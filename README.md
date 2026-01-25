@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Spectra Events 🎭
 
-## Getting Started
+O platformă inovatoare pentru invitații digitale premium, create pentru nunți, botezuri și aniversări exclusiviste.
 
-First, run the development server:
+## ✨ Funcționalități Principale
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+*   **Creator Interactiv**: Editor vizual în timp real pentru personalizarea invitațiilor.
+*   **Modele "Smechere"**:
+    *   ✉️ **Plic 3D**: Animație realistică de deschidere.
+    *   🎬 **Netflix Style**: "Serialul" poveștii voastre de dragoste.
+    *   ✈️ **Boarding Pass**: Bilet de avion cu QR Code dinamic.
+    *   🎵 **Vinyl Retro**: Player muzical animat.
+    *   🎫 **Loz (Scratch Card)**: Răzuiește ecranul pentru a vedea surpriza.
+*   **Cont Utilizator**: Dashboard pentru gestionarea evenimentelor și a listei de invitați.
+*   **Design Premium**: Glassmorphism, Dark Mode, animații fluide.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Cum să rulezi proiectul
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1.  Instalează dependențele:
+    ```bash
+    npm install
+    ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2.  Pornește serverul de dezvoltare:
+    ```bash
+    npm run dev
+    ```
 
-## Learn More
+3.  Accesează aplicația la [http://localhost:3000](http://localhost:3000).
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠 Tehnologii Folosite
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+*   **Next.js 14**: Framework React pentru performanță maximă.
+*   **CSS Modules**: Stilizare modulară și curată.
+*   **Canvas API**: Pentru efectul de scratch card.
+*   **Local Storage**: Pentru persistența datelor (MVP).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+*Creat cu ❤️ de Antigravity pentru un eveniment de neuitat.*

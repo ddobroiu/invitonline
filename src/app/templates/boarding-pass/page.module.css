@@ -1,0 +1,117 @@
+.container {
+    min-height: 100vh;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Courier Prime', Courier, monospace;
+}
+
+.ticket {
+    width: 800px;
+    height: 300px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    overflow: hidden;
+    position: relative;
+}
+
+.mainSection {
+    flex: 2.5;
+    padding: 2rem;
+    border-right: 2px dashed #ccc;
+    position: relative;
+    background: radial-gradient(circle at top right, transparent 10px, #fff 10px) top right,
+        radial-gradient(circle at bottom right, transparent 10px, #fff 10px) bottom right;
+    background-size: 51% 51%;
+    background-repeat: no-repeat;
+}
+
+.stubSection {
+    flex: 1;
+    padding: 2rem;
+    background: #e63946;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background: radial-gradient(circle at top left, transparent 10px, #e63946 10px) top left,
+        radial-gradient(circle at bottom left, transparent 10px, #e63946 10px) bottom left;
+    background-size: 52% 52%;
+    background-repeat: no-repeat;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #000;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.airline {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #e63946;
+    text-transform: uppercase;
+}
+
+.classType {
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.flightInfo {
+    display: flex;
+    justify-content: space-between;
+}
+
+.route {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 2rem;
+}
+
+.planeIcon {
+    color: #e63946;
+    transform: rotate(90deg);
+}
+
+.detailsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.detailLabel {
+    font-size: 0.7rem;
+    color: #888;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+}
+
+.detailValue {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.qrCode {
+    width: 100px;
+    height: 100px;
+    background: white;
+    margin-top: 1rem;
+}
+
+.stubTitle {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    text-align: center;
+}

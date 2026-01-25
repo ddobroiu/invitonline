@@ -1,0 +1,117 @@
+.container {
+    min-height: 100vh;
+    padding: 2rem;
+    display: flex;
+    gap: 2rem;
+    background: radial-gradient(circle at top left, #1a1a1a, #000);
+    color: #fff;
+    overflow: hidden;
+}
+
+.editorSection {
+    flex: 1;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    z-index: 10;
+    animation: slideInLeft 0.8s ease-out;
+}
+
+.previewSection {
+    flex: 2;
+    background: #111;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 1s ease-out;
+}
+
+.title {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    background: linear-gradient(to right, #d4af37, #f0e68c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.label {
+    font-size: 0.9rem;
+    color: #888;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 10px;
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.btnGenerate {
+    margin-top: 1rem;
+    background: linear-gradient(45deg, var(--accent), #ff8c00);
+    color: #000;
+    border: none;
+    padding: 1.2rem;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.btnGenerate:hover {
+    transform: scale(1.02);
+}
+
+/* Reusing envelope styles for preview but scaled */
+.previewScale {
+    transform: scale(0.8);
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
