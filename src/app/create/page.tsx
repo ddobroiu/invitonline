@@ -18,7 +18,7 @@ import FestivalTemplate from '@/components/templates/FestivalTemplate'
 import VipCardTemplate from '@/components/templates/VipCardTemplate'
 import StoryTemplate from '@/components/templates/StoryTemplate'
 import ChatTemplate from '@/components/templates/ChatTemplate'
-import { Save, Zap, ChevronLeft, Palette, Info, ClipboardList, Settings2, Trash2, Plus, Heart, Baby, PartyPopper, Calendar, MapPin, Music, Video, Image as ImageIcon, Loader2, Building, Search, Monitor, Smartphone, Lock, Receipt, CreditCard } from 'lucide-react'
+import { Save, Zap, ChevronLeft, Palette, Info, ClipboardList, Settings2, Trash2, Plus, Heart, Baby, PartyPopper, Calendar, MapPin, Music, Video, Image as ImageIcon, Loader2, Building, Search, Monitor, Smartphone, Lock, Receipt, CreditCard, MailOpen, Clapperboard, Plane, Disc, Ticket, Globe, Newspaper, Film, Tent, Crown, MessageCircle } from 'lucide-react'
 import LocationPicker from '@/components/LocationPicker'
 import MediaUploader from '@/components/MediaUploader'
 import ImageUploader from '@/components/ImageUploader'
@@ -352,90 +352,82 @@ function CreateEventContent() {
                     <div className={`${styles.editorCard} ${styles.scrollArea}`} style={{ animation: 'slideInLeft 0.4s ease' }}>
                         <label className={styles.label} style={{ marginBottom: '1.2rem', display: 'block' }}>ALEGE DESIGN-UL PREFERAT</label>
                         <div className={styles.templateGrid}>
-                            <button
-                                onClick={() => setSelectedTemplate('envelope')}
-                                className={`${styles.templateBtn} ${selectedTemplate === 'envelope' ? styles.activeTemplate : ''}`}
-                            >
-                                <span style={{ fontSize: '1.2rem' }}>💌</span>
-                                Plic 3D
-                            </button>
-                            <button
-                                onClick={() => setSelectedTemplate('netflix')}
-                                className={`${styles.templateBtn} ${selectedTemplate === 'netflix' ? styles.activeTemplate : ''}`}
-                            >
-                                <span style={{ fontSize: '1.2rem' }}>🎬</span>
-                                Netflix
-                            </button>
-                            <button
-                                onClick={() => setSelectedTemplate('boarding')}
-                                className={`${styles.templateBtn} ${selectedTemplate === 'boarding' ? styles.activeTemplate : ''}`}
-                            >
-                                <span style={{ fontSize: '1.2rem' }}>✈️</span>
-                                Avion
-                            </button>
-                            <button
-                                onClick={() => setSelectedTemplate('vinyl')}
-                                className={`${styles.templateBtn} ${selectedTemplate === 'vinyl' ? styles.activeTemplate : ''}`}
-                            >
-                                <span style={{ fontSize: '1.2rem' }}>💿</span>
-                                Vinyl
-                            </button>
-                            <button
-                                onClick={() => setSelectedTemplate('scratch')}
-                                className={`${styles.templateBtn} ${selectedTemplate === 'scratch' ? styles.activeTemplate : ''}`}
-                            >
-                                <span style={{ fontSize: '1.2rem' }}>🎫</span>
-                                Scratch
-                            </button>
-                            <button
-                                onClick={() => setSelectedTemplate('passport')}
-                                className={`${styles.templateBtn} ${selectedTemplate === 'passport' ? styles.activeTemplate : ''}`}
-                            >
-                                <span style={{ fontSize: '1.2rem' }}>🛂</span>
-                                Pașaport
-                            </button>
-                            <button
-                                onClick={() => setSelectedTemplate('news')}
-                                className={`${styles.templateBtn} ${selectedTemplate === 'news' ? styles.activeTemplate : ''}`}
-                            >
-                                <span style={{ fontSize: '1.2rem' }}>📰</span>
-                                Ziar
-                            </button>
-                            <button
-                                onClick={() => setSelectedTemplate('cinema')}
-                                className={`${styles.templateBtn} ${selectedTemplate === 'cinema' ? styles.activeTemplate : ''}`}
-                            >
-                                <span style={{ fontSize: '1.2rem' }}>🎬</span>
-                                Cinema
-                            </button>
-                            <button
-                                onClick={() => setSelectedTemplate('festival')}
-                                className={`${styles.templateBtn} ${selectedTemplate === 'festival' ? styles.activeTemplate : ''}`}
-                            >
-                                <span style={{ fontSize: '1.2rem' }}>🎡</span>
-                                Festival
-                            </button>
-                            <button
-                                onClick={() => setSelectedTemplate('vip')}
-                                className={`${styles.templateBtn} ${selectedTemplate === 'vip' ? styles.activeTemplate : ''}`}
-                            >
-                                <span style={{ fontSize: '1.2rem' }}>💳</span>
-                                VIP Card
-                            </button>
-                            <button
-                                onClick={() => setSelectedTemplate('story')}
-                                className={`${styles.templateBtn} ${selectedTemplate === 'story' ? styles.activeTemplate : ''}`}
-                            >
-                                <span style={{ fontSize: '1.2rem' }}>📱</span>
-                                Story
-                            </button>
-                            <button
-                                onClick={() => setSelectedTemplate('chat')}
-                                className={`${styles.templateBtn} ${selectedTemplate === 'chat' ? styles.activeTemplate : ''}`}
-                            >
-                                <span style={{ fontSize: '1.2rem' }}>💬</span>
-                                Chat
-                            </button>
+
+                            {/* Helper to get badges for editor grid */}
+                            {(() => {
+                                const templateData = [
+                                    { id: 'envelope', name: 'Plic 3D', icon: <MailOpen size={32} strokeWidth={1.5} />, features: ['photo'] },
+                                    { id: 'netflix', name: 'Netflix', icon: <Clapperboard size={32} strokeWidth={1.5} />, features: ['video', 'photo'] },
+                                    { id: 'boarding', name: 'Avion', icon: <Plane size={32} strokeWidth={1.5} />, features: ['photo'] },
+                                    { id: 'vinyl', name: 'Vinyl', icon: <Disc size={32} strokeWidth={1.5} />, features: ['audio', 'photo'] },
+                                    { id: 'scratch', name: 'Scratch', icon: <Ticket size={32} strokeWidth={1.5} />, features: ['photo'] },
+                                    { id: 'passport', name: 'Pașaport', icon: <Globe size={32} strokeWidth={1.5} />, features: ['photo'] },
+                                    { id: 'news', name: 'Ziar', icon: <Newspaper size={32} strokeWidth={1.5} />, features: ['photo'] },
+                                    { id: 'cinema', name: 'Cinema', icon: <Film size={32} strokeWidth={1.5} />, features: ['photo'] },
+                                    { id: 'festival', name: 'Festival', icon: <Tent size={32} strokeWidth={1.5} />, features: ['audio', 'photo'] },
+                                    { id: 'vip', name: 'VIP Card', icon: <Crown size={32} strokeWidth={1.5} />, features: ['photo'] },
+                                    { id: 'story', name: 'Story', icon: <Smartphone size={32} strokeWidth={1.5} />, features: ['video', 'photo'] },
+                                    { id: 'chat', name: 'Chat', icon: <MessageCircle size={32} strokeWidth={1.5} />, features: ['audio', 'photo'] }
+                                ];
+
+                                return templateData.map(tpl => (
+                                    <button
+                                        key={tpl.id}
+                                        onClick={() => setSelectedTemplate(tpl.id as any)}
+                                        className={`${styles.templateBtn} ${selectedTemplate === tpl.id ? styles.activeTemplate : ''}`}
+                                    >
+                                        <div style={{ marginBottom: '6px', color: selectedTemplate === tpl.id ? 'var(--accent)' : '#ccc' }}>
+                                            {tpl.icon}
+                                        </div>
+                                        <span style={{ fontSize: '0.9rem', fontWeight: 700 }}>{tpl.name}</span>
+
+                                        <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
+                                            {tpl.features.includes('video') && (
+                                                <div style={{
+                                                    background: 'rgba(255, 107, 107, 0.15)',
+                                                    padding: '4px 6px',
+                                                    borderRadius: '6px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '3px',
+                                                    border: '1px solid rgba(255, 107, 107, 0.3)'
+                                                }}>
+                                                    <Video size={10} color="#ff6b6b" />
+                                                    <span style={{ fontSize: '0.6rem', color: '#ff6b6b', fontWeight: 800 }}>VIDEO</span>
+                                                </div>
+                                            )}
+                                            {tpl.features.includes('audio') && (
+                                                <div style={{
+                                                    background: 'rgba(30, 215, 96, 0.15)',
+                                                    padding: '4px 6px',
+                                                    borderRadius: '6px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '3px',
+                                                    border: '1px solid rgba(30, 215, 96, 0.3)'
+                                                }}>
+                                                    <Music size={10} color="#1ed760" />
+                                                    <span style={{ fontSize: '0.6rem', color: '#1ed760', fontWeight: 800 }}>AUDIO</span>
+                                                </div>
+                                            )}
+                                            {tpl.features.includes('photo') && (
+                                                <div style={{
+                                                    background: 'rgba(56, 189, 248, 0.15)',
+                                                    padding: '4px 6px',
+                                                    borderRadius: '6px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '3px',
+                                                    border: '1px solid rgba(56, 189, 248, 0.3)'
+                                                }}>
+                                                    <ImageIcon size={10} color="#38bdf8" />
+                                                    <span style={{ fontSize: '0.6rem', color: '#38bdf8', fontWeight: 800 }}>FOTO</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </button>
+                                ));
+                            })()}
                         </div>
                     </div>
                 )}
