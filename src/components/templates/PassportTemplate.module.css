@@ -1,51 +1,47 @@
 .passportWrapper {
     width: 100%;
-    min-height: 100vh;
-    min-height: 100dvh;
+    min-height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 40px 20px;
     perspective: 1500px;
     background: #1a1a1a;
-    overflow-x: hidden;
+    overflow: visible;
 }
 
 .book {
-    width: 320px;
-    height: 480px;
+    width: 300px;
+    height: 440px;
     position: relative;
     transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transform-style: preserve-3d;
     cursor: pointer;
 }
 
+/* On mobile/narrow screens, we don't translate, we just scale and flip */
 .book.open {
-    transform: translateX(160px);
+    transform: translateX(150px);
 }
 
 @media (max-width: 700px) {
     .book.open {
-        transform: translateX(0) scale(0.85);
+        transform: translateX(0) scale(0.8);
     }
 
     .passportWrapper {
         perspective: 1000px;
-        overflow-x: hidden;
+        padding: 20px 10px;
     }
 
     .book {
+        width: 280px;
+        height: 400px;
         transform-origin: center center;
     }
 }
 
-@media (max-width: 400px) {
-    .book.open {
-        transform: translateX(0) scale(0.72);
-    }
-}
-
-/* RIGHT PAGE (Static Base - Visas & Info) */
+/* RIGHT PAGE */
 .rightPage {
     position: absolute;
     top: 0;
@@ -57,7 +53,7 @@
     z-index: 1;
     display: flex;
     flex-direction: column;
-    padding: 25px;
+    padding: 20px;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
     background-image:
         radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
@@ -65,7 +61,7 @@
     background-size: 20px 20px, 100% 30px;
 }
 
-/* FLIPPER (Front Cover + Back Identity) */
+/* FLIPPER */
 .flipper {
     position: absolute;
     top: 0;
@@ -82,7 +78,6 @@
     transform: rotateY(-180deg);
 }
 
-/* FACES */
 .front,
 .back {
     position: absolute;
@@ -94,12 +89,11 @@
     -webkit-backface-visibility: hidden;
 }
 
-/* FRONT COVER Style */
 .front {
     background: #2c3e50;
     border-radius: 12px;
     z-index: 2;
-    padding: 30px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -109,46 +103,46 @@
 }
 
 .coverGold {
-    border: 3px double #d4af37;
+    border: 2px double #d4af37;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 30px 15px;
+    padding: 20px 10px;
     border-radius: 8px;
 }
 
 .emblem {
     color: #d4af37;
     opacity: 0.9;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    width: 80px;
+    height: 80px;
 }
 
 .coverTitle {
     font-family: serif;
     color: #d4af37;
     text-transform: uppercase;
-    letter-spacing: 4px;
-    font-size: 1.4rem;
+    letter-spacing: 3px;
+    font-size: 1.2rem;
     font-weight: 900;
 }
 
 .coverEvent {
     color: #d4af37;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
     text-transform: uppercase;
     text-align: center;
 }
 
-/* BACK FACE (Identity Page - Left) */
 .back {
     background: #fdf5e6;
     transform: rotateY(180deg);
     border-radius: 12px 0 0 12px;
-    padding: 25px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     border-right: 1px solid rgba(0, 0, 0, 0.1);
@@ -159,44 +153,17 @@
     background-size: 20px 20px, 100% 30px;
 }
 
-.hint {
-    position: absolute;
-    bottom: 20px;
-    color: #fff;
-    font-size: 0.7rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    opacity: 0.7;
-    animation: pulse 2s infinite;
-    pointer-events: none;
-}
-
-@keyframes pulse {
-
-    0%,
-    100% {
-        opacity: 0.5;
-        transform: translateY(0);
-    }
-
-    50% {
-        opacity: 1;
-        transform: translateY(-5px);
-    }
-}
-
-/* Inner Content Styles */
 .header {
     border-bottom: 2px solid #333;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
 }
 
 .headerText {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 800;
     text-transform: uppercase;
     color: #333;
@@ -204,13 +171,13 @@
 
 .photoRow {
     display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
+    gap: 12px;
+    margin-bottom: 12px;
 }
 
 .photoArea {
-    width: 100px;
-    height: 130px;
+    width: 90px;
+    height: 120px;
     background: #ddd;
     border: 1px solid #999;
     display: flex;
@@ -218,7 +185,6 @@
     justify-content: center;
     position: relative;
     overflow: hidden;
-    color: #666;
 }
 
 .fields {
@@ -226,85 +192,69 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 12px;
-}
-
-.field {
-    margin-bottom: 8px;
+    gap: 8px;
 }
 
 .fieldLabel {
-    font-size: 0.5rem;
+    font-size: 0.45rem;
     color: #777;
     text-transform: uppercase;
     font-weight: 700;
-    margin-bottom: 2px;
 }
 
 .fieldValue {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 0.85rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
     font-weight: 700;
     color: #000;
-    text-transform: uppercase;
 }
 
 .mrz {
     margin-top: auto;
-    font-family: 'OCR-B', 'Courier New', monospace;
-    font-size: 0.7rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.6rem;
     letter-spacing: 1px;
     color: #444;
     line-height: 1.2;
-    word-break: break-all;
 }
 
 .stampsGrid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 8px;
 }
 
 .stampBox {
-    border: 2px dashed rgba(0, 0, 0, 0.15);
-    padding: 8px;
-    border-radius: 6px;
-    min-height: 70px;
+    border: 1px dashed rgba(0, 0, 0, 0.15);
+    padding: 6px;
+    border-radius: 4px;
+    min-height: 60px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
 }
 
 .stampLabel {
-    font-size: 0.55rem;
+    font-size: 0.5rem;
     color: #888;
     text-transform: uppercase;
     font-weight: bold;
-    margin-bottom: 4px;
 }
 
 .stampValue {
-    font-family: 'Courier New', monospace;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: bold;
-    color: #2c3e50;
 }
 
 .officialStamp {
     margin-top: auto;
     align-self: flex-end;
-    width: 90px;
-    padding: 8px;
-    border: 3px double #c0392b;
+    border: 2px double #c0392b;
     color: #c0392b;
     font-weight: 900;
     text-transform: uppercase;
-    font-size: 0.65rem;
-    text-align: center;
+    font-size: 0.6rem;
+    padding: 5px;
     transform: rotate(-10deg);
-    border-radius: 8px;
-    opacity: 0.8;
 }

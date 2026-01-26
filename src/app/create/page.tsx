@@ -309,10 +309,23 @@ function CreateEventContent() {
         setIsSaving(false)
     }
 
+    const [currentTime, setCurrentTime] = useState('')
+
+    useEffect(() => {
+        const updateTime = () => {
+            const now = new Date()
+            setCurrentTime(now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0'))
+        }
+        updateTime()
+        const timer = setInterval(updateTime, 10000)
+        return () => clearInterval(timer)
+    }, [])
+
     return (
         <div className={styles.container}>
-            {/* Left Side: Editor */}
+            {/* ... rest of editor section ... */}
             <div className={styles.editorSection}>
+                {/* (Step nav and content already here) */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                     <h1 className={styles.title}>Configurează</h1>
                     <div style={{ background: 'rgba(255,255,255,0.05)', padding: '5px 12px', borderRadius: '20px', fontSize: '0.7rem', color: '#888' }}>
@@ -552,6 +565,23 @@ function CreateEventContent() {
                 <div className={`${styles.previewContainer} ${previewMode === 'mobile' ? styles.mobileMode : styles.pcMode}`}>
                     {previewMode === 'mobile' ? (
                         <div className={styles.phoneFrame}>
+                            <div className={styles.statusBar}>
+                                <div className={styles.time}>{currentTime}</div>
+                                <div className={styles.statusIcons}>
+                                    <Search size={12} strokeWidth={3} />
+                                    <div style={{ display: 'flex', gap: '2px' }}>
+                                        <div style={{ width: '2px', height: '4px', background: '#fff' }}></div>
+                                        <div style={{ width: '2px', height: '6px', background: '#fff' }}></div>
+                                        <div style={{ width: '2px', height: '8px', background: '#fff' }}></div>
+                                        <div style={{ width: '2px', height: '10px', background: 'rgba(255,255,255,0.3)' }}></div>
+                                    </div>
+                                    <div style={{ width: '18px', height: '9px', border: '1px solid #fff', borderRadius: '2px', position: 'relative', display: 'flex', alignItems: 'center', padding: '1px' }}>
+                                        <div style={{ width: '80%', height: '100%', background: '#fff', borderRadius: '1px' }}></div>
+                                        <div style={{ position: 'absolute', right: '-3px', width: '2px', height: '4px', background: '#fff', borderRadius: '0 1px 1px 0' }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className={styles.homeBar}></div>
                             <div className={styles.phoneInner}>
                                 <div className={styles.scalerContent}>
                                     {selectedTemplate === 'envelope' && <EnvelopeTemplate {...formData} eventType={formData.eventType} />}
