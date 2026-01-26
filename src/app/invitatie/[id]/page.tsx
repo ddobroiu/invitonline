@@ -11,6 +11,9 @@ import PassportTemplate from '@/components/templates/PassportTemplate'
 import NewspaperTemplate from '@/components/templates/NewspaperTemplate'
 import CinemaTemplate from '@/components/templates/CinemaTemplate'
 import FestivalTemplate from '@/components/templates/FestivalTemplate'
+import ChatTemplate from '@/components/templates/ChatTemplate'
+import StoryTemplate from '@/components/templates/StoryTemplate'
+import VipCardTemplate from '@/components/templates/VipCardTemplate'
 import styles from './page.module.css'
 
 export default function PublicInvitation({ params }: { params: { id: string } }) {
@@ -59,6 +62,9 @@ export default function PublicInvitation({ params }: { params: { id: string } })
             {event.template === 'news' && <NewspaperTemplate id={params.id} {...event} />}
             {event.template === 'cinema' && <CinemaTemplate id={params.id} {...event} />}
             {event.template === 'festival' && <FestivalTemplate id={params.id} {...event} />}
+            {event.template === 'chat' && <ChatTemplate id={params.id} {...event} />}
+            {event.template === 'story' && <StoryTemplate id={params.id} {...event} />}
+            {event.template === 'vip' && <VipCardTemplate id={params.id} {...event} />}
         </main>
     )
 }
