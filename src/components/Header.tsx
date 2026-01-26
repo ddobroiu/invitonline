@@ -104,7 +104,7 @@ export default function Header() {
                     {!session ? (
                         <Link href="/login" style={{ textDecoration: 'none' }}>
                             <button style={{
-                                padding: '10px 22px',
+                                padding: '12px 28px',
                                 borderRadius: '50px',
                                 background: 'var(--accent)',
                                 border: 'none',
@@ -113,12 +113,13 @@ export default function Header() {
                                 fontSize: '0.85rem',
                                 fontWeight: '900',
                                 textTransform: 'uppercase',
-                                transition: 'all 0.3s'
+                                transition: 'all 0.3s',
+                                letterSpacing: '0.5px'
                             }}
                                 onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
                                 onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
                             >
-                                LOGIN
+                                INTRĂ / ÎNREGISTRARE
                             </button>
                         </Link>
                     ) : (
@@ -197,10 +198,11 @@ export default function Header() {
                                         borderRadius: '50px',
                                         background: 'var(--accent)',
                                         border: 'none',
-                                        fontSize: '1.2rem',
+                                        fontSize: '1.1rem',
                                         fontWeight: '900',
-                                        width: '100%'
-                                    }}>LOGIN</button>
+                                        width: '100%',
+                                        color: '#000'
+                                    }}>INTRĂ / ÎNREGISTRARE</button>
                                 </Link>
                             ) : (
                                 <button

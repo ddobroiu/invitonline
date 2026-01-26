@@ -348,6 +348,9 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>💌</span>
                                 Plic 3D
+                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
+                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('netflix')}
@@ -355,7 +358,10 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>🎬</span>
                                 Netflix
-                                <div style={{ fontSize: '0.55rem', fontWeight: 'bold', color: '#ff6b6b', marginTop: '2px', background: 'rgba(229,9,20,0.15)', padding: '2px 6px', borderRadius: '4px' }}>VIDEO</div>
+                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#ff6b6b', background: 'rgba(229,9,20,0.15)', padding: '2px 4px', borderRadius: '3px' }}>VIDEO</div>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
+                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('boarding')}
@@ -363,6 +369,9 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>✈️</span>
                                 Avion
+                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
+                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('vinyl')}
@@ -370,7 +379,10 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>💿</span>
                                 Vinyl
-                                <div style={{ fontSize: '0.55rem', fontWeight: 'bold', color: '#1ed760', marginTop: '2px', background: 'rgba(29,185,84,0.15)', padding: '2px 6px', borderRadius: '4px' }}>AUDIO</div>
+                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#1ed760', background: 'rgba(29,185,84,0.15)', padding: '2px 4px', borderRadius: '3px' }}>AUDIO</div>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
+                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('scratch')}
@@ -378,6 +390,9 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>🎫</span>
                                 Scratch
+                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
+                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('passport')}
@@ -385,6 +400,9 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>🛂</span>
                                 Pașaport
+                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
+                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('news')}
@@ -392,6 +410,9 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>📰</span>
                                 Ziar Vintage
+                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
+                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('cinema')}
@@ -399,6 +420,9 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>🎬</span>
                                 Poster Film
+                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
+                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('festival')}
@@ -406,7 +430,10 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>🎡</span>
                                 Festival
-                                <div style={{ fontSize: '0.55rem', fontWeight: 'bold', color: '#1ed760', marginTop: '2px', background: 'rgba(29,185,84,0.15)', padding: '2px 6px', borderRadius: '4px' }}>AUDIO</div>
+                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#1ed760', background: 'rgba(29,185,84,0.15)', padding: '2px 4px', borderRadius: '3px' }}>AUDIO</div>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
+                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('vip')}
@@ -414,6 +441,9 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>💳</span>
                                 VIP Card
+                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
+                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('story')}
@@ -421,7 +451,10 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>📱</span>
                                 Insta Story
-                                <div style={{ fontSize: '0.55rem', fontWeight: 'bold', color: '#ff6b6b', marginTop: '2px', background: 'rgba(229,9,20,0.15)', padding: '2px 6px', borderRadius: '4px' }}>VIDEO</div>
+                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#ff6b6b', background: 'rgba(229,9,20,0.15)', padding: '2px 4px', borderRadius: '3px' }}>VIDEO</div>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
+                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('chat')}
@@ -429,7 +462,11 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>💬</span>
                                 Love Chat
-                                <div style={{ fontSize: '0.55rem', fontWeight: 'bold', color: '#38bdf8', marginTop: '2px', background: 'rgba(56,189,248,0.15)', padding: '2px 6px', borderRadius: '4px' }}>MULTIMEDIA</div>
+                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#1ed760', background: 'rgba(29,185,84,0.15)', padding: '2px 4px', borderRadius: '3px' }}>AUDIO</div>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#ff6b6b', background: 'rgba(229,9,20,0.15)', padding: '2px 4px', borderRadius: '3px' }}>VIDEO</div>
+                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
+                                </div>
                             </button>
                         </div>
                     </div>
