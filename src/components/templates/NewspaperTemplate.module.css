@@ -324,3 +324,65 @@
         border-bottom: 1px solid #222;
     }
 }
+
+/* RSVP Styles */
+.rsvpWrapper {
+    margin-top: 30px;
+    width: 100%;
+    page-break-inside: avoid;
+}
+
+.cutLine {
+    text-align: center;
+    color: #555;
+    font-size: 0.7rem;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    opacity: 0.7;
+}
+
+.rsvpCoupon {
+    border: 3px dashed #222;
+    padding: 20px;
+    background: #fff8e1;
+    position: relative;
+    box-shadow: 2px 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.rsvpHeader {
+    text-align: center;
+    font-weight: 900;
+    font-size: 1.2rem;
+    border-bottom: 2px solid #222;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    font-family: 'Times New Roman', serif;
+    letter-spacing: 1px;
+}
+
+.rsvpContent {
+    text-align: center;
+    font-family: sans-serif;
+}
+
+.rsvpButton {
+    background: #c62828;
+    color: #fff;
+    border: 2px solid #222;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-top: 15px;
+    cursor: pointer;
+    border-radius: 2px;
+    box-shadow: 3px 3px 0px #222;
+    transition: transform 0.1s;
+}
+
+.rsvpButton:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0px #222;
+}

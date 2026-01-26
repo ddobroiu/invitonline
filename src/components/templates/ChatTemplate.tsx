@@ -222,12 +222,13 @@ export default function ChatTemplate(props: Props) {
 
                 {/* ACTION ZONE (Floating above footer) */}
                 {showActions && (
-                    <div className={`${styles.actionZone} ${styles.visible}`}>
-                        <button className={`${styles.whatsappBtn} ${styles.primary}`} onClick={() => setShowRSVP(true)}>
-                            DA, Confirm! 🥂
-                        </button>
-                        <button className={styles.whatsappBtn} onClick={() => alert('Sperăm să poți ajunge data viitoare!')}>
-                            Nu pot 😢
+                    <div className={`${styles.actionZone} ${styles.visible}`} style={{ justifyContent: 'center' }}>
+                        <button
+                            className={`${styles.whatsappBtn} ${styles.primary}`}
+                            onClick={() => setShowRSVP(true)}
+                            style={{ width: '80%', textAlign: 'center', justifyContent: 'center', display: 'flex' }}
+                        >
+                            DA, Confirm Prezența! 🥂
                         </button>
                     </div>
                 )}

@@ -1,37 +1,38 @@
 .chatContainer {
     width: 100%;
-    height: 600px;
-    /* Default fixed height if parent is auto */
-    max-height: 80vh;
-    /* Nu depăși niciodată 80% din ecran */
-    background: #d1d7db;
+    height: auto;
+    min-height: 700px;
+    background: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    overflow: hidden;
-    border-radius: 20px;
-    /* Nice touch for embedded */
 }
 
 .mobileScreen {
-    width: 100%;
-    max-width: 450px;
-    height: 100%;
-    max-height: 100%;
+    width: 360px;
+    height: 700px;
+    max-height: 90vh;
     background: #e5ddd5;
     display: flex;
     flex-direction: column;
     position: relative;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+
+    /* Phone Frame Styling */
+    border: 10px solid #222;
+    /* Bezel */
+    border-radius: 40px;
+    box-shadow:
+        0 0 0 2px #444,
+        /* Outer rim */
+        0 30px 60px rgba(0, 0, 0, 0.6);
+    /* Floating shadow */
+    overflow: hidden;
 }
 
 @media (min-width: 768px) {
-    .mobileScreen {
-        height: 95%;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
+    /* No special overrides needed anymore, fixed width is good */
 }
 
 /* Header WhatsApp Style */
