@@ -346,7 +346,7 @@ export default function CreateEvent() {
                                 onClick={() => setSelectedTemplate('envelope')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'envelope' ? styles.activeTemplate : ''}`}
                             >
-                                <span style={{ fontSize: '1.5rem' }}>✉️</span>
+                                <span style={{ fontSize: '1.5rem' }}>💌</span>
                                 Plic 3D
                             </button>
                             <button
@@ -355,6 +355,7 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>🎬</span>
                                 Netflix
+                                <div style={{ fontSize: '0.55rem', fontWeight: 'bold', color: '#ff6b6b', marginTop: '2px', background: 'rgba(229,9,20,0.15)', padding: '2px 6px', borderRadius: '4px' }}>VIDEO</div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('boarding')}
@@ -369,6 +370,7 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>💿</span>
                                 Vinyl
+                                <div style={{ fontSize: '0.55rem', fontWeight: 'bold', color: '#1ed760', marginTop: '2px', background: 'rgba(29,185,84,0.15)', padding: '2px 6px', borderRadius: '4px' }}>AUDIO</div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('scratch')}
@@ -404,6 +406,7 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>🎡</span>
                                 Festival
+                                <div style={{ fontSize: '0.55rem', fontWeight: 'bold', color: '#1ed760', marginTop: '2px', background: 'rgba(29,185,84,0.15)', padding: '2px 6px', borderRadius: '4px' }}>AUDIO</div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('vip')}
@@ -418,6 +421,7 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>📱</span>
                                 Insta Story
+                                <div style={{ fontSize: '0.55rem', fontWeight: 'bold', color: '#ff6b6b', marginTop: '2px', background: 'rgba(229,9,20,0.15)', padding: '2px 6px', borderRadius: '4px' }}>VIDEO</div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('chat')}
@@ -425,6 +429,7 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>💬</span>
                                 Love Chat
+                                <div style={{ fontSize: '0.55rem', fontWeight: 'bold', color: '#38bdf8', marginTop: '2px', background: 'rgba(56,189,248,0.15)', padding: '2px 6px', borderRadius: '4px' }}>MULTIMEDIA</div>
                             </button>
                         </div>
                     </div>

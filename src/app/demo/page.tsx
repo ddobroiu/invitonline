@@ -35,19 +35,76 @@ export default function DemoPage() {
     }
 
     const templates = [
-        { id: 'envelope', name: 'Plic 3D de Lux', component: EnvelopeTemplate, desc: 'O deschidere magică și clasică.' },
-        { id: 'netflix', name: 'Cinematic Netflix', component: NetflixTemplate, desc: 'Evenimentul tău ca un serial de succes.' },
-        { id: 'boarding', name: 'Boarding Pass', component: BoardingPassTemplate, desc: 'Invitație tip bilet de avion pentru călătoria vieții.' },
-        { id: 'vinyl', name: 'Vinyl Record', component: VinylTemplate, desc: 'Stil retro cu muzică de fundal.' },
-        { id: 'scratch', name: 'Loz Norocos', component: ScratchTemplate, desc: 'Interactiv: răzuiește pentru a afla surpriza.' },
-        { id: 'passport', name: 'Pașaport VIP', component: PassportTemplate, desc: 'Perfect pentru nunți tip "Destination Wedding".' },
-        { id: 'news', name: 'The Wedding Times', component: NewspaperTemplate, desc: 'Anunță evenimentul ca o știre de primă pagină.' },
-        { id: 'cinema', name: 'Film Poster', component: CinemaTemplate, desc: 'Voi sunteți vedetele filmului.' },
-        { id: 'festival', name: 'Summer Festival', component: FestivalTemplate, desc: 'Pentru petreceri non-conformiste și electrizante.' },
-        { id: 'vip', name: 'VIP Access Card', component: VipCardTemplate, desc: 'Un card exclusivist 3D cu efecte premium.' },
-        { id: 'story', name: 'Insta Story', component: StoryTemplate, desc: 'Format vertical, modern, perfect pentru mobil.' },
-        { id: 'chat', name: 'Love Chat', component: ChatTemplate, desc: 'O invitație sub formă de conversație WhatsApp.' },
+        { id: 'envelope', name: 'Plic 3D de Lux', component: EnvelopeTemplate, desc: 'O deschidere magică și clasică.', features: ['photo'] },
+        { id: 'netflix', name: 'Cinematic Netflix', component: NetflixTemplate, desc: 'Evenimentul tău ca un serial de succes.', features: ['video', 'photo'] },
+        { id: 'boarding', name: 'Boarding Pass', component: BoardingPassTemplate, desc: 'Invitație tip bilet de avion.', features: ['photo'] },
+        { id: 'vinyl', name: 'Vinyl Record', component: VinylTemplate, desc: 'Stil retro cu muzică de fundal.', features: ['audio', 'photo'] },
+        { id: 'scratch', name: 'Loz Norocos', component: ScratchTemplate, desc: 'Interactiv: răzuiește surpriza.', features: ['photo'] },
+        { id: 'passport', name: 'Pașaport VIP', component: PassportTemplate, desc: 'Perfect pentru nunți destinație.', features: ['photo'] },
+        { id: 'news', name: 'The Wedding Times', component: NewspaperTemplate, desc: 'Anunță evenimentul ca o știre.', features: ['photo'] },
+        { id: 'cinema', name: 'Film Poster', component: CinemaTemplate, desc: 'Voi sunteți vedetele filmului.', features: ['photo'] },
+        { id: 'festival', name: 'Summer Festival', component: FestivalTemplate, desc: 'Pentru petreceri electrizante.', features: ['audio', 'photo'] },
+        { id: 'vip', name: 'VIP Access Card', component: VipCardTemplate, desc: 'Un card exclusivist 3D.', features: ['photo'] },
+        { id: 'story', name: 'Insta Story', component: StoryTemplate, desc: 'Format vertical, modern, video.', features: ['video', 'photo'] },
+        { id: 'chat', name: 'Love Chat', component: ChatTemplate, desc: 'O conversație modernă.', features: ['audio', 'photo', 'video'] },
     ]
+
+    const getBadge = (type: string) => {
+        switch (type) {
+            case 'video': return (
+                <div style={{
+                    background: 'rgba(229, 9, 20, 0.15)',
+                    color: '#ff6b6b',
+                    border: '1px solid rgba(229, 9, 20, 0.3)',
+                    padding: '6px 10px',
+                    borderRadius: '6px',
+                    fontSize: '0.75rem',
+                    fontWeight: '800',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    letterSpacing: '0.5px'
+                }}>
+                    🎥 VIDEO
+                </div>
+            );
+            case 'audio': return (
+                <div style={{
+                    background: 'rgba(29, 185, 84, 0.15)',
+                    color: '#1ed760',
+                    border: '1px solid rgba(29, 185, 84, 0.3)',
+                    padding: '6px 10px',
+                    borderRadius: '6px',
+                    fontSize: '0.75rem',
+                    fontWeight: '800',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    letterSpacing: '0.5px'
+                }}>
+                    🎵 AUDIO
+                </div>
+            );
+            case 'photo': return (
+                <div style={{
+                    background: 'rgba(56, 189, 248, 0.15)',
+                    color: '#38bdf8',
+                    border: '1px solid rgba(56, 189, 248, 0.3)',
+                    padding: '6px 10px',
+                    borderRadius: '6px',
+                    fontSize: '0.75rem',
+                    fontWeight: '800',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    letterSpacing: '0.5px'
+                }}>
+                    📷 FOTO
+                </div>
+            );
+            default: return null;
+        }
+    }
 
     return (
         <div className={styles.demoPage}>
@@ -65,6 +122,15 @@ export default function DemoPage() {
                         <div className={styles.templateHeader}>
                             <div>
                                 <h3 className={styles.templateName}>{tpl.name}</h3>
+
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', margin: '12px 0' }}>
+                                    {tpl.features.map(f => (
+                                        <div key={f}>
+                                            {getBadge(f)}
+                                        </div>
+                                    ))}
+                                </div>
+
                                 <p className={styles.templateDesc}>{tpl.desc}</p>
                             </div>
                             <Link href={`/create?template=${tpl.id}`} className={styles.useBtn}>

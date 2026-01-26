@@ -44,8 +44,17 @@ export default function ChatTemplate(props: Props) {
     const [showRSVP, setShowRSVP] = useState(false)
     const [isPlaying, setIsPlaying] = useState(false)
     const audioRef = useRef<HTMLAudioElement>(null)
-    const messagesEndRef = useRef<HTMLDivElement>(null)
+    const listRef = useRef<HTMLDivElement>(null)
     const initialized = useRef(false)
+
+    const scrollToBottom = () => {
+        if (listRef.current) {
+            listRef.current.scrollTo({
+                top: listRef.current.scrollHeight,
+                behavior: 'smooth'
+            })
+        }
+    }
 
     // Scriptul conversației
     const script = [
@@ -79,7 +88,7 @@ export default function ChatTemplate(props: Props) {
             }
 
             setIsTyping(true)
-            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+            scrollToBottom()
 
             // Typing duration logic
             const typingTime = 1000 + Math.random() * 500
@@ -113,7 +122,7 @@ export default function ChatTemplate(props: Props) {
 
     // Scroll to bottom whenever messages change
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+        scrollToBottom()
     }, [messages, isTyping])
 
     const handleAudioPlay = () => {
@@ -153,7 +162,7 @@ export default function ChatTemplate(props: Props) {
                 </div>
 
                 {/* MESSAGES AREA */}
-                <div className={styles.messagesList}>
+                <div className={styles.messagesList} ref={listRef}>
                     <div style={{ textAlign: 'center', background: 'rgba(225,245,254,0.9)', padding: '5px 10px', borderRadius: '8px', fontSize: '0.75rem', color: '#555', alignSelf: 'center', marginBottom: '15px', boxShadow: '0 1px 1px rgba(0,0,0,0.1)' }}>
                         Messages are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them.
                     </div>
@@ -209,8 +218,6 @@ export default function ChatTemplate(props: Props) {
                             <div className={styles.dot}></div>
                         </div>
                     )}
-
-                    <div ref={messagesEndRef} style={{ height: '10px' }} />
                 </div>
 
                 {/* ACTION ZONE (Floating above footer) */}

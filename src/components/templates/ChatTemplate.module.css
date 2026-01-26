@@ -1,12 +1,17 @@
 .chatContainer {
     width: 100%;
-    height: 100%;
+    height: 600px;
+    /* Default fixed height if parent is auto */
+    max-height: 80vh;
+    /* Nu depăși niciodată 80% din ecran */
     background: #d1d7db;
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     overflow: hidden;
+    border-radius: 20px;
+    /* Nice touch for embedded */
 }
 
 .mobileScreen {

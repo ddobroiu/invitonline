@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Crown, CheckCircle, MapPin } from 'lucide-react'
 import styles from './page.module.css'
 import EnvelopeAnimation from '@/components/home/EnvelopeAnimation'
 import type { Metadata } from 'next'
@@ -42,18 +43,27 @@ export default function Home() {
 
       <section className={styles.features}>
         <div className={`glass-panel ${styles.featureCard} animate-fade-in delay-3`}>
+          <div className={styles.iconWrapper}>
+            <Crown size={30} />
+          </div>
           <h3 className={styles.featureTitle}>Design Premium</h3>
           <p className={styles.featureText}>
             Template-uri animate create de designeri de top pentru un impact vizual wow.
           </p>
         </div>
         <div className={`glass-panel ${styles.featureCard} animate-fade-in delay-3`}>
+          <div className={styles.iconWrapper}>
+            <CheckCircle size={30} />
+          </div>
           <h3 className={styles.featureTitle}>Confirmări Live</h3>
           <p className={styles.featureText}>
             Vezi cine vine în timp real. Sistem avansat de RSVP fără liste pe hârtie.
           </p>
         </div>
         <div className={`glass-panel ${styles.featureCard} animate-fade-in delay-3`}>
+          <div className={styles.iconWrapper}>
+            <MapPin size={30} />
+          </div>
           <h3 className={styles.featureTitle}>Hărți Inteligente</h3>
           <p className={styles.featureText}>
             Integrare cu Waze și Google Maps pentru ca oaspeții să ajungă direct la locație.
