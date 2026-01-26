@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, Suspense, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { useSession, signIn } from 'next-auth/react'
 import styles from './page.module.css'
 
 // Import Template Components
@@ -18,11 +18,10 @@ import FestivalTemplate from '@/components/templates/FestivalTemplate'
 import VipCardTemplate from '@/components/templates/VipCardTemplate'
 import StoryTemplate from '@/components/templates/StoryTemplate'
 import ChatTemplate from '@/components/templates/ChatTemplate'
-import { Save, Zap, ChevronLeft, Palette, Info, ClipboardList, Settings2, Trash2, Plus, Heart, Baby, PartyPopper, Calendar, MapPin, Eye, Users, CheckCircle, Lock, Link as LinkIcon, Globe, Music, Film, Ticket, Receipt, CreditCard, Loader2, Building, Search } from 'lucide-react'
+import { Save, Zap, ChevronLeft, Palette, Info, ClipboardList, Settings2, Trash2, Plus, Heart, Baby, PartyPopper, Calendar, MapPin, Music, Video, Image as ImageIcon, Loader2, Building, Search, Monitor, Smartphone, Lock, Receipt, CreditCard } from 'lucide-react'
 import LocationPicker from '@/components/LocationPicker'
 import MediaUploader from '@/components/MediaUploader'
 import ImageUploader from '@/components/ImageUploader'
-import { signIn } from 'next-auth/react'
 import BillingPanel from '@/components/dashboard/BillingPanel'
 
 interface UserBilling {
@@ -163,8 +162,6 @@ function CreateEventContent() {
         customFields: [] as { label: string, value: string }[]
     })
 
-
-
     const searchParams = useSearchParams()
 
     // State for selected template
@@ -173,6 +170,8 @@ function CreateEventContent() {
         const valid = ['envelope', 'netflix', 'boarding', 'vinyl', 'scratch', 'passport', 'news', 'cinema', 'festival', 'vip', 'story', 'chat']
         return (valid.includes(t || '') ? t : 'envelope') as any
     })
+
+    const [previewMode, setPreviewMode] = useState<'pc' | 'mobile'>('pc')
     const [currentStep, setCurrentStep] = useState(0)
     const steps = [
         { name: 'Design', icon: <Palette size={16} /> },
@@ -258,8 +257,6 @@ function CreateEventContent() {
             customFields: prev.customFields.filter((_, i) => i !== index)
         }))
     }
-
-
 
     const handleSave = async (shouldPay: boolean = false) => {
         if (status !== 'authenticated') {
@@ -348,9 +345,6 @@ function CreateEventContent() {
                             >
                                 <span style={{ fontSize: '1.2rem' }}>💌</span>
                                 Plic 3D
-                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
-                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('netflix')}
@@ -358,10 +352,6 @@ function CreateEventContent() {
                             >
                                 <span style={{ fontSize: '1.2rem' }}>🎬</span>
                                 Netflix
-                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#ff6b6b', background: 'rgba(229,9,20,0.15)', padding: '2px 4px', borderRadius: '3px' }}>VIDEO</div>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
-                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('boarding')}
@@ -369,9 +359,6 @@ function CreateEventContent() {
                             >
                                 <span style={{ fontSize: '1.2rem' }}>✈️</span>
                                 Avion
-                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
-                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('vinyl')}
@@ -379,10 +366,6 @@ function CreateEventContent() {
                             >
                                 <span style={{ fontSize: '1.2rem' }}>💿</span>
                                 Vinyl
-                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#1ed760', background: 'rgba(29,185,84,0.15)', padding: '2px 4px', borderRadius: '3px' }}>AUDIO</div>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
-                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('scratch')}
@@ -390,9 +373,6 @@ function CreateEventContent() {
                             >
                                 <span style={{ fontSize: '1.2rem' }}>🎫</span>
                                 Scratch
-                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
-                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('passport')}
@@ -400,29 +380,20 @@ function CreateEventContent() {
                             >
                                 <span style={{ fontSize: '1.2rem' }}>🛂</span>
                                 Pașaport
-                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
-                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('news')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'news' ? styles.activeTemplate : ''}`}
                             >
                                 <span style={{ fontSize: '1.2rem' }}>📰</span>
-                                Ziar Vintage
-                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
-                                </div>
+                                Ziar
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('cinema')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'cinema' ? styles.activeTemplate : ''}`}
                             >
                                 <span style={{ fontSize: '1.2rem' }}>🎬</span>
-                                Poster Film
-                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
-                                </div>
+                                Cinema
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('festival')}
@@ -430,10 +401,6 @@ function CreateEventContent() {
                             >
                                 <span style={{ fontSize: '1.2rem' }}>🎡</span>
                                 Festival
-                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#1ed760', background: 'rgba(29,185,84,0.15)', padding: '2px 4px', borderRadius: '3px' }}>AUDIO</div>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
-                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('vip')}
@@ -441,38 +408,26 @@ function CreateEventContent() {
                             >
                                 <span style={{ fontSize: '1.2rem' }}>💳</span>
                                 VIP Card
-                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
-                                </div>
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('story')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'story' ? styles.activeTemplate : ''}`}
                             >
                                 <span style={{ fontSize: '1.2rem' }}>📱</span>
-                                Insta Story
-                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#ff6b6b', background: 'rgba(229,9,20,0.15)', padding: '2px 4px', borderRadius: '3px' }}>VIDEO</div>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
-                                </div>
+                                Story
                             </button>
                             <button
                                 onClick={() => setSelectedTemplate('chat')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'chat' ? styles.activeTemplate : ''}`}
                             >
                                 <span style={{ fontSize: '1.2rem' }}>💬</span>
-                                Love Chat
-                                <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#1ed760', background: 'rgba(29,185,84,0.15)', padding: '2px 4px', borderRadius: '3px' }}>AUDIO</div>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#ff6b6b', background: 'rgba(229,9,20,0.15)', padding: '2px 4px', borderRadius: '3px' }}>VIDEO</div>
-                                    <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
-                                </div>
+                                Chat
                             </button>
                         </div>
                     </div>
                 )}
 
-                {/* --- STEP 1: CONFIGURARE (Merged Info & Details) --- */}
+                {/* --- STEP 1: CONFIGURARE --- */}
                 {currentStep === 1 && (
                     <div className={`${styles.editorCard} ${styles.scrollArea}`} style={{ animation: 'slideInLeft 0.4s ease' }}>
                         <div className={styles.inputGrid}>
@@ -491,8 +446,7 @@ function CreateEventContent() {
                             </div>
                             <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                                 <label className={styles.label}>TITLU / NUME</label>
-                                <input className={styles.input} name="title" value={formData.title} onChange={handleChange} style={{ fontSize: '1.2rem', padding: '1.3rem' }} />
-
+                                <input className={styles.input} name="title" value={formData.title} onChange={handleChange} />
                             </div>
                             <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                                 <label className={styles.label}>LOCAȚIE (GOOGLE MAPS)</label>
@@ -503,397 +457,148 @@ function CreateEventContent() {
                                     }}
                                 />
                             </div>
-
                             <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                                 <label className={styles.label}>MESAJ PERSONALIZAT</label>
-                                <textarea className={styles.input} name="message" value={formData.message} onChange={handleChange} rows={2} style={{ fontSize: '1.1rem', padding: '1.2rem' }} />
-
+                                <textarea className={styles.input} name="message" value={formData.message} onChange={handleChange} rows={2} />
                             </div>
 
-                            {/* Removed old static fields. Use the custom fields below for family details. */}
-
-
-                            {/* Dynamic Custom Fields */}
-                            {/* Dynamic Custom Fields */}
+                            {/* Custom Fields */}
                             <div className={`${styles.formGroup} ${styles.fullWidth}`} style={{ marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem' }}>
                                 <label className={styles.label} style={{ color: 'var(--accent)', marginBottom: '15px', display: 'block' }}>CÂMPURI PERSONALIZATE (MAX 3)</label>
-
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                                     {formData.customFields.map((field, idx) => (
                                         <div key={idx} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '8px', alignItems: 'center' }}>
                                             <input
                                                 className={styles.input}
                                                 placeholder="Etichetă (ex: Nași)"
-                                                style={{ padding: '0.9rem', fontSize: '0.9rem' }}
                                                 value={field.label}
                                                 onChange={(e) => handleCustomFieldChange(idx, 'label', e.target.value)}
                                             />
                                             <input
                                                 className={styles.input}
-                                                placeholder="Valoare (ex: Maria & Ion)"
-                                                style={{ padding: '0.9rem', fontSize: '0.9rem' }}
+                                                placeholder="Valoare"
                                                 value={field.value}
                                                 onChange={(e) => handleCustomFieldChange(idx, 'value', e.target.value)}
                                             />
-                                            <button
-                                                type="button"
-                                                onClick={() => removeCustomField(idx)}
-                                                style={{
-                                                    background: 'rgba(255, 68, 68, 0.1)',
-                                                    border: 'none',
-                                                    color: '#ff4444',
-                                                    cursor: 'pointer',
-                                                    width: '32px',
-                                                    height: '32px',
-                                                    borderRadius: '8px',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    flexShrink: 0
-                                                }}
-                                            >
+                                            <button type="button" onClick={() => removeCustomField(idx)} style={{ background: 'rgba(255, 68, 68, 0.1)', border: 'none', color: '#ff4444', cursor: 'pointer', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                                 <Trash2 size={16} />
                                             </button>
                                         </div>
                                     ))}
-
                                     {formData.customFields.length < 3 && (
-                                        <button
-                                            type="button"
-                                            onClick={addCustomField}
-                                            style={{
-                                                width: '100%',
-                                                padding: '14px',
-                                                border: '2px dashed rgba(255,255,255,0.15)',
-                                                background: 'rgba(255,255,255,0.02)',
-                                                color: '#aaa',
-                                                borderRadius: '12px',
-                                                marginTop: '5px',
-                                                cursor: 'pointer',
-                                                fontSize: '0.85rem',
-                                                fontWeight: '700',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                gap: '8px',
-                                                transition: 'all 0.2s',
-                                                textTransform: 'uppercase',
-                                                letterSpacing: '0.5px'
-                                            }}
-                                            onMouseOver={(e) => {
-                                                e.currentTarget.style.borderColor = 'var(--accent)'
-                                                e.currentTarget.style.color = 'var(--accent)'
-                                                e.currentTarget.style.background = 'rgba(212, 175, 55, 0.05)'
-                                            }}
-                                            onMouseOut={(e) => {
-                                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'
-                                                e.currentTarget.style.color = '#aaa'
-                                                e.currentTarget.style.background = 'rgba(255,255,255,0.02)'
-                                            }}
-                                        >
-                                            <Plus size={18} /> ADAUGĂ CÂMP (Ex: Nași, Părinți...)
+                                        <button type="button" onClick={addCustomField} className={styles.btnSecondary} style={{ width: '100%', border: '2px dashed rgba(255,255,255,0.1)', background: 'transparent' }}>
+                                            <Plus size={18} /> ADAUGĂ CÂMP
                                         </button>
                                     )}
                                 </div>
                             </div>
-
-                            {/* Media Upload Section - Only for Netflix and Vinyl */}
-                            {(selectedTemplate === 'netflix' || selectedTemplate === 'vinyl' || selectedTemplate === 'festival' || selectedTemplate === 'story' || selectedTemplate === 'chat') && (
-                                <div className={`${styles.formGroup} ${styles.fullWidth}`} style={{ marginTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem' }}>
-                                    <label className={styles.label} style={{ color: 'var(--accent)', marginBottom: '0.5rem' }}>
-                                        {selectedTemplate === 'netflix' ? '🎬 MEDIA PENTRU NETFLIX' :
-                                            selectedTemplate === 'festival' ? '🎵 MEDIA PENTRU FESTIVAL' :
-                                                selectedTemplate === 'story' ? '🎥 VIDEO PENTRU STORY' :
-                                                    selectedTemplate === 'chat' ? '🎤 VOCAL PENTRU CHAT' : '🎵 MEDIA PENTRU VINYL'}
-                                    </label>
-                                    <p style={{ fontSize: '0.8rem', color: '#888', marginBottom: '1rem' }}>
-                                        {selectedTemplate === 'netflix'
-                                            ? 'Încarcă un video care va fi afișat în invitația ta Netflix (opțional)'
-                                            : selectedTemplate === 'story' ? 'Încarcă un video vertical pentru fundal'
-                                                : selectedTemplate === 'chat' ? 'Încarcă un mesaj audio vocal (opțional)'
-                                                    : 'Încarcă un fișier audio care va fi redat în invitația ta (opțional)'}
-                                    </p>
-
-                                    {(selectedTemplate === 'netflix' || selectedTemplate === 'story') && (
-                                        <MediaUploader
-                                            type="video"
-                                            currentUrl={formData.videoUrl}
-                                            onUploadComplete={(url) => setFormData(prev => ({ ...prev, videoUrl: url }))}
-                                            onRemove={() => setFormData(prev => ({ ...prev, videoUrl: '' }))}
-                                        />
-                                    )}
-
-                                    {(selectedTemplate === 'vinyl' || selectedTemplate === 'festival' || selectedTemplate === 'chat') && (
-                                        <MediaUploader
-                                            type="audio"
-                                            currentUrl={formData.audioUrl}
-                                            onUploadComplete={(url) => setFormData(prev => ({ ...prev, audioUrl: url }))}
-                                            onRemove={() => setFormData(prev => ({ ...prev, audioUrl: '' }))}
-                                        />
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Image Upload Section */}
-                            {(selectedTemplate === 'passport' || selectedTemplate === 'news' || selectedTemplate === 'cinema' || selectedTemplate === 'scratch' || selectedTemplate === 'vip' || selectedTemplate === 'story' || selectedTemplate === 'chat') && (
-                                <div className={`${styles.formGroup} ${styles.fullWidth}`} style={{ marginTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem' }}>
-                                    <label className={styles.label} style={{ color: 'var(--accent)', marginBottom: '0.5rem' }}>
-                                        📸 FOTOGRAFIE PERSONALIZATĂ
-                                    </label>
-                                    <p style={{ fontSize: '0.8rem', color: '#888', marginBottom: '1rem' }}>
-                                        {selectedTemplate === 'passport' ? 'Încarcă o fotografie care va apărea în zona de fotografie a pașaportului' :
-                                            selectedTemplate === 'news' ? 'Încarcă o fotografie care va apărea în articolul de ziar' :
-                                                selectedTemplate === 'cinema' ? 'Încarcă o imagine pentru posterul filmului' :
-                                                    selectedTemplate === 'vip' ? 'Încarcă o imagine care va apărea ca fundal pe cardul VIP' :
-                                                        selectedTemplate === 'story' ? 'Încarcă o imagine de fundal (dacă nu ai video)' :
-                                                            selectedTemplate === 'chat' ? 'Încarcă o poză pentru chat' :
-                                                                'Încarcă o imagine care va apărea sub zona răzuibilă ca surpriză'}
-                                    </p>
-
-                                    <ImageUploader
-                                        currentUrl={formData.photoUrl}
-                                        onUploadComplete={(url) => setFormData(prev => ({ ...prev, photoUrl: url }))}
-                                        onRemove={() => setFormData(prev => ({ ...prev, photoUrl: '' }))}
-                                        label={
-                                            selectedTemplate === 'passport' ? 'Fotografie Pașaport' :
-                                                selectedTemplate === 'news' ? 'Fotografie Articol' :
-                                                    selectedTemplate === 'cinema' ? 'Poster Film' :
-                                                        selectedTemplate === 'vip' ? 'Fundal Card' :
-                                                            selectedTemplate === 'story' ? 'Fundal Foto' :
-                                                                selectedTemplate === 'chat' ? 'Poză Chat' : 'Premiu Ascuns'
-                                        }
-                                    />
-                                </div>
-                            )}
-
                         </div>
                     </div>
                 )}
 
-
-                {/* --- STEP 2: EXTRA & SAVE --- */}
+                {/* --- STEP 2: PLATA --- */}
                 {currentStep === 2 && (
                     <div className={`${styles.editorCard} ${styles.scrollArea}`} style={{ animation: 'slideInLeft 0.4s ease' }}>
-
-                        {/* 1. AUTH GATE */}
-                        {status === 'unauthenticated' && (
-                            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '15px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                                    <Lock size={32} color="var(--accent)" style={{ marginBottom: '10px' }} />
-                                    <h2 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: '#fff' }}>1. Autentificare</h2>
-                                    <p style={{ fontSize: '0.9rem', color: '#888', marginTop: '5px' }}>Pentru a salva invitația ta premium</p>
-                                </div>
-
-                                {authError && <div style={{ color: '#ff4444', fontSize: '0.8rem', textAlign: 'center', marginBottom: '10px' }}>{authError}</div>}
-
-                                <form onSubmit={handleAuthSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                                    {authMode === 'register' && (
-                                        <input
-                                            className={styles.input}
-                                            placeholder="Nume Complet"
-                                            value={authData.name}
-                                            onChange={e => setAuthData({ ...authData, name: e.target.value })}
-                                            required
-                                        />
-                                    )}
-                                    <input
-                                        className={styles.input}
-                                        type="email"
-                                        placeholder="Email"
-                                        value={authData.email}
-                                        onChange={e => setAuthData({ ...authData, email: e.target.value })}
-                                        required
-                                    />
-                                    <input
-                                        className={styles.input}
-                                        type="password"
-                                        placeholder="Parolă"
-                                        value={authData.password}
-                                        onChange={e => setAuthData({ ...authData, password: e.target.value })}
-                                        required
-                                    />
-                                    <button
-                                        type="submit"
-                                        disabled={isAuthLoading}
-                                        style={{ background: 'var(--accent)', color: 'black', padding: '12px', border: 'none', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer', marginTop: '5px' }}
-                                    >
-                                        {isAuthLoading ? 'Se procesează...' : (authMode === 'login' ? 'Intră în Cont' : 'Creează Cont')}
-                                    </button>
-                                </form>
-
-                                <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.8rem', color: '#888' }}>
-                                    {authMode === 'login' ? 'Nu ai cont?' : 'Ai deja cont?'}
-                                    <span
-                                        onClick={() => setAuthMode(authMode === 'login' ? 'register' : 'login')}
-                                        style={{ color: 'var(--accent)', cursor: 'pointer', marginLeft: '5px', fontWeight: 'bold' }}
-                                    >
-                                        {authMode === 'login' ? 'Înregistrează-te' : 'Autentifică-te'}
-                                    </span>
-                                </div>
-
-                                <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', marginTop: '20px', paddingTop: '15px' }}>
-                                    <button
-                                        onClick={() => handleSave(false)}
-                                        className={styles.btnSecondary}
-                                        style={{ width: '100%', fontSize: '0.8rem' }}
-                                    >
-                                        Salvează local și continuă mai târziu
-                                    </button>
-                                </div>
+                        {status === 'unauthenticated' ? (
+                            <div style={{ textAlign: 'center', padding: '20px' }}>
+                                <Lock size={32} color="var(--accent)" style={{ marginBottom: '10px' }} />
+                                <h3>Autentificare Necesara</h3>
+                                <p style={{ color: '#888', fontSize: '0.9rem' }}>Conectează-te pentru a salva invitația.</p>
+                                <button onClick={() => setAuthMode('login')} className={styles.btnGenerate} style={{ width: '100%', marginTop: '20px' }}>LOGHEAZĂ-TE</button>
                             </div>
-                        )}
-
-
-
-                        {/* 2. BILLING GATE (If logged in but info missing) */}
-                        {status === 'authenticated' && !isFetchingBilling && !userBilling?.companyName && (
-                            <div style={{ padding: '0', borderRadius: '24px' }}>
-                                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                                    <Receipt size={32} color="var(--accent)" style={{ marginBottom: '10px' }} />
-                                    <h2 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: '#fff' }}>2. Date de Facturare</h2>
-                                    <p style={{ fontSize: '0.9rem', color: '#888', marginTop: '5px' }}>Neceseare pentru a genera factura fiscală</p>
-                                </div>
-                                <BillingPanel
-                                    hideHistory={true}
-                                    hideStatus={true}
-                                    onSaveSuccess={() => {
-                                        fetchBilling();
-                                        handleSave(true);
-                                    }}
-                                    buttonText="Activează Invitația - 20€ (Stripe)"
-                                />
-                                <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
-                                    <button
-                                        onClick={() => handleSave(false)}
-                                        className={styles.btnSecondary}
-                                    >
-                                        <Save size={16} /> Salvează ca Draft
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-
-
-
-
-
-                        {/* 3. FINAL ACTIONS (Only if billing is complete) */}
-                        {status === 'authenticated' && !isFetchingBilling && userBilling?.companyName && (
-                            <>
-                                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                                    <Zap size={32} color="var(--accent)" style={{ marginBottom: '10px' }} />
-                                    <h2 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: '#fff' }}>3. Finalizare & Activare</h2>
-                                    <p style={{ fontSize: '0.9rem', color: '#888', marginTop: '5px' }}>Lansează-ți invitația către oaspeți</p>
-                                </div>
-
-                                <div className={styles.formGroup} style={{ marginBottom: '1.5rem' }}>
-                                    <label className={styles.label}>DRESS CODE (OPȚIONAL)</label>
-                                    <input className={styles.input} name="dressCode" value={formData.dressCode} onChange={handleChange} placeholder="Ex: Black Tie" />
-                                </div>
-
-                                {(formData.eventType === 'aniversare' || formData.eventType === 'petrecere') && (
-                                    <div className={styles.inputGrid}>
-                                        <div className={styles.formGroup}>
-                                            <label className={styles.label}>Vârstă</label>
-                                            <input className={styles.input} name="age" value={formData.age} onChange={handleChange} />
-                                        </div>
-                                        <div className={styles.formGroup}>
-                                            <label className={styles.label}>Tematică</label>
-                                            <input className={styles.input} name="theme" value={formData.theme} onChange={handleChange} />
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.8fr', gap: '15px', marginTop: '1rem' }}>
-                                    <button
-                                        className={styles.btnSecondary}
-                                        onClick={() => handleSave(false)}
-                                        disabled={isSaving}
-                                    >
-                                        {isSaving ? 'SALVARE...' : <><Save size={18} /> SALVEAZĂ DRAFT</>}
-                                    </button>
-                                    <button
-                                        className={styles.btnGenerate}
-                                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginTop: 0 }}
-                                        onClick={() => handleSave(true)}
-                                        disabled={isSaving}
-                                    >
-                                        {isSaving ? 'SE PROCESEAZĂ...' : <><Zap size={18} /> ACTIVARE PRO (STRIPE)</>}
-                                    </button>
-                                </div>
-
-                                <p style={{ textAlign: 'center', fontSize: '0.75rem', color: '#555', marginTop: '15px' }}>
-                                    * Activarea include găzduire nelimitată, link personalizat și confirmări în timp real.
-                                </p>
-                            </>
-                        )}
-
-
-                        {status === 'authenticated' && isFetchingBilling && (
-                            <div style={{ textAlign: 'center', padding: '40px' }}>
-                                <Loader2 className="animate-spin" size={32} color="var(--accent)" />
-                                <p style={{ marginTop: '10px', color: '#888' }}>Se verifică datele tale...</p>
+                        ) : (
+                            <div style={{ textAlign: 'center' }}>
+                                <Zap size={32} color="var(--accent)" style={{ marginBottom: '10px' }} />
+                                <h3>Finalizare Invitație</h3>
+                                <p style={{ color: '#888', fontSize: '0.9rem', marginBottom: '20px' }}>Activează invitația ta premium și trimite-o oaspeților.</p>
+                                <button onClick={() => handleSave(true)} className={styles.btnGenerate} style={{ width: '100%' }}>
+                                    {isSaving ? 'SE PROCESEAZĂ...' : 'ACTIVEAZĂ PROFESIONAL (20€)'}
+                                </button>
+                                <button onClick={() => handleSave(false)} className={styles.btnSecondary} style={{ width: '100%', marginTop: '10px' }}>
+                                    SALVEAZĂ CA DRAFT
+                                </button>
                             </div>
                         )}
                     </div>
-                )
-                }
+                )}
 
-
-                {/* Navigation Buttons Row */}
-                <div className={styles.cardFooter} style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '1rem' }}>
-                    <button
-                        onClick={() => setCurrentStep(prev => Math.max(0, prev - 1))}
-                        disabled={currentStep === 0}
-                        style={{ padding: '10px 20px', background: 'transparent', border: '1px solid #333', borderRadius: '10px', color: '#888', cursor: 'pointer', opacity: currentStep === 0 ? 0.3 : 1 }}
-                    >
-                        Înapoi
-                    </button>
+                {/* Footer Nav */}
+                <div className={styles.cardFooter} style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
+                    <button onClick={() => setCurrentStep(prev => Math.max(0, prev - 1))} disabled={currentStep === 0} className={styles.btnSecondary}>Înapoi</button>
                     {currentStep < steps.length - 1 && (
-                        <button
-                            onClick={() => setCurrentStep(prev => prev + 1)}
-                            style={{ padding: '10px 30px', background: 'var(--accent)', border: 'none', borderRadius: '10px', color: 'black', fontWeight: 'bold', cursor: 'pointer' }}
-                        >
-                            Pasul Următor
-                        </button>
+                        <button onClick={() => setCurrentStep(prev => prev + 1)} className={styles.btnGenerate}>Pasul Următor</button>
                     )}
                 </div>
-            </div >
+            </div>
 
-            {/* Right Side: Live Preview */}
-            < div className={styles.previewSection} >
-                {selectedTemplate === 'envelope' && <EnvelopeTemplate {...formData} eventType={formData.eventType} />}
-                {selectedTemplate === 'netflix' && <NetflixTemplate {...formData} eventType={formData.eventType} />}
-                {selectedTemplate === 'boarding' && <BoardingPassTemplate {...formData} eventType={formData.eventType} />}
-                {selectedTemplate === 'vinyl' && <VinylTemplate {...formData} eventType={formData.eventType} />}
-                {selectedTemplate === 'scratch' && <ScratchTemplate {...formData} eventType={formData.eventType} />}
-                {selectedTemplate === 'passport' && <PassportTemplate {...formData} eventType={formData.eventType} />}
-                {selectedTemplate === 'news' && <NewspaperTemplate {...formData} eventType={formData.eventType} />}
-                {selectedTemplate === 'cinema' && <CinemaTemplate {...formData} eventType={formData.eventType} />}
-                {selectedTemplate === 'festival' && <FestivalTemplate {...formData} eventType={formData.eventType} />}
-                {selectedTemplate === 'vip' && <VipCardTemplate {...formData} eventType={formData.eventType} />}
-                {selectedTemplate === 'story' && <StoryTemplate {...formData} eventType={formData.eventType} />}
-                {selectedTemplate === 'chat' && <ChatTemplate {...formData} eventType={formData.eventType} />}
-            </div >
-        </div >
+            {/* Right Side: Preview */}
+            <div className={styles.previewSection}>
+                {/* Switcher */}
+                <div className={styles.previewSwitcher}>
+                    <button
+                        className={`${styles.switchBtn} ${previewMode === 'pc' ? styles.activeSwitch : ''}`}
+                        onClick={() => setPreviewMode('pc')}
+                    >
+                        <Monitor size={18} />
+                    </button>
+                    <button
+                        className={`${styles.switchBtn} ${previewMode === 'mobile' ? styles.activeSwitch : ''}`}
+                        onClick={() => setPreviewMode('mobile')}
+                    >
+                        <Smartphone size={18} />
+                    </button>
+                </div>
+
+                <div className={`${styles.previewContainer} ${previewMode === 'mobile' ? styles.mobileMode : styles.pcMode}`}>
+                    {previewMode === 'mobile' ? (
+                        <div className={styles.phoneFrame}>
+                            <div className={styles.phoneInner}>
+                                {selectedTemplate === 'envelope' && <EnvelopeTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'netflix' && <NetflixTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'boarding' && <BoardingPassTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'vinyl' && <VinylTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'scratch' && <ScratchTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'passport' && <PassportTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'news' && <NewspaperTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'cinema' && <CinemaTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'festival' && <FestivalTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'vip' && <VipCardTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'story' && <StoryTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'chat' && <ChatTemplate {...formData} eventType={formData.eventType} />}
+                            </div>
+                        </div>
+                    ) : (
+                        <div className={styles.pcMockup}>
+                            <div className={styles.pcBrowserHeader}>
+                                <div className={styles.dot}></div>
+                                <div className={styles.dot}></div>
+                                <div className={styles.dot}></div>
+                            </div>
+                            <div className={styles.pcContent}>
+                                {selectedTemplate === 'envelope' && <EnvelopeTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'netflix' && <NetflixTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'boarding' && <BoardingPassTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'vinyl' && <VinylTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'scratch' && <ScratchTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'passport' && <PassportTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'news' && <NewspaperTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'cinema' && <CinemaTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'festival' && <FestivalTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'vip' && <VipCardTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'story' && <StoryTemplate {...formData} eventType={formData.eventType} />}
+                                {selectedTemplate === 'chat' && <ChatTemplate {...formData} eventType={formData.eventType} />}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
     )
 }
 
 export default function CreateEvent() {
     return (
-        <Suspense fallback={
-            <div style={{
-                minHeight: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: '#111',
-                color: '#fff',
-                fontFamily: 'sans-serif'
-            }}>
-                Încărcăm editorul...
-            </div>
-        }>
+        <Suspense fallback={<div className="p-20 text-white">Loading...</div>}>
             <CreateEventContent />
         </Suspense>
     )

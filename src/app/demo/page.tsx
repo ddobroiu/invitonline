@@ -119,6 +119,7 @@ export default function DemoPage() {
             <div className={styles.showcaseGrid}>
                 {templates.map((tpl) => (
                     <div key={tpl.id} className={styles.templateCard}>
+                        {/* Header Section */}
                         <div className={styles.templateHeader}>
                             <div>
                                 <h3 className={styles.templateName}>{tpl.name}</h3>
@@ -138,10 +139,38 @@ export default function DemoPage() {
                             </Link>
                         </div>
 
-                        <div className={styles.templatePreviewFrame}>
-                            <div className={styles.previewScaler}>
-                                <tpl.component {...demoProps} />
+                        {/* Dual Preview Area */}
+                        <div className={styles.templatePreviewArea}>
+
+                            {/* PC Mockup */}
+                            <div className={styles.pcView}>
+                                <div className={styles.viewLabel}>Desktop Experience</div>
+                                <div className={styles.pcFrame}>
+                                    <div className={styles.pcBrowserHeader}>
+                                        <div className={styles.dot}></div>
+                                        <div className={styles.dot}></div>
+                                        <div className={styles.dot}></div>
+                                    </div>
+                                    <div className={styles.pcContent}>
+                                        <div className={styles.previewScaler}>
+                                            <tpl.component {...demoProps} />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
+                            {/* Mobile Mockup */}
+                            <div className={styles.mobileView}>
+                                <div className={styles.viewLabel}>Mobile View</div>
+                                <div className={styles.phoneFrame}>
+                                    <div className={styles.phoneInner}>
+                                        <div className={styles.previewScaler}>
+                                            <tpl.component {...demoProps} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 ))}
