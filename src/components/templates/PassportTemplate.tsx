@@ -31,7 +31,16 @@ interface PassportTemplateProps {
 }
 
 
-export default function PassportTemplate(props: PassportTemplateProps) {
+export default function PassportTemplate({
+    id, title, date, location, locationUrl, message, eventType = 'nunta',
+    groomName, brideName, childName, celebrantName,
+    godparents, godparentsBaptism, parentsGroom, parentsBride,
+    motherName, fatherName, birthDate, childAge,
+    civilCeremonyTime, civilCeremonyLoc, religiousCeremonyTime, religiousCeremonyLoc,
+    partyTime, partyLoc, churchTime, churchLoc, restaurantTime, restaurantLoc,
+    age, partyType, theme, specialInstructions, dressCode,
+    customFields, photoUrl
+}: any) { // Use any briefly or fix interface if needed, but destructuring is key
     const [isOpen, setIsOpen] = useState(false)
 
     // Format fields for MRZ zone
@@ -59,36 +68,48 @@ export default function PassportTemplate(props: PassportTemplateProps) {
                     </div>
 
                     <div className={styles.stampsGrid}>
-                        {(props.godparents || props.godparentsBaptism) && (
+                        {(godparents || godparentsBaptism) && (
                             <div className={styles.stampBox}>
                                 <div className={styles.stampLabel}>GODPARENTS / NAȘI</div>
-                                <div className={styles.stampValue}>{props.godparents || props.godparentsBaptism}</div>
+                                <div className={styles.stampValue}>{godparents || godparentsBaptism}</div>
                             </div>
                         )}
 
-                        {(props.parentsGroom || props.parentsBride) && (
+                        {(parentsGroom || parentsBride) && (
                             <div className={styles.stampBox}>
                                 <div className={styles.stampLabel}>PARENTS / PĂRINȚI</div>
                                 <div className={styles.stampValue} style={{ fontSize: '0.65rem' }}>
-                                    {props.parentsGroom}
-                                    {props.parentsGroom && props.parentsBride && <br />}
-                                    {props.parentsBride}
+                                    {parentsGroom}
+                                    {parentsGroom && parentsBride && <br />}
+                                    {parentsBride}
                                 </div>
                             </div>
                         )}
 
-                        {(props.civilCeremonyTime || props.religiousCeremonyTime || props.partyTime) && (
+                        {(groomName || brideName || childName || celebrantName) && (
+                            <div className={styles.stampBox}>
+                                <div className={styles.stampLabel}>CAST / DISTRIBUȚIE</div>
+                                <div className={styles.stampValue} style={{ fontSize: '0.65rem' }}>
+                                    {groomName} {groomName && brideName && '&'} {brideName}
+                                    {childName || celebrantName}
+                                </div>
+                            </div>
+                        )}
+
+                        {(civilCeremonyTime || religiousCeremonyTime || partyTime || churchTime || restaurantTime) && (
                             <div className={styles.stampBox}>
                                 <div className={styles.stampLabel}>SCHEDULE / PROGRAM</div>
                                 <div className={styles.stampValue} style={{ fontSize: '0.6rem' }}>
-                                    {props.civilCeremonyTime && <div>Civil: {props.civilCeremonyTime}</div>}
-                                    {props.religiousCeremonyTime && <div>Religious: {props.religiousCeremonyTime}</div>}
-                                    {props.partyTime && <div>Party: {props.partyTime}</div>}
+                                    {civilCeremonyTime && <div>Civil: {civilCeremonyTime}</div>}
+                                    {religiousCeremonyTime && <div>Religious: {religiousCeremonyTime}</div>}
+                                    {churchTime && <div>Church: {churchTime}</div>}
+                                    {partyTime && <div>Party: {partyTime}</div>}
+                                    {restaurantTime && <div>Restaurant: {restaurantTime}</div>}
                                 </div>
                             </div>
                         )}
 
-                        {props.customFields && props.customFields.map((field, i) => (
+                        {customFields && customFields.map((field: any, i: number) => (
                             field.label && field.value && (
                                 <div key={i} className={styles.stampBox}>
                                     <div className={styles.stampLabel}>{field.label}</div>
@@ -178,7 +199,7 @@ export default function PassportTemplate(props: PassportTemplateProps) {
                             </div>
                             <div className={styles.field} style={{ gridColumn: 'span 2' }}>
                                 <div className={styles.fieldLabel}>Place of Issue / Locația</div>
-                                <div className={styles.fieldValue} style={{ fontSize: '0.8rem' }}>{props.location.split(',')[0]}</div>
+                                <div className={styles.fieldValue} style={{ fontSize: '0.8rem' }}>{location.split(',')[0]}</div>
                             </div>
                         </div>
 
