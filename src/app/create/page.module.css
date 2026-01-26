@@ -15,26 +15,41 @@
     display: flex;
     flex-direction: column;
     z-index: 10;
-    overflow-y: auto;
+    overflow: hidden;
     height: 100%;
     padding-right: 0.8rem;
 }
 
-/* Custom Scrollbar for sidebars */
-.editorSection::-webkit-scrollbar {
+/* Custom Scrollbar */
+.scrollArea::-webkit-scrollbar {
     width: 4px;
 }
 
-.editorSection::-webkit-scrollbar-track {
+.scrollArea::-webkit-scrollbar-track {
     background: transparent;
 }
 
-.editorSection::-webkit-scrollbar-thumb {
+.scrollArea::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
 }
 
+.scrollArea {
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+    padding-right: 5px;
+}
+
+.cardFooter {
+    flex-shrink: 0;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
 .previewSection {
+    /* ... restul fișierului ... */
     flex: 2;
     background: radial-gradient(circle at center, #111, #000);
     border-radius: 30px;
@@ -81,6 +96,11 @@
     font-family: var(--font-body);
     font-size: 1rem;
     transition: all 0.3s ease;
+}
+
+.input option {
+    background: #111;
+    color: #fff;
 }
 
 
@@ -169,9 +189,14 @@
     background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 28px;
-    padding: 2rem;
-    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    margin-bottom: 0;
     backdrop-filter: blur(20px);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
 }
 
 .inputGrid {
@@ -187,23 +212,24 @@
 .templateGrid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: 8px;
+    padding-bottom: 5px;
 }
 
 .templateBtn {
-    padding: 20px 10px;
+    padding: 10px 4px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     background: rgba(255, 255, 255, 0.02);
     color: #555;
     cursor: pointer;
-    border-radius: 20px;
+    border-radius: 16px;
     font-size: 0.7rem;
     font-weight: 700;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
 }
 
 .templateBtn:hover {

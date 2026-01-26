@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useSession, signOut } from 'next-auth/react'
+import { X } from 'lucide-react'
 
 export default function Header() {
     const pathname = usePathname()
@@ -100,44 +101,74 @@ export default function Header() {
                     </ul>
                 </nav>
 
-                <div className="mobile-hide" style={{ gap: '15px', alignItems: 'center' }}>
+                <div className="mobile-hide" style={{ gap: '25px', alignItems: 'center', display: 'flex' }}>
                     {!session ? (
-                        <Link href="/login" style={{ textDecoration: 'none' }}>
-                            <button style={{
-                                padding: '12px 28px',
-                                borderRadius: '50px',
-                                background: 'var(--accent)',
-                                border: 'none',
-                                color: '#000',
-                                cursor: 'pointer',
-                                fontSize: '0.85rem',
-                                fontWeight: '900',
-                                textTransform: 'uppercase',
-                                transition: 'all 0.3s',
-                                letterSpacing: '0.5px'
-                            }}
-                                onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                                onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                        <>
+                            <Link
+                                href="/login"
+                                style={{
+                                    textDecoration: 'none',
+                                    color: '#ccc',
+                                    fontSize: '0.85rem',
+                                    fontWeight: '700',
+                                    letterSpacing: '1px',
+                                    transition: 'color 0.2s'
+                                }}
+                                onMouseOver={(e) => e.currentTarget.style.color = '#fff'}
+                                onMouseOut={(e) => e.currentTarget.style.color = '#ccc'}
                             >
-                                INTRĂ / ÎNREGISTRARE
-                            </button>
-                        </Link>
+                                LOGIN
+                            </Link>
+                            <Link href="/login?tab=register" style={{ textDecoration: 'none' }}>
+                                <button style={{
+                                    padding: '10px 24px',
+                                    borderRadius: '50px',
+                                    background: 'linear-gradient(135deg, var(--accent) 0%, #f6e27a 100%)',
+                                    border: 'none',
+                                    color: '#000',
+                                    cursor: 'pointer',
+                                    fontSize: '0.85rem',
+                                    fontWeight: '900',
+                                    textTransform: 'uppercase',
+                                    transition: 'all 0.3s',
+                                    letterSpacing: '0.5px',
+                                    boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3)'
+                                }}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(-2px)'
+                                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(212, 175, 55, 0.4)'
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(0)'
+                                        e.currentTarget.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.3)'
+                                    }}
+                                >
+                                    CREEAZĂ CONT
+                                </button>
+                            </Link>
+                        </>
                     ) : (
                         <button
                             onClick={() => signOut({ callbackUrl: '/' })}
                             style={{
-                                padding: '10px 22px',
+                                padding: '8px 20px',
                                 borderRadius: '50px',
-                                background: 'rgba(255,255,255,0.1)',
-                                border: '1px solid rgba(255,255,255,0.2)',
+                                background: 'rgba(255,255,255,0.05)',
+                                border: '1px solid rgba(255,255,255,0.1)',
                                 color: '#fff',
                                 cursor: 'pointer',
-                                fontSize: '0.8rem',
+                                fontSize: '0.75rem',
                                 fontWeight: '700',
                                 transition: 'all 0.3s'
                             }}
-                            onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
-                            onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                            onMouseOver={(e) => {
+                                e.currentTarget.style.background = 'rgba(255,255,255,0.1)'
+                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)'
+                            }}
+                            onMouseOut={(e) => {
+                                e.currentTarget.style.background = 'rgba(255,255,255,0.05)'
+                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'
+                            }}
                         >
                             IEȘIRE
                         </button>
@@ -173,6 +204,26 @@ export default function Header() {
                     pointerEvents: 'auto',
                     animation: 'fadeIn 0.3s ease'
                 }}>
+                    <div
+                        onClick={() => setIsMenuOpen(false)}
+                        style={{
+                            position: 'absolute',
+                            top: '25px',
+                            right: '25px',
+                            background: 'rgba(255,255,255,0.1)',
+                            borderRadius: '50%',
+                            width: '44px',
+                            height: '44px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            border: '1px solid rgba(255,255,255,0.1)'
+                        }}
+                    >
+                        <X color="white" size={24} />
+                    </div>
+
                     <ul style={{ listStyle: 'none', padding: 0, margin: 0, textAlign: 'center' }}>
                         {navLinks.map((link) => (
                             <li key={link.href} style={{ marginBottom: '30px' }}>
@@ -190,20 +241,33 @@ export default function Header() {
                                 </Link>
                             </li>
                         ))}
-                        <li style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                        <li style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center' }}>
                             {!session ? (
-                                <Link href="/login" onClick={() => setIsMenuOpen(false)}>
-                                    <button style={{
-                                        padding: '15px 50px',
-                                        borderRadius: '50px',
-                                        background: 'var(--accent)',
-                                        border: 'none',
-                                        fontSize: '1.1rem',
-                                        fontWeight: '900',
-                                        width: '100%',
-                                        color: '#000'
-                                    }}>INTRĂ / ÎNREGISTRARE</button>
-                                </Link>
+                                <>
+                                    <Link href="/login" onClick={() => setIsMenuOpen(false)} style={{
+                                        color: '#ccc',
+                                        textDecoration: 'none',
+                                        fontWeight: '700',
+                                        fontSize: '1.2rem',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '1px'
+                                    }}>
+                                        LOGIN
+                                    </Link>
+                                    <Link href="/login?tab=register" onClick={() => setIsMenuOpen(false)}>
+                                        <button style={{
+                                            padding: '15px 50px',
+                                            borderRadius: '50px',
+                                            background: 'var(--accent)',
+                                            border: 'none',
+                                            fontSize: '1.1rem',
+                                            fontWeight: '900',
+                                            width: '100%',
+                                            color: '#000',
+                                            boxShadow: '0 5px 20px rgba(212, 175, 55, 0.2)'
+                                        }}>CREEAZĂ CONT</button>
+                                    </Link>
+                                </>
                             ) : (
                                 <button
                                     onClick={() => {

@@ -339,14 +339,14 @@ export default function CreateEvent() {
 
                 {/* --- STEP 0: DESIGN --- */}
                 {currentStep === 0 && (
-                    <div className={styles.editorCard} style={{ animation: 'slideInLeft 0.4s ease' }}>
+                    <div className={`${styles.editorCard} ${styles.scrollArea}`} style={{ animation: 'slideInLeft 0.4s ease' }}>
                         <label className={styles.label} style={{ marginBottom: '1.2rem', display: 'block' }}>ALEGE DESIGN-UL PREFERAT</label>
                         <div className={styles.templateGrid}>
                             <button
                                 onClick={() => setSelectedTemplate('envelope')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'envelope' ? styles.activeTemplate : ''}`}
                             >
-                                <span style={{ fontSize: '1.5rem' }}>💌</span>
+                                <span style={{ fontSize: '1.2rem' }}>💌</span>
                                 Plic 3D
                                 <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
                                     <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
@@ -356,7 +356,7 @@ export default function CreateEvent() {
                                 onClick={() => setSelectedTemplate('netflix')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'netflix' ? styles.activeTemplate : ''}`}
                             >
-                                <span style={{ fontSize: '1.5rem' }}>🎬</span>
+                                <span style={{ fontSize: '1.2rem' }}>🎬</span>
                                 Netflix
                                 <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
                                     <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#ff6b6b', background: 'rgba(229,9,20,0.15)', padding: '2px 4px', borderRadius: '3px' }}>VIDEO</div>
@@ -367,7 +367,7 @@ export default function CreateEvent() {
                                 onClick={() => setSelectedTemplate('boarding')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'boarding' ? styles.activeTemplate : ''}`}
                             >
-                                <span style={{ fontSize: '1.5rem' }}>✈️</span>
+                                <span style={{ fontSize: '1.2rem' }}>✈️</span>
                                 Avion
                                 <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
                                     <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
@@ -377,7 +377,7 @@ export default function CreateEvent() {
                                 onClick={() => setSelectedTemplate('vinyl')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'vinyl' ? styles.activeTemplate : ''}`}
                             >
-                                <span style={{ fontSize: '1.5rem' }}>💿</span>
+                                <span style={{ fontSize: '1.2rem' }}>💿</span>
                                 Vinyl
                                 <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
                                     <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#1ed760', background: 'rgba(29,185,84,0.15)', padding: '2px 4px', borderRadius: '3px' }}>AUDIO</div>
@@ -388,7 +388,7 @@ export default function CreateEvent() {
                                 onClick={() => setSelectedTemplate('scratch')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'scratch' ? styles.activeTemplate : ''}`}
                             >
-                                <span style={{ fontSize: '1.5rem' }}>🎫</span>
+                                <span style={{ fontSize: '1.2rem' }}>🎫</span>
                                 Scratch
                                 <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
                                     <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
@@ -398,7 +398,7 @@ export default function CreateEvent() {
                                 onClick={() => setSelectedTemplate('passport')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'passport' ? styles.activeTemplate : ''}`}
                             >
-                                <span style={{ fontSize: '1.5rem' }}>🛂</span>
+                                <span style={{ fontSize: '1.2rem' }}>🛂</span>
                                 Pașaport
                                 <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
                                     <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
@@ -408,7 +408,7 @@ export default function CreateEvent() {
                                 onClick={() => setSelectedTemplate('news')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'news' ? styles.activeTemplate : ''}`}
                             >
-                                <span style={{ fontSize: '1.5rem' }}>📰</span>
+                                <span style={{ fontSize: '1.2rem' }}>📰</span>
                                 Ziar Vintage
                                 <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
                                     <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
@@ -418,7 +418,7 @@ export default function CreateEvent() {
                                 onClick={() => setSelectedTemplate('cinema')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'cinema' ? styles.activeTemplate : ''}`}
                             >
-                                <span style={{ fontSize: '1.5rem' }}>🎬</span>
+                                <span style={{ fontSize: '1.2rem' }}>🎬</span>
                                 Poster Film
                                 <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
                                     <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
@@ -428,7 +428,7 @@ export default function CreateEvent() {
                                 onClick={() => setSelectedTemplate('festival')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'festival' ? styles.activeTemplate : ''}`}
                             >
-                                <span style={{ fontSize: '1.5rem' }}>🎡</span>
+                                <span style={{ fontSize: '1.2rem' }}>🎡</span>
                                 Festival
                                 <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
                                     <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#1ed760', background: 'rgba(29,185,84,0.15)', padding: '2px 4px', borderRadius: '3px' }}>AUDIO</div>
@@ -439,7 +439,7 @@ export default function CreateEvent() {
                                 onClick={() => setSelectedTemplate('vip')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'vip' ? styles.activeTemplate : ''}`}
                             >
-                                <span style={{ fontSize: '1.5rem' }}>💳</span>
+                                <span style={{ fontSize: '1.2rem' }}>💳</span>
                                 VIP Card
                                 <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
                                     <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#38bdf8', background: 'rgba(56,189,248,0.15)', padding: '2px 4px', borderRadius: '3px' }}>FOTO</div>
@@ -449,7 +449,7 @@ export default function CreateEvent() {
                                 onClick={() => setSelectedTemplate('story')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'story' ? styles.activeTemplate : ''}`}
                             >
-                                <span style={{ fontSize: '1.5rem' }}>📱</span>
+                                <span style={{ fontSize: '1.2rem' }}>📱</span>
                                 Insta Story
                                 <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
                                     <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#ff6b6b', background: 'rgba(229,9,20,0.15)', padding: '2px 4px', borderRadius: '3px' }}>VIDEO</div>
@@ -460,7 +460,7 @@ export default function CreateEvent() {
                                 onClick={() => setSelectedTemplate('chat')}
                                 className={`${styles.templateBtn} ${selectedTemplate === 'chat' ? styles.activeTemplate : ''}`}
                             >
-                                <span style={{ fontSize: '1.5rem' }}>💬</span>
+                                <span style={{ fontSize: '1.2rem' }}>💬</span>
                                 Love Chat
                                 <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '4px' }}>
                                     <div style={{ fontSize: '0.5rem', fontWeight: 'bold', color: '#1ed760', background: 'rgba(29,185,84,0.15)', padding: '2px 4px', borderRadius: '3px' }}>AUDIO</div>
@@ -474,7 +474,7 @@ export default function CreateEvent() {
 
                 {/* --- STEP 1: CONFIGURARE (Merged Info & Details) --- */}
                 {currentStep === 1 && (
-                    <div className={styles.editorCard} style={{ animation: 'slideInLeft 0.4s ease' }}>
+                    <div className={`${styles.editorCard} ${styles.scrollArea}`} style={{ animation: 'slideInLeft 0.4s ease' }}>
                         <div className={styles.inputGrid}>
                             <div className={styles.formGroup}>
                                 <label className={styles.label}>TIP EVENIMENT</label>
@@ -665,7 +665,7 @@ export default function CreateEvent() {
 
                 {/* --- STEP 2: EXTRA & SAVE --- */}
                 {currentStep === 2 && (
-                    <div className={styles.editorCard} style={{ animation: 'slideInLeft 0.4s ease' }}>
+                    <div className={`${styles.editorCard} ${styles.scrollArea}`} style={{ animation: 'slideInLeft 0.4s ease' }}>
 
                         {/* 1. AUTH GATE */}
                         {status === 'unauthenticated' && (
@@ -833,7 +833,7 @@ export default function CreateEvent() {
 
 
                 {/* Navigation Buttons Row */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '1rem' }}>
+                <div className={styles.cardFooter} style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '1rem' }}>
                     <button
                         onClick={() => setCurrentStep(prev => Math.max(0, prev - 1))}
                         disabled={currentStep === 0}
