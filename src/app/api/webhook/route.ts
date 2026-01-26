@@ -108,7 +108,56 @@ export async function POST(req: Request) {
                     }
                 })
 
+                // 4. Send Emails (Resend)
+                try {
+                    const { sendEmail } = await import('@/lib/resend')
 
+                    // --- To User ---
+                    await sendEmail({
+                        to: user.email,
+                        subject: 'Plata Reușită! Invitația ta este acum activă 🎉',
+                        html: `
+                            <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
+                                <h1 style="color: #2e7d32;">Plată Confirmată!</h1>
+                                <p>Bună, ${user.name || 'Utilizator'}!</p>
+                                <p>Îți mulțumim pentru plată. Invitația ta pentru evenimentul "<strong>${updatedEvent.title}</strong>" a fost activată și poate fi acum partajată cu oaspeții.</p>
+                                
+                                <div style="margin: 30px 0; background: #f5f5f5; padding: 20px; border-radius: 12px; border-left: 4px solid #d4af37;">
+                                    <p style="margin: 0; font-weight: bold; color: #555;">Link-ul tău unic:</p>
+                                    <p style="margin: 10px 0; font-size: 1.1rem; color: #000;">${process.env.NEXT_PUBLIC_SITE_URL}/invitatie/${eventId}</p>
+                                    <a href="${process.env.NEXT_PUBLIC_SITE_URL}/invitatie/${eventId}" style="display: inline-block; background: #000; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 6px; margin-top: 10px;">Vezi Invitația</a>
+                                </div>
+
+                                ${invLink ? `
+                                <p>Factura ta fiscală a fost generată și o poți descărca de aici:</p>
+                                <a href="${invLink}" style="color: #d4af37; font-weight: bold;">Descarcă Factura (PDF)</a>
+                                ` : ''}
+
+                                <p style="margin-top: 40px; font-size: 0.8rem; color: #888;">
+                                    Dacă ai nevoie de ajutor, ne poți contacta la ${process.env.ADMIN_EMAIL}.
+                                </p>
+                            </div>
+                        `
+                    })
+
+                    // --- To Admin ---
+                    await sendEmail({
+                        to: process.env.ADMIN_EMAIL || 'contact@invitonline.ro',
+                        subject: `💸 Vânzare Nouă: ${user.email}`,
+                        html: `
+                            <div style="font-family: sans-serif;">
+                                <h2>Vânzare Nouă!</h2>
+                                <p><strong>Client:</strong> ${user.email} (${user.name || 'N/A'})</p>
+                                <p><strong>Eveniment:</strong> ${updatedEvent.title} (${updatedEvent.type})</p>
+                                <p><strong>Suma:</strong> ${(session.amount_total || 0) / 100} ${session.currency?.toUpperCase()}</p>
+                                <p><strong>Stripe Session:</strong> ${session.id}</p>
+                                ${invSeries ? `<p><strong>Factura:</strong> ${invSeries} ${invNumber}</p>` : '<p><strong>Factura:</strong> Nu a fost generată automat (lipsă date CUI?)</p>'}
+                            </div>
+                        `
+                    })
+                } catch (emailErr) {
+                    console.error('Webhook notification emails failed:', emailErr)
+                }
 
             } catch (error) {
                 console.error("Error processing checkout session:", error)
