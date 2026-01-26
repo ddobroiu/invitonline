@@ -16,6 +16,18 @@ interface PassportTemplateProps {
     celebrantName?: string
     customFields?: { label: string, value: string }[]
     photoUrl?: string
+    // Extra details
+    parentsGroom?: string
+    parentsBride?: string
+    godparents?: string
+    motherName?: string
+    fatherName?: string
+    godparentsBaptism?: string
+    civilCeremonyTime?: string
+    religiousCeremonyTime?: string
+    partyTime?: string
+    churchTime?: string
+    restaurantTime?: string
 }
 
 
@@ -116,7 +128,37 @@ export default function PassportTemplate(props: PassportTemplateProps) {
                             </div>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginTop: '10px', borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '10px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginTop: '10px', borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '10px' }}>
+                            {props.godparents && (
+                                <div className={styles.field}>
+                                    <div className={styles.fieldLabel}>Godparents / Nași</div>
+                                    <div className={styles.fieldValue} style={{ fontSize: '0.6rem' }}>{props.godparents}</div>
+                                </div>
+                            )}
+                            {props.godparentsBaptism && (
+                                <div className={styles.field}>
+                                    <div className={styles.fieldLabel}>Godparents / Nași</div>
+                                    <div className={styles.fieldValue} style={{ fontSize: '0.6rem' }}>{props.godparentsBaptism}</div>
+                                </div>
+                            )}
+                            {props.parentsGroom && (
+                                <div className={styles.field}>
+                                    <div className={styles.fieldLabel}>Groom's Parents</div>
+                                    <div className={styles.fieldValue} style={{ fontSize: '0.6rem' }}>{props.parentsGroom}</div>
+                                </div>
+                            )}
+                            {props.parentsBride && (
+                                <div className={styles.field}>
+                                    <div className={styles.fieldLabel}>Bride's Parents</div>
+                                    <div className={styles.fieldValue} style={{ fontSize: '0.6rem' }}>{props.parentsBride}</div>
+                                </div>
+                            )}
+
+                            {/* Program */}
+                            {props.civilCeremonyTime && <div className={styles.field}><div className={styles.fieldLabel}>Civil Ceremony</div><div className={styles.fieldValue} style={{ fontSize: '0.6rem' }}>{props.civilCeremonyTime}</div></div>}
+                            {props.religiousCeremonyTime && <div className={styles.field}><div className={styles.fieldLabel}>Religious</div><div className={styles.fieldValue} style={{ fontSize: '0.6rem' }}>{props.religiousCeremonyTime}</div></div>}
+                            {props.partyTime && <div className={styles.field}><div className={styles.fieldLabel}>Party</div><div className={styles.fieldValue} style={{ fontSize: '0.6rem' }}>{props.partyTime}</div></div>}
+
                             {props.customFields && props.customFields.map((field, i) => (
                                 field.label && field.value && (
                                     <div key={i} className={styles.field}>

@@ -186,9 +186,18 @@ export default function ScratchTemplate({
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                                 <div>
                                     <div className={styles.detailLabel}><Users size={12} /> Distribuție</div>
+
+                                    {parentsGroom && <div><strong>P. Mire:</strong> {parentsGroom}</div>}
+                                    {parentsBride && <div><strong>P. Mireasă:</strong> {parentsBride}</div>}
+                                    {godparents && <div><strong>Nași:</strong> {godparents}</div>}
+
+                                    {motherName && <div><strong>Mama:</strong> {motherName}</div>}
+                                    {fatherName && <div><strong>Tata:</strong> {fatherName}</div>}
+                                    {godparentsBaptism && <div><strong>Nași:</strong> {godparentsBaptism}</div>}
+
                                     {customFields && customFields.map((field, i) => (
                                         field.label && field.value && (
-                                            <div key={i}>{field.label}: {field.value}</div>
+                                            <div key={i}><strong>{field.label}:</strong> {field.value}</div>
                                         )
                                     ))}
                                     {dressCode && <div style={{ color: '#e67e22', fontWeight: 800 }}>Dress: {dressCode}</div>}

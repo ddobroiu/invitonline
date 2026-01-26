@@ -43,6 +43,7 @@ interface Props {
     dressCode?: string
     customFields?: { label: string, value: string }[]
     videoUrl?: string
+    photoUrl?: string
 }
 
 
@@ -53,7 +54,7 @@ export default function NetflixTemplate({
     civilCeremonyTime, civilCeremonyLoc, religiousCeremonyTime, religiousCeremonyLoc,
     partyTime, partyLoc, churchTime, churchLoc, restaurantTime, restaurantLoc,
     age, partyType, theme, specialInstructions, dressCode,
-    customFields, videoUrl
+    customFields, videoUrl, photoUrl
 }: Props) {
 
     const [showRSVP, setShowRSVP] = useState(false)
@@ -80,7 +81,7 @@ export default function NetflixTemplate({
             <div
                 className={styles.hero}
                 style={{
-                    backgroundImage: 'linear-gradient(to top, #000 5%, transparent 95%), url("https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=2070")'
+                    backgroundImage: `linear-gradient(to top, #000 5%, transparent 95%), url("${photoUrl || 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=2070'}")`
                 }}
             >
                 <div className={styles.heroContent}>
@@ -176,6 +177,15 @@ export default function NetflixTemplate({
                             <div className={styles.episodeTitle}>DISTRIBUȚIE SPECIALĂ (CAST)</div>
                             <div className={styles.episodeDesc}>
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '20px', marginTop: '10px' }}>
+                                    {/* Explicit Cast Members */}
+                                    {parentsGroom && <div><strong>Părinți Mire:</strong><br />{parentsGroom}</div>}
+                                    {parentsBride && <div><strong>Părinți Mireasă:</strong><br />{parentsBride}</div>}
+                                    {godparents && <div><strong>Nași:</strong><br />{godparents}</div>}
+
+                                    {motherName && <div><strong>Mama:</strong><br />{motherName}</div>}
+                                    {fatherName && <div><strong>Tata:</strong><br />{fatherName}</div>}
+                                    {godparentsBaptism && <div><strong>Nași:</strong><br />{godparentsBaptism}</div>}
+
                                     {customFields && customFields.map((field, i) => (
                                         field.label && field.value && (
                                             <div key={i}>

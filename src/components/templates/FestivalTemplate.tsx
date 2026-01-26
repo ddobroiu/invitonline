@@ -13,6 +13,17 @@ interface FestivalTemplateProps {
     godparents?: string
     customFields?: { label: string, value: string }[]
     audioUrl?: string
+    // Extra
+    parentsGroom?: string
+    parentsBride?: string
+    motherName?: string
+    fatherName?: string
+    godparentsBaptism?: string
+    civilCeremonyTime?: string
+    religiousCeremonyTime?: string
+    partyTime?: string
+    churchTime?: string
+    restaurantTime?: string
 }
 
 
@@ -74,6 +85,12 @@ export default function FestivalTemplate(props: FestivalTemplateProps) {
                     <div className={styles.performerGrid}>
                         <div className={styles.mainPerformer}>{mainTitle}</div>
                         <div className={styles.supportAct}>
+                            {props.godparents && <div style={{ marginBottom: '5px' }}>★ SPECIAL GUESTS (NAȘI): {props.godparents.toUpperCase()} ★</div>}
+                            {props.godparentsBaptism && <div style={{ marginBottom: '5px' }}>★ SPECIAL GUESTS (NAȘI): {props.godparentsBaptism.toUpperCase()} ★</div>}
+
+                            {props.parentsGroom && <div style={{ display: 'inline-block', margin: '0 10px' }}>PROD. BY: {props.parentsGroom.toUpperCase()}</div>}
+                            {props.parentsBride && <div style={{ display: 'inline-block', margin: '0 10px' }}>CO-PROD. BY: {props.parentsBride.toUpperCase()}</div>}
+
                             {props.customFields && props.customFields.map((field, i) => (
                                 field.label && field.value && (
                                     <div key={i} style={{ display: 'inline-block', margin: '0 10px', fontSize: '0.7rem' }}>
@@ -81,10 +98,22 @@ export default function FestivalTemplate(props: FestivalTemplateProps) {
                                     </div>
                                 )
                             ))}
-                            {(!props.customFields || props.customFields.every(f => !f.label)) && (
+                            {(!props.customFields && !props.godparents) && (
                                 props.eventType === 'nunta' ? 'SPECIAL GUESTS: FAMILIA & PRIETENII' : 'FEATURING: GOOD VIBES ONLY'
                             )}
                         </div>
+
+                        {/* Set Times */}
+                        {(props.civilCeremonyTime || props.religiousCeremonyTime || props.partyTime) && (
+                            <div style={{ marginTop: '15px', border: '1px solid rgba(255,255,255,0.3)', padding: '5px' }}>
+                                <div style={{ fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '5px' }}>SET TIMES</div>
+                                <div style={{ fontSize: '0.7rem', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                                    {props.civilCeremonyTime && <span>CIVIL: {props.civilCeremonyTime}</span>}
+                                    {props.religiousCeremonyTime && <span>RELIGIOUS: {props.religiousCeremonyTime}</span>}
+                                    {props.partyTime && <span>PARTY: {props.partyTime}</span>}
+                                </div>
+                            </div>
+                        )}
 
                     </div>
 

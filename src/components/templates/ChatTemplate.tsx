@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import styles from './ChatTemplate.module.css'
 import RSVPModal from '@/components/RSVPModal'
-import { ChevronLeft, Play, Pause, MapPin, Mic, Send, Image as ImageIcon } from 'lucide-react'
+import { ChevronLeft, Play, Pause, MapPin, Mic, Send, Image as ImageIcon, Phone, Video, MoreVertical, Smile, Paperclip } from 'lucide-react'
 
 interface Props {
     id?: string
@@ -25,7 +25,7 @@ interface Message {
     id: number
     type: MessageType
     content: string
-    sender: 'system' | 'me' | 'them' // them = miri, me = invitat (pt reply-uri viitoare)
+    sender: 'system' | 'me' | 'them'
     timestamp: string
 }
 
@@ -36,18 +36,17 @@ export default function ChatTemplate(props: Props) {
     const [showRSVP, setShowRSVP] = useState(false)
     const [isPlaying, setIsPlaying] = useState(false)
     const audioRef = useRef<HTMLAudioElement>(null)
-    const chatEndRef = useRef<HTMLDivElement>(null)
+    const messagesEndRef = useRef<HTMLDivElement>(null)
 
     // Scriptul conversației
     const script = [
         { type: 'text', content: `Salut! 👋`, delay: 800 },
-        { type: 'text', content: props.message || `Avem o veste mare pentru tine!`, delay: 1500 },
-        { type: 'text', content: `Ne-ar plăcea enorm să fii alături de noi la ${props.eventType || 'evenimentul nostru'}! 💍🎉`, delay: 1500 },
+        { type: 'text', content: props.message || `Avem o veste mare!`, delay: 1500 },
+        { type: 'text', content: `Ne căsătorim pe ${props.date}! 💍🎉`, delay: 1500 },
         props.photoUrl ? { type: 'image', content: props.photoUrl, delay: 1000 } : null,
-        { type: 'text', content: `Data: ${props.date}`, delay: 1200 },
-        { type: 'location', content: props.location, delay: 1000 },
+        { type: 'location', content: props.location, delay: 1200 },
         props.audioUrl ? { type: 'audio', content: props.audioUrl, delay: 1000 } : null,
-        { type: 'text', content: `Te așteptăm cu drag! Ce zici? 👇`, delay: 1000 }
+        { type: 'text', content: `Te așteptăm cu drag! Ce zici, poți ajunge?`, delay: 1000 }
     ].filter(Boolean) as { type: MessageType, content: string, delay: number }[]
 
     useEffect(() => {
@@ -61,12 +60,10 @@ export default function ChatTemplate(props: Props) {
             }
 
             setIsTyping(true)
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
 
-            // Scroll to bottom when typing starts
-            chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-
-            // Typing duration (randomized slightly)
-            const typingTime = 800 + Math.random() * 500
+            // Typing duration logic
+            const typingTime = 1000 + Math.random() * 500
 
             timeout = setTimeout(() => {
                 setIsTyping(false)
@@ -76,13 +73,13 @@ export default function ChatTemplate(props: Props) {
                     id: Date.now(),
                     type: msgData.type,
                     content: msgData.content,
-                    sender: 'them',
+                    sender: 'left', // THEM = Left in WhatsApp
                     timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                }
+                } as any // TS hack for sender type string mismatch if any
 
                 setMessages(prev => [...prev, newMsg])
 
-                // Wait before starting next typing
+                // Wait before next
                 setTimeout(() => {
                     msgIndex++
                     playNextMessage()
@@ -91,15 +88,13 @@ export default function ChatTemplate(props: Props) {
             }, typingTime)
         }
 
-        // Start delay
         setTimeout(playNextMessage, 1000)
-
         return () => clearTimeout(timeout)
-    }, []) // Run once on mount
+    }, [])
 
-    // Auto-scroll logic
+    // Scroll to bottom whenever messages change
     useEffect(() => {
-        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }, [messages, isTyping])
 
     const handleAudioPlay = () => {
@@ -117,41 +112,49 @@ export default function ChatTemplate(props: Props) {
         <div className={styles.chatContainer}>
             <div className={styles.mobileScreen}>
 
-                {/* Header */}
+                {/* WHATSAPP HEADER */}
                 <div className={styles.header}>
                     <ChevronLeft className={styles.backBtn} size={24} />
                     <div className={styles.avatar}>
-                        {props.title.charAt(0)}
+                        {props.photoUrl ? (
+                            <img src={props.photoUrl} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        ) : props.title.charAt(0)}
                     </div>
                     <div className={styles.headerInfo}>
-                        <div className={styles.chatTitle}>{props.title.split('&')[0]} & {props.title.split('&')[1] || 'Noi'}</div>
-                        <div className={`${styles.status} ${isTyping ? 'online' : ''}`}>
-                            {isTyping ? 'scrie...' : 'Online'}
+                        <div className={styles.chatTitle}>{props.title}</div>
+                        <div className={styles.status}>
+                            {isTyping ? 'typing...' : 'online'}
                         </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '15px' }}>
+                        <Video size={20} />
+                        <Phone size={20} />
+                        <MoreVertical size={20} />
                     </div>
                 </div>
 
-                {/* Messages List */}
+                {/* MESSAGES AREA */}
                 <div className={styles.messagesList}>
-                    <div style={{ textAlign: 'center', color: '#999', fontSize: '0.7rem', margin: '10px 0' }}>Iti scriu azi</div>
+                    <div style={{ textAlign: 'center', background: 'rgba(225,245,254,0.9)', padding: '5px 10px', borderRadius: '8px', fontSize: '0.75rem', color: '#555', alignSelf: 'center', marginBottom: '15px', boxShadow: '0 1px 1px rgba(0,0,0,0.1)' }}>
+                        Messages are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them.
+                    </div>
 
                     {messages.map(msg => (
-                        <div key={msg.id} className={`${styles.messageRow} ${msg.sender === 'me' ? styles.right : styles.left}`}>
-                            <div className={`${styles.bubble} ${msg.type === 'image' ? styles.imageBubble : ''}`}>
-
-                                {/* TEXT MSG */}
+                        <div key={msg.id} className={`${styles.messageRow} ${styles.left}`}>
+                            <div className={styles.bubble}>
+                                {/* TEXT */}
                                 {msg.type === 'text' && msg.content}
 
-                                {/* IMAGE MSG */}
+                                {/* IMAGE */}
                                 {msg.type === 'image' && (
                                     <img src={msg.content} alt="Event" className={styles.chatImage} />
                                 )}
 
-                                {/* AUDIO MSG */}
+                                {/* AUDIO */}
                                 {msg.type === 'audio' && (
                                     <div className={styles.audioBubble}>
                                         <button className={styles.playBtn} onClick={handleAudioPlay}>
-                                            {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+                                            {isPlaying ? <Pause size={16} fill="white" /> : <Play size={16} fill="white" style={{ marginLeft: '2px' }} />}
                                         </button>
                                         <div className={styles.audioWave}>
                                             <div className={styles.audioProgress} style={{ width: isPlaying ? '50%' : '0%', animation: isPlaying ? 'pulse 1s infinite' : 'none' }}></div>
@@ -160,64 +163,61 @@ export default function ChatTemplate(props: Props) {
                                     </div>
                                 )}
 
-                                {/* LOCATION MSG */}
+                                {/* LOCATION */}
                                 {msg.type === 'location' && (
                                     <div className={styles.locationBubble}>
-                                        <div className={styles.mapPreview} style={{
-                                            background: `url('https://maps.googleapis.com/maps/api/staticmap?center=${encodeURIComponent(msg.content)}&zoom=14&size=400x200&sensor=false') center/cover no-repeat, #eee url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Google_Maps_icon_%282020%29.svg/1200px-Google_Maps_icon_%282020%29.svg.png') center/30% no-repeat`
-                                        }}>
-                                            <MapPin className={styles.mapPin} size={30} fill="#ea4335" />
-                                        </div>
-                                        <div style={{ fontWeight: 'bold' }}>{msg.content}</div>
+                                        <div style={{ fontSize: '0.85rem', fontWeight: '600', marginBottom: '5px' }}>📍 Locație:</div>
+                                        <div>{msg.content}</div>
                                         {props.locationUrl && (
-                                            <a
-                                                href={props.locationUrl}
-                                                target="_blank"
-                                                style={{ color: '#007aff', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}
-                                                onClick={(e) => e.stopPropagation()}
-                                            >
-                                                Deschide în Hărți
-                                            </a>
+                                            <div style={{ color: '#007aff', fontSize: '0.8rem', marginTop: '5px', cursor: 'pointer' }} onClick={() => window.open(props.locationUrl, '_blank')}>
+                                                Vezi pe Hartă
+                                            </div>
                                         )}
                                     </div>
                                 )}
 
-                                <div className={styles.timeStamp}>{msg.timestamp}</div>
+                                <div className={styles.metaRow}>
+                                    <span className={styles.timeStamp}>{msg.timestamp}</span>
+                                </div>
                             </div>
                         </div>
                     ))}
 
                     {isTyping && (
-                        <div className={`${styles.messageRow} ${styles.left}`}>
-                            <div className={styles.typing}>
-                                <div className={styles.dot}></div>
-                                <div className={styles.dot}></div>
-                                <div className={styles.dot}></div>
-                            </div>
+                        <div className={styles.typing}>
+                            <div className={styles.dot}></div>
+                            <div className={styles.dot}></div>
+                            <div className={styles.dot}></div>
                         </div>
                     )}
 
-                    <div ref={chatEndRef} />
+                    <div ref={messagesEndRef} style={{ height: '10px' }} />
                 </div>
 
-                {/* Footer Actions */}
+                {/* ACTION ZONE (Floating above footer) */}
                 {showActions && (
-                    <div className={styles.footer} style={{ animation: 'slideIn 0.5s ease' }}>
-                        <button className={`${styles.actionBtn} ${styles.primary}`} onClick={() => setShowRSVP(true)}>
-                            Vin cu Drag! 🥂
+                    <div className={`${styles.actionZone} ${styles.visible}`}>
+                        <button className={`${styles.whatsappBtn} ${styles.primary}`} onClick={() => setShowRSVP(true)}>
+                            DA, Confirm! 🥂
                         </button>
-                        <button className={styles.actionBtn} onClick={() => alert('Te rugăm să răspunzi la RSVP!')}>
-                            Îmi pare rău 😢
+                        <button className={styles.whatsappBtn} onClick={() => alert('Sperăm să poți ajunge data viitoare!')}>
+                            Nu pot 😢
                         </button>
-                        {props.locationUrl && (
-                            <button className={styles.actionBtn} onClick={() => window.open(props.locationUrl, '_blank')}>
-                                📍 Harta
-                            </button>
-                        )}
                     </div>
                 )}
 
-                {/* RSVP Modal */}
+                {/* WHATSAPP FOOTER (Fake Input) */}
+                <div className={styles.footer}>
+                    <Smile size={24} color="#888" />
+                    <Paperclip size={24} color="#888" style={{ marginLeft: '10px' }} />
+                    <div className={styles.fakeInput}>
+                        Type a message
+                    </div>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#075e54', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Mic size={20} color="white" />
+                    </div>
+                </div>
+
                 <RSVPModal
                     isOpen={showRSVP}
                     onClose={() => setShowRSVP(false)}

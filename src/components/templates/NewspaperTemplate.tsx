@@ -13,6 +13,18 @@ interface NewspaperTemplateProps {
     dressCode?: string
     customFields?: { label: string, value: string }[]
     photoUrl?: string
+    // Extra
+    parentsGroom?: string
+    parentsBride?: string
+    godparents?: string
+    motherName?: string
+    fatherName?: string
+    godparentsBaptism?: string
+    civilCeremonyTime?: string
+    religiousCeremonyTime?: string
+    partyTime?: string
+    churchTime?: string
+    restaurantTime?: string
 }
 
 
@@ -102,6 +114,43 @@ export default function NewspaperTemplate(props: NewspaperTemplateProps) {
 
                     {/* Dynamic Custom Fields Section */}
                     <div style={{ gridColumn: 'span 2', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px', marginTop: '20px', borderTop: '2px solid #222', borderBottom: '2px solid #222', padding: '10px 0' }}>
+                        {props.godparents && (
+                            <div className={styles.adBox} style={{ border: 'none' }}>
+                                <div className={styles.adTitle}>Nași (Godparents)</div>
+                                <div className={styles.adText}>{props.godparents}</div>
+                            </div>
+                        )}
+                        {props.godparentsBaptism && (
+                            <div className={styles.adBox} style={{ border: 'none' }}>
+                                <div className={styles.adTitle}>Nași Botez</div>
+                                <div className={styles.adText}>{props.godparentsBaptism}</div>
+                            </div>
+                        )}
+                        {props.parentsGroom && (
+                            <div className={styles.adBox} style={{ border: 'none' }}>
+                                <div className={styles.adTitle}>Părinți Mire</div>
+                                <div className={styles.adText}>{props.parentsGroom}</div>
+                            </div>
+                        )}
+                        {props.parentsBride && (
+                            <div className={styles.adBox} style={{ border: 'none' }}>
+                                <div className={styles.adTitle}>Părinți Mireasă</div>
+                                <div className={styles.adText}>{props.parentsBride}</div>
+                            </div>
+                        )}
+
+                        {/* Program Summary */}
+                        {(props.civilCeremonyTime || props.religiousCeremonyTime || props.partyTime) && (
+                            <div className={styles.adBox} style={{ border: 'none' }}>
+                                <div className={styles.adTitle}>PROGRAM</div>
+                                <div className={styles.adText} style={{ fontSize: '0.7rem' }}>
+                                    {props.civilCeremonyTime && <div>Civilă: {props.civilCeremonyTime}</div>}
+                                    {props.religiousCeremonyTime && <div>Religioasă: {props.religiousCeremonyTime}</div>}
+                                    {props.partyTime && <div>Petrecere: {props.partyTime}</div>}
+                                </div>
+                            </div>
+                        )}
+
                         {props.customFields && props.customFields.map((field, i) => (
                             field.label && field.value && (
                                 <div key={i} className={styles.adBox} style={{ border: 'none' }}>

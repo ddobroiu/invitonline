@@ -83,6 +83,17 @@ export default function EnvelopeTemplate({
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                                 <div style={{ fontWeight: 800, color: '#b8860b', borderBottom: '1px solid #eee', marginBottom: '4px' }}><Users size={12} /> Distribuție</div>
+
+                                {/* Wedding Details */}
+                                {parentsGroom && <div><strong>Părinți Mire:</strong> {parentsGroom}</div>}
+                                {parentsBride && <div><strong>Părinți Mireasă:</strong> {parentsBride}</div>}
+                                {godparents && <div><strong>Nași:</strong> {godparents}</div>}
+
+                                {/* Baptism Details */}
+                                {motherName && <div><strong>Mama:</strong> {motherName}</div>}
+                                {fatherName && <div><strong>Tata:</strong> {fatherName}</div>}
+                                {godparentsBaptism && <div><strong>Nași:</strong> {godparentsBaptism}</div>}
+
                                 {customFields && customFields.map((field, i) => (
                                     field.label && field.value && (
                                         <div key={i}><strong>{field.label}:</strong> {field.value}</div>

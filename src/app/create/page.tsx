@@ -542,18 +542,20 @@ export default function CreateEvent() {
                             </div>
 
                             {/* Media Upload Section - Only for Netflix and Vinyl */}
-                            {(selectedTemplate === 'netflix' || selectedTemplate === 'vinyl' || selectedTemplate === 'festival' || selectedTemplate === 'story') && (
+                            {(selectedTemplate === 'netflix' || selectedTemplate === 'vinyl' || selectedTemplate === 'festival' || selectedTemplate === 'story' || selectedTemplate === 'chat') && (
                                 <div className={`${styles.formGroup} ${styles.fullWidth}`} style={{ marginTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem' }}>
                                     <label className={styles.label} style={{ color: 'var(--accent)', marginBottom: '0.5rem' }}>
                                         {selectedTemplate === 'netflix' ? '🎬 MEDIA PENTRU NETFLIX' :
                                             selectedTemplate === 'festival' ? '🎵 MEDIA PENTRU FESTIVAL' :
-                                                selectedTemplate === 'story' ? '🎥 VIDEO PENTRU STORY' : '🎵 MEDIA PENTRU VINYL'}
+                                                selectedTemplate === 'story' ? '🎥 VIDEO PENTRU STORY' :
+                                                    selectedTemplate === 'chat' ? '🎤 VOCAL PENTRU CHAT' : '🎵 MEDIA PENTRU VINYL'}
                                     </label>
                                     <p style={{ fontSize: '0.8rem', color: '#888', marginBottom: '1rem' }}>
                                         {selectedTemplate === 'netflix'
                                             ? 'Încarcă un video care va fi afișat în invitația ta Netflix (opțional)'
                                             : selectedTemplate === 'story' ? 'Încarcă un video vertical pentru fundal'
-                                                : 'Încarcă un fișier audio care va fi redat în invitația ta (opțional)'}
+                                                : selectedTemplate === 'chat' ? 'Încarcă un mesaj audio vocal (opțional)'
+                                                    : 'Încarcă un fișier audio care va fi redat în invitația ta (opțional)'}
                                     </p>
 
                                     {(selectedTemplate === 'netflix' || selectedTemplate === 'story') && (
@@ -565,7 +567,7 @@ export default function CreateEvent() {
                                         />
                                     )}
 
-                                    {(selectedTemplate === 'vinyl' || selectedTemplate === 'festival') && (
+                                    {(selectedTemplate === 'vinyl' || selectedTemplate === 'festival' || selectedTemplate === 'chat') && (
                                         <MediaUploader
                                             type="audio"
                                             currentUrl={formData.audioUrl}
@@ -577,7 +579,7 @@ export default function CreateEvent() {
                             )}
 
                             {/* Image Upload Section */}
-                            {(selectedTemplate === 'passport' || selectedTemplate === 'news' || selectedTemplate === 'cinema' || selectedTemplate === 'scratch' || selectedTemplate === 'vip' || selectedTemplate === 'story') && (
+                            {(selectedTemplate === 'passport' || selectedTemplate === 'news' || selectedTemplate === 'cinema' || selectedTemplate === 'scratch' || selectedTemplate === 'vip' || selectedTemplate === 'story' || selectedTemplate === 'chat') && (
                                 <div className={`${styles.formGroup} ${styles.fullWidth}`} style={{ marginTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem' }}>
                                     <label className={styles.label} style={{ color: 'var(--accent)', marginBottom: '0.5rem' }}>
                                         📸 FOTOGRAFIE PERSONALIZATĂ
@@ -588,7 +590,8 @@ export default function CreateEvent() {
                                                 selectedTemplate === 'cinema' ? 'Încarcă o imagine pentru posterul filmului' :
                                                     selectedTemplate === 'vip' ? 'Încarcă o imagine care va apărea ca fundal pe cardul VIP' :
                                                         selectedTemplate === 'story' ? 'Încarcă o imagine de fundal (dacă nu ai video)' :
-                                                            'Încarcă o imagine care va apărea sub zona răzuibilă ca surpriză'}
+                                                            selectedTemplate === 'chat' ? 'Încarcă o poză pentru chat' :
+                                                                'Încarcă o imagine care va apărea sub zona răzuibilă ca surpriză'}
                                     </p>
 
                                     <ImageUploader
@@ -600,7 +603,8 @@ export default function CreateEvent() {
                                                 selectedTemplate === 'news' ? 'Fotografie Articol' :
                                                     selectedTemplate === 'cinema' ? 'Poster Film' :
                                                         selectedTemplate === 'vip' ? 'Fundal Card' :
-                                                            selectedTemplate === 'story' ? 'Fundal Foto' : 'Premiu Ascuns'
+                                                            selectedTemplate === 'story' ? 'Fundal Foto' :
+                                                                selectedTemplate === 'chat' ? 'Poză Chat' : 'Premiu Ascuns'
                                         }
                                     />
                                 </div>

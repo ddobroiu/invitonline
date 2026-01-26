@@ -116,14 +116,22 @@ export default function BoardingPassTemplate({
                                     <div style={{ fontSize: '0.85rem' }}>{message}</div>
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                    <div className={styles.detailLabel}><Users size={12} /> Distribuție</div>
+                                    <div className={styles.detailLabel}><Users size={12} /> Flight Crew (Distribuție)</div>
                                     <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>
+                                        {parentsGroom && <div><strong>P. Mire:</strong> {parentsGroom}</div>}
+                                        {parentsBride && <div><strong>P. Mireasă:</strong> {parentsBride}</div>}
+                                        {godparents && <div><strong>Nași:</strong> {godparents}</div>}
+
+                                        {motherName && <div><strong>Mama:</strong> {motherName}</div>}
+                                        {fatherName && <div><strong>Tata:</strong> {fatherName}</div>}
+                                        {godparentsBaptism && <div><strong>Nași:</strong> {godparentsBaptism}</div>}
+
                                         {customFields && customFields.map((field, i) => (
                                             field.label && field.value && (
-                                                <div key={i}>{field.label}: {field.value}</div>
+                                                <div key={i}><strong>{field.label}:</strong> {field.value}</div>
                                             )
                                         ))}
-                                        {dressCode && <div style={{ color: '#2563eb', fontWeight: 800 }}>Dress: {dressCode}</div>}
+                                        {dressCode && <div style={{ color: '#2563eb', fontWeight: 800, marginTop: '5px' }}>Dress: {dressCode}</div>}
                                     </div>
 
                                 </div>

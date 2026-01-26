@@ -61,6 +61,10 @@ export default function CinemaTemplate(props: CinemaTemplateProps) {
                         <span>ÎN ROLURILE PRINCIPALE: {mainNames}</span>
                     </div>
                     <div className={styles.creditLine}>
+                        {props.parentsGroom && <span style={{ marginRight: '15px' }}>PRODUS DE (P. Mire): {props.parentsGroom.toUpperCase()}</span>}
+                        {props.parentsBride && <span style={{ marginRight: '15px' }}>CO-PRODUS DE (P. Mireasă): {props.parentsBride.toUpperCase()}</span>}
+                        {props.godparents && <span style={{ marginRight: '15px' }}>DISTRIBUIT DE (Nași): {props.godparents.toUpperCase()}</span>}
+
                         {props.customFields && props.customFields.map((field, i) => (
                             field.label && field.value && (
                                 <span key={i} style={{ marginRight: '15px' }}>{field.label.toUpperCase()}: {field.value.toUpperCase()}</span>

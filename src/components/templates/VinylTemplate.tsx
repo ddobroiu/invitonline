@@ -43,6 +43,7 @@ interface Props {
     dressCode?: string
     customFields?: { label: string, value: string }[]
     audioUrl?: string
+    photoUrl?: string
 }
 
 
@@ -53,7 +54,7 @@ export default function VinylTemplate({
     civilCeremonyTime, civilCeremonyLoc, religiousCeremonyTime, religiousCeremonyLoc,
     partyTime, partyLoc, churchTime, churchLoc, restaurantTime, restaurantLoc,
     age, partyType, theme, specialInstructions, dressCode,
-    customFields, audioUrl
+    customFields, audioUrl, photoUrl
 }: Props) {
 
     const [isPlaying, setIsPlaying] = useState(false)
@@ -86,12 +87,16 @@ export default function VinylTemplate({
                 <div className={styles.vinylWrapper} onClick={togglePlayPause}>
                     <div className={`${styles.vinyl} ${isPlaying ? styles.playing : ''}`}>
                         <div className={styles.label}>
-                            <div>
-                                <Disc size={20} style={{ marginBottom: '5px' }} />
-                                SIDE A<br />
-                                2026<br />
-                                {eventType === 'nunta' ? 'WDD' : 'BND'}
-                            </div>
+                            {photoUrl ? (
+                                <img src={photoUrl} alt="Label" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                            ) : (
+                                <div>
+                                    <Disc size={20} style={{ marginBottom: '5px' }} />
+                                    SIDE A<br />
+                                    2026<br />
+                                    {eventType === 'nunta' ? 'WDD' : 'BND'}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -138,10 +143,19 @@ export default function VinylTemplate({
                             <p style={{ marginTop: '10px', fontStyle: 'italic', fontSize: '0.85rem' }}>"{message}"</p>
                         </div>
                         <div style={{ fontSize: '0.8rem', opacity: 0.9 }}>
-                            <div style={{ fontSize: '0.7rem', color: '#888', fontWeight: 800, textTransform: 'uppercase', marginBottom: '8px' }}><Users size={10} /> Distribuție</div>
+                            <div style={{ fontSize: '0.7rem', color: '#888', fontWeight: 800, textTransform: 'uppercase', marginBottom: '8px' }}><Users size={10} /> Distribuție (Credits)</div>
+
+                            {parentsGroom && <div><strong>P. Mire:</strong> {parentsGroom}</div>}
+                            {parentsBride && <div><strong>P. Mireasă:</strong> {parentsBride}</div>}
+                            {godparents && <div><strong>Nași:</strong> {godparents}</div>}
+
+                            {motherName && <div><strong>Mama:</strong> {motherName}</div>}
+                            {fatherName && <div><strong>Tata:</strong> {fatherName}</div>}
+                            {godparentsBaptism && <div><strong>Nași:</strong> {godparentsBaptism}</div>}
+
                             {customFields && customFields.map((field, i) => (
                                 field.label && field.value && (
-                                    <div key={i}>{field.label}: {field.value}</div>
+                                    <div key={i}><strong>{field.label}:</strong> {field.value}</div>
                                 )
                             ))}
                             {dressCode && <div style={{ color: 'var(--accent)', marginTop: '5px' }}>Dress: {dressCode}</div>}
