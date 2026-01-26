@@ -198,6 +198,7 @@
 }
 
 /* Phone Mockup - HYPER REALISTIC */
+/* Phone Mockup - HYPER REALISTIC */
 .phoneFrame {
     width: 320px;
     height: 660px;
@@ -209,6 +210,28 @@
         0 40px 80px rgba(0, 0, 0, 0.9),
         0 0 0 1px rgba(255, 255, 255, 0.05);
     overflow: hidden;
+}
+
+@media (max-width: 900px) {
+    .previewSwitcher {
+        display: none !important;
+    }
+
+    .phoneFrame {
+        width: 100% !important;
+        height: 100% !important;
+        max-height: 80vh;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .statusBar,
+    .homeBar,
+    .phoneFrame::before,
+    .phoneFrame::after {
+        display: none !important;
+    }
 }
 
 @media (min-height: 900px) {

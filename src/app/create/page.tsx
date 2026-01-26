@@ -172,6 +172,22 @@ function CreateEventContent() {
     })
 
     const [previewMode, setPreviewMode] = useState<'pc' | 'mobile'>('pc')
+
+    // Detect mobile device
+    useEffect(() => {
+        const checkMobile = () => {
+            if (window.innerWidth < 900) {
+                setPreviewMode('mobile')
+            } else {
+                setPreviewMode('pc')
+            }
+        }
+
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
+
     const [currentStep, setCurrentStep] = useState(0)
     const steps = [
         { name: 'Design', icon: <Palette size={16} /> },
@@ -445,27 +461,6 @@ function CreateEventContent() {
                                     <option value="petrecere">Petrecere</option>
                                 </select>
                             </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>DATA</label>
-                                <input className={styles.input} name="date" value={formData.date} onChange={handleChange} placeholder="Ex: 15 Iunie" />
-                            </div>
-                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                                <label className={styles.label}>TITLU / NUME</label>
-                                <input className={styles.input} name="title" value={formData.title} onChange={handleChange} />
-                            </div>
-                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                                <label className={styles.label}>LOCAȚIE (GOOGLE MAPS)</label>
-                                <LocationPicker
-                                    initialValue={formData.location}
-                                    onLocationSelect={(address: string, url: string) => {
-                                        setFormData(prev => ({ ...prev, location: address, locationUrl: url }))
-                                    }}
-                                />
-                            </div>
-                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                                <label className={styles.label}>MESAJ PERSONALIZAT</label>
-                                <textarea className={styles.input} name="message" value={formData.message} onChange={handleChange} rows={2} />
-                            </div>
 
                             {/* Custom Fields */}
                             <div className={`${styles.formGroup} ${styles.fullWidth}`} style={{ marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem' }}>
@@ -497,6 +492,55 @@ function CreateEventContent() {
                                     )}
                                 </div>
                             </div>
+
+                            {/* CONFIGURARE MEDIA (FOTO/VIDEO/AUDIO) - Moved to bottom & Optional */}
+                            {['story', 'netflix', 'chat', 'festival', 'vinyl'].includes(selectedTemplate) && (
+                                <div className={`${styles.formGroup} ${styles.fullWidth}`} style={{ marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px' }}>
+                                    <details style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '16px', overflow: 'hidden' }}>
+                                        <summary style={{ padding: '15px', cursor: 'pointer', userSelect: 'none', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 'bold', color: 'var(--accent)' }}>
+                                            <ImageIcon size={18} /> MEDIA & FIȘIERE (OPȚIONAL) <ChevronLeft size={16} style={{ transform: 'rotate(-90deg)', marginLeft: 'auto' }} />
+                                        </summary>
+
+                                        <div style={{ padding: '20px', paddingTop: '0', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                                            {/* FOTO MAIN / AVATAR */}
+                                            <div className={styles.formGroup}>
+                                                <ImageUploader
+                                                    onUploadComplete={(url) => setFormData(prev => ({ ...prev, photoUrl: url }))}
+                                                    currentUrl={formData.photoUrl}
+                                                    onRemove={() => setFormData(prev => ({ ...prev, photoUrl: '' }))}
+                                                    label={selectedTemplate === 'vinyl' ? 'COPERTĂ DISC (POZĂ)' :
+                                                        selectedTemplate === 'chat' ? 'AVATAR CUPLU (POZĂ)' :
+                                                            selectedTemplate === 'story' ? 'FOTO FUNDAL (dacă nu pui video)' : 'POZĂ PRINCIPALĂ'}
+                                                />
+                                            </div>
+
+                                            {/* VIDEO */}
+                                            {['story', 'netflix'].includes(selectedTemplate) && (
+                                                <div className={styles.formGroup}>
+                                                    <MediaUploader
+                                                        type="video"
+                                                        onUploadComplete={(url) => setFormData(prev => ({ ...prev, videoUrl: url }))}
+                                                        currentUrl={formData.videoUrl}
+                                                        onRemove={() => setFormData(prev => ({ ...prev, videoUrl: '' }))}
+                                                    />
+                                                </div>
+                                            )}
+
+                                            {/* AUDIO */}
+                                            {['vinyl', 'festival', 'chat'].includes(selectedTemplate) && (
+                                                <div className={styles.formGroup}>
+                                                    <MediaUploader
+                                                        type="audio"
+                                                        onUploadComplete={(url) => setFormData(prev => ({ ...prev, audioUrl: url }))}
+                                                        currentUrl={formData.audioUrl}
+                                                        onRemove={() => setFormData(prev => ({ ...prev, audioUrl: '' }))}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </details>
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}
