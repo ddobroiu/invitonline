@@ -12,8 +12,7 @@
 
 .scene {
     width: 100%;
-    max-width: 500px;
-    aspect-ratio: 85.6 / 53.98;
+    max-width: 600px;
     aspect-ratio: 85.6 / 53.98;
     /* Standard credit card ratio */
     position: relative;
