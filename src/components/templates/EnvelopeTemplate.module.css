@@ -197,20 +197,33 @@
 
 /* Responsive */
 @media (max-width: 600px) {
+    .container {
+        padding: 40px 10px;
+        align-items: flex-end;
+        /* Push envelope down to leave room for card upwards */
+        padding-bottom: 80px;
+    }
+
     .envelopeWrapper {
         width: 100%;
-        max-width: 330px;
+        max-width: 340px;
     }
 
     .card {
-        padding: 15px;
+        padding: 20px 15px;
     }
 
     .open .card {
-        transform: translateY(-180px) scale(1.1);
+        /* On mobile, card pops less high or container handles scroll */
+        transform: translateY(-90%) scale(1.02);
     }
 
     .title {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
+    }
+
+    .message {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
     }
 }

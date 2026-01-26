@@ -238,14 +238,17 @@
 @media (max-width: 900px) {
     .ticket {
         flex-direction: column;
-        width: 340px;
+        width: 100%;
+        /* Flexible width */
+        max-width: 380px;
         height: auto;
+        margin: 20px auto;
     }
 
     .mainSection {
         border-right: none;
         border-bottom: 2px dashed #e2e8f0;
-        padding: 25px;
+        padding: 25px 20px;
     }
 
     .mainSection::after,
@@ -254,10 +257,33 @@
     }
 
     .code {
-        font-size: 3rem;
+        font-size: 2.8rem;
+        /* Slightly smaller */
+    }
+
+    .planeIcon {
+        margin: 0 20px;
+    }
+
+    .detailsGrid {
+        grid-template-columns: 1fr 1fr;
+        /* 2 columns on mobile */
+        gap: 20px;
     }
 
     .stubSection {
-        padding: 25px;
+        padding: 30px 20px;
+        border-left: none;
+    }
+}
+
+@media (max-width: 400px) {
+    .code {
+        font-size: 2.22rem;
+    }
+
+    .detailsGrid {
+        grid-template-columns: 1fr;
+        /* 1 column on very small screens */
     }
 }
