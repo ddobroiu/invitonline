@@ -111,10 +111,17 @@ export default function ProcessAnimation() {
                 {/* --- 2. LINK POPUP (Success) --- */}
                 <div className={styles.linkPopup}>
                     <div className={styles.checkmark}>
-                        <Check size={32} strokeWidth={4} />
+                        <Check size={36} strokeWidth={4} />
                     </div>
-                    <div style={{ color: 'white', fontSize: '14px' }}>Invitația ta este gata!</div>
-                    <div className={styles.linkText}>invitonline.ro/nunta-ta</div>
+                    <div className={styles.popupTitle}>Invitația ta este gata!</div>
+                    <div className={styles.popupSub}>Link-ul tău unic a fost generat</div>
+
+                    <div className={styles.linkBox}>
+                        <div className={styles.linkText}>invitonline.ro/nunta-ta</div>
+                        <div className={styles.copyBtn}>
+                            COPY
+                        </div>
+                    </div>
                 </div>
 
                 {/* --- 3. PHONE (WhatsAPP + Invite) --- */}
