@@ -582,7 +582,7 @@ function CreateEventContent() {
                                 </div>
                             </div>
                             <div className={styles.homeBar}></div>
-                            <div className={styles.phoneInner}>
+                            <div className={`${styles.phoneInner} ${['envelope', 'vinyl', 'scratch', 'vip', 'passport'].includes(selectedTemplate) ? styles.centeredScaler : ''}`}>
                                 <div className={styles.scalerContent}>
                                     {selectedTemplate === 'envelope' && <EnvelopeTemplate {...formData} eventType={formData.eventType} />}
                                     {selectedTemplate === 'netflix' && <NetflixTemplate {...formData} eventType={formData.eventType} />}
@@ -606,7 +606,7 @@ function CreateEventContent() {
                                 <div className={styles.dot}></div>
                                 <div className={styles.dot}></div>
                             </div>
-                            <div className={styles.pcContent}>
+                            <div className={`${styles.pcContent} ${['envelope', 'vinyl', 'scratch', 'vip', 'passport'].includes(selectedTemplate) ? styles.centeredScaler : ''}`}>
                                 <div className={styles.scalerContent}>
                                     {selectedTemplate === 'envelope' && <EnvelopeTemplate {...formData} eventType={formData.eventType} />}
                                     {selectedTemplate === 'netflix' && <NetflixTemplate {...formData} eventType={formData.eventType} />}
