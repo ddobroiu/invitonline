@@ -18,19 +18,46 @@ interface Props {
     customFields?: { label: string, value: string }[]
 
     // Extra props
+    groomName?: string
+    brideName?: string
+    childName?: string
+    celebrantName?: string
+    age?: string
     civilCeremonyTime?: string
+    civilCeremonyLoc?: string
     religiousCeremonyTime?: string
+    religiousCeremonyLoc?: string
     partyTime?: string
+    partyLoc?: string
+    churchTime?: string
+    churchLoc?: string
+    restaurantTime?: string
+    restaurantLoc?: string
     // Extra
     parentsGroom?: string
     parentsBride?: string
     godparents?: string
+    godparentsBaptism?: string
     motherName?: string
     fatherName?: string
-    godparentsBaptism?: string
+    birthDate?: string
+    childAge?: string
+    partyType?: string
+    theme?: string
+    specialInstructions?: string
+    dressCode?: string
 }
 
-export default function StoryTemplate(props: Props) {
+export default function StoryTemplate({
+    id, title, date, location, locationUrl, message, eventType = 'nunta',
+    groomName, brideName, childName, celebrantName,
+    godparents, godparentsBaptism, parentsGroom, parentsBride,
+    motherName, fatherName, birthDate, childAge,
+    civilCeremonyTime, civilCeremonyLoc, religiousCeremonyTime, religiousCeremonyLoc,
+    partyTime, partyLoc, churchTime, churchLoc, restaurantTime, restaurantLoc,
+    age, partyType, theme, specialInstructions, dressCode,
+    customFields, videoUrl, photoUrl
+}: Props) {
     const [currentSlide, setCurrentSlide] = useState(0)
     const [progress, setProgress] = useState(0)
     const [isPaused, setIsPaused] = useState(false)
@@ -108,46 +135,44 @@ export default function StoryTemplate(props: Props) {
                 return (
                     <div className={styles.slideContent}>
                         <div className={styles.tag}>SAVE THE DATE</div>
-                        <h1 className={styles.title} style={{ marginTop: '20px' }}>{props.title}</h1>
-                        <h2 className={styles.subtitle}>{props.date}</h2>
+                        <h1 className={styles.title} style={{ marginTop: '20px' }}>{title}</h1>
+                        <h2 className={styles.subtitle}>{date}</h2>
                         <div style={{ fontSize: '3rem', marginTop: '20px' }}>
-                            {props.eventType === 'nunta' ? '💍' : props.eventType === 'botez' ? '👶' : '🎉'}
+                            {eventType === 'nunta' ? '💍' : eventType === 'botez' ? '👶' : '🎉'}
                         </div>
                     </div>
                 )
             case 1:
                 return (
                     <div className={styles.slideContent}>
-                        <h2 className={styles.subtitle} style={{ fontSize: '1.5rem', fontWeight: 800 }}>DETALIILE EVENIMENTULUI</h2>
+                        <h2 className={styles.subtitle} style={{ fontSize: '1.2rem', fontWeight: 800 }}>PROGRAM & DISTRIBUȚIE</h2>
 
                         <div className={styles.detailsBox}>
                             <div className={styles.detailRow}>
-                                <Calendar size={20} color="#ffde59" />
-                                <span>{props.date}</span>
+                                <Calendar size={18} color="#ffde59" />
+                                <span>{date}</span>
                             </div>
-                            <div className={styles.detailRow}>
-                                <MapPin size={20} color="#ffde59" />
-                                <span>{props.location}</span>
-                            </div>
+
                             <div className={styles.detailRow} style={{ alignItems: 'flex-start' }}>
-                                <Clock size={20} color="#ffde59" style={{ marginTop: '3px' }} />
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                                    {props.civilCeremonyTime && <div>Civilă: {props.civilCeremonyTime}</div>}
-                                    {props.religiousCeremonyTime && <div>Religioasă: {props.religiousCeremonyTime}</div>}
-                                    {props.partyTime && <div>Petrecere: {props.partyTime}</div>}
+                                <Clock size={18} color="#ffde59" style={{ marginTop: '3px' }} />
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', fontSize: '0.8rem' }}>
+                                    {civilCeremonyTime && <div>Civil: {civilCeremonyTime}</div>}
+                                    {religiousCeremonyTime && <div>Relig: {religiousCeremonyTime}</div>}
+                                    {churchTime && <div>Biserică: {churchTime}</div>}
+                                    {partyTime && <div>Party: {partyTime}</div>}
                                 </div>
                             </div>
 
-                            {(props.godparents || props.parentsGroom) && (
-                                <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(255,255,255,0.1)', fontSize: '0.8rem' }}>
-                                    {props.godparents && <div><strong>Nași:</strong> {props.godparents}</div>}
-                                    {props.parentsGroom && <div><strong>Părinți:</strong> {props.parentsGroom}</div>}
-                                </div>
-                            )}
-
+                            <div style={{ marginTop: '5px', paddingTop: '5px', borderTop: '1px solid rgba(255,255,255,0.1)', fontSize: '0.75rem', textAlign: 'left' }}>
+                                {groomName && <div><strong>Mire:</strong> {groomName}</div>}
+                                {brideName && <div><strong>Mireasă:</strong> {brideName}</div>}
+                                {childName && <div><strong>Copil:</strong> {childName}</div>}
+                                {celebrantName && <div><strong>Sărbătorit:</strong> {celebrantName}</div>}
+                                {(godparents || godparentsBaptism) && <div><strong>Nași:</strong> {godparents || godparentsBaptism}</div>}
+                            </div>
                         </div>
 
-                        <p style={{ fontStyle: 'italic', opacity: 0.9 }}>"{props.message}"</p>
+                        <p style={{ fontStyle: 'italic', opacity: 0.9, fontSize: '0.85rem' }}>"{message}"</p>
                     </div>
                 )
             case 2:
@@ -160,11 +185,11 @@ export default function StoryTemplate(props: Props) {
                             RSVP ACUM <ChevronRight size={20} />
                         </button>
 
-                        {props.locationUrl && (
+                        {locationUrl && (
                             <button
                                 className={styles.rsvpButton}
                                 style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', marginTop: '10px' }}
-                                onClick={() => window.open(props.locationUrl, '_blank')}
+                                onClick={() => window.open(locationUrl, '_blank')}
                             >
                                 Vezi Locația (Maps)
                             </button>
@@ -182,10 +207,10 @@ export default function StoryTemplate(props: Props) {
 
                 {/* 1. MEDIA LAYER */}
                 <div className={styles.mediaLayer}>
-                    {props.videoUrl ? (
+                    {videoUrl ? (
                         <video
                             ref={videoRef}
-                            src={props.videoUrl}
+                            src={videoUrl}
                             className={styles.bgVideo}
                             playsInline
                             loop
@@ -196,7 +221,7 @@ export default function StoryTemplate(props: Props) {
                         <div
                             className={styles.bgImage}
                             style={{
-                                backgroundImage: `url(${props.photoUrl || 'https://images.unsplash.com/photo-1511285560982-1351cdeb9821?q=80&w=1000&auto=format&fit=crop'})`,
+                                backgroundImage: `url(${photoUrl || 'https://images.unsplash.com/photo-1511285560982-1351cdeb9821?q=80&w=1000&auto=format&fit=crop'})`,
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
                                 width: '100%',
@@ -225,18 +250,18 @@ export default function StoryTemplate(props: Props) {
                     {/* Header */}
                     <div className={styles.headerInfo}>
                         <div className={styles.avatar}>
-                            {props.photoUrl ? (
-                                <img src={props.photoUrl} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                            ) : props.title.charAt(0)}
+                            {photoUrl ? (
+                                <img src={photoUrl} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            ) : title.charAt(0)}
                         </div>
                         <div>
-                            <div className={styles.userName}>{props.title.split('&')[0].trim()}</div>
+                            <div className={styles.userName}>{title.split('&')[0].trim()}</div>
                             <div className={styles.timeAgo}>Acum 2 minute</div>
                         </div>
                     </div>
 
                     {/* Sound Toggle */}
-                    {props.videoUrl && (
+                    {videoUrl && (
                         <div className={styles.soundIndicator} onClick={toggleMute}>
                             {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
                             {isMuted ? 'OFF' : 'ON'}
@@ -271,7 +296,7 @@ export default function StoryTemplate(props: Props) {
                 <RSVPModal
                     isOpen={showRSVP}
                     onClose={() => setShowRSVP(false)}
-                    eventId={props.id}
+                    eventId={id}
                 />
 
             </div>

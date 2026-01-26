@@ -5,7 +5,7 @@ import styles from './ChatTemplate.module.css'
 import RSVPModal from '@/components/RSVPModal'
 import { ChevronLeft, Play, Pause, MapPin, Mic, Send, Image as ImageIcon, Phone, Video, MoreVertical, Smile, Paperclip } from 'lucide-react'
 
-interface Props {
+interface ChatTemplateProps {
     id?: string
     title: string
     date: string
@@ -16,15 +16,34 @@ interface Props {
     audioUrl?: string
     photoUrl?: string
     // Extra props
+    groomName?: string
+    brideName?: string
+    childName?: string
+    celebrantName?: string
+    age?: string
+    civilCeremonyTime?: string
+    civilCeremonyLoc?: string
+    religiousCeremonyTime?: string
+    religiousCeremonyLoc?: string
     partyTime?: string
+    partyLoc?: string
+    churchTime?: string
+    churchLoc?: string
+    restaurantTime?: string
+    restaurantLoc?: string
+    birthDate?: string
+    childAge?: string
+    partyType?: string
+    theme?: string
+    specialInstructions?: string
+    dressCode?: string
     // Extra
     parentsGroom?: string
     parentsBride?: string
     godparents?: string
+    godparentsBaptism?: string
     motherName?: string
     fatherName?: string
-    godparentsBaptism?: string
-    civilCeremonyTime?: string
 }
 
 type MessageType = 'text' | 'image' | 'audio' | 'location'
@@ -37,7 +56,15 @@ interface Message {
     timestamp: string
 }
 
-export default function ChatTemplate(props: Props) {
+export default function ChatTemplate({
+    id, title, date, location, locationUrl, message, eventType = 'nunta',
+    groomName, brideName, childName, celebrantName, age,
+    godparents, godparentsBaptism, parentsGroom, parentsBride,
+    motherName, fatherName, civilCeremonyTime, civilCeremonyLoc, religiousCeremonyTime, religiousCeremonyLoc,
+    partyTime, partyLoc, churchTime, churchLoc, restaurantTime, restaurantLoc,
+    birthDate, childAge, partyType, theme, specialInstructions, dressCode,
+    audioUrl, photoUrl
+}: ChatTemplateProps) {
     const [messages, setMessages] = useState<Message[]>([])
     const [isTyping, setIsTyping] = useState(false)
     const [showActions, setShowActions] = useState(false)
@@ -59,15 +86,53 @@ export default function ChatTemplate(props: Props) {
     // Scriptul conversației
     const script = [
         { type: 'text', content: `Salut! 👋`, delay: 800 },
-        { type: 'text', content: props.message || `Avem o veste mare!`, delay: 1500 },
-        { type: 'text', content: `Ne căsătorim pe ${props.date}! 💍🎉`, delay: 1500 },
-        props.photoUrl ? { type: 'image', content: props.photoUrl, delay: 1000 } : null,
-        { type: 'location', content: props.location, delay: 1200 },
-        props.audioUrl ? { type: 'audio', content: props.audioUrl, delay: 1000 } : null,
+        { type: 'text', content: message || `Avem o veste mare!`, delay: 1500 },
+        { type: 'text', content: `Ne ${eventType === 'botez' ? 'vedem la botezul lui' : 'căsătorim pe'} ${date}! 💍🎉`, delay: 1500 },
+        photoUrl ? { type: 'image', content: photoUrl, delay: 1000 } : null,
+        { type: 'location', content: location, delay: 1200 },
+        audioUrl ? { type: 'audio', content: audioUrl, delay: 1000 } : null,
 
-        (props.godparents || props.parentsGroom) ? {
+        (groomName || brideName || childName || celebrantName) ? {
             type: 'text',
-            content: `✨ Cu binecuvântarea nașilor ${props.godparents || ''} ${(props.godparents && props.parentsGroom) ? 'și a părinților' : ''} ${props.parentsGroom || ''}`,
+            content: `Protagonisti: ${[groomName, brideName, childName, celebrantName].filter(Boolean).join(' & ')}`,
+            delay: 1000
+        } : null,
+
+        (godparents || godparentsBaptism) ? {
+            type: 'text',
+            content: `✨ Cu nașii: ${godparents || godparentsBaptism}`,
+            delay: 1200
+        } : null,
+
+        (parentsGroom || parentsBride || motherName || fatherName) ? {
+            type: 'text',
+            content: `Alături de părinți: ${[parentsGroom, parentsBride, motherName, fatherName].filter(Boolean).join(' & ')}`,
+            delay: 1200
+        } : null,
+
+        (civilCeremonyTime || religiousCeremonyTime || partyTime || churchTime || restaurantTime) ? {
+            type: 'text',
+            content: `Program: ${[
+                civilCeremonyTime ? `Civilă ${civilCeremonyTime}${civilCeremonyLoc ? ` la ${civilCeremonyLoc}` : ''}` : '',
+                religiousCeremonyTime ? `Religioasă ${religiousCeremonyTime}${religiousCeremonyLoc ? ` la ${religiousCeremonyLoc}` : ''}` : '',
+                churchTime ? `Biserică ${churchTime}${churchLoc ? ` la ${churchLoc}` : ''}` : '',
+                partyTime ? `Petrecere ${partyTime}${partyLoc ? ` la ${partyLoc}` : ''}` : '',
+                restaurantTime ? `Restaurant ${restaurantTime}${restaurantLoc ? ` la ${restaurantLoc}` : ''}` : ''
+            ].filter(Boolean).join(' | ')}`,
+            delay: 1500
+        } : null,
+
+        (age || birthDate || childAge || partyType || theme || specialInstructions || dressCode) ? {
+            type: 'text',
+            content: `Detalii suplimentare: ${[
+                age ? `Vârsta: ${age}` : '',
+                birthDate ? `Data nașterii: ${birthDate}` : '',
+                childAge ? `Vârsta copilului: ${childAge}` : '',
+                partyType ? `Tip petrecere: ${partyType}` : '',
+                theme ? `Tematică: ${theme}` : '',
+                specialInstructions ? `Instrucțiuni speciale: ${specialInstructions}` : '',
+                dressCode ? `Dress code: ${dressCode}` : ''
+            ].filter(Boolean).join(' | ')}`,
             delay: 1500
         } : null,
 
@@ -101,9 +166,9 @@ export default function ChatTemplate(props: Props) {
                     id: Date.now(),
                     type: msgData.type,
                     content: msgData.content,
-                    sender: 'left', // THEM = Left in WhatsApp
+                    sender: 'them', // THEM = Left in WhatsApp
                     timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                } as any // TS hack for sender type string mismatch if any
+                }
 
                 setMessages(prev => [...prev, newMsg])
 
@@ -144,12 +209,12 @@ export default function ChatTemplate(props: Props) {
                 <div className={styles.header}>
                     <ChevronLeft className={styles.backBtn} size={24} />
                     <div className={styles.avatar}>
-                        {props.photoUrl ? (
-                            <img src={props.photoUrl} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        ) : props.title.charAt(0)}
+                        {photoUrl ? (
+                            <img src={photoUrl} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        ) : title.charAt(0)}
                     </div>
                     <div className={styles.headerInfo}>
-                        <div className={styles.chatTitle}>{props.title}</div>
+                        <div className={styles.chatTitle}>{title}</div>
                         <div className={styles.status}>
                             {isTyping ? 'typing...' : 'online'}
                         </div>
@@ -196,8 +261,8 @@ export default function ChatTemplate(props: Props) {
                                     <div className={styles.locationBubble}>
                                         <div style={{ fontSize: '0.85rem', fontWeight: '600', marginBottom: '5px' }}>📍 Locație:</div>
                                         <div>{msg.content}</div>
-                                        {props.locationUrl && (
-                                            <div style={{ color: '#007aff', fontSize: '0.8rem', marginTop: '5px', cursor: 'pointer' }} onClick={() => window.open(props.locationUrl, '_blank')}>
+                                        {locationUrl && (
+                                            <div style={{ color: '#007aff', fontSize: '0.8rem', marginTop: '5px', cursor: 'pointer' }} onClick={() => window.open(locationUrl, '_blank')}>
                                                 Vezi pe Hartă
                                             </div>
                                         )}
@@ -248,7 +313,7 @@ export default function ChatTemplate(props: Props) {
                 <RSVPModal
                     isOpen={showRSVP}
                     onClose={() => setShowRSVP(false)}
-                    eventId={props.id}
+                    eventId={id}
                 />
 
             </div>

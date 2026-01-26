@@ -14,24 +14,48 @@ import VipCardTemplate from '@/components/templates/VipCardTemplate'
 import StoryTemplate from '@/components/templates/StoryTemplate'
 import ChatTemplate from '@/components/templates/ChatTemplate'
 
-import { Sparkles, ArrowRight } from 'lucide-react'
+import { Sparkles, ArrowRight, Monitor, Smartphone, Search } from 'lucide-react'
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
 
 export default function DemoPage() {
+    const [currentTime, setCurrentTime] = useState('09:41')
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            const now = new Date()
+            setCurrentTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
+        }, 1000)
+        return () => clearInterval(timer)
+    }, [])
     const demoProps = {
+        id: 'demo-event',
         title: 'Mihai & Teodora',
         date: '12 IULIE 2026',
         location: 'Domeniul cu Cireși, București',
         locationUrl: 'https://maps.app.goo.gl/W67fU7L8K1X5H7Z26',
         message: 'Dragostea noastră este o poveste pe care vrem să o împărtășim cu voi. Vă așteptăm cu drag să sărbătorim împreună!',
         eventType: 'nunta',
-        // Extra Details
-        godparents: 'Fam. Ionescu Radu & Elena',
-        parentsGroom: 'Gheorghe & Maria',
-        parentsBride: 'Constantin & Viorica',
+        // protagonists
+        groomName: 'Mihai Ionescu',
+        brideName: 'Teodora Stanciu',
+        // Wedding extra
+        godparents: 'Fam. Radu & Elena Popescu',
+        parentsGroom: 'Gheorghe & Maria Ionescu',
+        parentsBride: 'Constantin & Viorica Stanciu',
         civilCeremonyTime: '14:00',
+        civilCeremonyLoc: 'Primăria București',
         religiousCeremonyTime: '16:30',
+        religiousCeremonyLoc: 'Biserica Sf. Elefterie',
         partyTime: '19:30',
+        partyLoc: 'Salonul Imperial',
+        dressCode: 'Black Tie Optional',
+        videoUrl: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
+        photoUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600',
+        customFields: [
+            { label: 'Confirmări până la', value: '1 Iunie' },
+            { label: 'Meniu', value: 'Tradițional & Gourmet' }
+        ]
     }
 
     const templates = [
@@ -139,12 +163,10 @@ export default function DemoPage() {
                             </Link>
                         </div>
 
-                        {/* Dual Preview Area */}
                         <div className={styles.templatePreviewArea}>
-
                             {/* PC Mockup */}
                             <div className={styles.pcView}>
-                                <div className={styles.viewLabel}>Desktop Experience</div>
+                                <div className={styles.viewLabel}>Experiență Desktop</div>
                                 <div className={styles.pcFrame}>
                                     <div className={styles.pcBrowserHeader}>
                                         <div className={styles.dot}></div>
@@ -152,8 +174,10 @@ export default function DemoPage() {
                                         <div className={styles.dot}></div>
                                     </div>
                                     <div className={styles.pcContent}>
-                                        <div className={styles.previewScaler}>
-                                            <tpl.component {...demoProps} />
+                                        <div className={styles.pcInner}>
+                                            <div className={styles.scalerPC}>
+                                                <tpl.component {...demoProps} />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -161,16 +185,34 @@ export default function DemoPage() {
 
                             {/* Mobile Mockup */}
                             <div className={styles.mobileView}>
-                                <div className={styles.viewLabel}>Mobile View</div>
+                                <div className={styles.viewLabel}>Vizualizare Mobil</div>
                                 <div className={styles.phoneFrame}>
+                                    <div className={styles.statusBar}>
+                                        <div className={styles.time}>{currentTime}</div>
+                                        <div className={styles.statusIcons}>
+                                            <Search size={12} strokeWidth={3} />
+                                            <div style={{ display: 'flex', gap: '2px' }}>
+                                                <div style={{ width: '2px', height: '4px', background: '#fff' }}></div>
+                                                <div style={{ width: '2px', height: '6px', background: '#fff' }}></div>
+                                                <div style={{ width: '2px', height: '8px', background: '#fff' }}></div>
+                                                <div style={{ width: '2px', height: '10px', background: 'rgba(255,255,255,0.3)' }}></div>
+                                            </div>
+                                            <div style={{ width: '18px', height: '9px', border: '1px solid #fff', borderRadius: '2px', position: 'relative', display: 'flex', alignItems: 'center', padding: '1px' }}>
+                                                <div style={{ width: '80%', height: '100%', background: '#fff', borderRadius: '1px' }}></div>
+                                                <div style={{ position: 'absolute', right: '-3px', width: '2px', height: '4px', background: '#fff', borderRadius: '0 1px 1px 0' }}></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className={styles.homeBar}></div>
                                     <div className={styles.phoneInner}>
-                                        <div className={styles.previewScaler}>
-                                            <tpl.component {...demoProps} />
+                                        <div className={styles.mobileInner}>
+                                            <div className={styles.scalerMobile}>
+                                                <tpl.component {...demoProps} />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 ))}

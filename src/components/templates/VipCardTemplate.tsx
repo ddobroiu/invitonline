@@ -15,29 +15,49 @@ interface Props {
     eventType?: string
     groomName?: string
     brideName?: string
+    childName?: string
+    celebrantName?: string
+    parentsBride?: string
+    parentsGroom?: string
+    godparents?: string
+    godparentsBaptism?: string
+    motherName?: string
+    fatherName?: string
+    civilCeremonyTime?: string
+    civilCeremonyLoc?: string
+    religiousCeremonyTime?: string
+    religiousCeremonyLoc?: string
+    partyTime?: string
+    partyLoc?: string
+    churchTime?: string
+    churchLoc?: string
+    restaurantTime?: string
+    restaurantLoc?: string
     customFields?: { label: string, value: string }[]
     photoUrl?: string
-    // Extra props for full compatibility
-    parentsGroom?: string
-    parentsBride?: string
-    godparents?: string
-    civilCeremonyTime?: string
-    religiousCeremonyTime?: string
-    partyTime?: string
-    churchTime?: string
-    restaurantTime?: string
+    dressCode?: string
+    age?: string
 }
 
-export default function VipCardTemplate(props: Props) {
+export default function VipCardTemplate({
+    id, title, date, location, locationUrl, message, eventType = 'nunta',
+    groomName, brideName, childName, celebrantName,
+    godparents, godparentsBaptism, parentsGroom, parentsBride,
+    motherName, fatherName, birthDate, childAge,
+    civilCeremonyTime, civilCeremonyLoc, religiousCeremonyTime, religiousCeremonyLoc,
+    partyTime, partyLoc, churchTime, churchLoc, restaurantTime, restaurantLoc,
+    age, partyType, theme, specialInstructions, dressCode,
+    customFields, photoUrl
+}: any) {
     const [isFlipped, setIsFlipped] = useState(false)
     const [showRSVP, setShowRSVP] = useState(false)
 
     // Format Date as Card Number: "2508 2026 0000 0000"
     // Extract numbers from date string usually looks like "25 August 2026"
-    const year = props.date.match(/\d{4}/)?.[0] || '2026'
+    const year = date.match(/\d{4}/)?.[0] || '2026'
 
     // Simulate a card number based on event details
-    const cardNumber = `0000 ${year} ${props.eventType === 'botez' ? 'BABY' : 'LOVE'} 8888`
+    const cardNumber = `0000 ${year} ${eventType === 'botez' ? 'BABY' : 'LOVE'} 8888`
 
     const handleFlip = () => {
         if (!showRSVP) {
@@ -46,8 +66,8 @@ export default function VipCardTemplate(props: Props) {
     }
 
     // Determine background style if photo exists
-    const cardStyle = props.photoUrl ? {
-        backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), url(${props.photoUrl})`,
+    const cardStyle = photoUrl ? {
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), url(${photoUrl})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center'
     } : {}
@@ -61,7 +81,7 @@ export default function VipCardTemplate(props: Props) {
                     <div className={`${styles.face} ${styles.front}`} style={cardStyle}>
                         <div className={styles.topRow}>
                             <div className={styles.bankName}>
-                                {props.eventType === 'nunta' ? 'ROYAL WEDDING BANK' : 'PREMIUM EVENTS INC.'}
+                                {eventType === 'nunta' ? 'ROYAL WEDDING BANK' : 'PREMIUM EVENTS INC.'}
                             </div>
                             <Wifi size={24} color="rgba(255,255,255,0.4)" style={{ transform: 'rotate(90deg)' }} />
                         </div>
@@ -75,11 +95,11 @@ export default function VipCardTemplate(props: Props) {
                         <div className={styles.details}>
                             <div>
                                 <div className={styles.label}>CARD HOLDER</div>
-                                <div className={styles.value}>{props.title}</div>
+                                <div className={styles.value}>{title}</div>
                             </div>
                             <div style={{ textAlign: 'right' }}>
                                 <div className={styles.label}>VALID THRU</div>
-                                <div className={styles.value}>{props.date.split(',')[0]}</div>
+                                <div className={styles.value}>{date.split(',')[0]}</div>
                             </div>
                         </div>
 
@@ -94,31 +114,45 @@ export default function VipCardTemplate(props: Props) {
 
                         <div className={styles.signatureRow}>
                             <div className={styles.signatureArea}>
-                                {props.title}
+                                {title}
                             </div>
                             <div className={styles.cvv}>
-                                {props.partyTime ? props.partyTime.replace(':', '') : '1900'}
+                                {partyTime ? partyTime.replace(':', '') : '1900'}
                             </div>
                         </div>
 
                         <div className={styles.backContent}>
                             <div style={{ flex: 1, paddingRight: '15px' }}>
-                                <p className={styles.message}>
+                                <div className={styles.message}>
                                     <ShieldCheck size={12} style={{ marginRight: '5px', display: 'inline' }} />
-                                    This card grants exclusive access to the event located at: <br />
-                                    <strong>{props.location}</strong>
-                                </p>
-                                <p className={styles.message} style={{ marginTop: '10px', fontStyle: 'italic', opacity: 0.6 }}>
-                                    "{props.message}"
-                                </p>
+                                    Exclusive access to the event at: <br />
+                                    <strong>{location}</strong>
+                                </div>
+                                <div className={styles.message} style={{ marginTop: '5px', fontStyle: 'italic', opacity: 0.6 }}>
+                                    "{message}"
+                                </div>
 
-                                {props.parentsGroom && <div style={{ marginTop: '5px', fontSize: '0.6rem', color: '#ccc' }}><strong>Prd:</strong> {props.parentsGroom}</div>}
-                                {props.parentsBride && <div style={{ fontSize: '0.6rem', color: '#ccc' }}><strong>Co-Prd:</strong> {props.parentsBride}</div>}
-                                {props.godparents && <div style={{ fontSize: '0.6rem', color: '#d4af37' }}><strong>Sponsors:</strong> {props.godparents}</div>}
+                                <div style={{ marginTop: '5px', fontSize: '0.55rem', color: '#ccc', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px' }}>
+                                    {groomName && <div><strong>Mire:</strong> {groomName}</div>}
+                                    {brideName && <div><strong>Mireasă:</strong> {brideName}</div>}
+                                    {childName && <div><strong>Copil:</strong> {childName}</div>}
+                                    {celebrantName && <div><strong>Sărbătorit:</strong> {celebrantName}</div>}
+                                    {(godparents || godparentsBaptism) && <div><strong>Nași:</strong> {godparents || godparentsBaptism}</div>}
+                                    {parentsGroom && <div><strong>P. Mire:</strong> {parentsGroom}</div>}
+                                    {parentsBride && <div><strong>P. Mireasă:</strong> {parentsBride}</div>}
+                                </div>
 
-                                {props.customFields && props.customFields.length > 0 && (
-                                    <div style={{ marginTop: '10px', fontSize: '0.6rem', color: '#d4af37' }}>
-                                        {props.customFields.map((f, i) => (
+                                <div style={{ marginTop: '5px', fontSize: '0.55rem', color: '#d4af37', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px' }}>
+                                    {civilCeremonyTime && <div>Civil: {civilCeremonyTime}</div>}
+                                    {religiousCeremonyTime && <div>Relig: {religiousCeremonyTime}</div>}
+                                    {partyTime && <div>Party: {partyTime}</div>}
+                                    {churchTime && <div>Church: {churchTime}</div>}
+                                    {restaurantTime && <div>Restaurant: {restaurantTime}</div>}
+                                </div>
+
+                                {customFields && customFields.length > 0 && (
+                                    <div style={{ marginTop: '5px', fontSize: '0.55rem', color: '#d4af37' }}>
+                                        {customFields.map((f: any, i: number) => (
                                             <div key={i}>{f.label}: {f.value}</div>
                                         ))}
                                     </div>
@@ -126,8 +160,8 @@ export default function VipCardTemplate(props: Props) {
                             </div>
 
                             <div className={styles.actions}>
-                                <div style={{ background: '#fff', padding: '5px', borderRadius: '4px' }}>
-                                    <QrCode size={50} color="#000" />
+                                <div style={{ background: '#fff', padding: '3px', borderRadius: '4px' }}>
+                                    <QrCode size={40} color="#000" />
                                 </div>
                                 <button
                                     className={styles.rsvpBtn}
@@ -136,25 +170,25 @@ export default function VipCardTemplate(props: Props) {
                                         setShowRSVP(true)
                                     }}
                                 >
-                                    RSVP NOW
+                                    RSVP
                                 </button>
-                                {props.locationUrl && (
+                                {locationUrl && (
                                     <button
                                         style={{
                                             background: 'transparent',
                                             border: '1px solid #666',
                                             color: '#ccc',
-                                            padding: '4px 8px',
-                                            fontSize: '0.6rem',
+                                            padding: '2px 5px',
+                                            fontSize: '0.5rem',
                                             borderRadius: '4px',
                                             cursor: 'pointer'
                                         }}
                                         onClick={(e) => {
                                             e.stopPropagation()
-                                            window.open(props.locationUrl, '_blank')
+                                            window.open(locationUrl, '_blank')
                                         }}
                                     >
-                                        <Navigation size={10} style={{ marginRight: '3px', display: 'inline' }} /> MAP
+                                        <Navigation size={8} style={{ marginRight: '2px', display: 'inline' }} /> MAP
                                     </button>
                                 )}
                             </div>
@@ -171,7 +205,7 @@ export default function VipCardTemplate(props: Props) {
             <RSVPModal
                 isOpen={showRSVP}
                 onClose={() => setShowRSVP(false)}
-                eventId={props.id}
+                eventId={id}
             />
         </div>
     )

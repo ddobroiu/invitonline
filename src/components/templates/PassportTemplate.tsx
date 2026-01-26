@@ -44,8 +44,8 @@ export default function PassportTemplate({
     const [isOpen, setIsOpen] = useState(false)
 
     // Format fields for MRZ zone
-    const mrzTitle = props.title.replace(/[^a-zA-Z]/g, '<<').toUpperCase()
-    const mrzDate = props.date.replace(/[^0-9]/g, '').padEnd(6, '0').slice(0, 6)
+    const mrzTitle = title.replace(/[^a-zA-Z]/g, '<<').toUpperCase()
+    const mrzDate = date.replace(/[^0-9]/g, '').padEnd(6, '0').slice(0, 6)
 
     return (
         <div className={styles.passportWrapper}>
@@ -57,13 +57,13 @@ export default function PassportTemplate({
                 <div className={styles.rightPage}>
                     <div className={styles.header} style={{ borderBottom: '1px dashed #999', marginBottom: '15px' }}>
                         <div className={styles.headerText}>VISAS / VIZE & MENTIUNI</div>
-                        <div className={styles.headerText}>{props.date}</div>
+                        <div className={styles.headerText}>{date}</div>
                     </div>
 
                     <div className={styles.field}>
                         <div className={styles.fieldLabel}>Message / Mesaj</div>
                         <div className={styles.fieldValue} style={{ fontSize: '0.75rem', textTransform: 'none', fontStyle: 'italic', fontFamily: 'serif', letterSpacing: '0' }}>
-                            "{props.message || 'Vă așteptăm cu drag!'}"
+                            "{message || 'Vă așteptăm cu drag!'}"
                         </div>
                     </div>
 
@@ -120,7 +120,7 @@ export default function PassportTemplate({
                     </div>
 
                     <div className={styles.officialStamp}>
-                        ENTRY<br />PERMITTED<br />{props.date.split(' ')[0]}
+                        ENTRY<br />PERMITTED<br />{date.split(' ')[0]}
                     </div>
                 </div>
 
@@ -136,15 +136,15 @@ export default function PassportTemplate({
                             </div>
                             <div style={{ textAlign: 'center' }}>
                                 <div className={styles.coverEvent}>
-                                    {props.eventType === 'nunta' ? 'Nunta Noastră' :
-                                        props.eventType === 'botez' ? 'Botez' :
+                                    {eventType === 'nunta' ? 'Nunta Noastră' :
+                                        eventType === 'botez' ? 'Botez' :
                                             'Eveniment Special'}
                                 </div>
                                 <div style={{ color: '#d4af37', fontSize: '1.2rem', marginTop: '10px', fontFamily: 'var(--font-heading)' }}>
-                                    {props.title}
+                                    {title}
                                 </div>
                                 <div style={{ color: '#d4af37', fontSize: '0.8rem', marginTop: '5px' }}>
-                                    {props.date}
+                                    {date}
                                 </div>
                             </div>
                         </div>
@@ -162,28 +162,28 @@ export default function PassportTemplate({
 
                         <div className={styles.photoRow}>
                             <div className={styles.photoArea}>
-                                {props.photoUrl ? (
+                                {photoUrl ? (
                                     <img
-                                        src={props.photoUrl}
+                                        src={photoUrl}
                                         alt="Passport Photo"
                                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                     />
                                 ) : (
                                     <>
-                                        {props.eventType === 'nunta' && <Heart size={30} color="#ccc" />}
-                                        {props.eventType === 'botez' && <Baby size={30} color="#ccc" />}
-                                        {!props.eventType && <PartyPopper size={30} color="#ccc" />}
+                                        {eventType === 'nunta' && <Heart size={30} color="#ccc" />}
+                                        {eventType === 'botez' && <Baby size={30} color="#ccc" />}
+                                        {!eventType && <PartyPopper size={30} color="#ccc" />}
                                     </>
                                 )}
                             </div>
                             <div className={styles.fields}>
                                 <div className={styles.field}>
                                     <div className={styles.fieldLabel}>Surname / Nume</div>
-                                    <div className={styles.fieldValue}>{props.title.split('&')[0]?.trim()}</div>
+                                    <div className={styles.fieldValue}>{title.split('&')[0]?.trim()}</div>
                                 </div>
                                 <div className={styles.field}>
                                     <div className={styles.fieldLabel}>Given Names / Prenume</div>
-                                    <div className={styles.fieldValue}>{props.title.split('&')[1]?.trim() || 'Invitat'}</div>
+                                    <div className={styles.fieldValue}>{title.split('&')[1]?.trim() || 'Invitat'}</div>
                                 </div>
                             </div>
                         </div>
@@ -195,7 +195,7 @@ export default function PassportTemplate({
                             </div>
                             <div className={styles.field}>
                                 <div className={styles.fieldLabel}>Date of Birth</div>
-                                <div className={styles.fieldValue}>{props.date}</div>
+                                <div className={styles.fieldValue}>{date}</div>
                             </div>
                             <div className={styles.field} style={{ gridColumn: 'span 2' }}>
                                 <div className={styles.fieldLabel}>Place of Issue / Locația</div>
