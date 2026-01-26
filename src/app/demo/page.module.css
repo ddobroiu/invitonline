@@ -51,12 +51,21 @@
 }
 
 .showcaseGrid {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
     padding: 0 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 80px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    align-items: start;
+}
+
+@media (max-width: 1200px) {
+    .showcaseGrid {
+        grid-template-columns: 1fr;
+        gap: 80px;
+        padding: 0 20px;
+    }
 }
 
 .templateCard {
