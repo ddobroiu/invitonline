@@ -12,41 +12,39 @@
     flex: 1;
     max-width: 600px;
     min-width: 400px;
-    display: flex;
-    flex-direction: column;
+    display: block;
     z-index: 10;
-    overflow: hidden;
+    overflow-y: auto !important;
     height: 100%;
     padding-right: 0.8rem;
+    padding-bottom: 80px;
 }
 
-/* Custom Scrollbar */
-.scrollArea::-webkit-scrollbar {
+/* Custom Scrollbar for editorSection too */
+.editorSection::-webkit-scrollbar {
     width: 4px;
 }
 
-.scrollArea::-webkit-scrollbar-track {
+.editorSection::-webkit-scrollbar-track {
     background: transparent;
 }
 
-.scrollArea::-webkit-scrollbar-thumb {
+.editorSection::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
 }
 
 .scrollArea {
-    overflow-y: auto;
-    flex: 1;
-    min-height: 0;
-    padding-right: 5px;
-    padding-bottom: 60px;
-    /* Extra space at bottom */
+    overflow: visible !important;
+    height: auto !important;
+    flex: none !important;
+    padding-bottom: 0 !important;
 }
 
 .cardFooter {
-    flex-shrink: 0;
+    margin-top: 2rem;
     padding-top: 1rem;
-    margin-top: 1rem;
+    padding-bottom: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -57,10 +55,11 @@
     border-radius: 30px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    /* Start from top to avoid cropping */
     justify-content: center;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
     padding: 40px;
 }
@@ -194,11 +193,9 @@
     padding: 1.5rem;
     margin-bottom: 0;
     backdrop-filter: blur(20px);
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    overflow: hidden;
-    min-height: 0;
+    display: block;
+    overflow: visible;
+    height: auto;
 }
 
 .inputGrid {

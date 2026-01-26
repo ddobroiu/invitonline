@@ -41,32 +41,96 @@ export default function PassportTemplate(props: PassportTemplateProps) {
     return (
         <div className={styles.passportWrapper}>
             <div
-                className={`${styles.passport} ${isOpen ? styles.open : ''}`}
+                className={`${styles.book} ${isOpen ? styles.open : ''}`}
                 onClick={() => setIsOpen(!isOpen)}
             >
-                {/* FRONT COVER */}
-                <div className={styles.cover}>
-                    <div className={styles.coverGold}>
-                        <div className={styles.coverTitle}>Pașaport</div>
-                        <div className={styles.emblem}>
-                            <Globe size={80} strokeWidth={1} />
+                {/* --- RIGHT PAGE (STATIC BASE - VISAS / EXTRA INFO) --- */}
+                <div className={styles.rightPage}>
+                    <div className={styles.header} style={{ borderBottom: '1px dashed #999', marginBottom: '15px' }}>
+                        <div className={styles.headerText}>VISAS / VIZE & MENTIUNI</div>
+                        <div className={styles.headerText}>{props.date}</div>
+                    </div>
+
+                    <div className={styles.field}>
+                        <div className={styles.fieldLabel}>Message / Mesaj</div>
+                        <div className={styles.fieldValue} style={{ fontSize: '0.75rem', textTransform: 'none', fontStyle: 'italic', fontFamily: 'serif', letterSpacing: '0' }}>
+                            "{props.message || 'Vă așteptăm cu drag!'}"
                         </div>
-                        <div style={{ textAlign: 'center' }}>
-                            <div className={styles.coverEvent}>
-                                {props.eventType === 'nunta' ? 'Nunta Noastră' :
-                                    props.eventType === 'botez' ? 'Botez' :
-                                        'Eveniment Special'}
+                    </div>
+
+                    <div className={styles.stampsGrid}>
+                        {(props.godparents || props.godparentsBaptism) && (
+                            <div className={styles.stampBox}>
+                                <div className={styles.stampLabel}>GODPARENTS / NAȘI</div>
+                                <div className={styles.stampValue}>{props.godparents || props.godparentsBaptism}</div>
                             </div>
-                            <div style={{ color: '#d4af37', fontSize: '1.2rem', marginTop: '10px', fontFamily: 'var(--font-heading)' }}>
-                                {props.title}
+                        )}
+
+                        {(props.parentsGroom || props.parentsBride) && (
+                            <div className={styles.stampBox}>
+                                <div className={styles.stampLabel}>PARENTS / PĂRINȚI</div>
+                                <div className={styles.stampValue} style={{ fontSize: '0.65rem' }}>
+                                    {props.parentsGroom}
+                                    {props.parentsGroom && props.parentsBride && <br />}
+                                    {props.parentsBride}
+                                </div>
                             </div>
-                        </div>
+                        )}
+
+                        {(props.civilCeremonyTime || props.religiousCeremonyTime || props.partyTime) && (
+                            <div className={styles.stampBox}>
+                                <div className={styles.stampLabel}>SCHEDULE / PROGRAM</div>
+                                <div className={styles.stampValue} style={{ fontSize: '0.6rem' }}>
+                                    {props.civilCeremonyTime && <div>Civil: {props.civilCeremonyTime}</div>}
+                                    {props.religiousCeremonyTime && <div>Religious: {props.religiousCeremonyTime}</div>}
+                                    {props.partyTime && <div>Party: {props.partyTime}</div>}
+                                </div>
+                            </div>
+                        )}
+
+                        {props.customFields && props.customFields.map((field, i) => (
+                            field.label && field.value && (
+                                <div key={i} className={styles.stampBox}>
+                                    <div className={styles.stampLabel}>{field.label}</div>
+                                    <div className={styles.stampValue}>{field.value}</div>
+                                </div>
+                            )
+                        ))}
+                    </div>
+
+                    <div className={styles.officialStamp}>
+                        ENTRY<br />PERMITTED<br />{props.date.split(' ')[0]}
                     </div>
                 </div>
 
-                {/* INSIDE DATA PAGE */}
-                <div className={styles.inner}>
-                    <div className={styles.dataPage}>
+                {/* --- FLIPPER (FRONT & BACK) --- */}
+                <div className={styles.flipper}>
+
+                    {/* FRONT: COVER */}
+                    <div className={styles.front}>
+                        <div className={styles.coverGold}>
+                            <div className={styles.coverTitle}>Pașaport</div>
+                            <div className={styles.emblem}>
+                                <Globe size={80} strokeWidth={1} />
+                            </div>
+                            <div style={{ textAlign: 'center' }}>
+                                <div className={styles.coverEvent}>
+                                    {props.eventType === 'nunta' ? 'Nunta Noastră' :
+                                        props.eventType === 'botez' ? 'Botez' :
+                                            'Eveniment Special'}
+                                </div>
+                                <div style={{ color: '#d4af37', fontSize: '1.2rem', marginTop: '10px', fontFamily: 'var(--font-heading)' }}>
+                                    {props.title}
+                                </div>
+                                <div style={{ color: '#d4af37', fontSize: '0.8rem', marginTop: '5px' }}>
+                                    {props.date}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* BACK: IDENTITY PAGE (LEFT) */}
+                    <div className={styles.back}>
                         <div className={styles.header}>
                             <div>
                                 <div className={styles.headerText}>Republica Dragostei</div>
@@ -75,33 +139,26 @@ export default function PassportTemplate(props: PassportTemplateProps) {
                             <Plane size={24} color="#333" />
                         </div>
 
-                        <div style={{ display: 'flex', gap: '20px' }}>
+                        <div className={styles.photoRow}>
                             <div className={styles.photoArea}>
                                 {props.photoUrl ? (
                                     <img
                                         src={props.photoUrl}
                                         alt="Passport Photo"
-                                        style={{
-                                            width: '100%',
-                                            height: '100%',
-                                            objectFit: 'cover',
-                                            borderRadius: '4px'
-                                        }}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                     />
                                 ) : (
                                     <>
-                                        {props.eventType === 'nunta' && <Heart size={40} color="#ccc" />}
-                                        {props.eventType === 'botez' && <Baby size={40} color="#ccc" />}
-                                        {props.eventType !== 'nunta' && props.eventType !== 'botez' && <PartyPopper size={40} color="#ccc" />}
-                                        <div style={{ position: 'absolute', bottom: '5px', fontSize: '0.5rem' }}>PHOTO HERE</div>
+                                        {props.eventType === 'nunta' && <Heart size={30} color="#ccc" />}
+                                        {props.eventType === 'botez' && <Baby size={30} color="#ccc" />}
+                                        {!props.eventType && <PartyPopper size={30} color="#ccc" />}
                                     </>
                                 )}
                             </div>
-
                             <div className={styles.fields}>
                                 <div className={styles.field}>
                                     <div className={styles.fieldLabel}>Surname / Nume</div>
-                                    <div className={styles.fieldValue}>{props.title.split('&')[0].trim()}</div>
+                                    <div className={styles.fieldValue}>{props.title.split('&')[0]?.trim()}</div>
                                 </div>
                                 <div className={styles.field}>
                                     <div className={styles.fieldLabel}>Given Names / Prenume</div>
@@ -110,69 +167,20 @@ export default function PassportTemplate(props: PassportTemplateProps) {
                             </div>
                         </div>
 
-                        <div className={styles.inputGrid} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
                             <div className={styles.field}>
-                                <div className={styles.fieldLabel}>Date of Issue / Data</div>
+                                <div className={styles.fieldLabel}>Nationality</div>
+                                <div className={styles.fieldValue}>IUBIRE</div>
+                            </div>
+                            <div className={styles.field}>
+                                <div className={styles.fieldLabel}>Date of Birth</div>
                                 <div className={styles.fieldValue}>{props.date}</div>
                             </div>
-                            <div className={styles.field}>
-                                <div className={styles.fieldLabel}>Authority / Locația</div>
-                                <div className={styles.fieldValue}>{props.location.split(',')[0]}</div>
+                            <div className={styles.field} style={{ gridColumn: 'span 2' }}>
+                                <div className={styles.fieldLabel}>Place of Issue / Locația</div>
+                                <div className={styles.fieldValue} style={{ fontSize: '0.8rem' }}>{props.location.split(',')[0]}</div>
                             </div>
                         </div>
-
-                        <div className={styles.field}>
-                            <div className={styles.fieldLabel}>Message / Mesaj</div>
-                            <div className={styles.fieldValue} style={{ fontSize: '0.7rem', textTransform: 'none', fontStyle: 'italic' }}>
-                                "{props.message}"
-                            </div>
-                        </div>
-
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginTop: '10px', borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '10px' }}>
-                            {props.godparents && (
-                                <div className={styles.field}>
-                                    <div className={styles.fieldLabel}>Godparents / Nași</div>
-                                    <div className={styles.fieldValue} style={{ fontSize: '0.6rem' }}>{props.godparents}</div>
-                                </div>
-                            )}
-                            {props.godparentsBaptism && (
-                                <div className={styles.field}>
-                                    <div className={styles.fieldLabel}>Godparents / Nași</div>
-                                    <div className={styles.fieldValue} style={{ fontSize: '0.6rem' }}>{props.godparentsBaptism}</div>
-                                </div>
-                            )}
-                            {props.parentsGroom && (
-                                <div className={styles.field}>
-                                    <div className={styles.fieldLabel}>Groom's Parents</div>
-                                    <div className={styles.fieldValue} style={{ fontSize: '0.6rem' }}>{props.parentsGroom}</div>
-                                </div>
-                            )}
-                            {props.parentsBride && (
-                                <div className={styles.field}>
-                                    <div className={styles.fieldLabel}>Bride's Parents</div>
-                                    <div className={styles.fieldValue} style={{ fontSize: '0.6rem' }}>{props.parentsBride}</div>
-                                </div>
-                            )}
-
-                            {/* Program */}
-                            {props.civilCeremonyTime && <div className={styles.field}><div className={styles.fieldLabel}>Civil Ceremony</div><div className={styles.fieldValue} style={{ fontSize: '0.6rem' }}>{props.civilCeremonyTime}</div></div>}
-                            {props.religiousCeremonyTime && <div className={styles.field}><div className={styles.fieldLabel}>Religious</div><div className={styles.fieldValue} style={{ fontSize: '0.6rem' }}>{props.religiousCeremonyTime}</div></div>}
-                            {props.partyTime && <div className={styles.field}><div className={styles.fieldLabel}>Party</div><div className={styles.fieldValue} style={{ fontSize: '0.6rem' }}>{props.partyTime}</div></div>}
-
-                            {props.customFields && props.customFields.map((field, i) => (
-                                field.label && field.value && (
-                                    <div key={i} className={styles.field}>
-                                        <div className={styles.fieldLabel}>{field.label}</div>
-                                        <div className={styles.fieldValue} style={{ fontSize: '0.65rem' }}>{field.value}</div>
-                                    </div>
-                                )
-                            ))}
-                        </div>
-
-                        <div className={styles.stamp}>
-                            VIP<br />ACCESS<br />GRANTED
-                        </div>
-
 
                         <div className={styles.mrz}>
                             P&lt;ROU{mrzTitle}&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br />
@@ -182,9 +190,7 @@ export default function PassportTemplate(props: PassportTemplateProps) {
                 </div>
             </div>
 
-            {!isOpen && (
-                <div className={styles.instruction}>Apasă pentru a deschide</div>
-            )}
+            {!isOpen && <div className={styles.hint}>apasă pentru a deschide</div>}
         </div>
     )
 }

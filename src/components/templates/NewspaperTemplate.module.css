@@ -9,14 +9,16 @@
 }
 
 .newspaper {
-    width: 400px;
-    height: 560px;
+    width: 100%;
+    max-width: 450px;
+    min-height: 600px;
+    height: auto;
     background: #f4ecd8;
     /* Weathered paper color */
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
     padding: 25px;
     position: relative;
-    overflow-y: auto;
+    overflow: visible;
     color: #222;
     font-family: 'Times New Roman', Times, serif;
     border: 1px solid #dcd1b3;
@@ -35,50 +37,83 @@
     pointer-events: none;
 }
 
-.topBar {
-    border-bottom: 2px solid #222;
-    padding-bottom: 5px;
-    margin-bottom: 5px;
+/* Header Elements */
+.headerMeta {
     display: flex;
     justify-content: space-between;
-    font-size: 0.7rem;
-    font-weight: bold;
+    border-bottom: 3px double #222;
+    border-top: 1px solid #222;
+    padding: 4px 0;
+    margin-bottom: 15px;
+    font-size: 0.65rem;
+    font-weight: 800;
     text-transform: uppercase;
+    font-family: sans-serif;
+    letter-spacing: 0.5px;
+}
+
+.headerMeta>div {
+    flex: 1;
+}
+
+.headerMeta .weatherBox {
+    text-align: left;
+}
+
+.headerMeta .editionInfo {
+    text-align: center;
+}
+
+.headerMeta .priceBox {
+    text-align: right;
 }
 
 .masthead {
-    border-bottom: 4px solid #222;
-    padding: 10px 0;
-    margin-bottom: 20px;
     text-align: center;
+    padding: 0 0 15px 0;
 }
 
 .masthead h1 {
-    font-size: 2.8rem;
-    margin: 0;
+    font-family: 'Times New Roman', serif;
+    font-size: 3.5rem;
     text-transform: uppercase;
-    letter-spacing: -1px;
     font-weight: 900;
+    letter-spacing: -2px;
+    transform: scaleY(1.3);
+    margin: 10px 0 15px 0;
+    line-height: 0.8;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
 }
 
+.slogan {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 700;
+    border-top: 1px solid #222;
+    display: inline-block;
+    padding-top: 5px;
+}
+
+/* Article Styling */
 .mainHeadline {
-    font-size: 2.2rem;
-    line-height: 1.1;
+    font-size: 2.4rem;
+    line-height: 0.95;
     font-weight: 900;
     text-align: center;
     margin-bottom: 15px;
-    text-transform: capitalize;
+    text-transform: uppercase;
+    font-family: 'Times New Roman', serif;
 }
 
 .subHeadline {
-    border-top: 1px solid #222;
-    border-bottom: 1px solid #222;
-    padding: 8px 0;
-    margin-bottom: 20px;
     text-align: center;
-    font-style: italic;
     font-size: 1.1rem;
+    font-style: italic;
     font-weight: 600;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 15px;
 }
 
 .articleBody {
@@ -86,6 +121,8 @@
     grid-template-columns: 1fr 1fr;
     gap: 20px;
     text-align: justify;
+    font-size: 0.85rem;
+    line-height: 1.4;
 }
 
 .firstColumn {
@@ -95,107 +132,195 @@
 
 .dropCap {
     float: left;
-    font-size: 3.5rem;
+    font-size: 3.8rem;
     line-height: 0.8;
-    padding-top: 4px;
+    padding-top: 2px;
     padding-right: 8px;
     font-weight: 900;
+    font-family: serif;
 }
 
 .articleText {
-    font-size: 0.85rem;
-    line-height: 1.4;
     margin-bottom: 15px;
 }
 
-.eventPhoto {
+/* Photo Section */
+.eventPhotoContainer {
+    position: relative;
+    margin: 20px 0;
+    border: 1px solid #222;
+    padding: 4px;
+    background: #fff;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    transform: rotate(-1deg);
+}
+
+.actualPhoto {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: sepia(0.5) contrast(1.1) grayscale(0.2);
+}
+
+.placeholderPhoto {
     width: 100%;
     height: 180px;
-    background: #ccc;
-    margin-bottom: 15px;
-    border: 1px solid #222;
+    background: #e0e0e0;
     display: flex;
     align-items: center;
     justify-content: center;
-    filter: sepia(0.8) contrast(1.2);
-    position: relative;
-    overflow: hidden;
+    color: #555;
 }
 
-.eventPhoto::before {
-    content: "";
+.stamp {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle, transparent 30%, rgba(0, 0, 0, 0.1) 100%);
+    top: -12px;
+    right: -12px;
+    background: #c62828;
+    color: #fff;
+    padding: 4px 12px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    transform: rotate(15deg);
+    border: 2px dashed #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    z-index: 10;
 }
 
-.caption {
+.photoCaption {
     font-size: 0.65rem;
     font-style: italic;
-    margin-top: 5px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 5px;
+    margin-top: 6px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 2px;
+    font-weight: 600;
 }
 
-.detailsBox {
-    background: rgba(0, 0, 0, 0.03);
-    padding: 10px;
-    border: 1px dashed #666;
-    margin-top: 15px;
-}
-
-.detailItem {
+/* Right Column Details */
+.leadStory h3 {
     font-size: 1rem;
-    font-weight: 900;
-    margin-bottom: 5px;
     text-transform: uppercase;
+    border-bottom: 2px solid #222;
+    margin-bottom: 10px;
+    padding-bottom: 2px;
 }
 
-.advertisement {
-    grid-column: span 2;
-    border-top: 2px solid #222;
+.quoteBox {
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-style: italic;
+    margin: 20px 0;
+    padding: 10px;
+    border-left: 4px solid #222;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
     margin-top: 20px;
-    padding-top: 15px;
+    border: 2px solid #222;
+    padding: 10px;
+}
+
+.infoItem {
     display: flex;
     justify-content: space-between;
+    border-bottom: 1px dashed #999;
+    padding-bottom: 2px;
 }
 
-.adBox {
-    width: 48%;
-    border: 1px solid #888;
-    padding: 10px;
-    text-align: center;
+.infoItem:last-child {
+    border-bottom: none;
 }
 
-.adTitle {
-    font-size: 0.7rem;
+.infoLabel {
+    font-weight: 900;
     text-transform: uppercase;
-    font-weight: bold;
-    border-bottom: 1px solid #888;
-    margin-bottom: 5px;
+    font-size: 0.75rem;
 }
 
-.adText {
+.infoValue {
+    font-size: 0.75rem;
+}
+
+/* Classifieds / Ads */
+.classifiedsTitle {
+    grid-column: span 2;
+    background: #222;
+    color: #f4ecd8;
+    text-align: center;
+    font-weight: 900;
+    padding: 6px;
+    margin-top: 25px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+}
+
+.classifiedsGrid {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 2px solid #222;
+    border-top: none;
+    background: #fff;
+}
+
+.classifiedBox {
+    border-right: 1px solid #222;
+    padding: 10px;
     font-size: 0.65rem;
+    text-align: center;
+    background: #f4ecd8;
+}
+
+.classifiedBox:last-child {
+    border-right: none;
+}
+
+.classifiedBox h4 {
+    margin: 0 0 5px 0;
+    border-bottom: 1px solid #888;
+    padding-bottom: 3px;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.footerBar {
+    grid-column: span 2;
+    text-align: center;
+    font-size: 0.6rem;
+    margin-top: 15px;
+    border-top: 3px double #222;
+    padding-top: 5px;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 @media (max-width: 500px) {
     .newspaper {
         width: 100%;
         height: auto;
-        min-height: 100%;
     }
 
-    .articleBody {
+    .articleBody,
+    .classifiedsGrid {
         grid-template-columns: 1fr;
     }
 
     .firstColumn {
         border-right: none;
         padding-right: 0;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+
+    .classifiedBox {
+        border-right: none;
+        border-bottom: 1px solid #222;
     }
 }

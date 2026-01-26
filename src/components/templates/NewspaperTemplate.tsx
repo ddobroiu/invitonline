@@ -35,148 +35,155 @@ export default function NewspaperTemplate(props: NewspaperTemplateProps) {
     return (
         <div className={styles.paperWrapper}>
             <div className={styles.newspaper}>
-                {/* Top Banner */}
-                <div className={styles.topBar}>
-                    <span>EDIȚIE SPECIALĂ</span>
-                    <span>{today}</span>
-                    <span>GRATUIT</span>
+                {/* Header Meta */}
+                <div className={styles.headerMeta}>
+                    <div className={styles.weatherBox}>
+                        <span style={{ fontWeight: 'bold' }}>METEO:</span> IUBIRE MAXIMĂ & SOARE
+                    </div>
+                    <div className={styles.editionInfo}>
+                        NR. 1 • VOL. {new Date().getFullYear()} • EDIȚIE LIMITATĂ
+                    </div>
+                    <div className={styles.priceBox}>
+                        PREȚ: UN ZÂMBET
+                    </div>
                 </div>
 
                 {/* Masthead */}
                 <div className={styles.masthead}>
-                    <h1>THE {props.eventType?.toUpperCase() || 'EVENT'} TIMES</h1>
+                    <h1>The {props.eventType ? props.eventType.charAt(0).toUpperCase() + props.eventType.slice(1) : 'Wedding'} Times</h1>
+                    <div className={styles.slogan}>"Ziarul oficial al celor mai frumoase povești de dragoste"</div>
                 </div>
 
-                {/* Main Content Area */}
+                <div style={{ borderBottom: '2px solid #222', marginBottom: '2px' }}></div>
+                <div style={{ borderBottom: '1px solid #222', marginBottom: '15px' }}></div>
+
+                {/* Main Headline */}
                 <div className={styles.mainHeadline}>
-                    {props.title}: Cel Mai Așteptat Eveniment al Anului {eventYear}!
+                    {props.title}: EVENIMENTUL DECENIULUI A FOST CONFIRMAT!
                 </div>
 
                 <div className={styles.subHeadline}>
-                    "O zi care va rămâne în istorie" - relatează organizatorii.
+                    <em>Surse exclusive confirmă data de {props.date} ca fiind "cea mai importantă zi din istorie".</em>
                 </div>
 
                 <div className={styles.articleBody}>
                     <div className={styles.firstColumn}>
-                        <p className={styles.articleText}>
-                            <span className={styles.dropCap}>D</span>upa luni de pregătiri intense și așteptare,
-                            celebrul cuplu format din {props.title} a anunțat în sfârșit marea veste.
-                            În data de {props.date}, lumea întreagă își va îndrepta atenția către această sărbătoare unică.
-                        </p>
-
-                        <div className={styles.eventPhoto}>
+                        <div className={styles.eventPhotoContainer}>
                             {props.photoUrl ? (
                                 <img
                                     src={props.photoUrl}
                                     alt="Event Photo"
-                                    style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        objectFit: 'cover',
-                                        borderRadius: '4px'
-                                    }}
+                                    className={styles.actualPhoto}
                                 />
                             ) : (
-                                <>
-                                    {props.eventType === 'nunta' && <Heart size={60} strokeWidth={1} color="#222" />}
-                                    {props.eventType === 'botez' && <Baby size={60} strokeWidth={1} color="#222" />}
-                                    {props.eventType !== 'nunta' && props.eventType !== 'botez' && <PartyPopper size={60} strokeWidth={1} color="#222" />}
-                                </>
+                                <div className={styles.placeholderPhoto}>
+                                    {props.eventType === 'nunta' && <Heart size={50} strokeWidth={1} />}
+                                    {props.eventType === 'botez' && <Baby size={50} strokeWidth={1} />}
+                                    {!props.eventType && <PartyPopper size={50} strokeWidth={1} />}
+                                </div>
                             )}
+                            <div className={styles.stamp}>EXCLUSIVE</div>
+                            <div className={styles.photoCaption}>▲ FIG 1. Protagoniștii acestui eveniment istoric.</div>
                         </div>
-                        <div className={styles.caption}>
-                            ▲ Foto: Imagine din timpul pregătirilor pentru ziua de {props.date}.
-                        </div>
+
+                        <p className={styles.articleText}>
+                            <span className={styles.dropCap}>D</span>intr-o mare de evenimente mondene, unul singur strălucește cu adevărat.
+                            Redacția noastră a aflat că <strong>{props.title}</strong> au decis să își unească destinele într-o ceremonie fastuoasă.
+                            Locația aleasă, <strong>{props.location}</strong>, va deveni centrul universului pentru o noapte.
+                        </p>
                     </div>
 
                     <div className={styles.secondColumn}>
-                        <p className={styles.articleText} style={{ fontWeight: '600' }}>
-                            Locația secretă a fost dezvăluită: {props.location}!
-                        </p>
-                        <p className={styles.articleText}>
-                            Invitații sunt sfătuiți să își rezerve locul cât mai curând posibil.
-                            Sursele noastre spun că petrecerea va fi una legendară.
-                        </p>
-
-                        <div className={styles.detailsBox}>
-                            <div className={styles.detailItem}>
-                                <Calendar size={14} style={{ marginRight: '5px' }} /> {props.date}
-                            </div>
-                            <div className={styles.detailItem}>
-                                <MapPin size={14} style={{ marginRight: '5px' }} /> {props.location.split(',')[0]}
+                        <div className={styles.leadStory}>
+                            <h3>DETALIILE SCANDALOS DE FRUMOASE</h3>
+                            <p>
+                                Deși s-a încercat păstrarea secretului, reporterii noștri au aflat totul.
+                                Pregătirile sunt în toi, iar lista de invitați include cele mai importante persoane din viața cuplului.
+                            </p>
+                            <div className={styles.quoteBox}>
+                                "{props.message || 'Vă așteptăm să scriem istorie împreună!'}"
                             </div>
                         </div>
 
-                        <p className={styles.articleText} style={{ marginTop: '15px', fontStyle: 'italic' }}>
-                            "{props.message}"
-                        </p>
-                    </div>
-
-                    {/* Dynamic Custom Fields Section */}
-                    <div style={{ gridColumn: 'span 2', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px', marginTop: '20px', borderTop: '2px solid #222', borderBottom: '2px solid #222', padding: '10px 0' }}>
-                        {props.godparents && (
-                            <div className={styles.adBox} style={{ border: 'none' }}>
-                                <div className={styles.adTitle}>Nași (Godparents)</div>
-                                <div className={styles.adText}>{props.godparents}</div>
+                        {/* Info Grid - Replaces old list */}
+                        <div className={styles.infoGrid}>
+                            <div className={styles.infoItem}>
+                                <div className={styles.infoLabel}>DATA</div>
+                                <div className={styles.infoValue}>{props.date}</div>
                             </div>
-                        )}
-                        {props.godparentsBaptism && (
-                            <div className={styles.adBox} style={{ border: 'none' }}>
-                                <div className={styles.adTitle}>Nași Botez</div>
-                                <div className={styles.adText}>{props.godparentsBaptism}</div>
+                            <div className={styles.infoItem}>
+                                <div className={styles.infoLabel}>LOCAȚIE</div>
+                                <div className={styles.infoValue}>{props.location.split(',')[0]}</div>
                             </div>
-                        )}
-                        {props.parentsGroom && (
-                            <div className={styles.adBox} style={{ border: 'none' }}>
-                                <div className={styles.adTitle}>Părinți Mire</div>
-                                <div className={styles.adText}>{props.parentsGroom}</div>
+                            <div className={styles.infoItem}>
+                                <div className={styles.infoLabel}>MEMO</div>
+                                <div className={styles.infoValue}>Dress Code: {props.dressCode || 'Elegant'}</div>
                             </div>
-                        )}
-                        {props.parentsBride && (
-                            <div className={styles.adBox} style={{ border: 'none' }}>
-                                <div className={styles.adTitle}>Părinți Mireasă</div>
-                                <div className={styles.adText}>{props.parentsBride}</div>
-                            </div>
-                        )}
-
-                        {/* Program Summary */}
-                        {(props.civilCeremonyTime || props.religiousCeremonyTime || props.partyTime) && (
-                            <div className={styles.adBox} style={{ border: 'none' }}>
-                                <div className={styles.adTitle}>PROGRAM</div>
-                                <div className={styles.adText} style={{ fontSize: '0.7rem' }}>
-                                    {props.civilCeremonyTime && <div>Civilă: {props.civilCeremonyTime}</div>}
-                                    {props.religiousCeremonyTime && <div>Religioasă: {props.religiousCeremonyTime}</div>}
-                                    {props.partyTime && <div>Petrecere: {props.partyTime}</div>}
-                                </div>
-                            </div>
-                        )}
-
-                        {props.customFields && props.customFields.map((field, i) => (
-                            field.label && field.value && (
-                                <div key={i} className={styles.adBox} style={{ border: 'none' }}>
-                                    <div className={styles.adTitle}>{field.label}</div>
-                                    <div className={styles.adText}>{field.value}</div>
-                                </div>
-                            )
-                        ))}
-                    </div>
-
-                    {/* Lower Advertisement Section */}
-                    <div className={styles.advertisement}>
-
-                        <div className={styles.adBox}>
-                            <div className={styles.adTitle}>Dress Code</div>
-                            <div className={styles.adText}>{props.dressCode || 'Ținută Elegantă / Full Glam'}</div>
-                        </div>
-                        <div className={styles.adBox}>
-                            <div className={styles.adTitle}>RSVP Urgent</div>
-                            <div className={styles.adText}>Confirmați participarea în cel mai scurt timp!</div>
                         </div>
                     </div>
+                </div>
 
-                    <div style={{ gridColumn: 'span 2', textAlign: 'center', marginTop: '30px', borderTop: '1px solid #222', paddingTop: '10px' }}>
-                        <div style={{ fontSize: '0.6rem', color: '#666' }}>
-                            © Toate drepturile rezervate. InvitatiiOnline.ro News Network
+                {/* Ads Section */}
+                <div className={styles.classifiedsTitle}>MICĂ PUBLICITATE & ANUNȚURI</div>
+                <div className={styles.classifiedsGrid}>
+                    {(props.parentsGroom || props.parentsBride) && (
+                        <div className={styles.classifiedBox}>
+                            <h4>PĂRINȚI</h4>
+                            <p>{props.parentsGroom}</p>
+                            <p>{props.parentsBride}</p>
+                        </div>
+                    )}
+                    {(props.godparents || props.godparentsBaptism) && (
+                        <div className={styles.classifiedBox}>
+                            <h4>NAȘI SPIRITUALI</h4>
+                            <p>{props.godparents || props.godparentsBaptism}</p>
+                        </div>
+                    )}
+                    {(props.civilCeremonyTime || props.religiousCeremonyTime || props.partyTime) && (
+                        <div className={styles.classifiedBox}>
+                            <h4>PROGRAM</h4>
+                            {props.civilCeremonyTime && <p>Civilă: {props.civilCeremonyTime}</p>}
+                            {props.religiousCeremonyTime && <p>Religioasă: {props.religiousCeremonyTime}</p>}
+                            {props.partyTime && <p>Petrecere: {props.partyTime}</p>}
+                        </div>
+                    )}
+                    {props.customFields && props.customFields.map((field, i) => (
+                        field.label && field.value && (
+                            <div key={i} className={styles.classifiedBox}>
+                                <h4>{field.label.toUpperCase()}</h4>
+                                <p>{field.value}</p>
+                            </div>
+                        )
+                    ))}
+                    <div className={styles.classifiedBox} style={{ background: '#222', color: '#f4ecd8' }}>
+                        <h4 style={{ color: '#f4ecd8', borderColor: '#f4ecd8' }}>RSVP</h4>
+                        <p>Vă rugăm confirmați prezența.</p>
+                        <p>Termen limită: Imediat.</p>
+                    </div>
+                </div>
+
+                <div className={styles.footerBar}>
+                    INVITATII ONLINE NEWS GROUP © {new Date().getFullYear()} • TIPĂRIT ÎN INIMA TA
+                </div>
+
+                {/* RSVP COUPON */}
+                <div className={styles.rsvpWrapper}>
+                    <div className={styles.cutLine}>
+                        <span>✂</span> -------------------------------------------------------------
+                    </div>
+                    <div className={styles.rsvpCoupon}>
+                        <div className={styles.rsvpHeader}>TALON DE CONFIRMARE</div>
+                        <div className={styles.rsvpContent}>
+                            <p>DA, doresc să iau parte la acest eveniment istoric!</p>
+                            <p style={{ fontSize: '0.7rem', marginTop: '5px' }}>Vă rugăm să ne onorați cu prezența.</p>
+
+                            <button className={styles.rsvpButton}>
+                                CONFIRMĂ PREZENȚA
+                            </button>
+
+                            <div style={{ fontSize: '0.6rem', marginTop: '8px', fontStyle: 'italic' }}>
+                                *Prin completarea acestui talon, sunteți de acord să vă distrați.
+                            </div>
                         </div>
                     </div>
                 </div>
