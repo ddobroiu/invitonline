@@ -1,0 +1,201 @@
+.paperWrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a1a;
+    padding: 20px;
+}
+
+.newspaper {
+    width: 400px;
+    height: 560px;
+    background: #f4ecd8;
+    /* Weathered paper color */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    padding: 25px;
+    position: relative;
+    overflow-y: auto;
+    color: #222;
+    font-family: 'Times New Roman', Times, serif;
+    border: 1px solid #dcd1b3;
+}
+
+/* Texture overlay for paper */
+.newspaper::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.topBar {
+    border-bottom: 2px solid #222;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.masthead {
+    border-bottom: 4px solid #222;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.masthead h1 {
+    font-size: 2.8rem;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    font-weight: 900;
+}
+
+.mainHeadline {
+    font-size: 2.2rem;
+    line-height: 1.1;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 15px;
+    text-transform: capitalize;
+}
+
+.subHeadline {
+    border-top: 1px solid #222;
+    border-bottom: 1px solid #222;
+    padding: 8px 0;
+    margin-bottom: 20px;
+    text-align: center;
+    font-style: italic;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.articleBody {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    text-align: justify;
+}
+
+.firstColumn {
+    border-right: 1px solid #ccc;
+    padding-right: 15px;
+}
+
+.dropCap {
+    float: left;
+    font-size: 3.5rem;
+    line-height: 0.8;
+    padding-top: 4px;
+    padding-right: 8px;
+    font-weight: 900;
+}
+
+.articleText {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 15px;
+}
+
+.eventPhoto {
+    width: 100%;
+    height: 180px;
+    background: #ccc;
+    margin-bottom: 15px;
+    border: 1px solid #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: sepia(0.8) contrast(1.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.eventPhoto::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, transparent 30%, rgba(0, 0, 0, 0.1) 100%);
+}
+
+.caption {
+    font-size: 0.65rem;
+    font-style: italic;
+    margin-top: 5px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.detailsBox {
+    background: rgba(0, 0, 0, 0.03);
+    padding: 10px;
+    border: 1px dashed #666;
+    margin-top: 15px;
+}
+
+.detailItem {
+    font-size: 1rem;
+    font-weight: 900;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.advertisement {
+    grid-column: span 2;
+    border-top: 2px solid #222;
+    margin-top: 20px;
+    padding-top: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.adBox {
+    width: 48%;
+    border: 1px solid #888;
+    padding: 10px;
+    text-align: center;
+}
+
+.adTitle {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-bottom: 1px solid #888;
+    margin-bottom: 5px;
+}
+
+.adText {
+    font-size: 0.65rem;
+}
+
+@media (max-width: 500px) {
+    .newspaper {
+        width: 100%;
+        height: auto;
+        min-height: 100%;
+    }
+
+    .articleBody {
+        grid-template-columns: 1fr;
+    }
+
+    .firstColumn {
+        border-right: none;
+        padding-right: 0;
+    }
+}

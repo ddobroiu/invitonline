@@ -1,0 +1,221 @@
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, #1e272e, #050505);
+    padding: 20px;
+    perspective: 1200px;
+}
+
+.playerCard {
+    width: 95%;
+    max-width: 440px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 40px;
+    padding: 50px 40px;
+    box-shadow: 0 50px 100px rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: zoomIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.vinylWrapper {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    margin-bottom: 40px;
+    cursor: pointer;
+}
+
+.vinyl {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, #222 30%, #000 100%);
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    background-image: repeating-radial-gradient(circle,
+            transparent,
+            transparent 2px,
+            rgba(255, 255, 255, 0.03) 2px,
+            rgba(255, 255, 255, 0.03) 4px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.playing {
+    animation: spin 6s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 110px;
+    height: 110px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: #1a1a1a;
+    border: 8px solid #000;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.trackInfo {
+    text-align: center;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.trackTitle {
+    font-family: var(--font-heading);
+    font-size: 2.4rem;
+    color: #fff;
+    margin-bottom: 5px;
+    line-height: 1.1;
+}
+
+.artist {
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 0.85rem;
+}
+
+.soundWave {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 30px;
+    margin-top: 20px;
+}
+
+.bar {
+    width: 4px;
+    background: #fff;
+    border-radius: 2px;
+    height: 10px;
+    animation: wave 1.2s infinite alternate ease-in-out;
+}
+
+@keyframes wave {
+    0% {
+        height: 8px;
+        opacity: 0.4;
+    }
+
+    100% {
+        height: 30px;
+        opacity: 1;
+    }
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin: 20px 0;
+}
+
+.playBtn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.playBtn:hover {
+    transform: scale(1.1);
+    background: #f1f2f6;
+}
+
+.details {
+    margin-top: 10px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.rsvpBtn {
+    margin-top: 35px;
+    width: 100%;
+    padding: 16px;
+    border-radius: 50px;
+    background: #fff;
+    color: #000;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    font-size: 0.9rem;
+}
+
+.rsvpBtn:hover {
+    background: #dcdde1;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+    .playerCard {
+        width: 340px;
+        padding: 30px;
+    }
+
+    .vinylWrapper {
+        width: 260px;
+        height: 260px;
+    }
+
+    .trackTitle {
+        font-size: 1.8rem;
+    }
+}

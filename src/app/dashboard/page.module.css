@@ -117,6 +117,8 @@
     border-radius: 20px;
     padding: 2rem;
     border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow-x: auto;
+    /* Enable horizontal scroll for table */
 }
 
 .sectionTitle {
@@ -128,6 +130,8 @@
 .guestList {
     width: 100%;
     border-collapse: collapse;
+    min-width: 600px;
+    /* Force minimum width to trigger scroll on small screens */
 }
 
 .guestList th {
@@ -180,4 +184,209 @@
 
 .shareButton:hover {
     transform: scale(1.05);
+}
+
+.previewContainer {
+    width: 100%;
+    height: 600px;
+    /* Mobile or specific height */
+    background: #111;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 3rem;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.previewContainer>div {
+    transform: scale(0.9);
+}
+
+/* Invitation Cards Grid */
+.eventGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.invitationCard {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.invitationCard:hover {
+    transform: translateY(-10px);
+    border-color: var(--accent);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.invitationCard.activeCard {
+    border-color: var(--accent);
+    background: rgba(212, 175, 55, 0.08);
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.cardIcon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+}
+
+.cardBody h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-heading);
+}
+
+.cardDetails {
+    color: #888;
+    font-size: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.cardFooter {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.guestBadge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: #ccc;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.typeBadge {
+    font-size: 0.65rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: var(--accent);
+    color: black;
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.label {
+    font-size: 0.85rem;
+    color: #aaa;
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.input {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1.1rem;
+    border-radius: 12px;
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    outline: none;
+}
+
+.input:focus {
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+@media (max-width: 900px) {
+    .dashboardContainer {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1.5rem;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .navItem {
+        padding: 0.5rem 1rem;
+        margin-bottom: 0;
+        font-size: 0.9rem;
+    }
+
+    .logo {
+        margin-bottom: 0;
+        font-size: 1.2rem;
+    }
+
+    .mainContent {
+        padding: 1.5rem;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .previewContainer {
+        height: 400px;
+    }
+}
+
+@media (max-width: 600px) {
+    .sidebar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .statsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .eventGrid {
+        grid-template-columns: 1fr;
+    }
 }

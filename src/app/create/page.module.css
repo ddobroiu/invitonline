@@ -1,41 +1,57 @@
 .container {
-    min-height: 100vh;
-    padding: 2rem;
+    height: calc(100vh - 80px);
+    padding: 1.5rem;
     display: flex;
     gap: 2rem;
-    background: radial-gradient(circle at top left, #1a1a1a, #000);
+    background: #000;
     color: #fff;
     overflow: hidden;
 }
 
 .editorSection {
     flex: 1;
-    max-width: 500px;
+    max-width: 600px;
+    min-width: 400px;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
     z-index: 10;
-    animation: slideInLeft 0.8s ease-out;
+    overflow-y: auto;
+    height: 100%;
+    padding-right: 0.8rem;
+}
+
+/* Custom Scrollbar for sidebars */
+.editorSection::-webkit-scrollbar {
+    width: 4px;
+}
+
+.editorSection::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.editorSection::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
 }
 
 .previewSection {
     flex: 2;
-    background: #111;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: radial-gradient(circle at center, #111, #000);
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     overflow: hidden;
-    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
-    animation: fadeIn 1s ease-out;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    padding: 40px;
 }
 
 .title {
     font-family: var(--font-heading);
-    font-size: 2.5rem;
-    background: linear-gradient(to right, #d4af37, #f0e68c);
+    font-size: 1.8rem;
+    background: linear-gradient(to right, #fff, #999);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -48,56 +64,57 @@
 }
 
 .label {
-    font-size: 0.9rem;
-    color: #888;
-    font-weight: 500;
-    letter-spacing: 1px;
+    font-size: 0.85rem;
+    color: #aaa;
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: block;
 }
 
+
 .input {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 1rem;
-    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1.1rem;
+    border-radius: 12px;
     color: #fff;
     font-family: var(--font-body);
     font-size: 1rem;
     transition: all 0.3s ease;
 }
 
+
 .input:focus {
     outline: none;
     border-color: var(--accent);
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
 }
 
+
 .btnGenerate {
-    margin-top: 1rem;
-    background: linear-gradient(45deg, var(--accent), #ff8c00);
+    background: var(--accent);
     color: #000;
     border: none;
-    padding: 1.2rem;
-    border-radius: 12px;
-    font-weight: bold;
-    font-size: 1.1rem;
+    padding: 1rem;
+    border-radius: 16px;
+    font-weight: 800;
+    font-size: 0.9rem;
     cursor: pointer;
-    transition: transform 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .btnGenerate:hover {
-    transform: scale(1.02);
-}
-
-/* Reusing envelope styles for preview but scaled */
-.previewScale {
-    transform: scale(0.8);
+    transform: translateY(-2px);
+    filter: brightness(1.1);
 }
 
 @keyframes slideInLeft {
     from {
         opacity: 0;
-        transform: translateX(-50px);
+        transform: translateX(-20px);
     }
 
     to {
@@ -113,5 +130,161 @@
 
     to {
         opacity: 1;
+    }
+}
+
+.stepNav {
+    display: flex;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+    padding: 6px;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stepTab {
+    flex: 1;
+    padding: 12px 5px;
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #444;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.activeTab {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--accent);
+}
+
+.editorCard {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 28px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(20px);
+}
+
+.inputGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.fullWidth {
+    grid-column: span 2;
+}
+
+.templateGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.templateBtn {
+    padding: 20px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.02);
+    color: #555;
+    cursor: pointer;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.templateBtn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.activeTemplate {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(212, 175, 55, 0.08);
+}
+
+.btnSecondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: #888;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btnSecondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+        /* Let body handle scroll */
+        overflow: visible;
+        /* Remove internal scroll */
+        padding: 1rem;
+    }
+
+    .editorSection {
+        flex: none;
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        overflow: visible;
+        order: 2;
+        /* Editor (default) first */
+        /* Preview on top or bottom? Let's put editor on top for easier access usually, but design-wise maybe preview first? Let's stick to Editor first (order 1 implicitly) */
+    }
+
+    .previewSection {
+        flex: none;
+        width: 100%;
+        min-height: 400px;
+        /* Reduced from 500px fixed */
+        height: auto;
+        order: 1;
+        margin-top: 0;
+        margin-bottom: 2rem;
+        padding: 20px;
+        /* Reduced padding */
+    }
+}
+
+@media (max-width: 600px) {
+    .templateGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .inputGrid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .fullWidth {
+        grid-column: span 1;
     }
 }

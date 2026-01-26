@@ -1,0 +1,85 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  password      String
+  name          String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Billing Details
+  companyName   String?
+  cui           String?
+  regCom        String?
+  address       String?
+  city          String?
+  county        String?
+  bank          String?
+  iban          String?
+
+  events        Event[]
+  orders        Order[]
+}
+
+model Event {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  type            String   // nunta, botez, etc
+  template        String   // envelope, netflix, etc
+  title           String
+  date            String
+  location        String
+  locationUrl     String?  // Google Maps Link
+  invitationLink  String?  @unique
+  message         String?
+  data            Json     // Store full flexible JSON data for template specific fields
+  isPaid          Boolean  @default(false)
+  stripeSessionId String?  @unique
+  guests          Guest[]
+  orders          Order[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Order {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  eventId         String?
+  event           Event?    @relation(fields: [eventId], references: [id])
+  amount          Float
+  currency        String   @default("RON")
+  stripeSessionId String?  @unique
+  status          String   @default("pending") // pending, completed, failed
+  
+  // Invoice Info
+  invoiceSeries   String?
+  invoiceNumber   String?
+  invoiceLink     String?
+
+  createdAt       DateTime @default(now())
+}
+
+
+model Guest {
+  id        String   @id @default(uuid())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name      String
+  contact   String   // Email or Phone
+  persons   Int      @default(1)
+  status    String   @default("pending") // pending, confirmed, declined
+  message   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+

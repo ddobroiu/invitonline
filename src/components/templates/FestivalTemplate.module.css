@@ -1,0 +1,193 @@
+.festivalWrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0d001a;
+    padding: 20px;
+}
+
+.ticket {
+    width: 320px;
+    height: 600px;
+    background: linear-gradient(135deg, #1a0033 0%, #4d0099 100%);
+    border-radius: 30px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(128, 0, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Holographic effect */
+.ticket::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg,
+            transparent 45%,
+            rgba(255, 255, 255, 0.05) 50%,
+            transparent 55%);
+    animation: holo 6s infinite linear;
+    pointer-events: none;
+}
+
+@keyframes holo {
+    0% {
+        transform: translate(-20%, -20%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(20%, 20%) rotate(0deg);
+    }
+}
+
+.header {
+    padding: 40px 20px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.festivalName {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    background: linear-gradient(to bottom, #fff, #9d50bb);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1;
+}
+
+.ticketType {
+    font-size: 0.7rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: #ff00ff;
+    margin-top: 10px;
+    font-weight: 900;
+}
+
+.mainSection {
+    padding: 30px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.lineupTitle {
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.performerGrid {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.mainPerformer {
+    font-size: 1.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.supportAct {
+    font-size: 0.9rem;
+    color: #aaa;
+    text-transform: uppercase;
+}
+
+.infoLine {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.infoBlock {
+    text-align: left;
+}
+
+.infoLabel {
+    font-size: 0.5rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    margin-bottom: 3px;
+}
+
+.infoValue {
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.qrSection {
+    background: white;
+    padding: 20px;
+    margin-top: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+/* Ticket cut-out circles */
+.qrSection::before,
+.qrSection::after {
+    content: "";
+    position: absolute;
+    top: -15px;
+    width: 30px;
+    height: 30px;
+    background: #0d001a;
+    border-radius: 50%;
+}
+
+.qrSection::before {
+    left: -15px;
+}
+
+.qrSection::after {
+    right: -15px;
+}
+
+.qrCode {
+    width: 120px;
+    height: 120px;
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.barcode {
+    width: 80%;
+    height: 30px;
+    background: repeating-linear-gradient(90deg,
+            #333 0, #333 2px,
+            transparent 2px, transparent 4px,
+            #333 4px, #333 5px,
+            transparent 5px, transparent 8px);
+    margin-top: 10px;
+}

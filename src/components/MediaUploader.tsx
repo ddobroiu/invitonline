@@ -1,0 +1,181 @@
+'use client'
+
+import { useState, useRef } from 'react'
+import { Upload, X, Loader2, Music, Film, Check } from 'lucide-react'
+
+interface MediaUploaderProps {
+    type: 'audio' | 'video'
+    currentUrl?: string
+    onUploadComplete: (url: string) => void
+    onRemove: () => void
+}
+
+export default function MediaUploader({ type, currentUrl, onUploadComplete, onRemove }: MediaUploaderProps) {
+    const [isUploading, setIsUploading] = useState(false)
+    const [uploadProgress, setUploadProgress] = useState(0)
+    const fileInputRef = useRef<HTMLInputElement>(null)
+
+    const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        // Validate file type
+        const validAudioTypes = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg']
+        const validVideoTypes = ['video/mp4', 'video/webm', 'video/quicktime', 'video/x-msvideo']
+        const validTypes = type === 'audio' ? validAudioTypes : validVideoTypes
+
+        if (!validTypes.includes(file.type)) {
+            alert(`Tip de fișier invalid. Te rog încarcă un fișier ${type === 'audio' ? 'audio (MP3, WAV)' : 'video (MP4, WebM)'}.`)
+            return
+        }
+
+        // Validate file size (max 50MB for audio, 100MB for video)
+        const maxSize = type === 'audio' ? 50 * 1024 * 1024 : 100 * 1024 * 1024
+        if (file.size > maxSize) {
+            alert(`Fișierul este prea mare. Mărimea maximă este ${type === 'audio' ? '50MB' : '100MB'}.`)
+            return
+        }
+
+        setIsUploading(true)
+        setUploadProgress(0)
+
+        try {
+            const formData = new FormData()
+            formData.append('file', file)
+            formData.append('type', type)
+
+            const response = await fetch('/api/upload-media', {
+                method: 'POST',
+                body: formData
+            })
+
+            if (!response.ok) {
+                throw new Error('Upload failed')
+            }
+
+            const data = await response.json()
+            onUploadComplete(data.url)
+            setUploadProgress(100)
+        } catch (error) {
+            console.error('Upload error:', error)
+            alert('Eroare la încărcarea fișierului. Te rog încearcă din nou.')
+        } finally {
+            setIsUploading(false)
+            setUploadProgress(0)
+        }
+    }
+
+    const Icon = type === 'audio' ? Music : Film
+    const label = type === 'audio' ? 'Audio' : 'Video'
+
+    return (
+        <div style={{
+            background: 'rgba(255,255,255,0.03)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '12px',
+            padding: '20px',
+            marginTop: '15px'
+        }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Icon size={18} color="var(--accent)" />
+                    <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#fff' }}>
+                        Încarcă {label}
+                    </span>
+                </div>
+                {currentUrl && (
+                    <button
+                        onClick={onRemove}
+                        style={{
+                            background: 'rgba(255, 68, 68, 0.1)',
+                            border: 'none',
+                            color: '#ff4444',
+                            cursor: 'pointer',
+                            padding: '6px 12px',
+                            borderRadius: '6px',
+                            fontSize: '0.75rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                        }}
+                    >
+                        <X size={14} /> Șterge
+                    </button>
+                )}
+            </div>
+
+            {!currentUrl ? (
+                <>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept={type === 'audio' ? 'audio/*' : 'video/*'}
+                        onChange={handleFileSelect}
+                        style={{ display: 'none' }}
+                    />
+                    <button
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={isUploading}
+                        style={{
+                            width: '100%',
+                            padding: '16px',
+                            background: isUploading ? 'rgba(212, 175, 55, 0.1)' : 'rgba(212, 175, 55, 0.15)',
+                            border: '2px dashed var(--accent)',
+                            borderRadius: '8px',
+                            color: 'var(--accent)',
+                            cursor: isUploading ? 'not-allowed' : 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '8px',
+                            fontSize: '0.85rem',
+                            fontWeight: 600,
+                            transition: 'all 0.2s'
+                        }}
+                    >
+                        {isUploading ? (
+                            <>
+                                <Loader2 size={16} className="animate-spin" />
+                                Se încarcă... {uploadProgress > 0 && `${uploadProgress}%`}
+                            </>
+                        ) : (
+                            <>
+                                <Upload size={16} />
+                                Selectează fișier {label}
+                            </>
+                        )}
+                    </button>
+                    <p style={{ fontSize: '0.7rem', color: '#666', marginTop: '8px', textAlign: 'center' }}>
+                        {type === 'audio' ? 'MP3, WAV (max 50MB)' : 'MP4, WebM (max 100MB)'}
+                    </p>
+                </>
+            ) : (
+                <div style={{
+                    background: 'rgba(0, 255, 0, 0.05)',
+                    border: '1px solid rgba(0, 255, 0, 0.2)',
+                    borderRadius: '8px',
+                    padding: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
+                }}>
+                    <Check size={18} color="#00ff00" />
+                    <div style={{ flex: 1 }}>
+                        <p style={{ fontSize: '0.8rem', color: '#00ff00', margin: 0 }}>
+                            Fișier încărcat cu succes
+                        </p>
+                        {type === 'audio' ? (
+                            <audio controls style={{ width: '100%', marginTop: '8px', height: '32px' }}>
+                                <source src={currentUrl} />
+                            </audio>
+                        ) : (
+                            <video controls style={{ width: '100%', marginTop: '8px', borderRadius: '6px', maxHeight: '150px' }}>
+                                <source src={currentUrl} />
+                            </video>
+                        )}
+                    </div>
+                </div>
+            )}
+        </div>
+    )
+}

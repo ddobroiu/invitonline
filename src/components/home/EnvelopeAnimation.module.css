@@ -1,0 +1,403 @@
+/* Container for the entire 3D Scene */
+.scene {
+    width: 100%;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 2000px;
+    /* Deep perspective for 3D effect */
+    position: relative;
+    overflow: hidden;
+    margin-top: -2rem;
+    /* Pull it up into the hero a bit */
+}
+
+/* Background Atmospheric Glow */
+.glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    pointer-events: none;
+    animation: slowPulse 8s infinite alternate;
+}
+
+@keyframes slowPulse {
+    0% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    100% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+/* --- THE ENVELOPE CONTAINER --- */
+.envelopeWrapper {
+    position: relative;
+    width: 320px;
+    height: 220px;
+    z-index: 10;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    /* Initial State: Flying In from Left */
+    animation: flyInMain 1.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+/* Hover effect only when closed */
+.envelopeWrapper:not(.open):hover {
+    transform: rotateY(10deg) rotateX(10deg) scale(1.05);
+}
+
+@keyframes flyInMain {
+    0% {
+        transform: translateX(-120%) rotateY(45deg) rotateZ(-10deg) scale(0.5);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0) rotateY(0) rotateZ(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* --- ENVELOPE PARTS --- */
+.envelope {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+
+.back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #1a1a1a;
+    border-radius: 10px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.front {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 160px solid transparent;
+    border-right: 160px solid transparent;
+    border-bottom: 130px solid #222;
+    /* Slightly lighter dark */
+    z-index: 30;
+    filter: drop-shadow(0 -5px 5px rgba(0, 0, 0, 0.3));
+}
+
+.front::after {
+    /* Gold trim on pocket */
+    content: '';
+    position: absolute;
+    bottom: -130px;
+    left: -160px;
+    width: 0;
+    height: 0;
+    border-left: 160px solid transparent;
+    border-right: 160px solid transparent;
+    border-bottom: 130px solid transparent;
+    border-bottom-color: rgba(212, 175, 55, 0.05);
+    pointer-events: none;
+}
+
+/* TOP FLAP */
+.flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 160px solid transparent;
+    border-right: 160px solid transparent;
+    border-top: 130px solid #2a2a2a;
+    transform-origin: top;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), border-top-color 0.4s;
+    z-index: 40;
+    filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+}
+
+/* Gold Seal on Flap */
+.seal {
+    position: absolute;
+    top: -90px;
+    /* Position relative to flap border */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 44px;
+    height: 44px;
+    background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #5b4300;
+    font-weight: bold;
+    border: 2px solid #d4af37;
+    z-index: 50;
+    transition: transform 0.3s ease;
+}
+
+.seal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.8) 50%, transparent 60%);
+    background-size: 200% 200%;
+    animation: shimmerSeal 3s infinite;
+}
+
+@keyframes shimmerSeal {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+
+/* OPENING ANIMATION STATES */
+.envelopeWrapper.open .flap {
+    transform: rotateX(180deg);
+    border-top-color: #1a1a1a;
+    /* Match inside when open */
+    z-index: 10;
+}
+
+.envelopeWrapper.open .seal {
+    opacity: 0;
+    /* Hide seal when opened */
+    transform: scale(0.5);
+}
+
+.envelopeWrapper.open {
+    /* Move envelope down slightly when opening */
+    transform: translateY(100px);
+}
+
+/* --- THE INVITATION CARD (INSIDE) --- */
+.card {
+    position: absolute;
+    top: 10px;
+    left: 5%;
+    width: 90%;
+    height: 90%;
+    background: #050505;
+    border: 1px solid #d4af37;
+    z-index: 20;
+    transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s;
+    /* Delay for flap */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    transform-origin: bottom center;
+}
+
+/* Card Visuals */
+.cardBg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, #222, #000);
+    z-index: 0;
+}
+
+/* Animated Golden particles on card background */
+.cardBg::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: radial-gradient(circle, #d4af37 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.2;
+    transform: rotate(15deg);
+    animation: panPattern 20s linear infinite;
+}
+
+@keyframes panPattern {
+    0% {
+        transform: rotate(15deg) translateY(0);
+    }
+
+    100% {
+        transform: rotate(15deg) translateY(-50px);
+    }
+}
+
+.cardContent {
+    position: relative;
+    z-index: 5;
+    padding: 20px;
+    opacity: 0;
+    /* Hidden initially */
+    transform: translateY(20px);
+    transition: all 0.5s ease 0.8s;
+    width: 100%;
+}
+
+.cardTitle {
+    font-family: var(--font-heading);
+    background: linear-gradient(to right, #d4af37, #fff, #d4af37);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-size: 1.6rem;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: shineText 5s linear infinite;
+}
+
+@keyframes shineText {
+    to {
+        background-position: 200% center;
+    }
+}
+
+.cardText {
+    color: #ccc;
+    font-size: 0.7rem;
+    margin-bottom: 15px;
+    font-family: var(--font-body);
+}
+
+.cardBtn {
+    padding: 10px 25px;
+    background: linear-gradient(45deg, #d4af37, #f0e68c);
+    color: #000;
+    font-weight: 800;
+    border: none;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+    transition: all 0.3s ease;
+}
+
+.cardBtn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 25px rgba(212, 175, 55, 0.6);
+}
+
+/* CARD COMING OUT STATE */
+.envelopeWrapper.open .card {
+    /* Moves Up and Scales Out */
+    transform: translateY(-200px) scale(1.15);
+    height: 320px;
+    /* Expand height */
+    z-index: 100;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9), 0 0 40px rgba(212, 175, 55, 0.2);
+    border-color: #fff;
+}
+
+.envelopeWrapper.open .cardContent {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- INSTRUCTION PULSE --- */
+.pulseInstruction {
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #888;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0;
+    animation: fadeInPulse 2s infinite 2s;
+    /* Delayed start */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+}
+
+@keyframes fadeInPulse {
+    0% {
+        opacity: 0.3;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-5px);
+    }
+
+    100% {
+        opacity: 0.3;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+
+/* --- PARTICLES (CONFETTI) --- */
+.particle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    background: #d4af37;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 200;
+}
+
+/* Generate slightly randomized animations for particles via classes we'll assign in JS or predictable CSS here */
+/* In pure CSS modules without dynamic JS styles, we can make a few variants */
+
+/* MOBILE OPTIMIZATIONS */
+@media (max-width: 768px) {
+    .scene {
+        height: 600px;
+        /* More room for mobile scroll */
+        perspective: 1000px;
+        margin-top: 0;
+    }
+
+    .envelopeWrapper {
+        transform: scale(0.85);
+        /* Scale down whole assembly */
+    }
+
+    .envelopeWrapper.open .card {
+        transform: translateY(-160px) scale(1.1);
+        /* Less dramatic move on small screen */
+    }
+}

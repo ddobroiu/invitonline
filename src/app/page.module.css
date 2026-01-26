@@ -1,10 +1,11 @@
 .main {
-  min-height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  /* Let body handle scroll */
   padding: 2rem;
 }
 
@@ -14,6 +15,7 @@
   max-width: 900px;
   margin-top: 10vh;
   margin-bottom: 5rem;
+  width: 100%;
 }
 
 .features {
@@ -106,4 +108,33 @@
   padding-top: 4rem;
   color: #666;
   z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 1rem;
+  }
+
+  .hero {
+    margin-top: 5vh;
+    margin-bottom: 3rem;
+  }
+
+  .description {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+    /* Stack visually on mobile */
+    gap: 1.5rem;
+  }
+
+  .orb1,
+  .orb2 {
+    width: 80vw;
+    height: 80vw;
+    opacity: 0.4;
+  }
 }

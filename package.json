@@ -9,16 +9,30 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
+    "@react-google-maps/api": "^2.20.8",
+    "axios": "^1.13.3",
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.9.0",
+    "lucide-react": "^0.563.0",
     "next": "16.1.4",
+    "next-auth": "^4.24.13",
+    "next-cloudinary": "^6.17.5",
+    "pg": "^8.17.2",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "stripe": "^20.2.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
+    "@types/pg": "^8.16.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.4",
+    "prisma": "^7.3.0",
     "typescript": "^5"
   }
 }

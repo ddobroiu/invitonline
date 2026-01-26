@@ -1,35 +1,96 @@
 'use client'
 
-import { useState } from 'react'
-import styles from '@/app/templates/vinyl/page.module.css'
+import { useState, useRef } from 'react'
+import styles from './VinylTemplate.module.css'
+import RSVPModal from '@/components/RSVPModal'
+import { Play, Pause, Music, Disc, Calendar, MapPin, Users, Star, Navigation } from 'lucide-react'
 
 interface Props {
+    id?: string
     title: string
     date: string
     location: string
+    locationUrl?: string
     message: string
     eventType?: string
+    groomName?: string
+    brideName?: string
+    parentsGroom?: string
+    parentsBride?: string
+    godparents?: string
+    civilCeremonyTime?: string
+    civilCeremonyLoc?: string
+    religiousCeremonyTime?: string
+    religiousCeremonyLoc?: string
+    partyTime?: string
+    partyLoc?: string
+    // Baptism
+    motherName?: string
+    fatherName?: string
+    godparentsBaptism?: string
+    birthDate?: string
+    childAge?: string
+    churchTime?: string
+    churchLoc?: string
+    restaurantTime?: string
+    restaurantLoc?: string
+    // Party
+    celebrantName?: string
+    age?: string
+    partyType?: string
+    theme?: string
+    specialInstructions?: string
+    dressCode?: string
+    customFields?: { label: string, value: string }[]
+    audioUrl?: string
 }
 
-export default function VinylTemplate({ title, date, location, message, eventType = 'nunta' }: Props) {
+
+export default function VinylTemplate({
+    id, title, date, location, locationUrl, message, eventType = 'nunta',
+    godparents, godparentsBaptism, parentsGroom, parentsBride,
+    motherName, fatherName, birthDate, childAge,
+    civilCeremonyTime, civilCeremonyLoc, religiousCeremonyTime, religiousCeremonyLoc,
+    partyTime, partyLoc, churchTime, churchLoc, restaurantTime, restaurantLoc,
+    age, partyType, theme, specialInstructions, dressCode,
+    customFields, audioUrl
+}: Props) {
+
     const [isPlaying, setIsPlaying] = useState(false)
+    const [showRSVP, setShowRSVP] = useState(false)
+    const audioRef = useRef<HTMLAudioElement>(null)
 
-    // Parse details for better display
-    const [names, ...rest] = title.split(' ')
+    // Handle play/pause toggle
+    const togglePlayPause = () => {
+        if (audioRef.current) {
+            if (isPlaying) {
+                audioRef.current.pause()
+            } else {
+                audioRef.current.play()
+            }
+            setIsPlaying(!isPlaying)
+        } else {
+            // If no audio, just toggle animation
+            setIsPlaying(!isPlaying)
+        }
+    }
 
-    let albumName = 'The Wedding Album'
-    if (eventType === 'botez') albumName = "Baby's First Hits"
-    else if (eventType === 'aniversare') albumName = "Birthday Mix Vol. 1"
-    else if (eventType === 'petrecere') albumName = "Party Anthems"
+    let albumName = 'THE WEDDING ALBUM'
+    if (eventType === 'botez') albumName = "BABY'S FIRST HITS"
+    else if (eventType === 'petrecere') albumName = "PARTY ANTHEMS"
 
     return (
-        <div className={styles.container} style={{ minHeight: '100%' }}>
-            <div className={styles.playerCard} style={{ transform: 'scale(0.85)', transformOrigin: 'center' }}>
-                <div className={styles.vinylWrapper}>
+        <div className={styles.container}>
+            <div className={styles.playerCard}>
+
+                <div className={styles.vinylWrapper} onClick={togglePlayPause}>
                     <div className={`${styles.vinyl} ${isPlaying ? styles.playing : ''}`}>
                         <div className={styles.label}>
-                            <div style={{ transform: 'rotate(-45deg)' }}>
-                                SIDE A<br />2026
+                            <div>
+                                <Disc size={20} style={{ marginBottom: '5px' }} />
+                                SIDE A<br />
+                                2026<br />
+                                {eventType === 'nunta' ? 'WDD' : 'BND'}
                             </div>
                         </div>
                     </div>
@@ -37,50 +98,86 @@ export default function VinylTemplate({ title, date, location, message, eventTyp
 
                 <div className={styles.trackInfo}>
                     <h1 className={styles.trackTitle}>{title}</h1>
-                    <p className={styles.artist}>{albumName}</p>
+                    <p className={styles.artist}><Music size={14} style={{ display: 'inline', marginRight: '5px' }} /> {albumName}</p>
 
                     {isPlaying && (
-                        <div className={styles.soundWave} style={{ justifyContent: 'center' }}>
-                            <div className={styles.bar} style={{ animationDelay: '0s' }}></div>
-                            <div className={styles.bar} style={{ animationDelay: '0.1s' }}></div>
-                            <div className={styles.bar} style={{ animationDelay: '0.2s' }}></div>
-                            <div className={styles.bar} style={{ animationDelay: '0.3s' }}></div>
-                            <div className={styles.bar} style={{ animationDelay: '0.4s' }}></div>
+                        <div className={styles.soundWave}>
+                            {[...Array(15)].map((_, i) => (
+                                <div key={i} className={styles.bar} style={{
+                                    animationDelay: `${i * 0.05}s`,
+                                    height: `${Math.random() * 30 + 10}px`
+                                }}></div>
+                            ))}
                         </div>
                     )}
                 </div>
 
                 <div className={styles.controls}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#888">
-                        <path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z" />
-                    </svg>
-
-                    <button className={styles.playBtn} onClick={() => setIsPlaying(!isPlaying)}>
-                        {isPlaying ? (
-                            <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-                            </svg>
-                        ) : (
-                            <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: '4px' }}>
-                                <path d="M8 5v14l11-7z" />
-                            </svg>
-                        )}
+                    <button className={styles.playBtn} onClick={togglePlayPause}>
+                        {isPlaying ? <Pause size={32} fill="currentColor" /> : <Play size={32} fill="currentColor" />}
                     </button>
-
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#888">
-                        <path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z" />
-                    </svg>
                 </div>
 
-                <div className={styles.progressBar}>
-                    <div className={styles.progressFill} style={{ width: isPlaying ? '100%' : '0%', transition: 'width 20s linear' }}></div>
+                {/* Hidden Audio Player */}
+                {audioUrl && (
+                    <audio
+                        ref={audioRef}
+                        src={audioUrl}
+                        loop
+                        onEnded={() => setIsPlaying(false)}
+                        style={{ display: 'none' }}
+                    />
+                )}
+
+                <div className={styles.details} style={{ width: '100%', textAlign: 'left', background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '20px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                        <div>
+                            <div style={{ fontSize: '0.7rem', color: '#888', fontWeight: 800, textTransform: 'uppercase', marginBottom: '8px' }}><Star size={10} /> Track Info</div>
+                            <p style={{ marginBottom: '5px' }}><Calendar size={12} /> {date}</p>
+                            <p><MapPin size={12} /> {location}</p>
+                            <p style={{ marginTop: '10px', fontStyle: 'italic', fontSize: '0.85rem' }}>"{message}"</p>
+                        </div>
+                        <div style={{ fontSize: '0.8rem', opacity: 0.9 }}>
+                            <div style={{ fontSize: '0.7rem', color: '#888', fontWeight: 800, textTransform: 'uppercase', marginBottom: '8px' }}><Users size={10} /> Distribuție</div>
+                            {customFields && customFields.map((field, i) => (
+                                field.label && field.value && (
+                                    <div key={i}>{field.label}: {field.value}</div>
+                                )
+                            ))}
+                            {dressCode && <div style={{ color: 'var(--accent)', marginTop: '5px' }}>Dress: {dressCode}</div>}
+
+
+                            <div style={{ marginTop: '10px', color: 'var(--accent)', fontWeight: 800 }}>
+                                {civilCeremonyTime && <div>Intro: {civilCeremonyTime} {civilCeremonyLoc && `(${civilCeremonyLoc})`}</div>}
+                                {religiousCeremonyTime && <div>Cununie: {religiousCeremonyTime} {religiousCeremonyLoc && `(${religiousCeremonyLoc})`}</div>}
+                                {partyTime && <div>Remix: {partyTime} {partyLoc && `(${partyLoc})`}</div>}
+                                {churchTime && <div>Ceremony: {churchTime} {churchLoc && `(${churchLoc})`}</div>}
+                                {restaurantTime && <div>Afterparty: {restaurantTime} {restaurantLoc && `(${restaurantLoc})`}</div>}
+                            </div>
+                            {specialInstructions && <div style={{ fontSize: '0.7rem', marginTop: '10px', opacity: 0.7 }}>Lyrics: {specialInstructions}</div>}
+                        </div>
+                    </div>
                 </div>
 
-                <div className={styles.details}>
-                    <p>{message}</p>
-                    <p style={{ marginTop: '10px', fontWeight: 'bold' }}>{date} • {location}</p>
-                </div>
+                <button className={styles.rsvpBtn} onClick={() => setShowRSVP(true)}>
+                    REZERVAȚI BILETELE (RSVP)
+                </button>
+                {locationUrl && (
+                    <button
+                        className={styles.rsvpBtn}
+                        style={{ background: 'transparent', border: '1px solid #fff', marginTop: '10px' }}
+                        onClick={() => window.open(locationUrl, '_blank')}
+                    >
+                        <Navigation size={16} style={{ display: 'inline', marginRight: '5px' }} /> NAVIGARE LOCAȚIE
+                    </button>
+                )}
             </div>
+
+            <RSVPModal
+                isOpen={showRSVP}
+                onClose={() => setShowRSVP(false)}
+                eventId={id}
+            />
         </div>
     )
 }

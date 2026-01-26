@@ -1,0 +1,209 @@
+.passportWrapper {
+    perspective: 2000px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #111;
+    overflow: hidden;
+}
+
+.passport {
+    width: 320px;
+    height: 480px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.passport.open {
+    transform: rotateY(-160deg) translateX(50%);
+}
+
+.cover,
+.inner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.cover {
+    background: #2c3e50;
+    /* Navy Blue Leather */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    z-index: 2;
+}
+
+.coverGold {
+    border: 3px double #d4af37;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px 20px;
+    border-radius: 10px;
+}
+
+.emblem {
+    width: 80px;
+    height: 80px;
+    color: #d4af37;
+    opacity: 0.8;
+}
+
+.coverTitle {
+    font-family: var(--font-heading);
+    color: #d4af37;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.coverEvent {
+    color: #d4af37;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.inner {
+    background: #fdf5e6;
+    /* Parchment color */
+    transform: rotateY(180deg);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    color: #333;
+    background-image:
+        radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+    background-size: 20px 20px, 100% 30px;
+}
+
+.dataPage {
+    border: 1px solid #ccc;
+    padding: 15px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.headerText {
+    font-size: 0.6rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.photoArea {
+    width: 100px;
+    height: 120px;
+    background: #ddd;
+    border: 1px solid #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    color: #666;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.fields {
+    flex: 1;
+}
+
+.field {
+    margin-bottom: 12px;
+}
+
+.fieldLabel {
+    font-size: 0.5rem;
+    color: #888;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.fieldValue {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #000;
+    text-transform: uppercase;
+}
+
+.stamp {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 90px;
+    height: 90px;
+    border: 3px solid rgba(255, 0, 0, 0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-15deg);
+    color: rgba(255, 0, 0, 0.4);
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 0.6rem;
+    text-align: center;
+    pointer-events: none;
+}
+
+.mrz {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    margin-top: auto;
+    color: #555;
+    line-height: 1.2;
+}
+
+.instruction {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #888;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translate(-50%, 0);
+    }
+
+    50% {
+        transform: translate(-50%, -10px);
+    }
+}

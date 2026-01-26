@@ -6,9 +6,13 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-body' })
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-heading' })
 
 export const metadata: Metadata = {
-  title: 'Spectra Events - Invitații Digitale Premium',
+  title: 'InvitOnline - Invitații Digitale Premium',
   description: 'Creează invitații digitale inovative pentru nunți, botezuri și aniversări.',
 }
+
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+import Providers from '@/components/Providers'
 
 export default function RootLayout({
   children,
@@ -18,7 +22,13 @@ export default function RootLayout({
   return (
     <html lang="ro">
       <body className={`${inter.variable} ${playfair.variable} antialiased`}>
-        {children}
+        <Providers>
+          <Header />
+          <main style={{ flex: 1, paddingTop: '80px' }}>
+            {children}
+          </main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   )

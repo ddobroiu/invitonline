@@ -1,0 +1,263 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #2c3e50, #000);
+    padding: 20px;
+    overflow: hidden;
+}
+
+.ticketWrapper {
+    perspective: 1500px;
+    animation: flightIn 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes flightIn {
+    from {
+        opacity: 0;
+        transform: translateY(100px) rotateX(30deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0);
+    }
+}
+
+.ticket {
+    display: flex;
+    width: 100%;
+    max-width: 850px;
+    min-height: 340px;
+    height: auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+    position: relative;
+    overflow: hidden;
+    color: #1a1a1a;
+    background-image: url("https://www.transparenttextures.com/patterns/cardboard-flat.png");
+}
+
+/* Shimmer/Glossy Effect */
+.ticket::before {
+    content: '';
+    position: absolute;
+    top: -150%;
+    left: -150%;
+    width: 300%;
+    height: 300%;
+    background: linear-gradient(45deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0) 45%,
+            rgba(255, 255, 255, 0.5) 50%,
+            rgba(255, 255, 255, 0) 55%,
+            transparent 100%);
+    transform: rotate(45deg);
+    animation: shimmer 8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+    pointer-events: none;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translate(-30%, -30%) rotate(45deg);
+    }
+
+    25%,
+    100% {
+        transform: translate(100%, 100%) rotate(45deg);
+    }
+}
+
+.mainSection {
+    flex: 2.3;
+    padding: 30px 40px;
+    border-right: 2px dashed #cbd5e1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Notches for boarding pass look */
+.mainSection::after,
+.mainSection::before {
+    content: '';
+    position: absolute;
+    right: -12px;
+    width: 24px;
+    height: 24px;
+    background: #1a1a1a;
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.mainSection::after {
+    top: -12px;
+}
+
+.mainSection::before {
+    bottom: -12px;
+}
+
+.stubSection {
+    flex: 1;
+    background: #f1f5f9;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    border-left: 1px solid #e2e8f0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.airline {
+    font-weight: 950;
+    font-size: 1.6rem;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+}
+
+.airline span {
+    color: #2563eb;
+}
+
+.classType {
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    padding: 2px 10px;
+    border-radius: 4px;
+}
+
+.route {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 15px 0;
+}
+
+.cityCode {
+    display: flex;
+    flex-direction: column;
+}
+
+.code {
+    font-size: 4rem;
+    font-weight: 900;
+    color: #1e293b;
+    line-height: 1;
+}
+
+.cityName {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.planeIcon {
+    color: #2563eb;
+    margin: 0 40px;
+}
+
+.detailsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.detailLabel {
+    font-size: 0.65rem;
+    color: #94a3b8;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.detailValue {
+    font-size: 1rem;
+    font-weight: 850;
+    color: #0f172a;
+    word-break: break-word;
+    /* Allow long addresses to wrap */
+    line-height: 1.2;
+}
+
+.qrCode {
+    width: 100px;
+    height: 100px;
+    background: #fff;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.checkInBtn {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-size: 0.85rem;
+}
+
+.checkInBtn:hover {
+    background: #2563eb;
+    transform: scale(1.02);
+}
+
+.barcode {
+    width: 100%;
+    height: 35px;
+    background: repeating-linear-gradient(90deg, #333 0, #333 1px, #fff 1px, #fff 3px, #000 3px, #000 4px, #fff 4px, #fff 6px);
+    opacity: 0.4;
+    border-radius: 4px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .ticket {
+        flex-direction: column;
+        width: 340px;
+        height: auto;
+    }
+
+    .mainSection {
+        border-right: none;
+        border-bottom: 2px dashed #e2e8f0;
+        padding: 25px;
+    }
+
+    .mainSection::after,
+    .mainSection::before {
+        display: none;
+    }
+
+    .code {
+        font-size: 3rem;
+    }
+
+    .stubSection {
+        padding: 25px;
+    }
+}

@@ -2,26 +2,67 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { signIn } from 'next-auth/react'
 import styles from './page.module.css'
 
 export default function LoginPage() {
     const router = useRouter()
     const [isLogin, setIsLogin] = useState(true)
+    const [error, setError] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
     const [formData, setFormData] = useState({
         email: '',
         password: '',
         name: ''
     })
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        // Simulate login/signup logic
-        if (formData.email && formData.password) {
-            // In a real app, call API here
-            localStorage.setItem('user', JSON.stringify({ name: formData.name || 'User', email: formData.email }))
-            router.push('/dashboard')
+        setError('')
+        setIsLoading(true)
+
+        if (isLogin) {
+            // LOGIN FLOW
+            const res = await signIn('credentials', {
+                email: formData.email,
+                password: formData.password,
+                redirect: false
+            })
+
+            if (res?.error) {
+                setError('Email sau parolă incorectă')
+            } else {
+                localStorage.setItem('user', JSON.stringify({ email: formData.email })) // Keep for legacy dashboard check if needed, but session is better
+                router.push('/dashboard')
+            }
+        } else {
+            // REGISTER FLOW
+            try {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                })
+
+                if (res.ok) {
+                    // Auto login after register
+                    const loginRes = await signIn('credentials', {
+                        email: formData.email,
+                        password: formData.password,
+                        redirect: false
+                    })
+                    if (!loginRes?.error) {
+                        router.push('/dashboard')
+                    }
+                } else {
+                    const data = await res.json()
+                    setError(data.message || 'Eroare la înregistrare')
+                }
+            } catch (err) {
+                setError('A apărut o eroare. Încearcă din nou.')
+            }
         }
+        setIsLoading(false)
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +81,8 @@ export default function LoginPage() {
                         ? 'Intră în cont pentru a gestiona invitațiile.'
                         : 'Începe să creezi momente memorabile.'}
                 </p>
+
+                {error && <p style={{ color: '#ff4444', textAlign: 'center', marginBottom: '1rem' }}>{error}</p>}
 
                 <form onSubmit={handleSubmit}>
                     {!isLogin && (
@@ -82,8 +125,8 @@ export default function LoginPage() {
                         />
                     </div>
 
-                    <button type="submit" className={styles.submitBtn}>
-                        {isLogin ? 'Autentificare' : 'Înregistrare'}
+                    <button type="submit" className={styles.submitBtn} disabled={isLoading}>
+                        {isLoading ? 'Se procesează...' : (isLogin ? 'Autentificare' : 'Înregistrare')}
                     </button>
                 </form>
 
@@ -91,7 +134,7 @@ export default function LoginPage() {
                     {isLogin ? 'Nu ai cont?' : 'Ai deja cont?'}
                     <span
                         className={styles.link}
-                        onClick={() => setIsLogin(!isLogin)}
+                        onClick={() => { setIsLogin(!isLogin); setError('') }}
                     >
                         {isLogin ? 'Creează unul acum' : 'Intră în cont'}
                     </span>
