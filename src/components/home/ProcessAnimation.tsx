@@ -142,14 +142,30 @@ export default function ProcessAnimation() {
                                 <div className={styles.envFlap}></div>
                                 <div className={styles.envBody}></div>
                                 <div className={styles.envCard}>
-                                    <Crown size={20} color="#d4af37" style={{ marginBottom: '10px' }} />
-                                    <div style={{ color: '#999', fontSize: '10px', letterSpacing: '1px', textTransform: 'uppercase' }}>Save The Date</div>
-                                    <div style={{ color: '#000', fontSize: '18px', fontWeight: 'bold', margin: '5px 0', fontFamily: 'serif' }}>Mihai & Teodora</div>
-                                    <div style={{ background: '#000', color: '#fff', padding: '5px 10px', fontSize: '8px', borderRadius: '10px', marginTop: '10px' }}>
-                                        CONFIRMĂ PREZENȚA
+                                    <div className={styles.cardSubtitle}>SAVE THE DATE</div>
+                                    <div className={styles.cardTitle}>Mihai & Teodora</div>
+
+                                    {/* Animated Button */}
+                                    <div className={styles.rsvpBtn}>
+                                        <div className="btnText">
+                                            {step === 3 ? (
+                                                <span className="animate-pulse">CONFIRMĂ PREZENȚA</span>
+                                            ) : 'CONFIRMĂ'}
+                                        </div>
                                     </div>
                                 </div>
                                 <div className={styles.envFront}></div>
+
+                                {/* Hands/Finger Interaction */}
+                                {step === 3 && (
+                                    <>
+                                        <div className={styles.fingerTap}>👆</div>
+                                        {/* Confetti Particles */}
+                                        <div className={styles.confetti} style={{ '--tx': '-50px', '--ty': '-80px' } as any}></div>
+                                        <div className={styles.confetti} style={{ '--tx': '50px', '--ty': '-90px' } as any}></div>
+                                        <div className={styles.confetti} style={{ '--tx': '0px', '--ty': '-100px' } as any}></div>
+                                    </>
+                                )}
                             </div>
                         </div>
 
