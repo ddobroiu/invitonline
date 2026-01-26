@@ -553,18 +553,20 @@ function CreateEventContent() {
                     {previewMode === 'mobile' ? (
                         <div className={styles.phoneFrame}>
                             <div className={styles.phoneInner}>
-                                {selectedTemplate === 'envelope' && <EnvelopeTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'netflix' && <NetflixTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'boarding' && <BoardingPassTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'vinyl' && <VinylTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'scratch' && <ScratchTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'passport' && <PassportTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'news' && <NewspaperTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'cinema' && <CinemaTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'festival' && <FestivalTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'vip' && <VipCardTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'story' && <StoryTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'chat' && <ChatTemplate {...formData} eventType={formData.eventType} />}
+                                <div className={styles.scalerContent}>
+                                    {selectedTemplate === 'envelope' && <EnvelopeTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'netflix' && <NetflixTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'boarding' && <BoardingPassTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'vinyl' && <VinylTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'scratch' && <ScratchTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'passport' && <PassportTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'news' && <NewspaperTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'cinema' && <CinemaTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'festival' && <FestivalTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'vip' && <VipCardTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'story' && <StoryTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'chat' && <ChatTemplate {...formData} eventType={formData.eventType} />}
+                                </div>
                             </div>
                         </div>
                     ) : (
@@ -575,18 +577,20 @@ function CreateEventContent() {
                                 <div className={styles.dot}></div>
                             </div>
                             <div className={styles.pcContent}>
-                                {selectedTemplate === 'envelope' && <EnvelopeTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'netflix' && <NetflixTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'boarding' && <BoardingPassTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'vinyl' && <VinylTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'scratch' && <ScratchTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'passport' && <PassportTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'news' && <NewspaperTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'cinema' && <CinemaTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'festival' && <FestivalTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'vip' && <VipCardTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'story' && <StoryTemplate {...formData} eventType={formData.eventType} />}
-                                {selectedTemplate === 'chat' && <ChatTemplate {...formData} eventType={formData.eventType} />}
+                                <div className={styles.scalerContent}>
+                                    {selectedTemplate === 'envelope' && <EnvelopeTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'netflix' && <NetflixTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'boarding' && <BoardingPassTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'vinyl' && <VinylTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'scratch' && <ScratchTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'passport' && <PassportTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'news' && <NewspaperTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'cinema' && <CinemaTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'festival' && <FestivalTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'vip' && <VipCardTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'story' && <StoryTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'chat' && <ChatTemplate {...formData} eventType={formData.eventType} />}
+                                </div>
                             </div>
                         </div>
                     )}

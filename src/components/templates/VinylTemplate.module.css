@@ -1,22 +1,22 @@
-.container {
+.vinylContainer {
     width: 100%;
-    min-height: 100vh;
+    min-height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     background: radial-gradient(circle at center, #1e272e, #050505);
-    padding: 20px 10px;
+    padding: 40px 20px;
     perspective: 1200px;
 }
 
 .playerCard {
     width: 100%;
-    max-width: 440px;
+    max-width: 400px;
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(25px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 40px;
-    padding: 50px 40px;
+    padding: 40px 30px;
     box-shadow: 0 50px 100px rgba(0, 0, 0, 0.8);
     display: flex;
     flex-direction: column;
@@ -38,9 +38,9 @@
 
 .vinylWrapper {
     position: relative;
-    width: 320px;
-    height: 320px;
-    margin-bottom: 40px;
+    width: 280px;
+    height: 280px;
+    margin-bottom: 30px;
     cursor: pointer;
 }
 
@@ -78,18 +78,18 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 110px;
-    height: 110px;
+    width: 90px;
+    height: 90px;
     background: #fff;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     font-weight: 900;
     color: #1a1a1a;
-    border: 8px solid #000;
+    border: 6px solid #000;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -97,13 +97,13 @@
 
 .trackInfo {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     width: 100%;
 }
 
 .trackTitle {
     font-family: var(--font-heading);
-    font-size: 2.4rem;
+    font-size: 2rem;
     color: #fff;
     margin-bottom: 5px;
     line-height: 1.1;
@@ -114,7 +114,7 @@
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 3px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
 .soundWave {
@@ -154,8 +154,8 @@
 }
 
 .playBtn {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     background: #fff;
     border: none;
@@ -176,15 +176,15 @@
     margin-top: 10px;
     text-align: center;
     color: rgba(255, 255, 255, 0.8);
-    font-size: 1rem;
+    font-size: 0.95rem;
     line-height: 1.6;
     word-break: break-word;
 }
 
 .rsvpBtn {
-    margin-top: 35px;
+    margin-top: 30px;
     width: 100%;
-    padding: 16px;
+    padding: 15px;
     border-radius: 50px;
     background: #fff;
     color: #000;
@@ -194,7 +194,7 @@
     cursor: pointer;
     transition: all 0.3s;
     border: none;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .rsvpBtn:hover {
@@ -206,16 +206,17 @@
 /* Responsive */
 @media (max-width: 500px) {
     .playerCard {
-        width: 340px;
-        padding: 30px;
+        width: 100%;
+        max-width: 320px;
+        padding: 30px 20px;
     }
 
     .vinylWrapper {
-        width: 260px;
-        height: 260px;
+        width: 220px;
+        height: 220px;
     }
 
     .trackTitle {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
     }
 }
