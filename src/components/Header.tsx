@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useSession, signOut } from 'next-auth/react'
-import { X } from 'lucide-react'
+import { X, Mail } from 'lucide-react'
 
 export default function Header() {
     const pathname = usePathname()
@@ -58,18 +58,52 @@ export default function Header() {
                 pointerEvents: 'auto',
                 boxShadow: scrolled ? '0 12px 40px rgba(0,0,0,0.5)' : 'none'
             }}>
-                <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-                    <h2 style={{
-                        fontSize: '1.25rem',
-                        fontWeight: '900',
-                        fontFamily: 'var(--font-heading)',
-                        color: '#fff',
-                        letterSpacing: '0.5px',
-                        margin: 0,
-                        textTransform: 'uppercase'
+                <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <style>{`
+                        @keyframes floatMail {
+                            0%, 100% { transform: translateY(0) rotate(0deg); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3); }
+                            50% { transform: translateY(-4px) rotate(-3deg); box-shadow: 0 15px 25px rgba(212, 175, 55, 0.5); }
+                        }
+                    `}</style>
+                    <div style={{
+                        background: 'linear-gradient(135deg, var(--accent) 0%, #fff 100%)',
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        animation: 'floatMail 3.5s ease-in-out infinite',
+                        border: '1px solid rgba(255,255,255,0.2)'
                     }}>
-                        INVITONLINE<span style={{ color: 'var(--accent)' }}>.RO</span>
-                    </h2>
+                        <Mail size={22} color="#000" strokeWidth={2.5} />
+                    </div>
+                    <div>
+                        <h2 style={{
+                            fontSize: '1.3rem',
+                            fontWeight: '900',
+                            fontFamily: 'var(--font-heading)',
+                            color: '#fff',
+                            letterSpacing: '0.5px',
+                            margin: 0,
+                            lineHeight: 0.9,
+                            textTransform: 'uppercase'
+                        }}>
+                            INVIT<span style={{ color: 'var(--accent)' }}>ONLINE</span>
+                        </h2>
+                        <span style={{
+                            fontSize: '0.55rem',
+                            color: 'rgba(255,255,255,0.6)',
+                            letterSpacing: '2.5px',
+                            textTransform: 'uppercase',
+                            display: 'block',
+                            fontWeight: '600',
+                            marginLeft: '2px',
+                            marginTop: '3px'
+                        }}>
+                            Digital Events
+                        </span>
+                    </div>
                 </Link>
 
                 {/* DESKTOP NAV */}

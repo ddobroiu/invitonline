@@ -39,6 +39,8 @@
     flex: 1;
     min-height: 0;
     padding-right: 5px;
+    padding-bottom: 60px;
+    /* Extra space at bottom */
 }
 
 .cardFooter {

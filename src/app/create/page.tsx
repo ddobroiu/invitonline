@@ -514,33 +514,9 @@ export default function CreateEvent() {
 
 
                             {/* Dynamic Custom Fields */}
+                            {/* Dynamic Custom Fields */}
                             <div className={`${styles.formGroup} ${styles.fullWidth}`} style={{ marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                                    <label className={styles.label} style={{ color: 'var(--accent)', margin: 0 }}>CÂMPURI PERSONALIZATE (MAX 3)</label>
-                                    {formData.customFields.length < 3 && (
-                                        <button
-                                            type="button"
-                                            onClick={addCustomField}
-                                            style={{
-                                                background: 'rgba(212, 175, 55, 0.1)',
-                                                color: 'var(--accent)',
-                                                border: '1px solid var(--accent)',
-                                                borderRadius: '50%',
-                                                width: '28px',
-                                                height: '28px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                cursor: 'pointer',
-                                                transition: 'all 0.2s'
-                                            }}
-                                            onMouseOver={(e) => e.currentTarget.style.background = 'rgba(212, 175, 55, 0.2)'}
-                                            onMouseOut={(e) => e.currentTarget.style.background = 'rgba(212, 175, 55, 0.1)'}
-                                        >
-                                            <Plus size={16} />
-                                        </button>
-                                    )}
-                                </div>
+                                <label className={styles.label} style={{ color: 'var(--accent)', marginBottom: '15px', display: 'block' }}>CÂMPURI PERSONALIZATE (MAX 3)</label>
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                                     {formData.customFields.map((field, idx) => (
@@ -581,10 +557,42 @@ export default function CreateEvent() {
                                         </div>
                                     ))}
 
-                                    {formData.customFields.length === 0 && (
-                                        <p style={{ fontSize: '0.8rem', color: '#666', fontStyle: 'italic' }}>
-                                            Apasă pe butonul + pentru a adăuga câmpuri speciale (ex: Nași, Părinți, Dress Code).
-                                        </p>
+                                    {formData.customFields.length < 3 && (
+                                        <button
+                                            type="button"
+                                            onClick={addCustomField}
+                                            style={{
+                                                width: '100%',
+                                                padding: '14px',
+                                                border: '2px dashed rgba(255,255,255,0.15)',
+                                                background: 'rgba(255,255,255,0.02)',
+                                                color: '#aaa',
+                                                borderRadius: '12px',
+                                                marginTop: '5px',
+                                                cursor: 'pointer',
+                                                fontSize: '0.85rem',
+                                                fontWeight: '700',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '8px',
+                                                transition: 'all 0.2s',
+                                                textTransform: 'uppercase',
+                                                letterSpacing: '0.5px'
+                                            }}
+                                            onMouseOver={(e) => {
+                                                e.currentTarget.style.borderColor = 'var(--accent)'
+                                                e.currentTarget.style.color = 'var(--accent)'
+                                                e.currentTarget.style.background = 'rgba(212, 175, 55, 0.05)'
+                                            }}
+                                            onMouseOut={(e) => {
+                                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'
+                                                e.currentTarget.style.color = '#aaa'
+                                                e.currentTarget.style.background = 'rgba(255,255,255,0.02)'
+                                            }}
+                                        >
+                                            <Plus size={18} /> ADAUGĂ CÂMP (Ex: Nași, Părinți...)
+                                        </button>
                                     )}
                                 </div>
                             </div>
