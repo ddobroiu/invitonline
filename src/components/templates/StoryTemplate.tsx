@@ -21,6 +21,13 @@ interface Props {
     civilCeremonyTime?: string
     religiousCeremonyTime?: string
     partyTime?: string
+    // Extra
+    parentsGroom?: string
+    parentsBride?: string
+    godparents?: string
+    motherName?: string
+    fatherName?: string
+    godparentsBaptism?: string
 }
 
 export default function StoryTemplate(props: Props) {
@@ -130,6 +137,14 @@ export default function StoryTemplate(props: Props) {
                                     {props.partyTime && <div>Petrecere: {props.partyTime}</div>}
                                 </div>
                             </div>
+
+                            {(props.godparents || props.parentsGroom) && (
+                                <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(255,255,255,0.1)', fontSize: '0.8rem' }}>
+                                    {props.godparents && <div><strong>Nași:</strong> {props.godparents}</div>}
+                                    {props.parentsGroom && <div><strong>Părinți:</strong> {props.parentsGroom}</div>}
+                                </div>
+                            )}
+
                         </div>
 
                         <p style={{ fontStyle: 'italic', opacity: 0.9 }}>"{props.message}"</p>
@@ -210,7 +225,9 @@ export default function StoryTemplate(props: Props) {
                     {/* Header */}
                     <div className={styles.headerInfo}>
                         <div className={styles.avatar}>
-                            {props.title.charAt(0)}
+                            {props.photoUrl ? (
+                                <img src={props.photoUrl} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            ) : props.title.charAt(0)}
                         </div>
                         <div>
                             <div className={styles.userName}>{props.title.split('&')[0].trim()}</div>

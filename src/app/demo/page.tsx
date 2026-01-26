@@ -6,6 +6,14 @@ import NetflixTemplate from '@/components/templates/NetflixTemplate'
 import BoardingPassTemplate from '@/components/templates/BoardingPassTemplate'
 import VinylTemplate from '@/components/templates/VinylTemplate'
 import ScratchTemplate from '@/components/templates/ScratchTemplate'
+import PassportTemplate from '@/components/templates/PassportTemplate'
+import NewspaperTemplate from '@/components/templates/NewspaperTemplate'
+import CinemaTemplate from '@/components/templates/CinemaTemplate'
+import FestivalTemplate from '@/components/templates/FestivalTemplate'
+import VipCardTemplate from '@/components/templates/VipCardTemplate'
+import StoryTemplate from '@/components/templates/StoryTemplate'
+import ChatTemplate from '@/components/templates/ChatTemplate'
+
 import { Sparkles, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
@@ -27,18 +35,25 @@ export default function DemoPage() {
     }
 
     const templates = [
-        { id: 'envelope', name: 'Plic 3D de Lux', component: EnvelopeTemplate, desc: 'O deschidere magică pentru o nuntă clasică.' },
-        { id: 'netflix', name: 'Cinematic Netflix', component: NetflixTemplate, desc: 'Transformă evenimentul tău într-un serial de succes.' },
-        { id: 'boarding', name: 'Boarding Pass Premium', component: BoardingPassTemplate, desc: 'Pregătește-ți invitații pentru o călătorie de neuitat.' },
-        { id: 'vinyl', name: 'Vintage Vinyl Record', component: VinylTemplate, desc: 'Pentru iubitorii de muzică și stil retro-chic.' },
-        { id: 'scratch', name: 'Loz Norocos (Scratch)', component: ScratchTemplate, desc: 'O experiență interactivă cu premiu garantat.' },
+        { id: 'envelope', name: 'Plic 3D de Lux', component: EnvelopeTemplate, desc: 'O deschidere magică și clasică.' },
+        { id: 'netflix', name: 'Cinematic Netflix', component: NetflixTemplate, desc: 'Evenimentul tău ca un serial de succes.' },
+        { id: 'boarding', name: 'Boarding Pass', component: BoardingPassTemplate, desc: 'Invitație tip bilet de avion pentru călătoria vieții.' },
+        { id: 'vinyl', name: 'Vinyl Record', component: VinylTemplate, desc: 'Stil retro cu muzică de fundal.' },
+        { id: 'scratch', name: 'Loz Norocos', component: ScratchTemplate, desc: 'Interactiv: răzuiește pentru a afla surpriza.' },
+        { id: 'passport', name: 'Pașaport VIP', component: PassportTemplate, desc: 'Perfect pentru nunți tip "Destination Wedding".' },
+        { id: 'news', name: 'The Wedding Times', component: NewspaperTemplate, desc: 'Anunță evenimentul ca o știre de primă pagină.' },
+        { id: 'cinema', name: 'Film Poster', component: CinemaTemplate, desc: 'Voi sunteți vedetele filmului.' },
+        { id: 'festival', name: 'Summer Festival', component: FestivalTemplate, desc: 'Pentru petreceri non-conformiste și electrizante.' },
+        { id: 'vip', name: 'VIP Access Card', component: VipCardTemplate, desc: 'Un card exclusivist 3D cu efecte premium.' },
+        { id: 'story', name: 'Insta Story', component: StoryTemplate, desc: 'Format vertical, modern, perfect pentru mobil.' },
+        { id: 'chat', name: 'Love Chat', component: ChatTemplate, desc: 'O invitație sub formă de conversație WhatsApp.' },
     ]
 
     return (
         <div className={styles.demoPage}>
             {/* Hero Header */}
             <header className={styles.hero}>
-                <div className={styles.heroBadge}><Sparkles size={16} /> Modele 2026</div>
+                <div className={styles.heroBadge}><Sparkles size={16} /> Colecția 2026</div>
                 <h1 className={styles.heroTitle}>Alege Design-ul <span className={styles.goldText}>Perfect</span></h1>
                 <p className={styles.heroSubtitle}>Toate modelele noastre sunt complet interactive și optimizate pentru orice dispozitiv.</p>
             </header>
@@ -52,13 +67,15 @@ export default function DemoPage() {
                                 <h3 className={styles.templateName}>{tpl.name}</h3>
                                 <p className={styles.templateDesc}>{tpl.desc}</p>
                             </div>
-                            <Link href="/create" className={styles.useBtn}>
+                            <Link href={`/create?template=${tpl.id}`} className={styles.useBtn}>
                                 Personalizează <ArrowRight size={16} />
                             </Link>
                         </div>
 
                         <div className={styles.templatePreviewFrame}>
-                            <tpl.component {...demoProps} />
+                            <div className={styles.previewScaler}>
+                                <tpl.component {...demoProps} />
+                            </div>
                         </div>
                     </div>
                 ))}

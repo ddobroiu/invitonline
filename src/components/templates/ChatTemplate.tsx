@@ -17,6 +17,14 @@ interface Props {
     photoUrl?: string
     // Extra props
     partyTime?: string
+    // Extra
+    parentsGroom?: string
+    parentsBride?: string
+    godparents?: string
+    motherName?: string
+    fatherName?: string
+    godparentsBaptism?: string
+    civilCeremonyTime?: string
 }
 
 type MessageType = 'text' | 'image' | 'audio' | 'location'
@@ -46,6 +54,13 @@ export default function ChatTemplate(props: Props) {
         props.photoUrl ? { type: 'image', content: props.photoUrl, delay: 1000 } : null,
         { type: 'location', content: props.location, delay: 1200 },
         props.audioUrl ? { type: 'audio', content: props.audioUrl, delay: 1000 } : null,
+
+        (props.godparents || props.parentsGroom) ? {
+            type: 'text',
+            content: `✨ Cu binecuvântarea nașilor ${props.godparents || ''} ${(props.godparents && props.parentsGroom) ? 'și a părinților' : ''} ${props.parentsGroom || ''}`,
+            delay: 1500
+        } : null,
+
         { type: 'text', content: `Te așteptăm cu drag! Ce zici, poți ajunge?`, delay: 1000 }
     ].filter(Boolean) as { type: MessageType, content: string, delay: number }[]
 

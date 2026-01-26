@@ -112,6 +112,10 @@ export default function VipCardTemplate(props: Props) {
                                     "{props.message}"
                                 </p>
 
+                                {props.parentsGroom && <div style={{ marginTop: '5px', fontSize: '0.6rem', color: '#ccc' }}><strong>Prd:</strong> {props.parentsGroom}</div>}
+                                {props.parentsBride && <div style={{ fontSize: '0.6rem', color: '#ccc' }}><strong>Co-Prd:</strong> {props.parentsBride}</div>}
+                                {props.godparents && <div style={{ fontSize: '0.6rem', color: '#d4af37' }}><strong>Sponsors:</strong> {props.godparents}</div>}
+
                                 {props.customFields && props.customFields.length > 0 && (
                                     <div style={{ marginTop: '10px', fontSize: '0.6rem', color: '#d4af37' }}>
                                         {props.customFields.map((f, i) => (

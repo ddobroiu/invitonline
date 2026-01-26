@@ -108,20 +108,20 @@
 .templatePreviewFrame {
     width: 100%;
     height: 750px;
-    /* Increased height for full visibility */
-    background: #000;
+    background: #111;
     position: relative;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
-    overflow-y: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /* No overflow styling directly here, handled by scaler */
 }
 
-.templatePreviewFrame>div {
-    /* Ensure the component fills correctly but allow some padding */
+.previewScaler {
     width: 100%;
     height: 100%;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    /* Force templates to stay inside */
+    transform: translateZ(0);
 }
 
 .demoFooter {

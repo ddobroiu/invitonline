@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import styles from './page.module.css'
 
@@ -165,8 +165,14 @@ export default function CreateEvent() {
 
 
 
+    const searchParams = useSearchParams()
+
     // State for selected template
-    const [selectedTemplate, setSelectedTemplate] = useState<'envelope' | 'netflix' | 'boarding' | 'vinyl' | 'scratch' | 'passport' | 'news' | 'cinema' | 'festival' | 'vip' | 'story' | 'chat'>('envelope')
+    const [selectedTemplate, setSelectedTemplate] = useState<'envelope' | 'netflix' | 'boarding' | 'vinyl' | 'scratch' | 'passport' | 'news' | 'cinema' | 'festival' | 'vip' | 'story' | 'chat'>(() => {
+        const t = searchParams.get('template')
+        const valid = ['envelope', 'netflix', 'boarding', 'vinyl', 'scratch', 'passport', 'news', 'cinema', 'festival', 'vip', 'story', 'chat']
+        return (valid.includes(t || '') ? t : 'envelope') as any
+    })
     const [currentStep, setCurrentStep] = useState(0)
     const steps = [
         { name: 'Design', icon: <Palette size={16} /> },
