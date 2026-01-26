@@ -13,6 +13,7 @@ interface Props {
     locationUrl?: string
     message: string
     eventType?: string
+    childName?: string
     groomName?: string
     brideName?: string
     parentsGroom?: string
@@ -49,6 +50,7 @@ interface Props {
 
 export default function VinylTemplate({
     id, title, date, location, locationUrl, message, eventType = 'nunta',
+    groomName, brideName, childName, celebrantName,
     godparents, godparentsBaptism, parentsGroom, parentsBride,
     motherName, fatherName, birthDate, childAge,
     civilCeremonyTime, civilCeremonyLoc, religiousCeremonyTime, religiousCeremonyLoc,
@@ -145,13 +147,19 @@ export default function VinylTemplate({
                         <div style={{ fontSize: '0.8rem', opacity: 0.9 }}>
                             <div style={{ fontSize: '0.7rem', color: '#888', fontWeight: 800, textTransform: 'uppercase', marginBottom: '8px' }}><Users size={10} /> Distribuție (Credits)</div>
 
+                            {groomName && <div><strong>Mire:</strong> {groomName}</div>}
+                            {brideName && <div><strong>Mireasă:</strong> {brideName}</div>}
                             {parentsGroom && <div><strong>P. Mire:</strong> {parentsGroom}</div>}
                             {parentsBride && <div><strong>P. Mireasă:</strong> {parentsBride}</div>}
                             {godparents && <div><strong>Nași:</strong> {godparents}</div>}
 
+                            {childName && <div><strong>Copil:</strong> {childName}</div>}
                             {motherName && <div><strong>Mama:</strong> {motherName}</div>}
                             {fatherName && <div><strong>Tata:</strong> {fatherName}</div>}
                             {godparentsBaptism && <div><strong>Nași:</strong> {godparentsBaptism}</div>}
+
+                            {celebrantName && <div><strong>Sărbătorit:</strong> {celebrantName}</div>}
+                            {age && <div><strong>Vârstă:</strong> {age} ani</div>}
 
                             {customFields && customFields.map((field, i) => (
                                 field.label && field.value && (

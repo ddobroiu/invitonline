@@ -25,6 +25,7 @@ interface Props {
     partyTime?: string
     partyLoc?: string
     // Baptism
+    childName?: string
     motherName?: string
     fatherName?: string
     godparentsBaptism?: string
@@ -46,6 +47,7 @@ interface Props {
 
 export default function EnvelopeTemplate({
     id, title, date, location, locationUrl, message, eventType = 'nunta',
+    groomName, brideName, childName, celebrantName,
     godparents, godparentsBaptism, parentsGroom, parentsBride,
     civilCeremonyTime, civilCeremonyLoc, religiousCeremonyTime, religiousCeremonyLoc,
     partyTime, partyLoc, churchTime, churchLoc, restaurantTime, restaurantLoc,
@@ -85,14 +87,21 @@ export default function EnvelopeTemplate({
                                 <div style={{ fontWeight: 800, color: '#b8860b', borderBottom: '1px solid #eee', marginBottom: '4px' }}><Users size={12} /> Distribuție</div>
 
                                 {/* Wedding Details */}
+                                {groomName && <div><strong>Mire:</strong> {groomName}</div>}
+                                {brideName && <div><strong>Mireasă:</strong> {brideName}</div>}
                                 {parentsGroom && <div><strong>Părinți Mire:</strong> {parentsGroom}</div>}
                                 {parentsBride && <div><strong>Părinți Mireasă:</strong> {parentsBride}</div>}
                                 {godparents && <div><strong>Nași:</strong> {godparents}</div>}
 
                                 {/* Baptism Details */}
+                                {childName && <div><strong>Copil:</strong> {childName}</div>}
                                 {motherName && <div><strong>Mama:</strong> {motherName}</div>}
                                 {fatherName && <div><strong>Tata:</strong> {fatherName}</div>}
                                 {godparentsBaptism && <div><strong>Nași:</strong> {godparentsBaptism}</div>}
+
+                                {/* Party Details */}
+                                {celebrantName && <div><strong>Sărbătorit:</strong> {celebrantName}</div>}
+                                {age && <div><strong>Vârstă:</strong> {age} ani</div>}
 
                                 {customFields && customFields.map((field, i) => (
                                     field.label && field.value && (

@@ -12,7 +12,10 @@ interface Props {
     location: string
     locationUrl?: string
     message: string
-    eventType?: string
+    eventType: string
+    childName?: string
+    celebrantName?: string
+    // Wedding
     groomName?: string
     brideName?: string
     parentsGroom?: string
@@ -35,7 +38,6 @@ interface Props {
     restaurantTime?: string
     restaurantLoc?: string
     // Party
-    celebrantName?: string
     age?: string
     partyType?: string
     theme?: string
@@ -49,6 +51,7 @@ interface Props {
 
 export default function NetflixTemplate({
     id, title, date, location, locationUrl, message, eventType = 'nunta',
+    groomName, brideName, childName, celebrantName,
     godparents, godparentsBaptism, parentsGroom, parentsBride,
     motherName, fatherName, birthDate, childAge,
     civilCeremonyTime, civilCeremonyLoc, religiousCeremonyTime, religiousCeremonyLoc,
@@ -178,13 +181,19 @@ export default function NetflixTemplate({
                             <div className={styles.episodeDesc}>
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '20px', marginTop: '10px' }}>
                                     {/* Explicit Cast Members */}
+                                    {groomName && <div><strong>Mire:</strong><br />{groomName}</div>}
+                                    {brideName && <div><strong>Mireasă:</strong><br />{brideName}</div>}
                                     {parentsGroom && <div><strong>Părinți Mire:</strong><br />{parentsGroom}</div>}
                                     {parentsBride && <div><strong>Părinți Mireasă:</strong><br />{parentsBride}</div>}
                                     {godparents && <div><strong>Nași:</strong><br />{godparents}</div>}
 
+                                    {childName && <div><strong>Copil:</strong><br />{childName}</div>}
                                     {motherName && <div><strong>Mama:</strong><br />{motherName}</div>}
                                     {fatherName && <div><strong>Tata:</strong><br />{fatherName}</div>}
                                     {godparentsBaptism && <div><strong>Nași:</strong><br />{godparentsBaptism}</div>}
+
+                                    {celebrantName && <div><strong>Sărbătorit:</strong><br />{celebrantName}</div>}
+                                    {age && <div><strong>Vârstă:</strong><br />{age} ani</div>}
 
                                     {customFields && customFields.map((field, i) => (
                                         field.label && field.value && (

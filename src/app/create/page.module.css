@@ -101,11 +101,12 @@
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* PC Mockup - LARGER */
+/* PC Mockup - LARGER & TALLER */
 .pcMockup {
     width: 100%;
     max-width: 1100px;
-    aspect-ratio: 16 / 9.5;
+    aspect-ratio: 16 / 10.5;
+    /* Made it taller to fit envelope animation */
     background: #000;
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -261,22 +262,32 @@
 
 .centeredScaler {
     display: flex !important;
+    flex-direction: column !important;
     justify-content: center !important;
     align-items: center !important;
+    padding-top: 120px !important;
+    /* Default for PC */
+    padding-bottom: 40px !important;
 }
 
-/* For mobile, we still need the scaling but we let flex handle the position */
+/* Specific override for mobile to avoid clipping */
+.mobileMode.centeredScaler {
+    padding-top: 60px !important;
+    padding-bottom: 20px !important;
+}
+
 .mobileMode .scalerContent {
     width: 375px;
-    min-height: 100%;
+    height: 700px;
+    /* Reduced to fit better in the 780px frame (borders/padding) */
     transform: scale(calc(352 / 375));
     flex-shrink: 0;
 }
 
 .centeredScaler .scalerContent {
     margin: auto;
-    /* This helps with flex centering */
-    transform-origin: center center;
+    justify-content: center !important;
+    align-items: center !important;
 }
 
 .pcMode .scalerContent {

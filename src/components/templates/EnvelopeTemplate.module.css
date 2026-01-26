@@ -10,13 +10,13 @@
 
 .envelopeWrapper {
     position: relative;
-    width: 90%;
-    max-width: 480px;
+    width: 96%;
+    max-width: 520px;
     aspect-ratio: 3 / 2;
     background: #2c3e50;
     border-radius: 0 0 20px 20px;
     cursor: pointer;
-    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), inset 0 -10px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), inset 0 -10px 20px rgba(0, 0, 0, 0.3);
     transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
     transform-style: preserve-3d;
 }
@@ -107,22 +107,30 @@
     background: #fff;
     border: 1px solid #d4af37;
     border-radius: 4px;
-    padding: 30px 20px;
+    padding: 20px 15px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
+    /* Better for scroll */
     align-items: center;
     text-align: center;
-    transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     z-index: 2;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     background-image:
         url("https://www.transparenttextures.com/patterns/cream-paper.png"),
         linear-gradient(rgba(212, 175, 55, 0.02) 1px, transparent 1px);
+    overflow-y: auto;
+    /* Handle extra content */
+    scrollbar-width: none;
+}
+
+.card::-webkit-scrollbar {
+    display: none;
 }
 
 .open .card {
-    transform: translateY(-80%) rotate(-1deg) scale(1.05);
+    transform: translateY(-85%) rotate(-1deg) scale(1.02);
     z-index: 10;
     box-shadow: 0 50px 100px rgba(0, 0, 0, 0.5);
 }
@@ -197,23 +205,19 @@
 /* Responsive */
 @media (max-width: 600px) {
     .container {
-        padding: 40px 10px;
+        padding: 40px 15px;
         align-items: center;
-        padding-bottom: 40px;
     }
 
     .envelopeWrapper {
         width: 100%;
-        max-width: 340px;
-    }
-
-    .card {
-        padding: 20px 15px;
+        max-width: 330px;
+        margin-top: 60px;
+        /* Reduced to avoid hitting Dynamic Island */
     }
 
     .open .card {
-        /* On mobile, card pops less high or container handles scroll */
-        transform: translateY(-90%) scale(1.02);
+        transform: translateY(-92%) scale(1.0);
     }
 
     .title {
