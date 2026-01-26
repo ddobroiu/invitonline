@@ -165,6 +165,186 @@ const articles = [
         readTime: '7 min',
         category: 'Lux',
         image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'materiale-print-nunta-euprint',
+        title: 'Materiale Print Premium pentru Nuntă cu EuPrint.ro',
+        excerpt: 'Descoperă cum EuPrint.ro te ajută să creezi materiale print perfecte pentru nuntă - meniuri, place cards, numere de masă și multe altele.',
+        date: '26 Ianuarie 2026',
+        readTime: '6 min',
+        category: 'Servicii',
+        image: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'bannere-nunta-adbanner',
+        title: 'Bannere și Decorațiuni pentru Nuntă cu AdBanner.ro',
+        excerpt: 'Transformă locația nunții cu bannere personalizate, roll-up-uri și decorațiuni de la AdBanner.ro - vizibilitate perfectă pentru evenimentul tău.',
+        date: '25 Ianuarie 2026',
+        readTime: '5 min',
+        category: 'Decorațiuni',
+        image: 'https://images.unsplash.com/photo-1519167758481-83f29da8c6b6?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'gadgeturi-personalizate-nunta-shopprint',
+        title: 'Cadouri Personalizate pentru Invitați cu ShopPrint.ro',
+        excerpt: 'Idei creative de cadouri personalizate pentru invitații de nuntă - căni, tricouri, pixuri și multe altele de pe ShopPrint.ro.',
+        date: '24 Ianuarie 2026',
+        readTime: '7 min',
+        category: 'Cadouri',
+        image: 'https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'tablouri-canvas-nunta-prynt',
+        title: 'Tablouri Canvas Personalizate pentru Nuntă cu Prynt.ro',
+        excerpt: 'Creează amintiri de neuitat cu tablouri canvas personalizate de la Prynt.ro - perfecte pentru decorațiuni și cadouri.',
+        date: '23 Ianuarie 2026',
+        readTime: '5 min',
+        category: 'Decorațiuni',
+        image: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'lista-invitati-bazadate',
+        title: 'Gestionarea Listei de Invitați cu BazaDate.ro',
+        excerpt: 'Organizează perfect lista de invitați, confirmările și comunicarea cu ajutorul platformei BazaDate.ro - eficiență maximă.',
+        date: '22 Ianuarie 2026',
+        readTime: '6 min',
+        category: 'Organizare',
+        image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'facturare-nunta-chatbill',
+        title: 'Gestionarea Bugetului de Nuntă cu ChatBill.ro',
+        excerpt: 'Ține evidența cheltuielilor și facturilor pentru nuntă cu ChatBill.ro - organizare financiară simplă și eficientă.',
+        date: '21 Ianuarie 2026',
+        readTime: '5 min',
+        category: 'Buget',
+        image: 'https://images.unsplash.com/photo-1554224311-beee4ece8db7?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'site-nunta-eweb',
+        title: 'Site Personalizat pentru Nuntă cu E-Web.ro',
+        excerpt: 'Creează un site web spectaculos pentru nunta ta cu E-Web.ro - informații pentru invitați, confirmare online și galerie foto.',
+        date: '20 Ianuarie 2026',
+        readTime: '7 min',
+        category: 'Digital',
+        image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'randari-3d-locatie-nunta',
+        title: 'Vizualizare 3D a Locației de Nuntă cu Randari3D.ro',
+        excerpt: 'Vezi cum va arăta locația nunții înainte de marele eveniment cu randări 3D fotorealiste de la Randari3D.ro.',
+        date: '19 Ianuarie 2026',
+        readTime: '6 min',
+        category: 'Planificare',
+        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'planificare-vizuala-visionboard',
+        title: 'Planificarea Vizuală a Nunții cu VisionBoard.ro',
+        excerpt: 'Organizează toate detaliile nunții într-un singur loc cu VisionBoard.ro - moodboard-uri, timeline și task-uri.',
+        date: '18 Ianuarie 2026',
+        readTime: '5 min',
+        category: 'Organizare',
+        image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'tablouri-decorative-tablou-net',
+        title: 'Decorațiuni Artistice pentru Nuntă cu Tablou.net',
+        excerpt: 'Transformă locația nunții cu tablouri canvas și artă decorativă de la Tablou.net - atmosferă unică și memorabilă.',
+        date: '17 Ianuarie 2026',
+        readTime: '6 min',
+        category: 'Decorațiuni',
+        image: 'https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'management-date-sheet',
+        title: 'Organizarea Datelor pentru Nuntă cu Sheet.ro',
+        excerpt: 'Gestionează bugetul, lista de invitați și toate detaliile nunții cu Sheet.ro - rapoarte clare și organizare perfectă.',
+        date: '16 Ianuarie 2026',
+        readTime: '5 min',
+        category: 'Organizare',
+        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'video-nunta-mp5',
+        title: 'Producție Video Profesională pentru Nuntă cu MP5.ro',
+        excerpt: 'Creează un video spectaculos al nunții tale cu serviciile profesionale de la MP5.ro - amintiri cinematografice.',
+        date: '15 Ianuarie 2026',
+        readTime: '7 min',
+        category: 'Video',
+        image: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'ai-personalizare-invitatii-ai365',
+        title: 'Personalizare Inteligentă a Invitațiilor cu AI365.ro',
+        excerpt: 'Folosește inteligența artificială de la AI365.ro pentru a crea texte personalizate și design unic pentru invitațiile tale.',
+        date: '14 Ianuarie 2026',
+        readTime: '6 min',
+        category: 'Tehnologie',
+        image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'nunta-cu-copii-kidmy',
+        title: 'Organizarea Nunții Family-Friendly cu KidMy.ro',
+        excerpt: 'Sfaturi și soluții pentru o nuntă perfectă cu copii, cu ajutorul platformei KidMy.ro - distracție pentru toată familia.',
+        date: '13 Ianuarie 2026',
+        readTime: '8 min',
+        category: 'Familie',
+        image: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'ecosistem-complet-nunta',
+        title: 'Ecosistem Complet pentru Organizarea Nunții Tale',
+        excerpt: 'Descoperă cum să folosești toate platformele integrate - de la invitații digitale la materiale print și servicii digitale.',
+        date: '12 Ianuarie 2026',
+        readTime: '10 min',
+        category: 'Ghiduri',
+        image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'materiale-premium-prynt-nunta',
+        title: 'Materiale Print Premium pentru Evenimente cu Prynt.ro',
+        excerpt: 'Calitate superioară pentru invitații printate, meniuri și toate materialele de nuntă cu serviciile premium Prynt.ro.',
+        date: '11 Ianuarie 2026',
+        readTime: '6 min',
+        category: 'Print',
+        image: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'promovare-nunta-anuntul',
+        title: 'Promovarea Serviciilor de Nuntă cu Anuntul.net',
+        excerpt: 'Dacă oferi servicii pentru nunți, descoperă cum Anuntul.net te ajută să ajungi la mii de viitori miri.',
+        date: '10 Ianuarie 2026',
+        readTime: '5 min',
+        category: 'Business',
+        image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'semnalistica-nunta-adbanner',
+        title: 'Semnalistică și Direcționare pentru Nuntă cu AdBanner.ro',
+        excerpt: 'Ghidează invitații perfect cu semnalistică profesională de la AdBanner.ro - de la parcare la sala de evenimente.',
+        date: '9 Ianuarie 2026',
+        readTime: '5 min',
+        category: 'Organizare',
+        image: 'https://images.unsplash.com/photo-1511578194003-00c80e42dc9b?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'pachete-complete-nunta-2026',
+        title: 'Pachete Complete pentru Nunta Perfectă în 2026',
+        excerpt: 'Ghid complet: cum să combini invitațiile digitale cu materiale print, decorațiuni și servicii digitale pentru nunta ideală.',
+        date: '8 Ianuarie 2026',
+        readTime: '12 min',
+        category: 'Ghiduri',
+        image: 'https://images.unsplash.com/photo-1519167758481-83f29da8c6b6?w=800&auto=format&fit=crop'
+    },
+    {
+        id: 'buget-optimizat-nunta-servicii',
+        title: 'Cum să Optimizezi Bugetul de Nuntă cu Servicii Integrate',
+        excerpt: 'Economisește până la 40% din bugetul de nuntă folosind platformele integrate - de la invitații la decorațiuni.',
+        date: '7 Ianuarie 2026',
+        readTime: '9 min',
+        category: 'Buget',
+        image: 'https://images.unsplash.com/photo-1633613286991-611fe299c4be?w=800&auto=format&fit=crop'
     }
 ]
 
