@@ -173,7 +173,7 @@ export default function DemoPage() {
                                         <div className={styles.dot}></div>
                                         <div className={styles.dot}></div>
                                     </div>
-                                    <div className={styles.pcContent}>
+                                    <div className={`${styles.pcContent} ${['envelope', 'vinyl', 'scratch', 'vip', 'passport'].includes(tpl.id) ? styles.centeredScaler : ''}`}>
                                         <div className={styles.pcInner}>
                                             <div className={styles.scalerPC}>
                                                 <tpl.component {...demoProps} />
@@ -204,7 +204,7 @@ export default function DemoPage() {
                                         </div>
                                     </div>
                                     <div className={styles.homeBar}></div>
-                                    <div className={styles.phoneInner}>
+                                    <div className={`${styles.phoneInner} ${['envelope', 'vinyl', 'scratch', 'vip', 'passport', 'boarding'].includes(tpl.id) ? styles.centeredScaler : ''}`}>
                                         <div className={styles.mobileInner}>
                                             <div className={styles.scalerMobile}>
                                                 <tpl.component {...demoProps} />

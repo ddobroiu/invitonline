@@ -60,7 +60,7 @@
     position: relative;
     overflow: hidden;
     box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.5);
-    padding: 30px;
+    padding: 20px;
 }
 
 .previewSwitcher {
@@ -101,12 +101,19 @@
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* PC Mockup - LARGER & TALLER */
-.pcMockup {
+.pcMode {
     width: 100%;
-    max-width: 1100px;
-    aspect-ratio: 16 / 10.5;
-    /* Made it taller to fit envelope animation */
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+.pcMockup {
+    width: 95%;
+    max-width: 1200px;
+    aspect-ratio: 16 / 10;
     background: #000;
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -152,21 +159,63 @@
     overflow-y: auto;
     overflow-x: hidden;
     background: #000;
+    container-type: size;
+    display: flex;
+    flex-direction: column;
+    perspective: 3000px;
+}
+
+.pcInner {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    transform-style: preserve-3d;
+}
+
+.pcMockup .centeredScaler {
+    justify-content: center;
+    align-items: center;
+    overflow-y: hidden;
+}
+
+.pcMockup .centeredScaler .pcInner {
+    justify-content: center;
+    align-items: center;
+}
+
+.pcMockup .centeredScaler .scalerContent {
+    width: 90%;
+    max-width: 800px;
+}
+
+.mobileMode {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Phone Mockup - HYPER REALISTIC */
 .phoneFrame {
-    width: 380px;
-    height: 780px;
+    width: 320px;
+    height: 660px;
     background: #000;
-    border: 12px solid #1a1a1a;
-    border-radius: 55px;
+    border: 10px solid #1a1a1a;
+    border-radius: 50px;
     position: relative;
     box-shadow:
-        0 60px 120px rgba(0, 0, 0, 0.9),
-        0 0 0 2px rgba(255, 255, 255, 0.05),
-        inset 0 0 4px rgba(255, 255, 255, 0.2);
+        0 40px 80px rgba(0, 0, 0, 0.9),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
     overflow: hidden;
+}
+
+@media (min-height: 900px) {
+    .phoneFrame {
+        width: 360px;
+        height: 740px;
+    }
 }
 
 /* Dynamic Island Simulation - Overlay */
@@ -239,63 +288,48 @@
     overflow-y: auto;
     overflow-x: hidden;
     position: relative;
-    border-radius: 43px;
+    border-radius: 40px;
     scrollbar-width: none;
-    /* Firefox */
-    -ms-overflow-style: none;
-    /* IE/Edge */
-}
-
-.phoneInner::-webkit-scrollbar {
-    display: none;
-    /* Chrome, Safari, Opera */
+    container-type: size;
+    display: flex;
+    flex-direction: column;
+    perspective: 2000px;
 }
 
 .scalerContent {
     width: 100%;
     min-height: 100%;
-    transform-origin: center center;
-    position: relative;
     display: flex;
     flex-direction: column;
+    transform-style: preserve-3d;
 }
 
 .centeredScaler {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-    padding-top: 120px !important;
-    /* Default for PC */
-    padding-bottom: 40px !important;
-}
-
-/* Specific override for mobile to avoid clipping */
-.mobileMode.centeredScaler {
-    padding-top: 60px !important;
-    padding-bottom: 20px !important;
-}
-
-.mobileMode .scalerContent {
-    width: 375px;
-    height: 700px;
-    /* Reduced to fit better in the 780px frame (borders/padding) */
-    transform: scale(calc(352 / 375));
-    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+    overflow-y: hidden !important;
 }
 
 .centeredScaler .scalerContent {
-    margin: auto;
-    justify-content: center !important;
-    align-items: center !important;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
 }
 
-.pcMode .scalerContent {
+/* Specific scaling only if needed for very small mockups */
+@media (max-width: 1200px) {
+    .phoneFrame {
+        width: 280px;
+        height: 580px;
+    }
+}
+
+.pcMode .pcInner {
     width: 100%;
     height: 100%;
-    transform: none;
-    left: 0;
-    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .title {
