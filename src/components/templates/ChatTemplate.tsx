@@ -45,6 +45,7 @@ export default function ChatTemplate(props: Props) {
     const [isPlaying, setIsPlaying] = useState(false)
     const audioRef = useRef<HTMLAudioElement>(null)
     const messagesEndRef = useRef<HTMLDivElement>(null)
+    const initialized = useRef(false)
 
     // Scriptul conversației
     const script = [
@@ -65,6 +66,9 @@ export default function ChatTemplate(props: Props) {
     ].filter(Boolean) as { type: MessageType, content: string, delay: number }[]
 
     useEffect(() => {
+        if (initialized.current) return
+        initialized.current = true
+
         let timeout: NodeJS.Timeout
         let msgIndex = 0
 
