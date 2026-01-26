@@ -17,6 +17,7 @@ import CinemaTemplate from '@/components/templates/CinemaTemplate'
 import FestivalTemplate from '@/components/templates/FestivalTemplate'
 import VipCardTemplate from '@/components/templates/VipCardTemplate'
 import StoryTemplate from '@/components/templates/StoryTemplate'
+import ChatTemplate from '@/components/templates/ChatTemplate'
 import { Save, Zap, ChevronLeft, Palette, Info, ClipboardList, Settings2, Trash2, Plus, Heart, Baby, PartyPopper, Calendar, MapPin, Eye, Users, CheckCircle, Lock, Link as LinkIcon, Globe, Music, Film, Ticket, Receipt, CreditCard, Loader2, Building, Search } from 'lucide-react'
 import LocationPicker from '@/components/LocationPicker'
 import MediaUploader from '@/components/MediaUploader'
@@ -165,7 +166,7 @@ export default function CreateEvent() {
 
 
     // State for selected template
-    const [selectedTemplate, setSelectedTemplate] = useState<'envelope' | 'netflix' | 'boarding' | 'vinyl' | 'scratch' | 'passport' | 'news' | 'cinema' | 'festival' | 'vip' | 'story'>('envelope')
+    const [selectedTemplate, setSelectedTemplate] = useState<'envelope' | 'netflix' | 'boarding' | 'vinyl' | 'scratch' | 'passport' | 'news' | 'cinema' | 'festival' | 'vip' | 'story' | 'chat'>('envelope')
     const [currentStep, setCurrentStep] = useState(0)
     const steps = [
         { name: 'Design', icon: <Palette size={16} /> },
@@ -411,6 +412,13 @@ export default function CreateEvent() {
                             >
                                 <span style={{ fontSize: '1.5rem' }}>📱</span>
                                 Insta Story
+                            </button>
+                            <button
+                                onClick={() => setSelectedTemplate('chat')}
+                                className={`${styles.templateBtn} ${selectedTemplate === 'chat' ? styles.activeTemplate : ''}`}
+                            >
+                                <span style={{ fontSize: '1.5rem' }}>💬</span>
+                                Love Chat
                             </button>
                         </div>
                     </div>
@@ -805,6 +813,7 @@ export default function CreateEvent() {
                 {selectedTemplate === 'festival' && <FestivalTemplate {...formData} eventType={formData.eventType} />}
                 {selectedTemplate === 'vip' && <VipCardTemplate {...formData} eventType={formData.eventType} />}
                 {selectedTemplate === 'story' && <StoryTemplate {...formData} eventType={formData.eventType} />}
+                {selectedTemplate === 'chat' && <ChatTemplate {...formData} eventType={formData.eventType} />}
             </div >
         </div >
     )
