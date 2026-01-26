@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import styles from './page.module.css'
@@ -34,7 +34,7 @@ interface UserBilling {
     county?: string;
 }
 
-export default function CreateEvent() {
+function CreateEventContent() {
     const router = useRouter()
     const { data: session, status } = useSession()
     const [isSaving, setIsSaving] = useState(false)
@@ -876,5 +876,25 @@ export default function CreateEvent() {
                 {selectedTemplate === 'chat' && <ChatTemplate {...formData} eventType={formData.eventType} />}
             </div >
         </div >
+    )
+}
+
+export default function CreateEvent() {
+    return (
+        <Suspense fallback={
+            <div style={{
+                minHeight: '100vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: '#111',
+                color: '#fff',
+                fontFamily: 'sans-serif'
+            }}>
+                Încărcăm editorul...
+            </div>
+        }>
+            <CreateEventContent />
+        </Suspense>
     )
 }
