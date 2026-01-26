@@ -77,7 +77,7 @@ export default function FestivalTemplate(props: FestivalTemplateProps) {
                 </div>
 
                 {/* Audio Element */}
-                <audio ref={audioRef} src={props.audioUrl} loop onEnded={() => setIsPlaying(false)} />
+                {props.audioUrl && <audio ref={audioRef} src={props.audioUrl} loop onEnded={() => setIsPlaying(false)} />}
 
                 <div className={styles.mainSection}>
                     <div className={styles.lineupTitle}>★ LINE-UP ★</div>

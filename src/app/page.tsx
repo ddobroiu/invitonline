@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Crown, CheckCircle, MapPin } from 'lucide-react'
 import styles from './page.module.css'
-import EnvelopeAnimation from '@/components/home/EnvelopeAnimation'
+import ProcessAnimation from '@/components/home/ProcessAnimation'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -37,7 +37,7 @@ export default function Home() {
         </div>
 
         <div className="animate-fade-in delay-3">
-          <EnvelopeAnimation />
+          <ProcessAnimation />
         </div>
       </section>
 

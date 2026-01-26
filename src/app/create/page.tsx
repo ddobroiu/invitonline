@@ -16,9 +16,10 @@ import NewspaperTemplate from '@/components/templates/NewspaperTemplate'
 import CinemaTemplate from '@/components/templates/CinemaTemplate'
 import FestivalTemplate from '@/components/templates/FestivalTemplate'
 import VipCardTemplate from '@/components/templates/VipCardTemplate'
-import StoryTemplate from '@/components/templates/StoryTemplate'
-import ChatTemplate from '@/components/templates/ChatTemplate'
-import { Save, Zap, ChevronLeft, Palette, Info, ClipboardList, Settings2, Trash2, Plus, Heart, Baby, PartyPopper, Calendar, MapPin, Music, Video, Image as ImageIcon, Loader2, Building, Search, Monitor, Smartphone, Lock, Receipt, CreditCard, MailOpen, Clapperboard, Plane, Disc, Ticket, Globe, Newspaper, Film, Tent, Crown, MessageCircle } from 'lucide-react'
+import ClassicTemplate from '@/components/templates/ClassicTemplate'
+import ClassicGoldTemplate from '@/components/templates/ClassicGoldTemplate'
+import ClassicMinimalTemplate from '@/components/templates/ClassicMinimalTemplate'
+import { Save, Zap, ChevronLeft, Palette, Info, ClipboardList, Settings2, Trash2, Plus, Heart, Baby, PartyPopper, Calendar, MapPin, Music, Video, Image as ImageIcon, Loader2, Building, Search, Monitor, Smartphone, Lock, Receipt, CreditCard, MailOpen, Clapperboard, Plane, Disc, Ticket, Globe, Newspaper, Film, Tent, Crown, MessageCircle, Flower2, Gem, Minus } from 'lucide-react'
 import LocationPicker from '@/components/LocationPicker'
 import MediaUploader from '@/components/MediaUploader'
 import ImageUploader from '@/components/ImageUploader'
@@ -165,10 +166,10 @@ function CreateEventContent() {
     const searchParams = useSearchParams()
 
     // State for selected template
-    const [selectedTemplate, setSelectedTemplate] = useState<'envelope' | 'netflix' | 'boarding' | 'vinyl' | 'scratch' | 'passport' | 'news' | 'cinema' | 'festival' | 'vip' | 'story' | 'chat'>(() => {
+    const [selectedTemplate, setSelectedTemplate] = useState<'classic' | 'classic-gold' | 'classic-minimal' | 'envelope' | 'netflix' | 'boarding' | 'vinyl' | 'scratch' | 'passport' | 'news' | 'cinema' | 'festival' | 'vip' | 'story' | 'chat'>(() => {
         const t = searchParams.get('template')
-        const valid = ['envelope', 'netflix', 'boarding', 'vinyl', 'scratch', 'passport', 'news', 'cinema', 'festival', 'vip', 'story', 'chat']
-        return (valid.includes(t || '') ? t : 'envelope') as any
+        const valid = ['classic', 'classic-gold', 'classic-minimal', 'envelope', 'netflix', 'boarding', 'vinyl', 'scratch', 'passport', 'news', 'cinema', 'festival', 'vip', 'story', 'chat']
+        return (valid.includes(t || '') ? t : 'classic') as any
     })
 
     const [previewMode, setPreviewMode] = useState<'pc' | 'mobile'>('pc')
@@ -372,6 +373,9 @@ function CreateEventContent() {
                             {/* Helper to get badges for editor grid */}
                             {(() => {
                                 const templateData = [
+                                    { id: 'classic', name: 'Classic Floral', icon: <Flower2 size={32} strokeWidth={1.5} />, features: ['photo'] },
+                                    { id: 'classic-gold', name: 'Classic Gold', icon: <Gem size={32} strokeWidth={1.5} />, features: ['photo'] },
+                                    { id: 'classic-minimal', name: 'Minimalist', icon: <Minus size={32} strokeWidth={1.5} />, features: ['photo'] },
                                     { id: 'envelope', name: 'Plic 3D', icon: <MailOpen size={32} strokeWidth={1.5} />, features: ['photo'] },
                                     { id: 'netflix', name: 'Netflix', icon: <Clapperboard size={32} strokeWidth={1.5} />, features: ['video', 'photo'] },
                                     { id: 'boarding', name: 'Avion', icon: <Plane size={32} strokeWidth={1.5} />, features: ['photo'] },
@@ -494,7 +498,7 @@ function CreateEventContent() {
                             </div>
 
                             {/* CONFIGURARE MEDIA (FOTO/VIDEO/AUDIO) - Moved to bottom & Optional */}
-                            {['story', 'netflix', 'chat', 'festival', 'vinyl'].includes(selectedTemplate) && (
+                            {['story', 'netflix', 'chat', 'festival', 'vinyl', 'classic'].includes(selectedTemplate) && (
                                 <div className={`${styles.formGroup} ${styles.fullWidth}`} style={{ marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px' }}>
                                     <details style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '16px', overflow: 'hidden' }}>
                                         <summary style={{ padding: '15px', cursor: 'pointer', userSelect: 'none', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 'bold', color: 'var(--accent)' }}>
@@ -618,8 +622,11 @@ function CreateEventContent() {
                                 </div>
                             </div>
                             <div className={styles.homeBar}></div>
-                            <div className={`${styles.phoneInner} ${['envelope', 'vinyl', 'scratch', 'vip', 'passport'].includes(selectedTemplate) ? styles.centeredScaler : ''}`}>
+                            <div className={`${styles.phoneInner} ${['classic', 'classic-gold', 'classic-minimal', 'envelope', 'vinyl', 'scratch', 'vip', 'passport'].includes(selectedTemplate) ? styles.centeredScaler : ''}`}>
                                 <div className={styles.scalerContent}>
+                                    {selectedTemplate === 'classic' && <ClassicTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'classic-gold' && <ClassicGoldTemplate {...formData} eventType={formData.eventType} />}
+                                    {selectedTemplate === 'classic-minimal' && <ClassicMinimalTemplate {...formData} eventType={formData.eventType} />}
                                     {selectedTemplate === 'envelope' && <EnvelopeTemplate {...formData} eventType={formData.eventType} />}
                                     {selectedTemplate === 'netflix' && <NetflixTemplate {...formData} eventType={formData.eventType} />}
                                     {selectedTemplate === 'boarding' && <BoardingPassTemplate {...formData} eventType={formData.eventType} />}
@@ -642,9 +649,12 @@ function CreateEventContent() {
                                 <div className={styles.dot}></div>
                                 <div className={styles.dot}></div>
                             </div>
-                            <div className={`${styles.pcContent} ${['envelope', 'vinyl', 'scratch', 'vip', 'passport'].includes(selectedTemplate) ? styles.centeredScaler : ''}`}>
+                            <div className={`${styles.pcContent} ${['classic', 'classic-gold', 'classic-minimal', 'envelope', 'vinyl', 'scratch', 'vip', 'passport'].includes(selectedTemplate) ? styles.centeredScaler : ''}`}>
                                 <div className={styles.pcInner}>
                                     <div className={styles.scalerContent}>
+                                        {selectedTemplate === 'classic' && <ClassicTemplate {...formData} eventType={formData.eventType} />}
+                                        {selectedTemplate === 'classic-gold' && <ClassicGoldTemplate {...formData} eventType={formData.eventType} />}
+                                        {selectedTemplate === 'classic-minimal' && <ClassicMinimalTemplate {...formData} eventType={formData.eventType} />}
                                         {selectedTemplate === 'envelope' && <EnvelopeTemplate {...formData} eventType={formData.eventType} />}
                                         {selectedTemplate === 'netflix' && <NetflixTemplate {...formData} eventType={formData.eventType} />}
                                         {selectedTemplate === 'boarding' && <BoardingPassTemplate {...formData} eventType={formData.eventType} />}

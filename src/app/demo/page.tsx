@@ -13,8 +13,10 @@ import FestivalTemplate from '@/components/templates/FestivalTemplate'
 import VipCardTemplate from '@/components/templates/VipCardTemplate'
 import StoryTemplate from '@/components/templates/StoryTemplate'
 import ChatTemplate from '@/components/templates/ChatTemplate'
-
-import { Sparkles, ArrowRight, Monitor, Smartphone, Search } from 'lucide-react'
+import ClassicTemplate from '@/components/templates/ClassicTemplate'
+import ClassicGoldTemplate from '@/components/templates/ClassicGoldTemplate'
+import ClassicMinimalTemplate from '@/components/templates/ClassicMinimalTemplate'
+import { Sparkles, ArrowRight, Monitor, Smartphone, Search, Gem, Minus } from 'lucide-react'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
@@ -59,6 +61,9 @@ export default function DemoPage() {
     }
 
     const templates = [
+        { id: 'classic', name: 'Classic Floral', component: ClassicTemplate, desc: 'Eleganță atemporală cu motive florale.', features: ['photo'] },
+        { id: 'classic-gold', name: 'Classic Gold', component: ClassicGoldTemplate, desc: 'Lux regal cu detalii aurii.', features: ['photo'] },
+        { id: 'classic-minimal', name: 'Minimalist', component: ClassicMinimalTemplate, desc: 'Modern, curat, alb-negru.', features: ['photo'] },
         { id: 'envelope', name: 'Plic 3D de Lux', component: EnvelopeTemplate, desc: 'O deschidere magică și clasică.', features: ['photo'] },
         { id: 'netflix', name: 'Cinematic Netflix', component: NetflixTemplate, desc: 'Evenimentul tău ca un serial de succes.', features: ['video', 'photo'] },
         { id: 'boarding', name: 'Boarding Pass', component: BoardingPassTemplate, desc: 'Invitație tip bilet de avion.', features: ['photo'] },
@@ -173,7 +178,7 @@ export default function DemoPage() {
                                         <div className={styles.dot}></div>
                                         <div className={styles.dot}></div>
                                     </div>
-                                    <div className={`${styles.pcContent} ${['envelope', 'vinyl', 'scratch', 'vip', 'passport'].includes(tpl.id) ? styles.centeredScaler : ''}`}>
+                                    <div className={`${styles.pcContent} ${['classic', 'classic-gold', 'classic-minimal', 'envelope', 'vinyl', 'scratch', 'vip', 'passport'].includes(tpl.id) ? styles.centeredScaler : ''}`}>
                                         <div className={styles.pcInner}>
                                             <div className={styles.scalerPC}>
                                                 <tpl.component {...demoProps} />
@@ -204,7 +209,7 @@ export default function DemoPage() {
                                         </div>
                                     </div>
                                     <div className={styles.homeBar}></div>
-                                    <div className={`${styles.phoneInner} ${['envelope', 'vinyl', 'scratch', 'vip', 'passport', 'boarding'].includes(tpl.id) ? styles.centeredScaler : ''}`}>
+                                    <div className={`${styles.phoneInner} ${['classic', 'classic-gold', 'classic-minimal', 'envelope', 'vinyl', 'scratch', 'vip', 'passport', 'boarding'].includes(tpl.id) ? styles.centeredScaler : ''}`}>
                                         <div className={styles.mobileInner}>
                                             <div className={styles.scalerMobile}>
                                                 <tpl.component {...demoProps} />

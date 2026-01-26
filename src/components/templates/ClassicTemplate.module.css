@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500&display=swap');
+
+.container {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #fff;
+    color: #4a4a4a;
+    font-family: 'Playfair Display', serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.card {
+    background: #fff;
+    width: 100%;
+    max-width: 600px;
+    min-height: 800px;
+    position: relative;
+    padding: 4rem 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+/* Floral Decorations (CSS approximations or placeholders for images) */
+.decorationTopLeft {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 250px;
+    background-image: url('https://images.unsplash.com/photo-1588607196025-a1290639d6e7?q=80&w=800&auto=format&fit=crop');
+    /* Watercolor leaves */
+    background-size: cover;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 0;
+    transform: rotate(180deg);
+}
+
+.decorationTopRight {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 250px;
+    height: 250px;
+    background-image: url('https://images.unsplash.com/photo-1588607196025-a1290639d6e7?q=80&w=800&auto=format&fit=crop');
+    background-size: cover;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 0;
+    transform: rotate(-90deg);
+}
+
+.decorationBottomLeft {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 250px;
+    height: 250px;
+    background-image: url('https://images.unsplash.com/photo-1588607196025-a1290639d6e7?q=80&w=800&auto=format&fit=crop');
+    background-size: cover;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 0;
+    transform: rotate(90deg);
+}
+
+.decorationBottomRight {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 250px;
+    height: 250px;
+    background-image: url('https://images.unsplash.com/photo-1588607196025-a1290639d6e7?q=80&w=800&auto=format&fit=crop');
+    background-size: cover;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 0;
+    transform: rotate(0deg);
+}
+
+
+.intro {
+    font-size: 1.1rem;
+    font-style: italic;
+    margin-bottom: 2rem;
+    color: #666;
+    z-index: 1;
+}
+
+.names {
+    font-family: 'Great Vibes', cursive;
+    font-size: 4.5rem;
+    color: #5d4037;
+    /* Dark brown/bronze */
+    line-height: 1.2;
+    margin-bottom: 2rem;
+    z-index: 1;
+}
+
+.ampersand {
+    font-size: 3rem;
+    display: block;
+    margin: 0.5rem 0;
+    font-family: 'Playfair Display', serif;
+    color: #8d6e63;
+}
+
+.quote {
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    color: #555;
+    line-height: 1.6;
+    z-index: 1;
+}
+
+.dateBlock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    font-size: 1.3rem;
+    color: #5d4037;
+    z-index: 1;
+}
+
+.dayName,
+.year {
+    font-style: italic;
+    font-weight: 400;
+}
+
+.dayNumber {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0 1.5rem;
+    border-left: 2px solid #d7ccc8;
+    border-right: 2px solid #d7ccc8;
+    color: #3e2723;
+}
+
+.section {
+    margin-bottom: 2.5rem;
+    z-index: 1;
+    width: 100%;
+}
+
+.sectionTitle {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    color: #8d6e63;
+    font-weight: 700;
+}
+
+.namesList {
+    font-size: 1.3rem;
+    color: #333;
+    line-height: 1.8;
+}
+
+.namesList strong {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.locationContainer {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    z-index: 1;
+}
+
+.locationIcon {
+    color: #5d4037;
+}
+
+.locationText {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #3e2723;
+}
+
+.rsvpButton {
+    margin-top: 3rem;
+    background-color: #5d4037;
+    color: white;
+    border: none;
+    padding: 1rem 3rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 50px;
+    z-index: 10;
+}
+
+.rsvpButton:hover {
+    background-color: #3e2723;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(93, 64, 55, 0.3);
+}
+
+@media (max-width: 600px) {
+    .names {
+        font-size: 3rem;
+    }
+
+    .dayNumber {
+        font-size: 2.5rem;
+        padding: 0 1rem;
+    }
+
+    .card {
+        padding: 3rem 1.5rem;
+    }
+}

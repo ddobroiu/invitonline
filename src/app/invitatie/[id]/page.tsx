@@ -14,6 +14,9 @@ import FestivalTemplate from '@/components/templates/FestivalTemplate'
 import ChatTemplate from '@/components/templates/ChatTemplate'
 import StoryTemplate from '@/components/templates/StoryTemplate'
 import VipCardTemplate from '@/components/templates/VipCardTemplate'
+import ClassicTemplate from '@/components/templates/ClassicTemplate'
+import ClassicGoldTemplate from '@/components/templates/ClassicGoldTemplate'
+import ClassicMinimalTemplate from '@/components/templates/ClassicMinimalTemplate'
 import styles from './page.module.css'
 
 export default function PublicInvitation({ params }: { params: { id: string } }) {
@@ -65,6 +68,9 @@ export default function PublicInvitation({ params }: { params: { id: string } })
             {event.template === 'chat' && <ChatTemplate id={params.id} {...event} />}
             {event.template === 'story' && <StoryTemplate id={params.id} {...event} />}
             {event.template === 'vip' && <VipCardTemplate id={params.id} {...event} />}
+            {event.template === 'classic' && <ClassicTemplate id={params.id} {...event} />}
+            {event.template === 'classic-gold' && <ClassicGoldTemplate id={params.id} {...event} />}
+            {event.template === 'classic-minimal' && <ClassicMinimalTemplate id={params.id} {...event} />}
         </main>
     )
 }
