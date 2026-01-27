@@ -333,8 +333,10 @@
 /* --- STATES FOR LAPTOP --- */
 .step1 .laptopGroup {
     transform: scale(0.8) translateY(-20px) rotateX(10deg);
-    opacity: 0.4;
-    filter: blur(2px);
+    opacity: 0.1;
+    /* Almost invisible */
+    filter: blur(10px);
+    /* Heavy blur */
 }
 
 .step2 .laptopGroup,
@@ -345,7 +347,6 @@
 
 
 
-/* --- LINK POPUP (Stage 1) --- */
 /* --- LINK POPUP (Stage 1) --- */
 .linkPopup {
     position: absolute;
