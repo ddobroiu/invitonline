@@ -424,18 +424,29 @@
     background: #000;
     border: 1px solid #333;
     border-radius: 12px;
-    padding: 6px 6px 6px 20px;
+    padding: 8px 10px 8px 16px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    /* Push apart */
     gap: 15px;
     width: 100%;
+    min-width: 320px;
+    /* Ensure enough space */
+    box-sizing: border-box;
+    /* Include padding in width */
 }
 
 .linkText {
     font-family: monospace;
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #d4af37;
     letter-spacing: 0.5px;
+    white-space: nowrap;
+    /* Prevent wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* ... if too long */
 }
 
 .copyBtn {
@@ -443,7 +454,7 @@
     color: #fff;
     border: 1px solid #333;
     border-radius: 8px;
-    padding: 8px 12px;
+    padding: 8px 14px;
     font-size: 0.7rem;
     font-weight: 600;
     cursor: pointer;
@@ -451,7 +462,13 @@
     align-items: center;
     gap: 6px;
     transition: all 0.2s;
+    white-space: nowrap;
+    /* Don't squash button text */
+    flex-shrink: 0;
+    /* Never shrink button */
 }
+
+
 
 .step1 .copyBtn {
     animation: copyHint 2s infinite 1s;
