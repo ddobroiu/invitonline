@@ -346,23 +346,28 @@
 
 
 /* --- LINK POPUP (Stage 1) --- */
+/* --- LINK POPUP (Stage 1) --- */
 .linkPopup {
     position: absolute;
     opacity: 0;
     transform: scale(0.8) translateY(20px);
     transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     z-index: 20;
-    background: rgba(15, 15, 15, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
+    background: #050505;
+    /* Solid dark background */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    /* Slightly brighter border */
+    /* Remove backdrop blur since we are solid */
+    /* backdrop-filter: blur(20px); */
     padding: 40px 60px;
     border-radius: 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
     box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.8),
-        0 0 0 1px rgba(255, 255, 255, 0.05);
+        0 40px 100px rgba(0, 0, 0, 0.95),
+        /* Strong shadow to lift it */
+        0 0 0 1px rgba(255, 255, 255, 0.08);
     text-align: center;
 }
 
