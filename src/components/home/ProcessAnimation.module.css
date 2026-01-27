@@ -1083,6 +1083,11 @@
     .linkBox {
         padding: 4px 4px 4px 12px;
         gap: 8px;
+        min-width: unset;
+        width: 100%;
+        /* Keep row for better look even on mobile */
+        flex-direction: row;
+        justify-content: space-between;
     }
 
     .linkText {
@@ -1112,5 +1117,35 @@
     .step3 .phoneGroup {
         transform: translateX(0) scale(1.1);
         /* Less extreme zoom on mobile */
+    }
+}
+
+/* Extra small devices (iPhone SE etc) */
+@media (max-width: 480px) {
+    .container {
+        padding: 20px 0;
+        overflow: hidden;
+    }
+
+    .linkPopup {
+        width: 95%;
+        max-width: 100%;
+        padding: 20px 15px;
+    }
+
+    .stageWrapper {
+        transform: scale(0.70);
+        transform-origin: top center;
+        height: 400px;
+    }
+
+    /* Scale down SIGNIFICANTLY */
+    .linkText {
+        font-size: 0.7rem;
+        letter-spacing: 0;
+    }
+
+    .linkBox {
+        min-width: 100%;
     }
 }
