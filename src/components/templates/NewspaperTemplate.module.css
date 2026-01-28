@@ -150,6 +150,10 @@
 }
 
 @media (max-width: 500px) {
+    .paperWrapper {
+        padding: 5px;
+    }
+
     .articleBody {
         grid-template-columns: 1fr;
     }

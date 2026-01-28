@@ -239,6 +239,12 @@
 }
 
 /* Responsive */
+@media (max-width: 480px) {
+    .container {
+        padding: 5px;
+    }
+}
+
 @container (max-width: 700px) {
     .ticket {
         flex-direction: column;
@@ -251,7 +257,7 @@
     .mainSection {
         border-right: none;
         border-bottom: 2px dashed #e2e8f0;
-        padding: 25px 20px;
+        padding: 20px 15px;
     }
 
     .mainSection::after,
@@ -260,20 +266,24 @@
     }
 
     .code {
-        font-size: 2.8rem;
+        font-size: 2.2rem;
+    }
+
+    .airline {
+        font-size: 1.2rem;
     }
 
     .planeIcon {
-        margin: 0 20px;
+        margin: 0 15px;
     }
 
     .detailsGrid {
         grid-template-columns: 1fr 1fr;
-        gap: 20px;
+        gap: 15px;
     }
 
     .stubSection {
-        padding: 30px 20px;
+        padding: 20px 15px;
         border-left: none;
     }
 }

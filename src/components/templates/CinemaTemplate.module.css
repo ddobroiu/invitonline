@@ -62,6 +62,9 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
 }
 
 .comingSoon {

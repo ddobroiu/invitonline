@@ -176,13 +176,21 @@
 
 /* Responsive */
 @media (max-width: 500px) {
+    .scratchContainer {
+        padding: 5px;
+        align-items: flex-start;
+        /* Ensure top visibility if scrolling needed */
+        padding-top: 20px;
+    }
+
     .cardWrapper {
-        max-width: 310px;
-        height: 520px;
+        max-width: 100%;
+        height: auto;
+        min-height: 500px;
         border-width: 6px;
     }
 
     .prizeTitle {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
 }
