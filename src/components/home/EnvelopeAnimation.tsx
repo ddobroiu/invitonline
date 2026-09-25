@@ -6,7 +6,7 @@ import { Check, MousePointerClick } from 'lucide-react'
 
 export default function EnvelopeAnimation() {
     const [isOpen, setIsOpen] = useState(false)
-    const [particles, setParticles] = useState<Array<{ id: number, x: number, y: number, color: string }>>([])
+    const [particles, setParticles] = useState<Array<{ id: number, x: number, y: number, color: string, duration: number }>>([])
     const containerRef = useRef<HTMLDivElement>(null)
 
     // Handle interaction (click/touch)
@@ -17,22 +17,33 @@ export default function EnvelopeAnimation() {
         setIsOpen(!isOpen)
     }
 
+    const cleanupTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+    useEffect(() => {
+        return () => {
+            if (cleanupTimer.current) clearTimeout(cleanupTimer.current)
+        }
+    }, [])
+
     const triggerConfetti = () => {
-        const newParticles = []
+        const newParticles: Array<{ id: number, x: number, y: number, color: string, duration: number }> = []
+        const batch = Date.now()
         const colors = ['#d4af37', '#ffd700', '#ffffff', '#f0e68c']
 
         for (let i = 0; i < 40; i++) {
             newParticles.push({
-                id: i,
+                id: batch + i,
                 x: (Math.random() - 0.5) * 300, // Spread X
                 y: (Math.random() - 1) * 300, // Spread Y (Upwards)
-                color: colors[Math.floor(Math.random() * colors.length)]
+                color: colors[Math.floor(Math.random() * colors.length)],
+                duration: 1 + Math.random(),
             })
         }
         setParticles(newParticles)
 
         // Cleanup particles after animation
-        setTimeout(() => setParticles([]), 2000)
+        if (cleanupTimer.current) clearTimeout(cleanupTimer.current)
+        cleanupTimer.current = setTimeout(() => setParticles([]), 2000)
     }
 
     // 3D Parallax Effect on Hover
@@ -65,7 +76,7 @@ export default function EnvelopeAnimation() {
                         backgroundColor: p.color,
                         transform: `translate(${p.x}px, ${p.y}px)`,
                         opacity: 0,
-                        transition: `all ${1 + Math.random()}s cubic-bezier(0, 1, 0.5, 1)`,
+                        transition: `all ${p.duration}s cubic-bezier(0, 1, 0.5, 1)`,
                     }}
                     ref={el => {
                         if (el) {
@@ -98,7 +109,7 @@ export default function EnvelopeAnimation() {
                             VĂ INVITĂM LA NUNTA NOASTRĂ<br />
                             <span style={{ color: '#d4af37', fontWeight: 'bold' }}>24 AUGUST 2026</span>
                         </p>
-                        <button className={styles.cardBtn}>CONFIRMĂ PREZENȚA</button>
+                        <button type="button" className={styles.cardBtn}>CONFIRMĂ PREZENȚA</button>
                     </div>
                 </div>
 

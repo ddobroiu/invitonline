@@ -4,331 +4,215 @@ import { useState, useEffect, Suspense, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useSession, signIn } from 'next-auth/react'
 import styles from './page.module.css'
-
-// Import Template Components
-import NetflixTemplate from '@/components/templates/NetflixTemplate'
-import BoardingPassTemplate from '@/components/templates/BoardingPassTemplate'
-import EnvelopeTemplate from '@/components/templates/EnvelopeTemplate'
-import VinylTemplate from '@/components/templates/VinylTemplate'
-import ScratchTemplate from '@/components/templates/ScratchTemplate'
-import PassportTemplate from '@/components/templates/PassportTemplate'
-import NewspaperTemplate from '@/components/templates/NewspaperTemplate'
-import CinemaTemplate from '@/components/templates/CinemaTemplate'
-import FestivalTemplate from '@/components/templates/FestivalTemplate'
-import VipCardTemplate from '@/components/templates/VipCardTemplate'
-import ClassicTemplate from '@/components/templates/ClassicTemplate'
-import ClassicGoldTemplate from '@/components/templates/ClassicGoldTemplate'
-import ClassicMinimalTemplate from '@/components/templates/ClassicMinimalTemplate'
-import StoryTemplate from '@/components/templates/StoryTemplate'
-import ChatTemplate from '@/components/templates/ChatTemplate'
-import { Save, Zap, ChevronLeft, Palette, Info, ClipboardList, Settings2, Trash2, Plus, Heart, Baby, PartyPopper, Calendar, MapPin, Music, Video, Image as ImageIcon, Loader2, Building, Search, Monitor, Smartphone, Lock, Receipt, CreditCard, MailOpen, Clapperboard, Plane, Disc, Ticket, Globe, Newspaper, Film, Tent, Crown, MessageCircle, Flower2, Gem, Minus } from 'lucide-react'
+import TemplateRenderer, { CENTERED_TEMPLATES } from '@/components/TemplateRenderer'
 import LocationPicker from '@/components/LocationPicker'
 import MediaUploader from '@/components/MediaUploader'
 import ImageUploader from '@/components/ImageUploader'
-import BillingPanel from '@/components/dashboard/BillingPanel'
+import {
+    Zap, Palette, Info, Trash2, Plus, Music, Video, Image as ImageIcon, Monitor, Smartphone, Lock, CreditCard,
+    MailOpen, Clapperboard, Plane, Disc, Ticket, Globe, Newspaper, Film, Tent, Crown, MessageCircle, Flower2, Gem,
+    Minus, Sparkles, Eye, X, Loader2, Check, ChevronLeft, ChevronRight
+} from 'lucide-react'
 
-interface UserBilling {
-    companyName?: string;
-    cui?: string;
-    regCom?: string;
-    address?: string;
-    city?: string;
-    county?: string;
+type TemplateId = 'classic' | 'classic-gold' | 'classic-minimal' | 'envelope' | 'netflix' | 'boarding' | 'vinyl' | 'scratch' | 'passport' | 'news' | 'cinema' | 'festival' | 'vip' | 'story' | 'chat'
+
+const TEMPLATES: { id: TemplateId, name: string, icon: React.ReactNode, features: ('photo' | 'video' | 'audio')[] }[] = [
+    { id: 'classic', name: 'Classic Floral', icon: <Flower2 size={28} strokeWidth={1.5} />, features: ['photo'] },
+    { id: 'classic-gold', name: 'Classic Gold', icon: <Gem size={28} strokeWidth={1.5} />, features: ['photo'] },
+    { id: 'classic-minimal', name: 'Minimalist', icon: <Minus size={28} strokeWidth={1.5} />, features: ['photo'] },
+    { id: 'envelope', name: 'Plic 3D', icon: <MailOpen size={28} strokeWidth={1.5} />, features: ['photo'] },
+    { id: 'netflix', name: 'Netflix', icon: <Clapperboard size={28} strokeWidth={1.5} />, features: ['video', 'photo'] },
+    { id: 'boarding', name: 'Avion', icon: <Plane size={28} strokeWidth={1.5} />, features: ['photo'] },
+    { id: 'vinyl', name: 'Vinyl', icon: <Disc size={28} strokeWidth={1.5} />, features: ['audio', 'photo'] },
+    { id: 'scratch', name: 'Scratch', icon: <Ticket size={28} strokeWidth={1.5} />, features: ['photo'] },
+    { id: 'passport', name: 'Pașaport', icon: <Globe size={28} strokeWidth={1.5} />, features: ['photo'] },
+    { id: 'news', name: 'Ziar', icon: <Newspaper size={28} strokeWidth={1.5} />, features: ['photo'] },
+    { id: 'cinema', name: 'Cinema', icon: <Film size={28} strokeWidth={1.5} />, features: ['photo'] },
+    { id: 'festival', name: 'Festival', icon: <Tent size={28} strokeWidth={1.5} />, features: ['audio', 'photo'] },
+    { id: 'vip', name: 'VIP Card', icon: <Crown size={28} strokeWidth={1.5} />, features: ['photo'] },
+    { id: 'story', name: 'Story', icon: <Smartphone size={28} strokeWidth={1.5} />, features: ['video', 'photo'] },
+    { id: 'chat', name: 'Chat', icon: <MessageCircle size={28} strokeWidth={1.5} />, features: ['audio', 'photo'] },
+]
+const TEMPLATE_IDS = TEMPLATES.map(t => t.id) as string[]
+
+const DEFAULTS_BY_TYPE: Record<string, { title: string, message: string }> = {
+    nunta: { title: 'Ana & Andrei', message: 'Te invităm să sărbătorești alături de noi începutul poveștii noastre.' },
+    botez: { title: 'David', message: 'Vă invităm cu drag la botezul micuțului nostru.' },
+    aniversare: { title: 'Alex - 30 de ani', message: 'Te invit să sărbătorim împreună o nouă aniversare!' },
+    petrecere: { title: 'Summer Party', message: 'Hai la o petrecere de neuitat!' },
+}
+
+const MONTHS = ['Ianuarie', 'Februarie', 'Martie', 'Aprilie', 'Mai', 'Iunie', 'Iulie', 'August', 'Septembrie', 'Octombrie', 'Noiembrie', 'Decembrie']
+
+function formatDate(iso: string) {
+    const [y, m, d] = iso.split('-').map(Number)
+    if (!y || !m || !d) return ''
+    return `${d} ${MONTHS[m - 1]} ${y}`
+}
+
+const initialFormData = {
+    eventType: 'nunta',
+    title: 'Ana & Andrei',
+    date: '25 August 2026',
+    eventDateISO: '2026-08-25',
+    location: 'Palatul Știrbei, Buftea',
+    locationUrl: '',
+    message: DEFAULTS_BY_TYPE.nunta.message,
+    dressCode: '',
+    specialInstructions: '',
+    // Wedding
+    brideName: 'Ana',
+    groomName: 'Andrei',
+    parentsBride: '',
+    parentsGroom: '',
+    godparents: '',
+    civilCeremonyTime: '',
+    civilCeremonyLoc: '',
+    religiousCeremonyTime: '',
+    religiousCeremonyLoc: '',
+    partyTime: '',
+    partyLoc: '',
+    // Baptism
+    childName: '',
+    motherName: '',
+    fatherName: '',
+    godparentsBaptism: '',
+    churchTime: '',
+    churchLoc: '',
+    restaurantTime: '',
+    restaurantLoc: '',
+    // Birthday / party
+    celebrantName: '',
+    age: '',
+    theme: '',
+    host: '',
+    // Media
+    photoUrl: '',
+    audioUrl: '',
+    videoUrl: '',
+    customFields: [] as { label: string, value: string }[],
+}
+
+type FormData = typeof initialFormData
+
+const DRAFT_KEY = 'eventDraft'
+
+const steps = [
+    { name: 'Design', icon: <Palette size={16} /> },
+    { name: 'Detalii', icon: <Info size={16} /> },
+    { name: 'Extra', icon: <Sparkles size={16} /> },
+    { name: 'Finalizare', icon: <CreditCard size={16} /> },
+]
+
+function Field({ label, children, full, hint, htmlFor }: { label: string, children: React.ReactNode, full?: boolean, hint?: string, htmlFor?: string }) {
+    return (
+        <div className={`${styles.formGroup} ${full ? styles.fullWidth : ''}`}>
+            {htmlFor ? <label className={styles.label} htmlFor={htmlFor}>{label}</label> : <span className={styles.label}>{label}</span>}
+            {children}
+            {hint && <span className={styles.hint}>{hint}</span>}
+        </div>
+    )
 }
 
 function CreateEventContent() {
     const router = useRouter()
-    const { data: session, status } = useSession()
-    const [isSaving, setIsSaving] = useState(false)
-    const [userBilling, setUserBilling] = useState<UserBilling | null>(null)
-    const [isFetchingBilling, setIsFetchingBilling] = useState(false)
+    const searchParams = useSearchParams()
+    const { status } = useSession()
 
-    // Auth Form State (Simplified)
-    const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
+    const editId = searchParams.get('id')
+    const [eventId, setEventId] = useState<string | null>(editId)
+    const [isPaid, setIsPaid] = useState(false)
+    const [formData, setFormData] = useState<FormData>(initialFormData)
+    const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>(() => {
+        const t = searchParams.get('template') || ''
+        return (TEMPLATE_IDS.includes(t) ? t : 'classic') as TemplateId
+    })
+    const [titleTouched, setTitleTouched] = useState(false)
+    const [currentStep, setCurrentStep] = useState(0)
+    const [previewMode, setPreviewMode] = useState<'pc' | 'mobile'>('mobile')
+    const [showMobilePreview, setShowMobilePreview] = useState(false)
+    const [isLoadingEvent, setIsLoadingEvent] = useState(!!editId)
+    const [isSaving, setIsSaving] = useState(false)
+    const [saveError, setSaveError] = useState('')
+    const [errors, setErrors] = useState<Record<string, string>>({})
+    const [currentTime, setCurrentTime] = useState('')
+    const hydrated = useRef(false)
+
+    // Inline auth (final step)
+    const [authMode, setAuthMode] = useState<'login' | 'register'>('register')
     const [authData, setAuthData] = useState({ email: '', password: '', name: '' })
     const [authError, setAuthError] = useState('')
     const [isAuthLoading, setIsAuthLoading] = useState(false)
 
-    // Effect to fetch billing info if logged in
+    // Load the event being edited, or restore an unsaved draft
     useEffect(() => {
-        if (status === 'authenticated') {
-            fetchBilling()
-        }
-    }, [status])
-
-
-    const fetchBilling = async () => {
-        setIsFetchingBilling(true)
-        try {
-            const res = await fetch('/api/user/billing')
-            if (res.ok) {
-                const data = await res.json()
-                setUserBilling(data)
+        if (editId) {
+            if (status !== 'authenticated') {
+                if (status === 'unauthenticated') router.push(`/login?callbackUrl=${encodeURIComponent(`/create?id=${editId}`)}`)
+                return
             }
-        } catch (error) {
-            console.error('Error fetching billing:', error)
-        } finally {
-            setIsFetchingBilling(false)
-        }
-    }
-
-    const handleAuthSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setAuthError('')
-        setIsAuthLoading(true)
-
-        if (authMode === 'login') {
-            const res = await signIn('credentials', {
-                email: authData.email,
-                password: authData.password,
-                redirect: false
-            })
-            if (res?.error) setAuthError('Email sau parolă incorectă')
-        } else {
-            try {
-                const res = await fetch('/api/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(authData)
+            fetch(`/api/events?id=${editId}`)
+                .then(res => res.ok ? res.json() : Promise.reject(res))
+                .then(({ event }) => {
+                    const data = event.data || {}
+                    setFormData(prev => ({
+                        ...prev,
+                        ...data,
+                        eventType: event.type || data.eventType || 'nunta',
+                        title: event.title || '',
+                        date: event.date || '',
+                        location: event.location || '',
+                        locationUrl: event.locationUrl || '',
+                        message: event.message || '',
+                        customFields: Array.isArray(data.customFields) ? data.customFields : [],
+                    }))
+                    if (TEMPLATE_IDS.includes(event.template)) setSelectedTemplate(event.template)
+                    setIsPaid(!!event.isPaid)
+                    setTitleTouched(true)
+                    setCurrentStep(1)
                 })
-                if (res.ok) {
-                    await signIn('credentials', {
-                        email: authData.email,
-                        password: authData.password,
-                        redirect: false
-                    })
-                } else {
-                    const data = await res.json()
-                    setAuthError(data.message || 'Eroare la înregistrare')
-                }
-            } catch (err) {
-                setAuthError('Eroare tehnică')
-            }
-        }
-        setIsAuthLoading(false)
-    }
-
-    const [formData, setFormData] = useState({
-        title: 'Ana & Andrei',
-        date: '25 AUGUST 2026',
-        location: 'Palatul Știrbei',
-        locationUrl: '',
-        message: 'Te invităm să sărbătorești alături de noi acest moment special.',
-        eventType: 'nunta',
-        // Common
-        dressCode: '',
-        // Toggle Flags
-        showWeddingExtras: false,
-        showBaptismExtras: false,
-        showPartyExtras: false,
-        // Wedding
-        groomName: '',
-        brideName: '',
-        parentsGroom: '',
-        parentsBride: '',
-        godparents: '',
-        civilCeremonyTime: '',
-        civilCeremonyLoc: '',
-        religiousCeremonyTime: '',
-        religiousCeremonyLoc: '',
-        partyTime: '',
-        partyLoc: '',
-        // Baptism
-        childName: '',
-        motherName: '',
-        fatherName: '',
-        godparentsBaptism: '',
-        birthDate: '',
-        childAge: '',
-        churchTime: '',
-        churchLoc: '',
-        restaurantTime: '',
-        restaurantLoc: '',
-        // Anniversary
-        celebrantName: '',
-        age: '',
-        partyType: '',
-        host: '',
-        theme: '',
-        specialInstructions: '',
-        // Billing Info
-        billingType: 'persoana_fizica', // persoana_fizica or persoana_juridica
-        billingName: '',
-        billingCui: '',
-        billingAddress: '',
-        billingCity: '',
-        // Media URLs
-        audioUrl: '',
-        videoUrl: '',
-        photoUrl: '',
-        // Dynamic Fields
-        customFields: [] as { label: string, value: string }[]
-    })
-
-    const searchParams = useSearchParams()
-
-    // State for selected template
-    const [selectedTemplate, setSelectedTemplate] = useState<'classic' | 'classic-gold' | 'classic-minimal' | 'envelope' | 'netflix' | 'boarding' | 'vinyl' | 'scratch' | 'passport' | 'news' | 'cinema' | 'festival' | 'vip' | 'story' | 'chat'>(() => {
-        const t = searchParams.get('template')
-        const valid = ['classic', 'classic-gold', 'classic-minimal', 'envelope', 'netflix', 'boarding', 'vinyl', 'scratch', 'passport', 'news', 'cinema', 'festival', 'vip', 'story', 'chat']
-        return (valid.includes(t || '') ? t : 'classic') as any
-    })
-
-    const [previewMode, setPreviewMode] = useState<'pc' | 'mobile'>('pc')
-
-    // Detect mobile device
-    useEffect(() => {
-        const checkMobile = () => {
-            if (window.innerWidth < 900) {
-                setPreviewMode('mobile')
-            } else {
-                setPreviewMode('pc')
-            }
-        }
-
-        checkMobile()
-        window.addEventListener('resize', checkMobile)
-        return () => window.removeEventListener('resize', checkMobile)
-    }, [])
-
-    const [currentStep, setCurrentStep] = useState(0)
-    const steps = [
-        { name: 'Design', icon: <Palette size={16} /> },
-        { name: 'Configurare', icon: <Info size={16} /> },
-        { name: 'Finalizare', icon: <CreditCard size={16} /> }
-    ]
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value, type } = e.target as HTMLInputElement
-        const isChecked = (e.target as HTMLInputElement).checked
-
-        setFormData(prev => {
-            // Checkbox handling
-            if (type === 'checkbox') {
-                return { ...prev, [name]: isChecked }
-            }
-            // 1. Handle Event Type Change (Set Defaults)
-            if (name === 'eventType') {
-                let newTitle = ''
-                let newMessage = ''
-
-                switch (value) {
-                    case 'nunta':
-                        newTitle = 'Ana & Andrei'
-                        newMessage = 'Te invităm să sărbătorești alături de noi acest moment special.'
-                        break
-                    case 'botez':
-                        newTitle = 'David Ionuț'
-                        newMessage = 'Vă invităm la creștinarea micuțului nostru.'
-                        break
-                    case 'aniversare':
-                        newTitle = 'Alex - 30 Ani'
-                        newMessage = 'Te invităm la o super petrecere!'
-                        break
-                    case 'petrecere':
-                        newTitle = 'Summer Party'
-                        newMessage = 'Let\'s party all night!'
-                        break
-                    default:
-                        newTitle = 'Eveniment Special'
-                        newMessage = 'Te invităm la evenimentul nostru.'
-                }
-                return { ...prev, eventType: value, title: newTitle, message: newMessage }
-            }
-
-            // 2. Handle Specific Fields Syncing to Title
-            const updated = { ...prev, [name]: value }
-
-            if (updated.eventType === 'nunta' && (name === 'groomName' || name === 'brideName')) {
-                const g = name === 'groomName' ? value : updated.groomName
-                const b = name === 'brideName' ? value : updated.brideName
-                if (g || b) updated.title = `${g || 'Mire'} & ${b || 'Mireasă'}`
-            }
-            else if (updated.eventType === 'botez' && name === 'childName') {
-                updated.title = value
-            }
-            else if ((updated.eventType === 'aniversare' || updated.eventType === 'petrecere') && name === 'celebrantName') {
-                updated.title = value
-            }
-
-            return updated
-        })
-    }
-
-    const handleCustomFieldChange = (index: number, key: 'label' | 'value', value: string) => {
-        setFormData(prev => {
-            const newFields = [...prev.customFields]
-            newFields[index] = { ...newFields[index], [key]: value }
-            return { ...prev, customFields: newFields }
-        })
-    }
-
-    const addCustomField = () => {
-        setFormData(prev => ({
-            ...prev,
-            customFields: [...prev.customFields, { label: '', value: '' }].slice(0, 3)
-        }))
-    }
-
-    const removeCustomField = (index: number) => {
-        setFormData(prev => ({
-            ...prev,
-            customFields: prev.customFields.filter((_, i) => i !== index)
-        }))
-    }
-
-    const handleSave = async (shouldPay: boolean = false) => {
-        if (status !== 'authenticated') {
-            // Save draft locally before redirecting
-            localStorage.setItem('eventDraft', JSON.stringify({ ...formData, template: selectedTemplate }))
-            router.push('/login?callbackUrl=/create')
+                .catch(() => setSaveError('Nu am putut încărca invitația.'))
+                .finally(() => {
+                    setIsLoadingEvent(false)
+                    hydrated.current = true
+                })
             return
         }
 
-        setIsSaving(true)
+        if (hydrated.current) return
+        hydrated.current = true
         try {
-            const res = await fetch('/api/events', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...formData,
-                    template: selectedTemplate,
-                    type: formData.eventType
-                })
-            })
-
-            if (res.ok) {
-                const data = await res.json()
-                localStorage.removeItem('eventDraft')
-
-                if (shouldPay) {
-                    // Immediately trigger payment
-                    const checkoutRes = await fetch('/api/checkout', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ eventId: data.event.id })
-                    })
-
-                    if (checkoutRes.ok) {
-                        const { url } = await checkoutRes.json()
-                        window.location.href = url
-                        return
-                    }
-                }
-
-                // If not paying or payment fails, go to dashboard
-                router.push('/dashboard')
-            } else {
-                alert('Eroare la salvarea evenimentului.')
+            const raw = localStorage.getItem(DRAFT_KEY)
+            if (raw) {
+                const { template, ...draft } = JSON.parse(raw)
+                setFormData(prev => ({ ...prev, ...draft }))
+                setTitleTouched(true)
+                if (!searchParams.get('template') && TEMPLATE_IDS.includes(template)) setSelectedTemplate(template)
             }
-        } catch (error) {
-            console.error(error)
-            alert('Eroare de rețea.')
-        }
-        setIsSaving(false)
-    }
+        } catch { /* ignore corrupt draft */ }
+    }, [editId, status, router, searchParams])
 
-    const [currentTime, setCurrentTime] = useState('')
+    // Autosave draft locally while creating a new invitation
+    useEffect(() => {
+        if (eventId || !hydrated.current) return
+        const t = setTimeout(() => {
+            try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...formData, template: selectedTemplate })) } catch { /* storage full/blocked */ }
+        }, 400)
+        return () => clearTimeout(t)
+    }, [formData, selectedTemplate, eventId])
+
+    useEffect(() => {
+        // Only switch when crossing the breakpoint, so a manual PC/phone choice survives other resizes
+        let wasNarrow: boolean | null = null
+        const checkWidth = () => {
+            const narrow = window.innerWidth < 1100
+            if (narrow !== wasNarrow) setPreviewMode(narrow ? 'mobile' : 'pc')
+            wasNarrow = narrow
+        }
+        checkWidth()
+        window.addEventListener('resize', checkWidth)
+        return () => window.removeEventListener('resize', checkWidth)
+    }, [])
 
     useEffect(() => {
         const updateTime = () => {
@@ -340,349 +224,629 @@ function CreateEventContent() {
         return () => clearInterval(timer)
     }, [])
 
+    // Lock page scroll while the mobile preview overlay is open
+    useEffect(() => {
+        document.body.style.overflow = showMobilePreview ? 'hidden' : ''
+        return () => { document.body.style.overflow = '' }
+    }, [showMobilePreview])
+
+    // Keep ?template= in sync so a reload (or shared link) keeps the chosen design
+    const selectTemplate = (id: TemplateId) => {
+        setSelectedTemplate(id)
+        if (!eventId) {
+            const url = new URL(window.location.href)
+            url.searchParams.set('template', id)
+            window.history.replaceState(window.history.state, '', url.toString())
+        }
+    }
+
+    const buildTitle = (d: FormData) => {
+        if (d.eventType === 'nunta') {
+            if (d.brideName || d.groomName) return `${d.brideName || 'Mireasa'} & ${d.groomName || 'Mirele'}`
+        } else if (d.eventType === 'botez') {
+            if (d.childName) return d.childName
+        } else if (d.celebrantName) {
+            return d.age ? `${d.celebrantName} - ${d.age} ani` : d.celebrantName
+        }
+        return d.title
+    }
+
+    const update = (patch: Partial<FormData>) => {
+        setFormData(prev => {
+            const next = { ...prev, ...patch }
+            if (!titleTouched) next.title = buildTitle(next)
+            return next
+        })
+        setErrors(prev => {
+            const copy = { ...prev }
+            Object.keys(patch).forEach(k => delete copy[k])
+            return copy
+        })
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value } = e.target
+        if (name === 'title') {
+            setTitleTouched(true)
+            setFormData(prev => ({ ...prev, title: value }))
+            setErrors(prev => ({ ...prev, title: '' }))
+            return
+        }
+        if (name === 'eventType') {
+            const defaults = DEFAULTS_BY_TYPE[value] || DEFAULTS_BY_TYPE.nunta
+            const isDefaultMessage = Object.values(DEFAULTS_BY_TYPE).some(d => d.message === formData.message)
+            setTitleTouched(false)
+            setFormData(prev => {
+                const next = { ...prev, eventType: value, message: isDefaultMessage || !prev.message ? defaults.message : prev.message }
+                next.title = buildTitle(next) === prev.title ? defaults.title : buildTitle(next)
+                return next
+            })
+            return
+        }
+        update({ [name]: value } as Partial<FormData>)
+    }
+
+    const input = (name: keyof FormData, placeholder = '', type = 'text') => (
+        <input
+            id={`f-${name}`}
+            className={`${styles.input} ${errors[name] ? styles.inputError : ''}`}
+            aria-invalid={!!errors[name] || undefined}
+            name={name}
+            type={type}
+            placeholder={placeholder}
+            value={formData[name] as string}
+            onChange={handleChange}
+        />
+    )
+
+    const handleCustomFieldChange = (index: number, key: 'label' | 'value', value: string) => {
+        setFormData(prev => {
+            const newFields = [...prev.customFields]
+            newFields[index] = { ...newFields[index], [key]: value }
+            return { ...prev, customFields: newFields }
+        })
+    }
+
+    const validate = () => {
+        const errs: Record<string, string> = {}
+        if (!formData.title.trim()) errs.title = 'Adaugă un titlu'
+        if (!formData.date.trim()) errs.date = 'Alege data evenimentului'
+        if (!formData.location.trim()) errs.location = 'Adaugă locația'
+        setErrors(errs)
+        const ok = Object.keys(errs).length === 0
+        if (!ok) {
+            // Bring the first problem into view once the details step is rendered
+            setTimeout(() => {
+                const el = document.querySelector<HTMLElement>('[aria-invalid="true"]')
+                el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                el?.focus({ preventScroll: true })
+            }, 60)
+        }
+        return ok
+    }
+
+    const goToStep = (step: number) => {
+        // Details must be valid before the final step
+        if (step === 3 && !validate()) {
+            setCurrentStep(1)
+            return
+        }
+        setCurrentStep(step)
+    }
+
+    const handleSave = async (shouldPay: boolean) => {
+        if (!validate()) {
+            setCurrentStep(1)
+            return
+        }
+        if (status !== 'authenticated') return
+
+        setIsSaving(true)
+        setSaveError('')
+        try {
+            const res = await fetch('/api/events', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...formData,
+                    id: eventId || undefined,
+                    template: selectedTemplate,
+                    type: formData.eventType,
+                })
+            })
+
+            const data = await res.json().catch(() => ({}))
+            if (!res.ok) {
+                setSaveError(data.message || 'Eroare la salvarea invitației.')
+                return
+            }
+
+            setEventId(data.event.id)
+            try { localStorage.removeItem(DRAFT_KEY) } catch { /* ignore */ }
+
+            if (shouldPay && !isPaid) {
+                const checkoutRes = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ eventId: data.event.id })
+                })
+                const checkout = await checkoutRes.json().catch(() => ({}))
+                if (checkoutRes.ok && checkout.url) {
+                    window.location.href = checkout.url
+                    return
+                }
+                setSaveError(`${checkout.message || 'Plata nu a putut fi inițiată.'} Invitația a fost salvată ca draft în contul tău.`)
+                return
+            }
+
+            router.push('/dashboard')
+        } catch (error) {
+            console.error(error)
+            setSaveError('Eroare de rețea. Verifică conexiunea și încearcă din nou.')
+        } finally {
+            setIsSaving(false)
+        }
+    }
+
+    const handleAuthSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setAuthError('')
+        setIsAuthLoading(true)
+        try {
+            if (authMode === 'register') {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(authData)
+                })
+                if (!res.ok) {
+                    const data = await res.json().catch(() => ({}))
+                    setAuthError(data.message || 'Eroare la înregistrare')
+                    return
+                }
+            }
+            const res = await signIn('credentials', { email: authData.email, password: authData.password, redirect: false })
+            if (res?.error) setAuthError('Email sau parolă incorectă')
+        } catch {
+            setAuthError('Eroare de rețea. Încearcă din nou.')
+        } finally {
+            setIsAuthLoading(false)
+        }
+    }
+
+    const template = TEMPLATES.find(t => t.id === selectedTemplate)!
+    const previewProps = { ...formData, id: undefined }
+    const isCentered = CENTERED_TEMPLATES.includes(selectedTemplate)
+
+    const preview = (
+        <TemplateRenderer key={selectedTemplate} template={selectedTemplate} {...previewProps} />
+    )
+
+    const phonePreview = (
+        <div className={styles.phoneFrame}>
+            <div className={styles.statusBar}>
+                <div>{currentTime}</div>
+                <div className={styles.statusIcons}>
+                    <div style={{ display: 'flex', gap: '2px', alignItems: 'flex-end' }}>
+                        {[4, 6, 8, 10].map((h, i) => <div key={h} style={{ width: '2px', height: `${h}px`, background: i === 3 ? 'rgba(255,255,255,0.3)' : '#fff' }} />)}
+                    </div>
+                    <div className={styles.battery}><div /></div>
+                </div>
+            </div>
+            <div className={styles.homeBar}></div>
+            <div className={`${styles.phoneInner} ${isCentered ? styles.centeredScaler : ''}`}>
+                <div className={styles.scalerContent}>{preview}</div>
+            </div>
+        </div>
+    )
+
+    if (isLoadingEvent) {
+        return (
+            <div className={styles.loadingScreen}>
+                <Loader2 className="animate-spin" size={32} color="var(--accent)" />
+                <p>Se încarcă invitația...</p>
+            </div>
+        )
+    }
+
     return (
         <div className={styles.container}>
-            {/* ... rest of editor section ... */}
             <div className={styles.editorSection}>
-                {/* (Step nav and content already here) */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                    <h1 className={styles.title}>Configurează</h1>
-                    <div style={{ background: 'rgba(255,255,255,0.05)', padding: '5px 12px', borderRadius: '20px', fontSize: '0.7rem', color: '#888' }}>
-                        PAS {currentStep + 1} DIN {steps.length}
+                <div className={styles.editorHeader}>
+                    <div>
+                        <h1 className={styles.title}>{eventId ? 'Editează invitația' : 'Creează invitația'}</h1>
+                        <p className={styles.subtitle}>Model ales: <strong>{template.name}</strong></p>
                     </div>
+                    <div className={styles.stepCounter}>PAS {currentStep + 1} / {steps.length}</div>
                 </div>
 
-                {/* Step Navigation Bar */}
                 <div className={styles.stepNav}>
                     {steps.map((step, idx) => (
-                        <div
-                            key={idx}
-                            className={`${styles.stepTab} ${currentStep === idx ? styles.activeTab : ''}`}
-                            onClick={() => setCurrentStep(idx)}
+                        <button
+                            type="button"
+                            key={step.name}
+                            className={`${styles.stepTab} ${currentStep === idx ? styles.activeTab : ''} ${idx < currentStep ? styles.doneTab : ''}`}
+                            onClick={() => goToStep(idx)}
                         >
-                            <div style={{ marginBottom: '4px' }}>{step.icon}</div>
+                            {idx < currentStep ? <Check size={16} /> : step.icon}
                             {step.name}
-                        </div>
+                        </button>
                     ))}
                 </div>
 
-                {/* --- STEP 0: DESIGN --- */}
+                {/* STEP 0: DESIGN */}
                 {currentStep === 0 && (
-                    <div className={`${styles.editorCard} ${styles.scrollArea}`} style={{ animation: 'slideInLeft 0.4s ease' }}>
-                        <label className={styles.label} style={{ marginBottom: '1.2rem', display: 'block' }}>ALEGE DESIGN-UL PREFERAT</label>
+                    <div className={styles.editorCard}>
+                        <h2 className={styles.cardTitle}>Alege designul preferat</h2>
+                        <p className={styles.cardText}>Poți schimba modelul oricând — datele tale rămân.</p>
                         <div className={styles.templateGrid}>
-
-                            {/* Helper to get badges for editor grid */}
-                            {(() => {
-                                const templateData = [
-                                    { id: 'classic', name: 'Classic Floral', icon: <Flower2 size={32} strokeWidth={1.5} />, features: ['photo'] },
-                                    { id: 'classic-gold', name: 'Classic Gold', icon: <Gem size={32} strokeWidth={1.5} />, features: ['photo'] },
-                                    { id: 'classic-minimal', name: 'Minimalist', icon: <Minus size={32} strokeWidth={1.5} />, features: ['photo'] },
-                                    { id: 'envelope', name: 'Plic 3D', icon: <MailOpen size={32} strokeWidth={1.5} />, features: ['photo'] },
-                                    { id: 'netflix', name: 'Netflix', icon: <Clapperboard size={32} strokeWidth={1.5} />, features: ['video', 'photo'] },
-                                    { id: 'boarding', name: 'Avion', icon: <Plane size={32} strokeWidth={1.5} />, features: ['photo'] },
-                                    { id: 'vinyl', name: 'Vinyl', icon: <Disc size={32} strokeWidth={1.5} />, features: ['audio', 'photo'] },
-                                    { id: 'scratch', name: 'Scratch', icon: <Ticket size={32} strokeWidth={1.5} />, features: ['photo'] },
-                                    { id: 'passport', name: 'Pașaport', icon: <Globe size={32} strokeWidth={1.5} />, features: ['photo'] },
-                                    { id: 'news', name: 'Ziar', icon: <Newspaper size={32} strokeWidth={1.5} />, features: ['photo'] },
-                                    { id: 'cinema', name: 'Cinema', icon: <Film size={32} strokeWidth={1.5} />, features: ['photo'] },
-                                    { id: 'festival', name: 'Festival', icon: <Tent size={32} strokeWidth={1.5} />, features: ['audio', 'photo'] },
-                                    { id: 'vip', name: 'VIP Card', icon: <Crown size={32} strokeWidth={1.5} />, features: ['photo'] },
-                                    { id: 'story', name: 'Story', icon: <Smartphone size={32} strokeWidth={1.5} />, features: ['video', 'photo'] },
-                                    { id: 'chat', name: 'Chat', icon: <MessageCircle size={32} strokeWidth={1.5} />, features: ['audio', 'photo'] }
-                                ];
-
-                                return templateData.map(tpl => (
-                                    <button
-                                        key={tpl.id}
-                                        onClick={() => setSelectedTemplate(tpl.id as any)}
-                                        className={`${styles.templateBtn} ${selectedTemplate === tpl.id ? styles.activeTemplate : ''}`}
-                                    >
-                                        <div style={{ marginBottom: '6px', color: selectedTemplate === tpl.id ? 'var(--accent)' : '#ccc' }}>
-                                            {tpl.icon}
-                                        </div>
-                                        <span style={{ fontSize: '0.9rem', fontWeight: 700 }}>{tpl.name}</span>
-
-                                        <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
-                                            {tpl.features.includes('video') && (
-                                                <div style={{
-                                                    background: 'rgba(255, 107, 107, 0.15)',
-                                                    padding: '4px 6px',
-                                                    borderRadius: '6px',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '3px',
-                                                    border: '1px solid rgba(255, 107, 107, 0.3)'
-                                                }}>
-                                                    <Video size={10} color="#ff6b6b" />
-                                                    <span style={{ fontSize: '0.6rem', color: '#ff6b6b', fontWeight: 800 }}>VIDEO</span>
-                                                </div>
-                                            )}
-                                            {tpl.features.includes('audio') && (
-                                                <div style={{
-                                                    background: 'rgba(30, 215, 96, 0.15)',
-                                                    padding: '4px 6px',
-                                                    borderRadius: '6px',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '3px',
-                                                    border: '1px solid rgba(30, 215, 96, 0.3)'
-                                                }}>
-                                                    <Music size={10} color="#1ed760" />
-                                                    <span style={{ fontSize: '0.6rem', color: '#1ed760', fontWeight: 800 }}>AUDIO</span>
-                                                </div>
-                                            )}
-                                            {tpl.features.includes('photo') && (
-                                                <div style={{
-                                                    background: 'rgba(56, 189, 248, 0.15)',
-                                                    padding: '4px 6px',
-                                                    borderRadius: '6px',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '3px',
-                                                    border: '1px solid rgba(56, 189, 248, 0.3)'
-                                                }}>
-                                                    <ImageIcon size={10} color="#38bdf8" />
-                                                    <span style={{ fontSize: '0.6rem', color: '#38bdf8', fontWeight: 800 }}>FOTO</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </button>
-                                ));
-                            })()}
+                            {TEMPLATES.map(tpl => (
+                                <button
+                                    type="button"
+                                    key={tpl.id}
+                                    onClick={() => selectTemplate(tpl.id)}
+                                    aria-pressed={selectedTemplate === tpl.id}
+                                    className={`${styles.templateBtn} ${selectedTemplate === tpl.id ? styles.activeTemplate : ''}`}
+                                >
+                                    <div className={styles.templateIcon}>{tpl.icon}</div>
+                                    <span className={styles.templateName}>{tpl.name}</span>
+                                    <div className={styles.featureBadges}>
+                                        {tpl.features.includes('video') && <span className={`${styles.badge} ${styles.badgeVideo}`}><Video size={10} /> VIDEO</span>}
+                                        {tpl.features.includes('audio') && <span className={`${styles.badge} ${styles.badgeAudio}`}><Music size={10} /> AUDIO</span>}
+                                        {tpl.features.includes('photo') && <span className={`${styles.badge} ${styles.badgePhoto}`}><ImageIcon size={10} /> FOTO</span>}
+                                    </div>
+                                </button>
+                            ))}
                         </div>
                     </div>
                 )}
 
-                {/* --- STEP 1: CONFIGURARE --- */}
+                {/* STEP 1: DETAILS */}
                 {currentStep === 1 && (
-                    <div className={`${styles.editorCard} ${styles.scrollArea}`} style={{ animation: 'slideInLeft 0.4s ease' }}>
+                    <div className={styles.editorCard}>
+                        <h2 className={styles.cardTitle}>Detaliile evenimentului</h2>
                         <div className={styles.inputGrid}>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>TIP EVENIMENT</label>
-                                <select className={styles.input} name="eventType" value={formData.eventType} onChange={handleChange}>
-                                    <option value="nunta">Nuntă</option>
-                                    <option value="botez">Botez</option>
-                                    <option value="aniversare">Aniversare</option>
-                                    <option value="petrecere">Petrecere</option>
-                                </select>
-                            </div>
+                            <Field label="Tip eveniment" full>
+                                <div className={styles.typeSwitch}>
+                                    {[['nunta', '💍 Nuntă'], ['botez', '👶 Botez'], ['aniversare', '🎂 Aniversare'], ['petrecere', '🎉 Petrecere']].map(([value, label]) => (
+                                        <button
+                                            type="button"
+                                            key={value}
+                                            className={`${styles.typeBtn} ${formData.eventType === value ? styles.typeBtnActive : ''}`}
+                                            aria-pressed={formData.eventType === value}
+                                            onClick={() => handleChange({ target: { name: 'eventType', value } } as any)}
+                                        >
+                                            {label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </Field>
 
-                            {/* Custom Fields */}
-                            <div className={`${styles.formGroup} ${styles.fullWidth}`} style={{ marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem' }}>
-                                <label className={styles.label} style={{ color: 'var(--accent)', marginBottom: '15px', display: 'block' }}>CÂMPURI PERSONALIZATE (MAX 3)</label>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                            {formData.eventType === 'nunta' && (
+                                <>
+                                    <Field label="Mireasa" htmlFor="f-brideName">{input('brideName', 'Ex: Ana')}</Field>
+                                    <Field label="Mirele" htmlFor="f-groomName">{input('groomName', 'Ex: Andrei')}</Field>
+                                </>
+                            )}
+                            {formData.eventType === 'botez' && (
+                                <Field label="Numele copilului" full htmlFor="f-childName">{input('childName', 'Ex: David')}</Field>
+                            )}
+                            {(formData.eventType === 'aniversare' || formData.eventType === 'petrecere') && (
+                                <>
+                                    <Field label={formData.eventType === 'aniversare' ? 'Sărbătoritul / sărbătorita' : 'Gazda'} htmlFor="f-celebrantName">{input('celebrantName', 'Ex: Alex')}</Field>
+                                    {formData.eventType === 'aniversare'
+                                        ? <Field label="Vârsta (opțional)" htmlFor="f-age">{input('age', 'Ex: 30')}</Field>
+                                        : <Field label="Tema (opțional)" htmlFor="f-theme">{input('theme', 'Ex: Retro 80s')}</Field>}
+                                </>
+                            )}
+
+                            <Field label="Titlul invitației" full hint="Se completează automat din nume, dar îl poți schimba." htmlFor="f-title">
+                                {input('title', 'Ex: Ana & Andrei')}
+                                {errors.title && <span className={styles.errorText}>{errors.title}</span>}
+                            </Field>
+
+                            <Field label="Data evenimentului" htmlFor="f-eventDateISO">
+                                <input
+                                    id="f-eventDateISO"
+                                    type="date"
+                                    aria-invalid={!!errors.date || undefined}
+                                    className={`${styles.input} ${errors.date ? styles.inputError : ''}`}
+                                    value={formData.eventDateISO}
+                                    onChange={(e) => update({ eventDateISO: e.target.value, date: formatDate(e.target.value) })}
+                                />
+                                {errors.date && <span className={styles.errorText}>{errors.date}</span>}
+                            </Field>
+                            <Field label="Cum apare data" htmlFor="f-date">{input('date', 'Ex: 25 August 2026')}</Field>
+
+                            <Field label="Locația principală" full htmlFor="f-location">
+                                <LocationPicker
+                                    id="f-location"
+                                    invalid={!!errors.location}
+                                    value={formData.location}
+                                    onChange={(address, url) => update({ location: address, locationUrl: url })}
+                                />
+                                {errors.location && <span className={styles.errorText}>{errors.location}</span>}
+                            </Field>
+
+                            <Field label="Mesajul invitației" full htmlFor="f-message">
+                                <textarea
+                                    id="f-message"
+                                    className={styles.input}
+                                    name="message"
+                                    rows={3}
+                                    value={formData.message}
+                                    onChange={handleChange}
+                                    placeholder="Un mesaj scurt pentru invitați"
+                                />
+                            </Field>
+
+                            {formData.eventType === 'nunta' && (
+                                <>
+                                    <div className={styles.sectionDivider}>Familie</div>
+                                    <Field label="Părinții miresei" htmlFor="f-parentsBride">{input('parentsBride', 'Ex: Maria & Ion Popescu')}</Field>
+                                    <Field label="Părinții mirelui" htmlFor="f-parentsGroom">{input('parentsGroom', 'Ex: Elena & Mihai Ionescu')}</Field>
+                                    <Field label="Nașii" full htmlFor="f-godparents">{input('godparents', 'Ex: Ioana & Radu Dumitrescu')}</Field>
+
+                                    <div className={styles.sectionDivider}>Program</div>
+                                    <Field label="Cununia civilă — ora" htmlFor="f-civilCeremonyTime">{input('civilCeremonyTime', '', 'time')}</Field>
+                                    <Field label="Cununia civilă — locul" htmlFor="f-civilCeremonyLoc">{input('civilCeremonyLoc', 'Ex: Primăria Sector 1')}</Field>
+                                    <Field label="Cununia religioasă — ora" htmlFor="f-religiousCeremonyTime">{input('religiousCeremonyTime', '', 'time')}</Field>
+                                    <Field label="Cununia religioasă — locul" htmlFor="f-religiousCeremonyLoc">{input('religiousCeremonyLoc', 'Ex: Biserica Sf. Nicolae')}</Field>
+                                    <Field label="Petrecerea — ora" htmlFor="f-partyTime">{input('partyTime', '', 'time')}</Field>
+                                    <Field label="Petrecerea — locul" htmlFor="f-partyLoc">{input('partyLoc', 'Ex: Restaurant Grand')}</Field>
+                                </>
+                            )}
+
+                            {formData.eventType === 'botez' && (
+                                <>
+                                    <div className={styles.sectionDivider}>Familie</div>
+                                    <Field label="Mama" htmlFor="f-motherName">{input('motherName', 'Ex: Maria')}</Field>
+                                    <Field label="Tata" htmlFor="f-fatherName">{input('fatherName', 'Ex: Andrei')}</Field>
+                                    <Field label="Nașii" full htmlFor="f-godparentsBaptism">{input('godparentsBaptism', 'Ex: Ioana & Radu')}</Field>
+
+                                    <div className={styles.sectionDivider}>Program</div>
+                                    <Field label="Slujba — ora" htmlFor="f-churchTime">{input('churchTime', '', 'time')}</Field>
+                                    <Field label="Slujba — biserica" htmlFor="f-churchLoc">{input('churchLoc', 'Ex: Biserica Sf. Maria')}</Field>
+                                    <Field label="Petrecerea — ora" htmlFor="f-restaurantTime">{input('restaurantTime', '', 'time')}</Field>
+                                    <Field label="Petrecerea — restaurantul" htmlFor="f-restaurantLoc">{input('restaurantLoc', 'Ex: Restaurant Grand')}</Field>
+                                </>
+                            )}
+
+                            {(formData.eventType === 'aniversare' || formData.eventType === 'petrecere') && (
+                                <>
+                                    <div className={styles.sectionDivider}>Program</div>
+                                    <Field label="Ora de început" htmlFor="f-partyTime">{input('partyTime', '', 'time')}</Field>
+                                    <Field label="Organizator (opțional)" htmlFor="f-host">{input('host', 'Ex: Familia Popescu')}</Field>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {/* STEP 2: EXTRA */}
+                {currentStep === 2 && (
+                    <div className={styles.editorCard}>
+                        <h2 className={styles.cardTitle}>Fotografii, muzică și detalii</h2>
+                        <p className={styles.cardText}>Totul este opțional — adaugă doar ce vrei.</p>
+
+                        <div className={styles.mediaStack}>
+                            {status === 'authenticated' ? (
+                                <>
+                                    <ImageUploader
+                                        onUploadComplete={(url) => update({ photoUrl: url })}
+                                        currentUrl={formData.photoUrl}
+                                        onRemove={() => update({ photoUrl: '' })}
+                                        label={selectedTemplate === 'vinyl' ? 'copertă disc' : selectedTemplate === 'chat' ? 'avatar' : 'fotografie'}
+                                    />
+                                    {template.features.includes('video') && (
+                                        <MediaUploader
+                                            type="video"
+                                            onUploadComplete={(url) => update({ videoUrl: url })}
+                                            currentUrl={formData.videoUrl}
+                                            onRemove={() => update({ videoUrl: '' })}
+                                        />
+                                    )}
+                                    {template.features.includes('audio') && (
+                                        <MediaUploader
+                                            type="audio"
+                                            onUploadComplete={(url) => update({ audioUrl: url })}
+                                            currentUrl={formData.audioUrl}
+                                            onRemove={() => update({ audioUrl: '' })}
+                                        />
+                                    )}
+                                </>
+                            ) : (
+                                <div className={styles.infoBox}>
+                                    <Lock size={16} /> Pentru a încărca fotografii, video sau muzică, creează-ți un cont în pasul „Finalizare”. Datele completate se păstrează.
+                                </div>
+                            )}
+                        </div>
+
+                        <div className={styles.inputGrid} style={{ marginTop: '1.5rem' }}>
+                            <Field label="Dress code (opțional)" full htmlFor="f-dressCode">{input('dressCode', 'Ex: Elegant / Black tie')}</Field>
+                            <Field label="Informații suplimentare (opțional)" full htmlFor="f-specialInstructions">
+                                <textarea
+                                    id="f-specialInstructions"
+                                    className={styles.input}
+                                    name="specialInstructions"
+                                    rows={2}
+                                    value={formData.specialInstructions}
+                                    onChange={handleChange}
+                                    placeholder="Ex: Vă rugăm să confirmați până la 1 august."
+                                />
+                            </Field>
+
+                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                                <span className={styles.label}>Câmpuri personalizate (max. 3)</span>
+                                <div className={styles.customFields}>
                                     {formData.customFields.map((field, idx) => (
-                                        <div key={idx} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '8px', alignItems: 'center' }}>
+                                        <div key={idx} className={styles.customFieldRow}>
                                             <input
                                                 className={styles.input}
-                                                placeholder="Etichetă (ex: Nași)"
+                                                placeholder="Etichetă (ex: Cazare)"
+                                                aria-label={`Etichetă câmp ${idx + 1}`}
                                                 value={field.label}
                                                 onChange={(e) => handleCustomFieldChange(idx, 'label', e.target.value)}
                                             />
                                             <input
                                                 className={styles.input}
                                                 placeholder="Valoare"
+                                                aria-label={`Valoare câmp ${idx + 1}`}
                                                 value={field.value}
                                                 onChange={(e) => handleCustomFieldChange(idx, 'value', e.target.value)}
                                             />
-                                            <button type="button" onClick={() => removeCustomField(idx)} style={{ background: 'rgba(255, 68, 68, 0.1)', border: 'none', color: '#ff4444', cursor: 'pointer', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <button
+                                                type="button"
+                                                className={styles.iconBtnDanger}
+                                                aria-label="Șterge câmpul"
+                                                onClick={() => setFormData(prev => ({ ...prev, customFields: prev.customFields.filter((_, i) => i !== idx) }))}
+                                            >
                                                 <Trash2 size={16} />
                                             </button>
                                         </div>
                                     ))}
                                     {formData.customFields.length < 3 && (
-                                        <button type="button" onClick={addCustomField} className={styles.btnSecondary} style={{ width: '100%', border: '2px dashed rgba(255,255,255,0.1)', background: 'transparent' }}>
-                                            <Plus size={18} /> ADAUGĂ CÂMP
+                                        <button
+                                            type="button"
+                                            className={styles.addFieldBtn}
+                                            onClick={() => setFormData(prev => ({ ...prev, customFields: [...prev.customFields, { label: '', value: '' }] }))}
+                                        >
+                                            <Plus size={18} /> Adaugă câmp
                                         </button>
                                     )}
                                 </div>
                             </div>
-
-                            {/* CONFIGURARE MEDIA (FOTO/VIDEO/AUDIO) - Moved to bottom & Optional */}
-                            {['story', 'netflix', 'chat', 'festival', 'vinyl', 'classic'].includes(selectedTemplate) && (
-                                <div className={`${styles.formGroup} ${styles.fullWidth}`} style={{ marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px' }}>
-                                    <details style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '16px', overflow: 'hidden' }}>
-                                        <summary style={{ padding: '15px', cursor: 'pointer', userSelect: 'none', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 'bold', color: 'var(--accent)' }}>
-                                            <ImageIcon size={18} /> MEDIA & FIȘIERE (OPȚIONAL) <ChevronLeft size={16} style={{ transform: 'rotate(-90deg)', marginLeft: 'auto' }} />
-                                        </summary>
-
-                                        <div style={{ padding: '20px', paddingTop: '0', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                                            {/* FOTO MAIN / AVATAR */}
-                                            <div className={styles.formGroup}>
-                                                <ImageUploader
-                                                    onUploadComplete={(url) => setFormData(prev => ({ ...prev, photoUrl: url }))}
-                                                    currentUrl={formData.photoUrl}
-                                                    onRemove={() => setFormData(prev => ({ ...prev, photoUrl: '' }))}
-                                                    label={selectedTemplate === 'vinyl' ? 'COPERTĂ DISC (POZĂ)' :
-                                                        selectedTemplate === 'chat' ? 'AVATAR CUPLU (POZĂ)' :
-                                                            selectedTemplate === 'story' ? 'FOTO FUNDAL (dacă nu pui video)' : 'POZĂ PRINCIPALĂ'}
-                                                />
-                                            </div>
-
-                                            {/* VIDEO */}
-                                            {['story', 'netflix'].includes(selectedTemplate) && (
-                                                <div className={styles.formGroup}>
-                                                    <MediaUploader
-                                                        type="video"
-                                                        onUploadComplete={(url) => setFormData(prev => ({ ...prev, videoUrl: url }))}
-                                                        currentUrl={formData.videoUrl}
-                                                        onRemove={() => setFormData(prev => ({ ...prev, videoUrl: '' }))}
-                                                    />
-                                                </div>
-                                            )}
-
-                                            {/* AUDIO */}
-                                            {['vinyl', 'festival', 'chat'].includes(selectedTemplate) && (
-                                                <div className={styles.formGroup}>
-                                                    <MediaUploader
-                                                        type="audio"
-                                                        onUploadComplete={(url) => setFormData(prev => ({ ...prev, audioUrl: url }))}
-                                                        currentUrl={formData.audioUrl}
-                                                        onRemove={() => setFormData(prev => ({ ...prev, audioUrl: '' }))}
-                                                    />
-                                                </div>
-                                            )}
-                                        </div>
-                                    </details>
-                                </div>
-                            )}
                         </div>
                     </div>
                 )}
 
-                {/* --- STEP 2: PLATA --- */}
-                {currentStep === 2 && (
-                    <div className={`${styles.editorCard} ${styles.scrollArea}`} style={{ animation: 'slideInLeft 0.4s ease' }}>
-                        {status === 'unauthenticated' ? (
-                            <div style={{ textAlign: 'center', padding: '20px' }}>
-                                <Lock size={32} color="var(--accent)" style={{ marginBottom: '10px' }} />
-                                <h3>Autentificare Necesara</h3>
-                                <p style={{ color: '#888', fontSize: '0.9rem' }}>Conectează-te pentru a salva invitația.</p>
-                                <button onClick={() => setAuthMode('login')} className={styles.btnGenerate} style={{ width: '100%', marginTop: '20px' }}>LOGHEAZĂ-TE</button>
-                            </div>
+                {/* STEP 3: FINISH */}
+                {currentStep === 3 && (
+                    <div className={styles.editorCard}>
+                        {status === 'loading' ? (
+                            <div style={{ textAlign: 'center', padding: '2rem' }}><Loader2 className="animate-spin" color="var(--accent)" /></div>
+                        ) : status === 'unauthenticated' ? (
+                            <>
+                                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                                    <Lock size={28} color="var(--accent)" />
+                                    <h2 className={styles.cardTitle} style={{ marginTop: '0.5rem' }}>Salvează-ți invitația</h2>
+                                    <p className={styles.cardText}>Creează un cont gratuit (durează 10 secunde). Tot ce ai completat se păstrează.</p>
+                                </div>
+                                <div className={styles.authTabs}>
+                                    <button type="button" className={authMode === 'register' ? styles.authTabActive : ''} onClick={() => { setAuthMode('register'); setAuthError('') }}>Cont nou</button>
+                                    <button type="button" className={authMode === 'login' ? styles.authTabActive : ''} onClick={() => { setAuthMode('login'); setAuthError('') }}>Am deja cont</button>
+                                </div>
+                                <form onSubmit={handleAuthSubmit} className={styles.authForm}>
+                                    {authMode === 'register' && (
+                                        <input className={styles.input} aria-label="Nume" placeholder="Nume" autoComplete="name" value={authData.name} onChange={e => setAuthData({ ...authData, name: e.target.value })} />
+                                    )}
+                                    <input className={styles.input} type="email" required aria-label="Email" placeholder="Email" autoComplete="email" value={authData.email} onChange={e => setAuthData({ ...authData, email: e.target.value })} />
+                                    <input className={styles.input} type="password" required aria-label="Parolă" minLength={authMode === 'register' ? 6 : undefined} placeholder={authMode === 'register' ? 'Parolă (minim 6 caractere)' : 'Parolă'} autoComplete={authMode === 'register' ? 'new-password' : 'current-password'} value={authData.password} onChange={e => setAuthData({ ...authData, password: e.target.value })} />
+                                    {authError && <p className={styles.errorText}>{authError}</p>}
+                                    <button type="submit" className={styles.btnGenerate} disabled={isAuthLoading}>
+                                        {isAuthLoading ? 'Se procesează...' : authMode === 'register' ? 'Creează cont și continuă' : 'Intră în cont'}
+                                    </button>
+                                </form>
+                            </>
                         ) : (
                             <div style={{ textAlign: 'center' }}>
-                                <Zap size={32} color="var(--accent)" style={{ marginBottom: '10px' }} />
-                                <h3>Finalizare Invitație</h3>
-                                <p style={{ color: '#888', fontSize: '0.9rem', marginBottom: '20px' }}>Activează invitația ta premium și trimite-o oaspeților.</p>
-                                <button onClick={() => handleSave(true)} className={styles.btnGenerate} style={{ width: '100%' }}>
-                                    {isSaving ? 'SE PROCESEAZĂ...' : 'ACTIVEAZĂ PROFESIONAL (20€)'}
+                                <Zap size={28} color="var(--accent)" />
+                                <h2 className={styles.cardTitle} style={{ marginTop: '0.5rem' }}>{isPaid ? 'Salvează modificările' : 'Activează invitația'}</h2>
+
+                                {isPaid ? (
+                                    <p className={styles.cardText}>Invitația este deja activă. Modificările apar imediat la link-ul trimis oaspeților.</p>
+                                ) : (
+                                    <div className={styles.priceCard}>
+                                        <div className={styles.price}>20 €<span> / invitație</span></div>
+                                        <ul>
+                                            <li><Check size={14} /> Link unic, fără limită de invitați</li>
+                                            <li><Check size={14} /> Confirmări RSVP live + notificări pe email</li>
+                                            <li><Check size={14} /> Listă de invitați în contul tău</li>
+                                            <li><Check size={14} /> Modificări nelimitate oricând</li>
+                                        </ul>
+                                    </div>
+                                )}
+
+                                {saveError && <p className={styles.errorBox}>{saveError}</p>}
+
+                                <button type="button" onClick={() => handleSave(!isPaid)} className={styles.btnGenerate} style={{ width: '100%' }} disabled={isSaving}>
+                                    {isSaving ? 'Se procesează...' : isPaid ? 'Salvează modificările' : 'Plătește și activează (20 €)'}
                                 </button>
-                                <button onClick={() => handleSave(false)} className={styles.btnSecondary} style={{ width: '100%', marginTop: '10px' }}>
-                                    SALVEAZĂ CA DRAFT
-                                </button>
+                                {!isPaid && (
+                                    <button type="button" onClick={() => handleSave(false)} className={styles.btnSecondary} style={{ width: '100%', marginTop: '10px' }} disabled={isSaving}>
+                                        Salvează ca draft (plătești mai târziu)
+                                    </button>
+                                )}
+                                <p className={styles.secureNote}><Lock size={12} /> Plată securizată prin Stripe</p>
                             </div>
                         )}
                     </div>
                 )}
 
-                {/* Footer Nav */}
-                <div className={styles.cardFooter} style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
-                    <button onClick={() => setCurrentStep(prev => Math.max(0, prev - 1))} disabled={currentStep === 0} className={styles.btnSecondary}>Înapoi</button>
+                <div className={styles.cardFooter}>
+                    <button type="button" onClick={() => setCurrentStep(prev => Math.max(0, prev - 1))} disabled={currentStep === 0} className={styles.btnSecondary}>
+                        <ChevronLeft size={16} /> Înapoi
+                    </button>
                     {currentStep < steps.length - 1 && (
-                        <button onClick={() => setCurrentStep(prev => prev + 1)} className={styles.btnGenerate}>Pasul Următor</button>
+                        <button type="button" onClick={() => goToStep(currentStep + 1)} className={styles.btnGenerate}>
+                            Pasul următor <ChevronRight size={16} style={{ verticalAlign: 'middle' }} />
+                        </button>
                     )}
                 </div>
             </div>
 
-            {/* Right Side: Preview */}
+            {/* Desktop preview */}
             <div className={styles.previewSection}>
-                {/* Switcher */}
                 <div className={styles.previewSwitcher}>
-                    <button
-                        className={`${styles.switchBtn} ${previewMode === 'pc' ? styles.activeSwitch : ''}`}
-                        onClick={() => setPreviewMode('pc')}
-                    >
+                    <button type="button" aria-label="Previzualizare desktop" className={`${styles.switchBtn} ${previewMode === 'pc' ? styles.activeSwitch : ''}`} onClick={() => setPreviewMode('pc')}>
                         <Monitor size={18} />
                     </button>
-                    <button
-                        className={`${styles.switchBtn} ${previewMode === 'mobile' ? styles.activeSwitch : ''}`}
-                        onClick={() => setPreviewMode('mobile')}
-                    >
+                    <button type="button" aria-label="Previzualizare telefon" className={`${styles.switchBtn} ${previewMode === 'mobile' ? styles.activeSwitch : ''}`} onClick={() => setPreviewMode('mobile')}>
                         <Smartphone size={18} />
                     </button>
                 </div>
 
                 <div className={`${styles.previewContainer} ${previewMode === 'mobile' ? styles.mobileMode : styles.pcMode}`}>
-                    {previewMode === 'mobile' ? (
-                        <div className={styles.phoneFrame}>
-                            <div className={styles.statusBar}>
-                                <div className={styles.time}>{currentTime}</div>
-                                <div className={styles.statusIcons}>
-                                    <Search size={12} strokeWidth={3} />
-                                    <div style={{ display: 'flex', gap: '2px' }}>
-                                        <div style={{ width: '2px', height: '4px', background: '#fff' }}></div>
-                                        <div style={{ width: '2px', height: '6px', background: '#fff' }}></div>
-                                        <div style={{ width: '2px', height: '8px', background: '#fff' }}></div>
-                                        <div style={{ width: '2px', height: '10px', background: 'rgba(255,255,255,0.3)' }}></div>
-                                    </div>
-                                    <div style={{ width: '18px', height: '9px', border: '1px solid #fff', borderRadius: '2px', position: 'relative', display: 'flex', alignItems: 'center', padding: '1px' }}>
-                                        <div style={{ width: '80%', height: '100%', background: '#fff', borderRadius: '1px' }}></div>
-                                        <div style={{ position: 'absolute', right: '-3px', width: '2px', height: '4px', background: '#fff', borderRadius: '0 1px 1px 0' }}></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className={styles.homeBar}></div>
-                            <div className={`${styles.phoneInner} ${['classic', 'classic-gold', 'classic-minimal', 'envelope', 'vinyl', 'scratch', 'vip', 'passport'].includes(selectedTemplate) ? styles.centeredScaler : ''}`}>
-                                <div className={styles.scalerContent}>
-                                    {selectedTemplate === 'classic' && <ClassicTemplate {...formData} eventType={formData.eventType} />}
-                                    {selectedTemplate === 'classic-gold' && <ClassicGoldTemplate {...formData} eventType={formData.eventType} />}
-                                    {selectedTemplate === 'classic-minimal' && <ClassicMinimalTemplate {...formData} eventType={formData.eventType} />}
-                                    {selectedTemplate === 'envelope' && <EnvelopeTemplate {...formData} eventType={formData.eventType} />}
-                                    {selectedTemplate === 'netflix' && <NetflixTemplate {...formData} eventType={formData.eventType} />}
-                                    {selectedTemplate === 'boarding' && <BoardingPassTemplate {...formData} eventType={formData.eventType} />}
-                                    {selectedTemplate === 'vinyl' && <VinylTemplate {...formData} eventType={formData.eventType} />}
-                                    {selectedTemplate === 'scratch' && <ScratchTemplate {...formData} eventType={formData.eventType} />}
-                                    {selectedTemplate === 'passport' && <PassportTemplate {...formData} eventType={formData.eventType} />}
-                                    {selectedTemplate === 'news' && <NewspaperTemplate {...formData} eventType={formData.eventType} />}
-                                    {selectedTemplate === 'cinema' && <CinemaTemplate {...formData} eventType={formData.eventType} />}
-                                    {selectedTemplate === 'festival' && <FestivalTemplate {...formData} eventType={formData.eventType} />}
-                                    {selectedTemplate === 'vip' && <VipCardTemplate {...formData} eventType={formData.eventType} />}
-                                    {selectedTemplate === 'story' && <StoryTemplate {...formData} eventType={formData.eventType} />}
-                                    {selectedTemplate === 'chat' && <ChatTemplate {...formData} eventType={formData.eventType} />}
-                                </div>
-                            </div>
-                        </div>
-                    ) : (
+                    {previewMode === 'mobile' ? phonePreview : (
                         <div className={styles.pcMockup}>
                             <div className={styles.pcBrowserHeader}>
                                 <div className={styles.dot}></div>
                                 <div className={styles.dot}></div>
                                 <div className={styles.dot}></div>
+                                <div className={styles.urlBar}>invitonline.ro/invitatie/…</div>
                             </div>
-                            <div className={`${styles.pcContent} ${['classic', 'classic-gold', 'classic-minimal', 'envelope', 'vinyl', 'scratch', 'vip', 'passport'].includes(selectedTemplate) ? styles.centeredScaler : ''}`}>
+                            <div className={`${styles.pcContent} ${isCentered ? styles.centeredScaler : ''}`}>
                                 <div className={styles.pcInner}>
-                                    <div className={styles.scalerContent}>
-                                        {selectedTemplate === 'classic' && <ClassicTemplate {...formData} eventType={formData.eventType} />}
-                                        {selectedTemplate === 'classic-gold' && <ClassicGoldTemplate {...formData} eventType={formData.eventType} />}
-                                        {selectedTemplate === 'classic-minimal' && <ClassicMinimalTemplate {...formData} eventType={formData.eventType} />}
-                                        {selectedTemplate === 'envelope' && <EnvelopeTemplate {...formData} eventType={formData.eventType} />}
-                                        {selectedTemplate === 'netflix' && <NetflixTemplate {...formData} eventType={formData.eventType} />}
-                                        {selectedTemplate === 'boarding' && <BoardingPassTemplate {...formData} eventType={formData.eventType} />}
-                                        {selectedTemplate === 'vinyl' && <VinylTemplate {...formData} eventType={formData.eventType} />}
-                                        {selectedTemplate === 'scratch' && <ScratchTemplate {...formData} eventType={formData.eventType} />}
-                                        {selectedTemplate === 'passport' && <PassportTemplate {...formData} eventType={formData.eventType} />}
-                                        {selectedTemplate === 'news' && <NewspaperTemplate {...formData} eventType={formData.eventType} />}
-                                        {selectedTemplate === 'cinema' && <CinemaTemplate {...formData} eventType={formData.eventType} />}
-                                        {selectedTemplate === 'festival' && <FestivalTemplate {...formData} eventType={formData.eventType} />}
-                                        {selectedTemplate === 'vip' && <VipCardTemplate {...formData} eventType={formData.eventType} />}
-                                        {selectedTemplate === 'story' && <StoryTemplate {...formData} eventType={formData.eventType} />}
-                                        {selectedTemplate === 'chat' && <ChatTemplate {...formData} eventType={formData.eventType} />}
-                                    </div>
+                                    <div className={styles.scalerContent}>{preview}</div>
                                 </div>
                             </div>
                         </div>
                     )}
                 </div>
             </div>
+
+            {/* Mobile: floating preview button + full-screen preview */}
+            <button type="button" className={styles.floatingPreviewBtn} onClick={() => setShowMobilePreview(true)}>
+                <Eye size={18} /> Previzualizare
+            </button>
+            {showMobilePreview && (
+                <div className={styles.mobilePreviewOverlay}>
+                    <div className={styles.mobilePreviewBar}>
+                        <span>Previzualizare · {template.name}</span>
+                        <button type="button" aria-label="Închide" onClick={() => setShowMobilePreview(false)}><X size={22} /></button>
+                    </div>
+                    <div className={`${styles.mobilePreviewBody} ${isCentered ? styles.centeredScaler : ''}`}>
+                        <div className={styles.scalerContent}>{preview}</div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
 
 export default function CreateEvent() {
     return (
-        <Suspense fallback={<div className="p-20 text-white">Loading...</div>}>
+        <Suspense fallback={null}>
             <CreateEventContent />
         </Suspense>
     )

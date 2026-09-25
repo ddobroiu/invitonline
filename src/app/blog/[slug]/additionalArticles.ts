@@ -9,7 +9,7 @@ export const additionalArticles = {
         category: 'Stiluri',
         image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1200&auto=format&fit=crop',
         content: [
-            'Nuntile rustice au un farmec aparte, combinând eleganța naturală cu căldura tradițională. Invitațiile tale trebuie să reflecte perfect această atmosferă.',
+            'Nunțile rustice au un farmec aparte, combinând eleganța naturală cu căldura tradițională. Invitațiile tale trebuie să reflecte perfect această atmosferă.',
             '## Caracteristicile Stilului Rustic',
             'Stilul rustic se caracterizează prin:',
             '- Elemente naturale (lemn, pânză, flori sălbatice)',
@@ -238,7 +238,7 @@ export const additionalArticles = {
         category: 'Sezonal',
         image: 'https://images.unsplash.com/photo-1482517967863-00e15c9b44be?w=1200&auto=format&fit=crop',
         content: [
-            'Nuntile de iarnă au un farmec magic aparte. Invitațiile tale trebuie să capteze această atmosferă de basm și să pregătească invitații pentru o celebrare de neuitat.',
+            'Nunțile de iarnă au un farmec magic aparte. Invitațiile tale trebuie să capteze această atmosferă de basm și să pregătească invitații pentru o celebrare de neuitat.',
             '## Caracteristicile Nuntilor de Iarnă',
             'Sezonul rece oferă oportunități unice:',
             '- Atmosferă intimă și caldă',
@@ -320,7 +320,7 @@ export const additionalArticles = {
             '- **Galerie foto**: Poze de cuplu în peisaje de iarnă',
             '- **Hartă interactivă**: Cu avertizări despre vreme',
             '## Concluzie',
-            'Nuntile de iarnă oferă oportunități unice pentru invitații memorabile. Cu template-uri digitale, poți crea o invitație care captează perfect magia sezonului rece.'
+            'Nunțile de iarnă oferă oportunități unice pentru invitații memorabile. Cu template-uri digitale, poți crea o invitație care captează perfect magia sezonului rece.'
         ],
         relatedLinks: [
             { text: 'Template-uri de Iarnă', href: '/demo' },
@@ -442,7 +442,7 @@ export const additionalArticles = {
         category: 'Destinații',
         image: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=1200&auto=format&fit=crop',
         content: [
-            'Nuntile la mare au un farmec special - combinația dintre romantism, relaxare și aventură. Invitațiile tale trebuie să capteze această atmosferă unică.',
+            'Nunțile la mare au un farmec special - combinația dintre romantism, relaxare și aventură. Invitațiile tale trebuie să capteze această atmosferă unică.',
             '## Esența Beach Wedding',
             'Caracteristicile unei nunți la mare:',
             '- Atmosferă relaxată și informală',
@@ -698,7 +698,7 @@ export const additionalArticles = {
         category: 'Lux',
         image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&auto=format&fit=crop',
         content: [
-            'Nuntile elegante necesită invitații care să reflecte rafinamentul și luxul evenimentului. Iată cum să creezi invitații care impresionează de la prima privire.',
+            'Nunțile elegante necesită invitații care să reflecte rafinamentul și luxul evenimentului. Iată cum să creezi invitații care impresionează de la prima privire.',
             '## Esența Eleganței',
             'O invitație elegantă se caracterizează prin:',
             '- Simplitate sofisticată',

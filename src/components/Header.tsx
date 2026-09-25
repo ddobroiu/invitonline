@@ -16,19 +16,44 @@ export default function Header() {
         const handleScroll = () => {
             setScrolled(window.scrollY > 20)
         }
-        window.addEventListener('scroll', handleScroll)
+        handleScroll()
+        window.addEventListener('scroll', handleScroll, { passive: true })
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
+
+    // Close the mobile menu whenever the route changes (link click, back button, redirects)
+    const [menuPath, setMenuPath] = useState(pathname)
+    if (menuPath !== pathname) {
+        setMenuPath(pathname)
+        if (isMenuOpen) setIsMenuOpen(false)
+    }
+
+    // Close on Escape
+    useEffect(() => {
+        if (!isMenuOpen) return
+        const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setIsMenuOpen(false) }
+        window.addEventListener('keydown', onKey)
+        return () => window.removeEventListener('keydown', onKey)
+    }, [isMenuOpen])
+
+    // Lock page scroll while the mobile menu is open
+    useEffect(() => {
+        document.body.style.overflow = isMenuOpen ? 'hidden' : ''
+        return () => { document.body.style.overflow = '' }
+    }, [isMenuOpen])
 
     const navLinks = [
         { name: 'Acasă', href: '/' },
         { name: 'Creează', href: '/create' },
         { name: 'Modele', href: '/demo' },
+        { name: 'Blog', href: '/blog' },
     ]
 
     if (session) {
-        navLinks.push({ name: 'Dashboard', href: '/dashboard' })
+        navLinks.push({ name: 'Contul meu', href: '/dashboard' })
     }
+
+    const isActiveLink = (href: string) => href === '/' ? pathname === '/' : !!pathname?.startsWith(href)
 
     return (
         <header style={{
@@ -39,7 +64,7 @@ export default function Header() {
             zIndex: 1000,
             display: 'flex',
             justifyContent: 'center',
-            padding: '0 20px',
+            padding: scrolled ? '0 12px' : '0',
             transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
             pointerEvents: 'none'
         }}>
@@ -50,7 +75,7 @@ export default function Header() {
                 backdropFilter: 'blur(16px)',
                 border: '1px solid rgba(255,255,255,0.12)',
                 borderRadius: scrolled ? '100px' : '0 0 24px 24px',
-                padding: scrolled ? '12px 32px' : '18px 40px',
+                padding: scrolled ? '12px clamp(16px, 3vw, 32px)' : '16px clamp(16px, 3vw, 40px)',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
@@ -108,13 +133,14 @@ export default function Header() {
 
                 {/* DESKTOP NAV */}
                 <nav className="mobile-hide" style={{ flex: 1, justifyContent: 'center' }}>
-                    <ul style={{ display: 'flex', gap: '32px', listStyle: 'none', margin: 0, padding: 0 }}>
+                    <ul style={{ display: 'flex', gap: scrolled ? '24px' : '32px', listStyle: 'none', margin: 0, padding: 0 }}>
                         {navLinks.map((link) => {
-                            const isActive = pathname === link.href
+                            const isActive = isActiveLink(link.href)
                             return (
                                 <li key={link.href}>
                                     <Link
                                         href={link.href}
+                                        aria-current={isActive ? 'page' : undefined}
                                         style={{
                                             color: isActive ? 'var(--accent)' : '#eee',
                                             fontSize: '0.9rem',
@@ -153,32 +179,32 @@ export default function Header() {
                             >
                                 LOGIN
                             </Link>
-                            <Link href="/login?tab=register" style={{ textDecoration: 'none' }}>
-                                <button style={{
+                            <Link
+                                href="/login?tab=register"
+                                style={{
+                                    display: 'inline-block',
                                     padding: '10px 24px',
                                     borderRadius: '50px',
                                     background: 'linear-gradient(135deg, var(--accent) 0%, #f6e27a 100%)',
-                                    border: 'none',
                                     color: '#000',
-                                    cursor: 'pointer',
                                     fontSize: '0.85rem',
                                     fontWeight: '900',
                                     textTransform: 'uppercase',
+                                    textDecoration: 'none',
                                     transition: 'all 0.3s',
                                     letterSpacing: '0.5px',
                                     boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3)'
                                 }}
-                                    onMouseOver={(e) => {
-                                        e.currentTarget.style.transform = 'translateY(-2px)'
-                                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(212, 175, 55, 0.4)'
-                                    }}
-                                    onMouseOut={(e) => {
-                                        e.currentTarget.style.transform = 'translateY(0)'
-                                        e.currentTarget.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.3)'
-                                    }}
-                                >
-                                    CREEAZĂ CONT
-                                </button>
+                                onMouseOver={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-2px)'
+                                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(212, 175, 55, 0.4)'
+                                }}
+                                onMouseOut={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0)'
+                                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.3)'
+                                }}
+                            >
+                                CREEAZĂ CONT
                             </Link>
                         </>
                     ) : (
@@ -210,14 +236,17 @@ export default function Header() {
                 </div>
 
                 {/* MOBILE HAMBURGER */}
-                <div
+                <button
+                    type="button"
+                    aria-label={isMenuOpen ? 'Închide meniul' : 'Deschide meniul'}
+                    aria-expanded={isMenuOpen}
                     className={`hamburger ${isMenuOpen ? 'open' : ''}`}
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                 >
                     <span></span>
                     <span></span>
                     <span></span>
-                </div>
+                </button>
             </div>
 
             {/* MOBILE MENU OVERLAY */}
@@ -238,7 +267,9 @@ export default function Header() {
                     pointerEvents: 'auto',
                     animation: 'fadeIn 0.3s ease'
                 }}>
-                    <div
+                    <button
+                        type="button"
+                        aria-label="Închide meniul"
                         onClick={() => setIsMenuOpen(false)}
                         style={{
                             position: 'absolute',
@@ -256,18 +287,19 @@ export default function Header() {
                         }}
                     >
                         <X color="white" size={24} />
-                    </div>
+                    </button>
 
                     <ul style={{ listStyle: 'none', padding: 0, margin: 0, textAlign: 'center' }}>
                         {navLinks.map((link) => (
-                            <li key={link.href} style={{ marginBottom: '30px' }}>
+                            <li key={link.href} style={{ marginBottom: '26px' }}>
                                 <Link
                                     href={link.href}
                                     onClick={() => setIsMenuOpen(false)}
+                                    aria-current={isActiveLink(link.href) ? 'page' : undefined}
                                     style={{
                                         fontSize: '2rem',
                                         fontWeight: '800',
-                                        color: pathname === link.href ? 'var(--accent)' : '#fff',
+                                        color: isActiveLink(link.href) ? 'var(--accent)' : '#fff',
                                         textTransform: 'uppercase'
                                     }}
                                 >
@@ -288,18 +320,22 @@ export default function Header() {
                                     }}>
                                         LOGIN
                                     </Link>
-                                    <Link href="/login?tab=register" onClick={() => setIsMenuOpen(false)}>
-                                        <button style={{
+                                    <Link
+                                        href="/login?tab=register"
+                                        onClick={() => setIsMenuOpen(false)}
+                                        style={{
+                                            display: 'block',
                                             padding: '15px 50px',
                                             borderRadius: '50px',
                                             background: 'var(--accent)',
-                                            border: 'none',
                                             fontSize: '1.1rem',
                                             fontWeight: '900',
-                                            width: '100%',
                                             color: '#000',
+                                            textAlign: 'center',
                                             boxShadow: '0 5px 20px rgba(212, 175, 55, 0.2)'
-                                        }}>CREEAZĂ CONT</button>
+                                        }}
+                                    >
+                                        CREEAZĂ CONT
                                     </Link>
                                 </>
                             ) : (

@@ -1,7 +1,11 @@
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
 import { Calendar, Clock, ArrowLeft, ArrowRight } from 'lucide-react'
 import styles from './page.module.css'
 import { additionalArticles } from './additionalArticles'
+import { partnerArticles } from './partnerArticles'
 
 // Full article content database
 const articlesContent: Record<string, {
@@ -245,7 +249,7 @@ const articlesContent: Record<string, {
         title: 'Eticheta Invitațiilor de Nuntă: Ghid Complet',
         date: '5 Ianuarie 2026',
         readTime: '8 min',
-        category: 'Eticheta',
+        category: 'Etichetă',
         image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1200&auto=format&fit=crop',
         content: [
             'Eticheta invitațiilor de nuntă poate părea complicată, dar urmând câteva reguli de bază, vă veți asigura că totul este perfect și respectuos.',
@@ -392,7 +396,7 @@ const articlesContent: Record<string, {
         date: '28 Decembrie 2025',
         readTime: '7 min',
         category: 'Inovație',
-        image: 'https://images.unsplash.com/photo-1519167758481-83f29da8c6b6?w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1200&auto=format&fit=crop',
         content: [
             'Tehnologia transformă invitațiile de nuntă din simple anunțuri în experiențe interactive memorabile. Descoperă ce aduce viitorul în 2026 și dincolo.',
             '## Ce Sunt Invitațiile Interactive?',
@@ -592,7 +596,7 @@ const articlesContent: Record<string, {
             '### Copii',
             '"Din păcate, din cauza limitărilor de spațiu, evenimentul este destinat doar adulților."',
             'SAU',
-            '"Copiii sunt bineveniti! Vom avea colț special de joacă pentru cei mici."',
+            '"Copiii sunt bineveniți! Vom avea colț special de joacă pentru cei mici."',
             '### Cadouri',
             '"Prezența voastră este cel mai frumos cadou. Dacă doriți totuși să ne oferiți ceva, un plic ar fi apreciat pentru începutul călătoriei noastre împreună."',
             '## Concluzie',
@@ -603,31 +607,85 @@ const articlesContent: Record<string, {
             { text: 'Vezi Template-uri', href: '/demo' }
         ]
     },
-    ...additionalArticles
+    ...additionalArticles,
+    ...partnerArticles,
 }
+
+type PageProps = { params: Promise<{ slug: string }> }
+
+export const dynamicParams = false
 
 export async function generateStaticParams() {
-    return Object.keys(articlesContent).map((slug) => ({
-        slug: slug,
-    }))
+    return Object.keys(articlesContent).map((slug) => ({ slug }))
 }
 
-export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const { slug } = await params
+    const article = articlesContent[slug]
+    if (!article) return { title: 'Articol negăsit | InvitOnline' }
+    const description = article.content.find((p) => !/^(#|-)/.test(p))?.slice(0, 160)
+    return {
+        title: `${article.title} | Blog InvitOnline`,
+        description,
+        openGraph: {
+            title: article.title,
+            description,
+            type: 'article',
+            images: [{ url: article.image }],
+        },
+    }
+}
+
+/** Renders **bold** segments inside a paragraph. */
+function renderInline(text: string): ReactNode[] {
+    return text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean).map((part, i) =>
+        part.startsWith('**') && part.endsWith('**')
+            ? <strong key={i}>{part.slice(2, -2)}</strong>
+            : part
+    )
+}
+
+/** Converts the simple markdown-like content array into blocks, grouping consecutive list items into <ul>. */
+function renderContent(content: string[]) {
+    const blocks: ReactNode[] = []
+    let list: string[] = []
+
+    const flushList = (key: number) => {
+        if (list.length === 0) return
+        blocks.push(
+            <ul key={`ul-${key}`} className={styles.list}>
+                {list.map((item, j) => (
+                    <li key={j} className={styles.listItem}>{renderInline(item)}</li>
+                ))}
+            </ul>
+        )
+        list = []
+    }
+
+    content.forEach((paragraph, index) => {
+        if (paragraph.startsWith('- ')) {
+            list.push(paragraph.slice(2))
+            return
+        }
+        flushList(index)
+        if (paragraph.startsWith('### ')) {
+            blocks.push(<h3 key={index} className={styles.subheading}>{renderInline(paragraph.slice(4))}</h3>)
+        } else if (paragraph.startsWith('## ')) {
+            blocks.push(<h2 key={index} className={styles.heading}>{renderInline(paragraph.slice(3))}</h2>)
+        } else {
+            blocks.push(<p key={index} className={styles.paragraph}>{renderInline(paragraph)}</p>)
+        }
+    })
+    flushList(content.length)
+    return blocks
+}
+
+export default async function ArticlePage({ params }: PageProps) {
     const { slug } = await params
     const article = articlesContent[slug]
 
     if (!article) {
-        return (
-            <div className={styles.container}>
-                <div className={styles.notFound}>
-                    <h1>Articol negăsit</h1>
-                    <p>Slug: {slug}</p>
-                    <Link href="/blog" className={styles.backLink}>
-                        <ArrowLeft size={20} /> Înapoi la Blog
-                    </Link>
-                </div>
-            </div>
-        )
+        notFound()
     }
 
     return (
@@ -658,32 +716,33 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 </div>
 
                 <div className={styles.content}>
-                    {article.content.map((paragraph, index) => {
-                        if (paragraph.startsWith('## ')) {
-                            return <h2 key={index} className={styles.heading}>{paragraph.replace('## ', '')}</h2>
-                        } else if (paragraph.startsWith('### ')) {
-                            return <h3 key={index} className={styles.subheading}>{paragraph.replace('### ', '')}</h3>
-                        } else if (paragraph.startsWith('- ')) {
-                            return <li key={index} className={styles.listItem}>{paragraph.replace('- ', '')}</li>
-                        } else {
-                            return <p key={index} className={styles.paragraph}>{paragraph}</p>
-                        }
-                    })}
+                    {renderContent(article.content)}
                 </div>
 
                 <div className={styles.cta}>
                     <h3 className={styles.ctaTitle}>Gata să Creezi Invitația Ta Perfectă?</h3>
                     <div className={styles.ctaButtons}>
-                        {article.relatedLinks.map((link, index) => (
-                            <Link
-                                key={index}
-                                href={link.href}
-                                className={index === 0 ? styles.ctaSecondary : styles.ctaPrimary}
-                            >
-                                {link.text}
-                                <ArrowRight size={18} />
-                            </Link>
-                        ))}
+                        {article.relatedLinks.map((link, index) => {
+                            const className = index === 0 ? styles.ctaSecondary : styles.ctaPrimary
+                            const isExternal = /^https?:\/\//.test(link.href)
+                            return isExternal ? (
+                                <a
+                                    key={link.href}
+                                    href={link.href}
+                                    className={className}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    {link.text}
+                                    <ArrowRight size={18} />
+                                </a>
+                            ) : (
+                                <Link key={link.href} href={link.href} className={className}>
+                                    {link.text}
+                                    <ArrowRight size={18} />
+                                </Link>
+                            )
+                        })}
                     </div>
                 </div>
             </article>

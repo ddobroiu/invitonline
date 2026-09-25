@@ -1,64 +1,80 @@
 .passportWrapper {
+    /* may shrink to the viewport height: the editor centres us with unsafe centering,
+       so overflowing content must flow downwards (scrollable) instead of upwards */
+    flex: 1 1 auto;
     width: 100%;
     min-height: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
-    perspective: 1500px;
-    background: #1a1a1a;
-    overflow: visible;
+    gap: 18px;
+    padding: 40px 16px;
+    perspective: 1800px;
+    background:
+        radial-gradient(ellipse at 50% 40%, rgba(212, 175, 55, 0.08) 0%, transparent 55%),
+        radial-gradient(ellipse at center, #22262b 0%, #15171a 60%, #0d0e10 100%);
+    overflow-x: hidden;
+    overflow-x: clip;
+    container-type: inline-size;
+    color: #222;
 }
 
 .book {
-    width: 300px;
-    height: 440px;
+    width: min(300px, 100%);
+    aspect-ratio: 300 / 440;
     position: relative;
     transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transform-style: preserve-3d;
     cursor: pointer;
+    flex-shrink: 0;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* On mobile/narrow screens, we don't translate, we just scale and flip */
+.book:focus-visible {
+    outline: 2px solid #d4af37;
+    outline-offset: 6px;
+    border-radius: 12px;
+}
+
+/* Wide: open like a real book, the spread is centred */
 .book.open {
-    transform: translateX(150px);
-}
-
-@media (max-width: 700px) {
-    .book.open {
-        transform: translateX(0) scale(0.8);
-    }
-
-    .passportWrapper {
-        perspective: 1000px;
-        padding: 20px 10px;
-    }
-
-    .book {
-        width: 280px;
-        height: 400px;
-        transform-origin: center center;
-    }
+    transform: translateX(50%);
 }
 
 /* RIGHT PAGE */
 .rightPage {
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: #fdf5e6;
-    border-radius: 0 12px 12px 0;
+    background-color: #fdf5e6;
+    border-radius: 12px;
     z-index: 1;
     display: flex;
     flex-direction: column;
+    gap: 12px;
     padding: 20px;
+    color: #222;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
     background-image:
         radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
         linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px);
     background-size: 20px 20px, 100% 30px;
+}
+
+.book.open .rightPage {
+    border-radius: 0 12px 12px 0;
+}
+
+.rightPage > * {
+    flex-shrink: 0;
 }
 
 /* FLIPPER */
@@ -91,60 +107,89 @@
 
 .front {
     background: #2c3e50;
+    background-image: radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.06), transparent 60%);
     border-radius: 12px;
     z-index: 2;
-    padding: 20px;
+    padding: 18px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: inset 3px 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: inset 4px 0 10px rgba(0, 0, 0, 0.5), 0 12px 30px rgba(0, 0, 0, 0.45);
 }
 
 .coverGold {
-    border: 2px double #d4af37;
+    border: 3px double #d4af37;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 10px;
+    padding: 22px 12px;
     border-radius: 8px;
 }
 
 .emblem {
     color: #d4af37;
     opacity: 0.9;
-    width: 80px;
-    height: 80px;
+    width: 32%;
+    aspect-ratio: 1;
+}
+
+.emblem svg {
+    width: 100%;
+    height: 100%;
 }
 
 .coverTitle {
-    font-family: serif;
+    font-family: Georgia, 'Times New Roman', serif;
     color: #d4af37;
     text-transform: uppercase;
-    letter-spacing: 3px;
-    font-size: 1.2rem;
+    letter-spacing: 4px;
+    font-size: 1.3rem;
     font-weight: 900;
+}
+
+.coverBottom {
+    text-align: center;
+    width: 100%;
+}
+
+.coverNames {
+    color: #d4af37;
+    font-size: 1.35rem;
+    line-height: 1.25;
+    margin-top: 10px;
+    font-family: var(--font-heading), Georgia, serif;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    text-wrap: balance;
+}
+
+.coverDate {
+    color: #d4af37;
+    font-size: 0.85rem;
+    margin-top: 6px;
 }
 
 .coverEvent {
     color: #d4af37;
-    font-size: 0.7rem;
-    letter-spacing: 1px;
+    font-size: 0.72rem;
+    letter-spacing: 2px;
     text-transform: uppercase;
     text-align: center;
 }
 
 .back {
-    background: #fdf5e6;
+    background-color: #fdf5e6;
     transform: rotateY(180deg);
     border-radius: 12px 0 0 12px;
     padding: 20px;
     display: flex;
     flex-direction: column;
+    color: #222;
     border-right: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.3);
     background-image:
@@ -156,29 +201,32 @@
 .header {
     border-bottom: 2px solid #333;
     padding-bottom: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    gap: 10px;
 }
 
 .headerText {
-    font-size: 0.6rem;
+    font-size: 0.68rem;
     font-weight: 800;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
     color: #333;
 }
 
 .photoRow {
     display: flex;
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: 14px;
+    margin-bottom: 14px;
 }
 
 .photoArea {
-    width: 90px;
-    height: 120px;
-    background: #ddd;
+    flex-shrink: 0;
+    width: 92px;
+    height: 118px;
+    background: #e4ddd0;
     border: 1px solid #999;
     display: flex;
     align-items: center;
@@ -187,74 +235,358 @@
     overflow: hidden;
 }
 
+.photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.85) contrast(1.05);
+}
+
 .fields {
+    min-width: 0;
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
+}
+
+.field {
+    min-width: 0;
+}
+
+.fullRow {
+    grid-column: 1 / -1;
 }
 
 .fieldLabel {
-    font-size: 0.45rem;
-    color: #777;
+    font-size: 0.6rem;
+    letter-spacing: 0.5px;
+    color: #6f6a60;
     text-transform: uppercase;
     font-weight: 700;
+    margin-bottom: 2px;
 }
 
 .fieldValue {
+    overflow-wrap: break-word;
     font-family: 'Courier New', monospace;
-    font-size: 0.75rem;
+    font-size: 0.88rem;
+    line-height: 1.25;
     font-weight: 700;
-    color: #000;
+    color: #111;
 }
 
 .mrz {
-    margin-top: auto;
+    word-break: break-all;
+    overflow: hidden;
+    margin-top: 12px;
     font-family: 'Courier New', monospace;
-    font-size: 0.6rem;
+    font-size: 0.62rem;
     letter-spacing: 1px;
     color: #444;
-    line-height: 1.2;
+    line-height: 1.3;
+}
+
+.messageValue {
+    font-size: 1rem;
+    line-height: 1.4;
+    font-style: italic;
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #222;
+    overflow-wrap: break-word;
+}
+
+.destination .fieldValue {
+    font-size: 0.82rem;
 }
 
 .stampsGrid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
     gap: 8px;
 }
 
 .stampBox {
-    border: 1px dashed rgba(0, 0, 0, 0.15);
-    padding: 6px;
+    border: 1px dashed rgba(0, 0, 0, 0.25);
+    padding: 8px;
     border-radius: 4px;
-    min-height: 60px;
+    min-height: 56px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 3px;
+    background: rgba(255, 255, 255, 0.35);
 }
 
 .stampLabel {
-    font-size: 0.5rem;
-    color: #888;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    color: #8a2d20;
     text-transform: uppercase;
-    font-weight: bold;
+    font-weight: 800;
 }
 
 .stampValue {
-    font-size: 0.65rem;
-    font-weight: bold;
+    font-size: 0.82rem;
+    line-height: 1.3;
+    font-weight: 700;
+    text-align: center;
+    color: #222;
+    overflow-wrap: break-word;
+}
+
+.scheduleBox {
+    align-items: stretch;
+    gap: 6px;
+}
+
+.scheduleBox .stampLabel {
+    text-align: center;
+}
+
+.scheduleRow {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    font-size: 0.82rem;
+    line-height: 1.3;
+}
+
+.scheduleTime {
+    flex-shrink: 0;
+    min-width: 42px;
+    font-family: 'Courier New', monospace;
+    font-weight: 800;
+    color: #8a2d20;
+}
+
+.scheduleText {
+    min-width: 0;
+    overflow-wrap: break-word;
+}
+
+.scheduleText strong {
+    font-weight: 700;
+}
+
+.scheduleLoc {
+    display: block;
+    color: #555;
+    font-size: 0.78rem;
 }
 
 .officialStamp {
+    flex-shrink: 0;
     margin-top: auto;
     align-self: flex-end;
     border: 2px double #c0392b;
     color: #c0392b;
     font-weight: 900;
     text-transform: uppercase;
-    font-size: 0.6rem;
-    padding: 5px;
+    text-align: center;
+    font-size: 0.62rem;
+    line-height: 1.25;
+    padding: 5px 7px;
     transform: rotate(-10deg);
+    margin-right: 10px;
+    opacity: 0.9;
+}
+
+.dashedHeader {
+    border-bottom: 1px dashed #999;
+    margin-bottom: 0;
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 10px;
+}
+
+.note {
+    font-size: 0.8rem;
+    line-height: 1.35;
+    font-style: italic;
+    color: #555;
+}
+
+.hint {
+    color: #d4af37;
+    font-size: 0.8rem;
+    text-align: center;
+    opacity: 0.8;
+    animation: hintPulse 2s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: min(300px, 100%);
+}
+
+.rsvpButton {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 16px;
+    background: #2c3e50;
+    color: #d4af37;
+    border: 3px double #d4af37;
+    border-radius: 8px;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.rsvpButton:hover {
+    background: #34495e;
+    transform: translateY(-2px);
+}
+
+.mapLinks {
+    display: flex;
+    gap: 18px;
+}
+
+.mapLinks a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #d4af37;
+    font-size: 0.78rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.5);
+    padding: 4px 0;
+}
+
+/* Large screens: a bigger book so the open spread fills the page nicely */
+@container (min-width: 820px) {
+    .book {
+        width: 380px;
+    }
+
+    .actions {
+        width: 350px;
+    }
+
+    .coverTitle {
+        font-size: 1.45rem;
+    }
+
+    .coverNames {
+        font-size: 1.55rem;
+    }
+
+    .back,
+    .rightPage {
+        padding: 24px;
+    }
+
+    .photoArea {
+        width: 104px;
+        height: 134px;
+    }
+}
+
+/* Narrow (phone / editor mockup): the open passport shows its pages stacked */
+@container (max-width: 640px) {
+    .book.open {
+        transform: none;
+        aspect-ratio: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .book.open .flipper {
+        position: relative;
+        order: -1;
+        height: auto;
+        transform: none;
+        transition: none;
+    }
+
+    .book.open .front {
+        display: none;
+    }
+
+    .book.open .back {
+        position: relative;
+        transform: none;
+        height: auto;
+        min-height: 0;
+        border-radius: 12px;
+        animation: pageIn 0.5s ease-out;
+    }
+
+    .book.open .rightPage {
+        position: relative;
+        height: auto;
+        overflow: visible;
+        border-radius: 12px;
+        animation: pageIn 0.7s ease-out;
+    }
+
+    .book.open .officialStamp {
+        margin-top: 8px;
+    }
+}
+
+@container (max-width: 340px) {
+    .photoArea {
+        width: 76px;
+        height: 98px;
+    }
+
+    .front,
+    .back,
+    .rightPage {
+        padding: 14px;
+    }
+
+    .coverGold {
+        padding: 18px 8px;
+    }
+}
+
+@media (max-width: 360px) {
+    .passportWrapper {
+        padding: 24px 10px;
+    }
+}
+
+@keyframes pageIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
 }

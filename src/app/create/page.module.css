@@ -1,32 +1,39 @@
 .container {
     height: calc(100vh - 80px);
+    height: calc(100dvh - 80px);
     padding: 1.5rem;
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
     background: #000;
     color: #fff;
     overflow: hidden;
 }
 
-.editorSection {
-    flex: 1;
-    max-width: 600px;
-    min-width: 400px;
-    display: block;
-    z-index: 10;
-    overflow-y: auto !important;
-    height: 100%;
-    padding-right: 0.8rem;
-    padding-bottom: 80px;
+.loadingScreen {
+    height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    color: #888;
 }
 
-/* Custom Scrollbar for editorSection too */
+/* ---------- Editor column ---------- */
+
+.editorSection {
+    flex: 1 1 0;
+    max-width: 620px;
+    min-width: 0;
+    overflow-y: auto;
+    height: 100%;
+    padding-right: 0.6rem;
+    display: flex;
+    flex-direction: column;
+}
+
 .editorSection::-webkit-scrollbar {
     width: 4px;
-}
-
-.editorSection::-webkit-scrollbar-track {
-    background: transparent;
 }
 
 .editorSection::-webkit-scrollbar-thumb {
@@ -34,33 +41,552 @@
     border-radius: 10px;
 }
 
-.scrollArea {
-    overflow: visible !important;
-    height: auto !important;
-    flex: none !important;
-    padding-bottom: 0 !important;
+.editorHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.title {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    line-height: 1.2;
+    background: linear-gradient(to right, #fff, #999);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.subtitle {
+    color: #777;
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+.subtitle strong {
+    color: var(--accent);
+}
+
+.stepCounter {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    color: #888;
+    white-space: nowrap;
+    letter-spacing: 1px;
+}
+
+.stepNav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    padding: 5px;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stepTab {
+    background: transparent;
+    border: none;
+    padding: 10px 4px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #555;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    font-family: inherit;
+}
+
+.stepTab:hover {
+    color: #aaa;
+}
+
+.doneTab {
+    color: #6fbf73;
+}
+
+.activeTab {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--accent);
+}
+
+.editorCard {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.035) 0%, rgba(255, 255, 255, 0.01) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 24px;
+    padding: 1.5rem;
+    animation: slideIn 0.35s ease;
+}
+
+.cardTitle {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    color: #fff;
+    margin-bottom: 0.35rem;
+}
+
+.cardText {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
 }
 
 .cardFooter {
-    margin-top: 2rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    padding: 1rem 0;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* ---------- Form ---------- */
+
+.inputGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 1rem;
+}
+
+.fullWidth {
+    grid-column: 1 / -1;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+}
+
+.label {
+    font-size: 0.75rem;
+    color: #aaa;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.hint {
+    font-size: 0.72rem;
+    color: #666;
+}
+
+.input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+    color-scheme: dark;
+}
+
+textarea.input {
+    resize: vertical;
+    min-height: 70px;
+}
+
+.input::placeholder {
+    color: #555;
+}
+
+.input option {
+    background: #111;
+    color: #fff;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.12);
+}
+
+.inputError {
+    border-color: #ff5a5a;
+}
+
+.errorText {
+    color: #ff6b6b;
+    font-size: 0.8rem;
+}
+
+.errorBox {
+    color: #ff8a8a;
+    background: rgba(255, 68, 68, 0.08);
+    border: 1px solid rgba(255, 68, 68, 0.25);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.infoBox {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    color: #bbb;
+    font-size: 0.85rem;
+    background: rgba(212, 175, 55, 0.06);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 12px;
+    padding: 12px 14px;
+}
+
+.infoBox svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--accent);
+}
+
+.sectionDivider {
+    grid-column: 1 / -1;
+    margin-top: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.typeSwitch {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+}
+
+.typeBtn {
+    padding: 10px 4px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    color: #aaa;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.typeBtn:hover {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.typeBtnActive {
+    border-color: var(--accent);
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--accent);
+}
+
+.mediaStack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.customFields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.customFieldRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 8px;
+    align-items: center;
+}
+
+.iconBtnDanger {
+    background: rgba(255, 68, 68, 0.1);
+    border: none;
+    color: #ff4444;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.addFieldBtn {
+    width: 100%;
+    padding: 12px;
+    border: 2px dashed rgba(255, 255, 255, 0.12);
+    background: transparent;
+    color: #999;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 700;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.addFieldBtn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ---------- Templates grid ---------- */
+
+.templateGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.templateBtn {
+    padding: 14px 6px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+    color: #999;
+    cursor: pointer;
+    border-radius: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 110px;
+    font-family: inherit;
+}
+
+.templateBtn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+.activeTemplate,
+.activeTemplate:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(212, 175, 55, 0.08);
+    box-shadow: 0 0 0 1px var(--accent) inset;
+}
+
+.templateIcon {
+    color: inherit;
+}
+
+.templateName {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.featureBadges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3px;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 5px;
+    border-radius: 6px;
+    font-size: 0.55rem;
+    font-weight: 800;
+}
+
+.badgeVideo {
+    background: rgba(255, 107, 107, 0.15);
+    color: #ff6b6b;
+}
+
+.badgeAudio {
+    background: rgba(30, 215, 96, 0.15);
+    color: #1ed760;
+}
+
+.badgePhoto {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+}
+
+/* ---------- Final step ---------- */
+
+.authTabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 1rem;
+}
+
+.authTabs button {
+    background: transparent;
+    border: none;
+    color: #888;
+    padding: 10px;
+    border-radius: 9px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.authTabs .authTabActive {
+    background: #fff;
+    color: #000;
+}
+
+.authForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.priceCard {
+    text-align: left;
+    background: rgba(212, 175, 55, 0.06);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 18px;
+    padding: 1.25rem;
+    margin: 1rem 0 1.25rem;
+}
+
+.price {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+}
+
+.price span {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.priceCard ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.priceCard li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.priceCard li svg {
+    color: #6fbf73;
+    flex-shrink: 0;
+}
+
+.secureNote {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: #666;
+    font-size: 0.75rem;
+    margin-top: 1rem;
+}
+
+/* ---------- Buttons ---------- */
+
+.btnGenerate {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 0.9rem 1.5rem;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: inherit;
+}
+
+.btnGenerate:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+    box-shadow: 0 8px 24px rgba(212, 175, 55, 0.25);
+}
+
+.btnGenerate:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.btnSecondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: #aaa;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.8rem 1.25rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: inherit;
+}
+
+.btnSecondary:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.btnSecondary:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* ---------- Preview column ---------- */
+
 .previewSection {
-    flex: 2;
-    background: radial-gradient(circle at 10% 10%, #151515, #000);
-    border-radius: 40px;
+    flex: 1.4 1 0;
+    min-width: 0;
+    background: radial-gradient(circle at 20% 10%, #161616, #000);
+    border-radius: 32px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
     position: relative;
     overflow: hidden;
-    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.5);
-    padding: 20px;
+    padding: 16px;
 }
 
 .previewSwitcher {
@@ -68,9 +594,10 @@
     background: rgba(255, 255, 255, 0.05);
     padding: 4px;
     border-radius: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     z-index: 20;
     border: 1px solid rgba(255, 255, 255, 0.05);
+    flex-shrink: 0;
 }
 
 .switchBtn {
@@ -83,54 +610,49 @@
     transition: all 0.3s;
     display: flex;
     align-items: center;
-    justify-content: center;
 }
 
 .activeSwitch {
     background: #fff;
     color: #000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .previewContainer {
     width: 100%;
-    height: 100%;
+    flex: 1;
+    min-height: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .pcMode {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding-top: 20px;
+    align-items: center;
 }
 
 .pcMockup {
-    width: 95%;
-    max-width: 1200px;
-    aspect-ratio: 16 / 10;
+    width: 100%;
+    max-width: 1100px;
+    height: 100%;
+    max-height: 700px;
     background: #000;
-    border-radius: 20px;
+    border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     overflow: hidden;
     position: relative;
-    box-shadow: 0 60px 120px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7);
     display: flex;
     flex-direction: column;
 }
 
 .pcBrowserHeader {
     height: 34px;
+    flex-shrink: 0;
     background: linear-gradient(to bottom, #222, #1a1a1a);
     display: flex;
     align-items: center;
-    padding: 0 15px;
-    gap: 8px;
+    padding: 0 14px;
+    gap: 7px;
     border-bottom: 1px solid #000;
 }
 
@@ -153,6 +675,20 @@
     background: #28c840;
 }
 
+.urlBar {
+    margin-left: 12px;
+    flex: 1;
+    max-width: 360px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #777;
+    font-size: 0.7rem;
+    padding: 3px 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .pcContent {
     flex: 1;
     position: relative;
@@ -173,99 +709,40 @@
     transform-style: preserve-3d;
 }
 
-.pcMockup .centeredScaler {
-    justify-content: center;
-    align-items: center;
-    overflow-y: hidden;
-}
-
 .pcMockup .centeredScaler .pcInner {
-    justify-content: center;
-    align-items: center;
-}
-
-.pcMockup .centeredScaler .scalerContent {
-    width: 90%;
-    max-width: 800px;
+    justify-content: safe center;
+    align-items: safe center;
 }
 
 .mobileMode {
-    width: 100%;
-    height: 100%;
-    display: flex;
     align-items: center;
-    justify-content: center;
 }
 
-/* Phone Mockup - HYPER REALISTIC */
-/* Phone Mockup - HYPER REALISTIC */
 .phoneFrame {
     width: 320px;
-    height: 660px;
+    height: min(660px, 100%);
+    aspect-ratio: 9 / 19;
+    max-width: 100%;
     background: #000;
     border: 10px solid #1a1a1a;
-    border-radius: 50px;
+    border-radius: 48px;
     position: relative;
-    box-shadow:
-        0 40px 80px rgba(0, 0, 0, 0.9),
-        0 0 0 1px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.06);
     overflow: hidden;
+    flex-shrink: 0;
 }
 
-@media (max-width: 900px) {
-    .previewSwitcher {
-        display: none !important;
-    }
-
-    .phoneFrame {
-        width: 100% !important;
-        height: 100% !important;
-        max-height: 80vh;
-        border: none !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-    }
-
-    .statusBar,
-    .homeBar,
-    .phoneFrame::before,
-    .phoneFrame::after {
-        display: none !important;
-    }
-}
-
-@media (min-height: 900px) {
-    .phoneFrame {
-        width: 360px;
-        height: 740px;
-    }
-}
-
-/* Dynamic Island Simulation - Overlay */
 .phoneFrame::before {
     content: '';
     position: absolute;
     top: 10px;
     left: 50%;
     transform: translateX(-50%);
-    width: 110px;
-    height: 28px;
+    width: 100px;
+    height: 26px;
     background: #000;
     border-radius: 20px;
     z-index: 110;
-}
-
-/* Side Buttons */
-.phoneFrame::after {
-    content: '';
-    position: absolute;
-    top: 100px;
-    left: -14px;
-    width: 3px;
-    height: 60px;
-    background: #222;
-    border-radius: 2px 0 0 2px;
-    box-shadow: 0 80px 0 #222, 0 150px 0 #222;
 }
 
 .statusBar {
@@ -274,12 +751,12 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    padding: 0 32px 8px;
+    padding: 0 28px 8px;
     position: absolute;
     top: 0;
     z-index: 100;
     color: #fff;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
     pointer-events: none;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
@@ -291,12 +768,27 @@
     gap: 6px;
 }
 
+.battery {
+    width: 18px;
+    height: 9px;
+    border: 1px solid #fff;
+    border-radius: 2px;
+    padding: 1px;
+}
+
+.battery div {
+    width: 80%;
+    height: 100%;
+    background: #fff;
+    border-radius: 1px;
+}
+
 .homeBar {
     position: absolute;
     bottom: 8px;
     left: 50%;
     transform: translateX(-50%);
-    width: 130px;
+    width: 120px;
     height: 5px;
     background: rgba(255, 255, 255, 0.4);
     border-radius: 10px;
@@ -311,7 +803,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     position: relative;
-    border-radius: 40px;
+    border-radius: 38px;
     scrollbar-width: none;
     container-type: size;
     display: flex;
@@ -319,9 +811,14 @@
     perspective: 2000px;
 }
 
+.phoneInner::-webkit-scrollbar {
+    display: none;
+}
+
 .scalerContent {
     width: 100%;
     min-height: 100%;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     transform-style: preserve-3d;
@@ -333,101 +830,68 @@
 }
 
 .centeredScaler .scalerContent {
-    width: 100%;
     margin: auto 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    align-items: safe center;
+    justify-content: safe center;
     background: transparent;
 }
 
-/* Specific scaling only if needed for very small mockups */
-@media (max-width: 1200px) {
-    .phoneFrame {
-        width: 280px;
-        height: 580px;
-    }
+/* ---------- Mobile preview ---------- */
+
+.floatingPreviewBtn {
+    display: none;
 }
 
-.pcMode .pcInner {
-    width: 100%;
-    height: 100%;
+.mobilePreviewOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: #000;
     display: flex;
     flex-direction: column;
+    animation: fadeIn 0.2s ease;
 }
 
-.title {
-    font-family: var(--font-heading);
-    font-size: 1.8rem;
-    background: linear-gradient(to right, #fff, #999);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.formGroup {
+.mobilePreviewBar {
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.label {
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ccc;
     font-size: 0.85rem;
-    color: #aaa;
     font-weight: 600;
-    margin-bottom: 4px;
-    display: block;
+    flex-shrink: 0;
 }
 
-
-.input {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 1.1rem;
-    border-radius: 12px;
-    color: #fff;
-    font-family: var(--font-body);
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-.input option {
-    background: #111;
-    color: #fff;
-}
-
-
-.input:focus {
-    outline: none;
-    border-color: var(--accent);
-    background: rgba(255, 255, 255, 0.06);
-    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
-}
-
-
-.btnGenerate {
-    background: var(--accent);
-    color: #000;
+.mobilePreviewBar button {
+    background: rgba(255, 255, 255, 0.1);
     border: none;
-    padding: 1rem;
-    border-radius: 16px;
-    font-weight: 800;
-    font-size: 0.9rem;
+    color: #fff;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    text-transform: uppercase;
-    letter-spacing: 1px;
 }
 
-.btnGenerate:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.1);
+.mobilePreviewBody {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    container-type: size;
+    display: flex;
+    flex-direction: column;
+    perspective: 2000px;
 }
 
-@keyframes slideInLeft {
+@keyframes slideIn {
     from {
         opacity: 0;
-        transform: translateX(-20px);
+        transform: translateX(-12px);
     }
 
     to {
@@ -446,167 +910,86 @@
     }
 }
 
-.stepNav {
-    display: flex;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 15px;
-    padding: 6px;
-    margin-bottom: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
+/* ---------- Responsive ---------- */
 
-.stepTab {
-    flex: 1;
-    padding: 12px 5px;
-    text-align: center;
-    font-size: 0.65rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: #444;
-    cursor: pointer;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-}
-
-.activeTab {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--accent);
-}
-
-.editorCard {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 28px;
-    padding: 1.5rem;
-    margin-bottom: 0;
-    backdrop-filter: blur(20px);
-    display: block;
-    overflow: visible;
-    height: auto;
-}
-
-.inputGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-}
-
-.fullWidth {
-    grid-column: span 2;
-}
-
-.templateGrid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    padding-bottom: 5px;
-}
-
-.templateBtn {
-    padding: 15px 8px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    background: rgba(255, 255, 255, 0.02);
-    color: #888;
-    cursor: pointer;
-    border-radius: 18px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    position: relative;
-    min-height: 90px;
-    justify-content: center;
-}
-
-.templateBtn:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-    color: #fff;
-}
-
-.activeTemplate {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: rgba(212, 175, 55, 0.08);
-}
-
-.btnSecondary {
-    background: rgba(255, 255, 255, 0.05);
-    color: #888;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 0.8rem 1.5rem;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.btnSecondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.2);
+@media (max-width: 1100px) {
+    .previewSwitcher {
+        display: none;
+    }
 }
 
 @media (max-width: 900px) {
     .container {
-        flex-direction: column;
         height: auto;
-        /* Let body handle scroll */
         overflow: visible;
-        /* Remove internal scroll */
-        padding: 1rem;
+        padding: 1rem 16px 6rem;
     }
 
     .editorSection {
-        flex: none;
-        width: 100%;
         max-width: none;
-        min-width: 0;
+        height: auto;
         overflow: visible;
-        order: 2;
-        /* Editor (default) first */
-        /* Preview on top or bottom? Let's put editor on top for easier access usually, but design-wise maybe preview first? Let's stick to Editor first (order 1 implicitly) */
+        padding-right: 0;
     }
 
     .previewSection {
-        flex: none;
-        width: 100%;
-        min-height: 400px;
-        /* Reduced from 500px fixed */
-        height: auto;
-        order: 1;
-        margin-top: 0;
-        margin-bottom: 2rem;
-        padding: 20px;
-        /* Reduced padding */
+        display: none;
+    }
+
+    .floatingPreviewBtn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 900;
+        background: var(--accent);
+        color: #000;
+        border: none;
+        border-radius: 50px;
+        padding: 14px 26px;
+        font-weight: 800;
+        font-size: 0.9rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 0 4px rgba(212, 175, 55, 0.2);
+        cursor: pointer;
+        font-family: inherit;
     }
 }
 
 @media (max-width: 600px) {
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .editorCard {
+        padding: 1.1rem;
+        border-radius: 20px;
+    }
+
     .templateGrid {
         grid-template-columns: repeat(2, 1fr);
     }
 
     .inputGrid {
         grid-template-columns: 1fr;
-        gap: 1rem;
     }
 
-    .fullWidth {
-        grid-column: span 1;
+    .typeSwitch {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .customFieldRow {
+        grid-template-columns: 1fr auto;
+    }
+
+    .customFieldRow input:nth-child(2) {
+        grid-row: 2;
+    }
+
+    .stepTab {
+        font-size: 0.58rem;
+        letter-spacing: 0.5px;
     }
 }

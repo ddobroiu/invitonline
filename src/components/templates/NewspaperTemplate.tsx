@@ -1,15 +1,22 @@
 'use client'
 
+import { useState } from 'react'
 import styles from './NewspaperTemplate.module.css'
-import { Heart, Baby, PartyPopper, Calendar, MapPin, Search } from 'lucide-react'
+import RSVPModal from '@/components/RSVPModal'
+import { Heart, Baby, PartyPopper, Cake } from 'lucide-react'
+import {
+    str, shortLocation, getMapUrl, getWazeUrl, getMainNames, getSchedule, getParents, getGodparents,
+    parseDate, validCustomFields, CustomField,
+} from './templateUtils'
 
 interface NewspaperTemplateProps {
-    title: string
-    date: string
-    location: string
+    id?: string
+    title?: string
+    date?: string
+    location?: string
+    locationUrl?: string
     message?: string
     eventType?: string
-    id?: string
     groomName?: string
     brideName?: string
     childName?: string
@@ -31,80 +38,126 @@ interface NewspaperTemplateProps {
     churchLoc?: string
     restaurantTime?: string
     restaurantLoc?: string
+    dressCode?: string
+    specialInstructions?: string
+    photoUrl?: string
+    customFields?: CustomField[]
 }
 
+const PAPER: Record<string, { name: string, slogan: string, weather: string, article: (who: string) => string, lead: string }> = {
+    nunta: {
+        name: 'The Wedding Times',
+        slogan: 'Ziarul oficial al celor mai frumoase povești de dragoste',
+        weather: 'IUBIRE MAXIMĂ & SOARE',
+        article: (who) => `Redacția noastră a aflat că ${who} au decis să își unească destinele într-o ceremonie fastuoasă.`,
+        lead: 'Pregătirile sunt în toi, iar lista de invitați include cele mai importante persoane din viața cuplului.',
+    },
+    botez: {
+        name: 'The Baby Times',
+        slogan: 'Ziarul oficial al celor mai dulci vești',
+        weather: 'ZÂMBETE & GÂNGURELI',
+        article: (who) => `Redacția noastră a aflat că micuțul/micuța ${who} va fi creștinat(ă) într-o ceremonie plină de emoție.`,
+        lead: 'Familia se pregătește intens, iar lista de invitați include cele mai dragi persoane din viața celui mic.',
+    },
+    aniversare: {
+        name: 'The Birthday Times',
+        slogan: 'Ziarul oficial al celor mai frumoase aniversări',
+        weather: 'TORT & ARTIFICII',
+        article: (who) => `Redacția noastră a aflat că ${who} sărbătorește o nouă aniversare și nu vrea să o facă fără tine.`,
+        lead: 'Tortul este comandat, muzica e pregătită, iar lista de invitați include doar oameni speciali.',
+    },
+    petrecere: {
+        name: 'The Party Times',
+        slogan: 'Ziarul oficial al celor mai tari petreceri',
+        weather: 'DISTRACȚIE 100%',
+        article: (who) => `Redacția noastră a aflat că ${who} pregătește o petrecere de neuitat.`,
+        lead: 'DJ-ul e confirmat, atmosfera e garantată, iar lista de invitați include cei mai buni prieteni.',
+    },
+}
 
-export default function NewspaperTemplate({
-    id, title, date, location, locationUrl, message, eventType = 'nunta',
-    groomName, brideName, childName, celebrantName,
-    godparents, godparentsBaptism, parentsGroom, parentsBride,
-    motherName, fatherName, birthDate, childAge,
-    civilCeremonyTime, civilCeremonyLoc, religiousCeremonyTime, religiousCeremonyLoc,
-    partyTime, partyLoc, churchTime, churchLoc, restaurantTime, restaurantLoc,
-    age, partyType, theme, specialInstructions, dressCode,
-    customFields, photoUrl
-}: any) {
-    const today = new Date().toLocaleDateString('ro-RO', { year: 'numeric', month: 'long', day: 'numeric' })
-    const eventYear = date.match(/\d{4}/)?.[0] || '2025'
+export default function NewspaperTemplate(props: NewspaperTemplateProps) {
+    const {
+        id, date, location, locationUrl, message, eventType = 'nunta',
+        groomName, brideName, childName, celebrantName, age,
+        dressCode, specialInstructions, customFields, photoUrl,
+    } = props
+
+    const [showRSVP, setShowRSVP] = useState(false)
+
+    const type = PAPER[eventType] ? eventType : 'nunta'
+    const paper = PAPER[type]
+    const names = getMainNames(props) || 'Protagoniștii'
+    const year = parseDate(date).year || String(new Date().getFullYear())
+    const mapUrl = getMapUrl(location, locationUrl)
+    const wazeUrl = getWazeUrl(location)
+    const schedule = getSchedule(props)
+    const parents = getParents(props)
+    const godparentsText = getGodparents(props)
+    const fields = validCustomFields(customFields)
+
+    const protagonists: { label: string, value: string }[] = []
+    if (type === 'nunta') {
+        if (str(groomName)) protagonists.push({ label: 'Mire', value: str(groomName) })
+        if (str(brideName)) protagonists.push({ label: 'Mireasă', value: str(brideName) })
+    } else if (type === 'botez') {
+        if (str(childName)) protagonists.push({ label: 'Micuțul/Micuța', value: str(childName) })
+    } else {
+        if (str(celebrantName)) protagonists.push({ label: 'Sărbătorit', value: str(celebrantName) })
+        if (str(age)) protagonists.push({ label: 'Vârstă', value: `${str(age)} ani` })
+    }
+
+    const Icon = type === 'nunta' ? Heart : type === 'botez' ? Baby : type === 'aniversare' ? Cake : PartyPopper
 
     return (
         <div className={styles.paperWrapper}>
             <div className={styles.newspaper}>
-                {/* Header Meta */}
                 <div className={styles.headerMeta}>
                     <div className={styles.weatherBox}>
-                        <span style={{ fontWeight: 'bold' }}>METEO:</span> IUBIRE MAXIMĂ & SOARE
+                        <strong>METEO:</strong> {paper.weather}
                     </div>
                     <div className={styles.editionInfo}>
-                        NR. 1 • VOL. {new Date().getFullYear()} • EDIȚIE LIMITATĂ
+                        NR. 1 • VOL. {year} • EDIȚIE LIMITATĂ
                     </div>
                     <div className={styles.priceBox}>
                         PREȚ: UN ZÂMBET
                     </div>
                 </div>
 
-                {/* Masthead */}
                 <div className={styles.masthead}>
-                    <h1>The {eventType ? eventType.charAt(0).toUpperCase() + eventType.slice(1) : 'Wedding'} Times</h1>
-                    <div className={styles.slogan}>"Ziarul oficial al celor mai frumoase povești de dragoste"</div>
+                    <h1>{paper.name}</h1>
+                    <div className={styles.slogan}>„{paper.slogan}”</div>
                 </div>
 
-                <div style={{ borderBottom: '2px solid #222', marginBottom: '2px' }}></div>
-                <div style={{ borderBottom: '1px solid #222', marginBottom: '15px' }}></div>
+                <div className={styles.doubleRule} aria-hidden="true"></div>
 
-                {/* Main Headline */}
                 <div className={styles.mainHeadline}>
-                    {title}: EVENIMENTUL DECENIULUI A FOST CONFIRMAT!
+                    {names}: EVENIMENTUL DECENIULUI A FOST CONFIRMAT!
                 </div>
 
-                <div className={styles.subHeadline}>
-                    <em>Surse exclusive confirmă data de {date} ca fiind "cea mai importantă zi din istorie".</em>
-                </div>
+                {str(date) && (
+                    <div className={styles.subHeadline}>
+                        <em>Surse exclusive confirmă data de {str(date)} ca fiind „cea mai importantă zi din istorie”.</em>
+                    </div>
+                )}
 
                 <div className={styles.articleBody}>
                     <div className={styles.firstColumn}>
                         <div className={styles.eventPhotoContainer}>
                             {photoUrl ? (
-                                <img
-                                    src={photoUrl}
-                                    alt="Event Photo"
-                                    className={styles.actualPhoto}
-                                />
+                                <img src={photoUrl} alt={names} className={styles.actualPhoto} />
                             ) : (
                                 <div className={styles.placeholderPhoto}>
-                                    {eventType === 'nunta' && <Heart size={50} strokeWidth={1} />}
-                                    {eventType === 'botez' && <Baby size={50} strokeWidth={1} />}
-                                    {!eventType && <PartyPopper size={50} strokeWidth={1} />}
+                                    <Icon size={50} strokeWidth={1} />
                                 </div>
                             )}
-                            <div className={styles.stamp}>EXCLUSIVE</div>
+                            <div className={styles.stamp}>EXCLUSIV</div>
                             <div className={styles.photoCaption}>▲ FIG 1. Protagoniștii acestui eveniment istoric.</div>
                         </div>
 
                         <p className={styles.articleText}>
-                            <span className={styles.dropCap}>D</span>intr-o mare de evenimente mondene, unul singur strălucește cu adevărat.
-                            Redacția noastră a aflat că <strong>{title}</strong> au decis să își unească destinele într-o ceremonie fastuoasă.
-                            Locația aleasă, <strong>{location}</strong>, va deveni centrul universului pentru o noapte.
+                            <span className={styles.dropCap}>D</span>intr-o mare de evenimente mondene, unul singur strălucește cu adevărat.{' '}
+                            {paper.article(names)}
+                            {str(location) && <> Locația aleasă, <strong>{str(location)}</strong>, va deveni centrul universului pentru o zi.</>}
                         </p>
                     </div>
 
@@ -112,108 +165,125 @@ export default function NewspaperTemplate({
                         <div className={styles.leadStory}>
                             <h3>DETALIILE SCANDALOS DE FRUMOASE</h3>
                             <p>
-                                Deși s-a încercat păstrarea secretului, reporterii noștri au aflat totul.
-                                Pregătirile sunt în toi, iar lista de invitați include cele mai importante persoane din viața cuplului.
+                                Deși s-a încercat păstrarea secretului, reporterii noștri au aflat totul. {paper.lead}
                             </p>
                             <div className={styles.quoteBox}>
-                                "{message || 'Vă așteptăm să scriem istorie împreună!'}"
+                                „{str(message) || 'Vă așteptăm să scriem istorie împreună!'}”
                             </div>
                         </div>
 
-                        {/* Info Grid - Replaces old list */}
                         <div className={styles.infoGrid}>
+                            {str(date) && (
+                                <div className={styles.infoItem}>
+                                    <div className={styles.infoLabel}>DATA</div>
+                                    <div className={styles.infoValue}>{str(date)}</div>
+                                </div>
+                            )}
+                            {str(location) && (
+                                <div className={styles.infoItem}>
+                                    <div className={styles.infoLabel}>LOCAȚIE</div>
+                                    <div className={styles.infoValue}>{shortLocation(location)}</div>
+                                </div>
+                            )}
+                            {schedule[0]?.time && (
+                                <div className={styles.infoItem}>
+                                    <div className={styles.infoLabel}>ORA</div>
+                                    <div className={styles.infoValue}>{schedule[0].time}</div>
+                                </div>
+                            )}
                             <div className={styles.infoItem}>
-                                <div className={styles.infoLabel}>DATA</div>
-                                <div className={styles.infoValue}>{date}</div>
+                                <div className={styles.infoLabel}>ȚINUTĂ</div>
+                                <div className={styles.infoValue}>{str(dressCode) || 'Elegantă'}</div>
                             </div>
-                            <div className={styles.infoItem}>
-                                <div className={styles.infoLabel}>LOCAȚIE</div>
-                                <div className={styles.infoValue}>{location.split(',')[0]}</div>
-                            </div>
-                            <div className={styles.infoItem}>
-                                <div className={styles.infoLabel}>MEMO</div>
-                                <div className={styles.infoValue}>Dress: {dressCode || 'Elegant'}</div>
-                            </div>
+                            {(mapUrl || wazeUrl) && (
+                                <div className={styles.mapLinks}>
+                                    {mapUrl && <a href={mapUrl} target="_blank" rel="noopener noreferrer">Vezi harta</a>}
+                                    {wazeUrl && <a href={wazeUrl} target="_blank" rel="noopener noreferrer">Waze</a>}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
 
-                {/* Ads Section */}
                 <div className={styles.classifiedsTitle}>MICĂ PUBLICITATE & ANUNȚURI</div>
                 <div className={styles.classifiedsGrid}>
-                    {(groomName || brideName || childName || celebrantName) && (
+                    {protagonists.length > 0 && (
                         <div className={styles.classifiedBox}>
                             <h4>PROTAGONIȘTI</h4>
-                            {groomName && <p><strong>Mire:</strong> {groomName}</p>}
-                            {brideName && <p><strong>Mireasă:</strong> {brideName}</p>}
-                            {childName && <p><strong>Copil:</strong> {childName}</p>}
-                            {celebrantName && <p><strong>Sărbătorit:</strong> {celebrantName}</p>}
+                            {protagonists.map((p) => <p key={p.label}><strong>{p.label}:</strong> {p.value}</p>)}
                         </div>
                     )}
-                    {(parentsGroom || parentsBride) && (
+                    {parents.length > 0 && (
                         <div className={styles.classifiedBox}>
                             <h4>PĂRINȚI</h4>
-                            {parentsGroom && <p>{parentsGroom}</p>}
-                            {parentsBride && <p>{parentsBride}</p>}
+                            {parents.map((p) => <p key={p}>{p}</p>)}
                         </div>
                     )}
-                    {(godparents || godparentsBaptism) && (
+                    {godparentsText && (
                         <div className={styles.classifiedBox}>
-                            <h4>NAȘI SPIRITUALI</h4>
-                            <p>{godparents || godparentsBaptism}</p>
+                            <h4>NAȘI</h4>
+                            <p>{godparentsText}</p>
                         </div>
                     )}
-                    {(civilCeremonyTime || religiousCeremonyTime || partyTime || churchTime || restaurantTime) && (
+                    {schedule.length > 0 && (
                         <div className={styles.classifiedBox}>
                             <h4>PROGRAM</h4>
-                            {civilCeremonyTime && <p>Civilă: {civilCeremonyTime}</p>}
-                            {religiousCeremonyTime && <p>Religioasă: {religiousCeremonyTime}</p>}
-                            {churchTime && <p>Biserică: {churchTime}</p>}
-                            {partyTime && <p>Petrecere: {partyTime}</p>}
-                            {restaurantTime && <p>Local: {restaurantTime}</p>}
+                            {schedule.map((s) => (
+                                <p key={s.key}><strong>{s.time}</strong> {s.label}{s.loc && ` – ${s.loc}`}</p>
+                            ))}
                         </div>
                     )}
-                    {customFields && customFields.map((field: any, i: number) => (
-                        field.label && field.value && (
-                            <div key={i} className={styles.classifiedBox}>
-                                <h4>{field.label.toUpperCase()}</h4>
-                                <p>{field.value}</p>
-                            </div>
-                        )
+                    {fields.map((f, i) => (
+                        <div key={`${f.label}-${i}`} className={styles.classifiedBox}>
+                            <h4>{f.label.toLocaleUpperCase('ro-RO')}</h4>
+                            <p>{f.value}</p>
+                        </div>
                     ))}
-                    <div className={styles.classifiedBox} style={{ background: '#222', color: '#f4ecd8' }}>
-                        <h4 style={{ color: '#f4ecd8', borderColor: '#f4ecd8' }}>RSVP</h4>
-                        <p>Vă rugăm confirmați prezența.</p>
-                        <p>Termen limită: ASAP.</p>
-                    </div>
+                    {str(specialInstructions) && (
+                        <div className={styles.classifiedBox}>
+                            <h4>DE REȚINUT</h4>
+                            <p>{str(specialInstructions)}</p>
+                        </div>
+                    )}
+                    <button type="button" className={`${styles.classifiedBox} ${styles.darkBox}`} onClick={() => setShowRSVP(true)}>
+                        <span className={styles.darkBoxTitle}>RSVP</span>
+                        <span>Vă rugăm confirmați prezența — apăsați aici sau folosiți talonul de mai jos.</span>
+                    </button>
                 </div>
 
                 <div className={styles.footerBar}>
-                    INVITATII ONLINE NEWS GROUP © {new Date().getFullYear()} • TIPĂRIT ÎN INIMA TA
+                    INVITAȚII ONLINE NEWS GROUP © {year} • TIPĂRIT ÎN INIMA TA
                 </div>
 
-                {/* RSVP COUPON */}
                 <div className={styles.rsvpWrapper}>
                     <div className={styles.cutLine}>
-                        <span>✂</span> -------------------------------------------------------------
+                        <span>✂</span>
                     </div>
                     <div className={styles.rsvpCoupon}>
                         <div className={styles.rsvpHeader}>TALON DE CONFIRMARE</div>
                         <div className={styles.rsvpContent}>
                             <p>DA, doresc să iau parte la acest eveniment istoric!</p>
-                            <p style={{ fontSize: '0.7rem', marginTop: '5px' }}>Vă rugăm să ne onorați cu prezența.</p>
+                            <p className={styles.rsvpSub}>Vă rugăm să ne onorați cu prezența.</p>
 
-                            <button className={styles.rsvpButton}>
-                                CONFIRMĂ PREZENȚA
+                            <button className={styles.rsvpButton} onClick={() => setShowRSVP(true)}>
+                                Confirmă Prezența
                             </button>
 
-                            <div style={{ fontSize: '0.6rem', marginTop: '8px', fontStyle: 'italic' }}>
+                            <div className={styles.rsvpFine}>
                                 *Prin completarea acestui talon, sunteți de acord să vă distrați.
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {showRSVP && (
+                <RSVPModal
+                    isOpen={showRSVP}
+                    onClose={() => setShowRSVP(false)}
+                    eventId={id}
+                />
+            )}
         </div>
     )
 }

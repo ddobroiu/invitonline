@@ -1,25 +1,31 @@
 .cinemaWrapper {
     width: 100%;
     min-height: 100%;
+    flex: 1 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #000;
-    padding: 30px 15px;
+    padding: 40px 16px;
+    /* Red velvet curtains + spotlight */
+    background:
+        radial-gradient(ellipse 60% 55% at 50% 35%, rgba(255, 235, 200, 0.10), transparent 70%),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0%, transparent 18%, transparent 82%, rgba(0, 0, 0, 0.85) 100%),
+        repeating-linear-gradient(90deg, #3a0508 0px, #5c0a10 18px, #2a0306 36px),
+        #1a0204;
 }
 
 .poster {
     width: 100%;
-    max-width: 380px;
-    height: auto;
-    min-height: 560px;
-    background: #111;
+    max-width: 440px;
+    background: linear-gradient(180deg, #151515 0%, #0d0d0d 100%);
     border: 8px solid #222;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    outline: 1px solid #3a3a3a;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.85), 0 0 60px rgba(229, 9, 20, 0.12);
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: 30px 20px;
+    align-items: stretch;
+    padding: 32px 24px 22px;
     color: #eee;
     text-align: center;
     overflow: hidden;
@@ -28,7 +34,7 @@
 
 @keyframes flicker {
     0% {
-        opacity: 0.9;
+        opacity: 0.92;
     }
 
     5% {
@@ -36,7 +42,7 @@
     }
 
     10% {
-        opacity: 0.9;
+        opacity: 0.94;
     }
 
     100% {
@@ -45,72 +51,335 @@
 }
 
 .topText {
-    font-size: 0.65rem;
+    font-size: 0.72rem;
     letter-spacing: 4px;
     text-transform: uppercase;
-    color: #888;
-    margin-bottom: 20px;
+    color: #8a8a8a;
+    margin-bottom: 18px;
 }
 
 .mainTitle {
     font-family: var(--font-heading);
-    font-size: 2.8rem;
-    line-height: 1;
+    font-size: clamp(2rem, 9cqw, 2.9rem);
+    line-height: 1.05;
     text-transform: uppercase;
-    margin-bottom: 15px;
+    margin: 0 0 14px;
     background: linear-gradient(to bottom, #fff, #bbb);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     overflow-wrap: break-word;
-    word-break: break-word;
     hyphens: auto;
+    text-wrap: balance;
 }
 
 .comingSoon {
-    font-size: 1.4rem;
+    align-self: center;
+    overflow-wrap: break-word;
+    font-size: 1.25rem;
+    line-height: 1.25;
     color: #e50914;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 2px;
-    margin-bottom: 30px;
+    margin-bottom: 18px;
     transform: rotate(-2deg);
+    text-wrap: balance;
 }
 
 .photoArea {
-    flex: 1;
-    margin: 15px 0;
+    margin: 10px 0 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 200px;
 }
 
-.credits {
-    font-family: 'Courier New', monospace;
-    font-size: 0.55rem;
-    text-transform: uppercase;
-    color: #666;
-    line-height: 1.6;
-    margin-top: auto;
+.posterImage {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    max-height: 420px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 4px;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.6);
+    filter: contrast(1.05) saturate(0.9);
+}
+
+.iconCircle {
+    width: 150px;
+    height: 150px;
+    margin: 12px 0;
+    border-radius: 50%;
+    border: 1px solid rgba(229, 9, 20, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 50px rgba(229, 9, 20, 0.18);
+}
+
+.tagline {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #cfcfcf;
+    margin: 0 0 18px;
+    overflow-wrap: break-word;
 }
 
 .locationTag {
+    align-self: center;
+    max-width: 100%;
+    overflow-wrap: break-word;
     background: #e50914;
     color: white;
-    padding: 5px 15px;
-    font-size: 0.7rem;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
     font-weight: bold;
     text-transform: uppercase;
-    margin: 15px 0;
+    margin: 0 0 8px;
 }
 
-@media (max-width: 400px) {
+.locationFull {
+    font-size: 0.85rem;
+    color: #a8a8a8;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    overflow-wrap: break-word;
+}
+
+.mapLinks {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 4px 0 22px;
+}
+
+.mapLinks a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #eee;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    border: 1px solid rgba(229, 9, 20, 0.6);
+    border-radius: 3px;
+    padding: 7px 12px;
+    transition: background 0.2s;
+}
+
+.mapLinks a:hover {
+    background: rgba(229, 9, 20, 0.18);
+}
+
+/* ---------- Showtimes ---------- */
+.showtimes {
+    border-top: 1px dashed #333;
+    border-bottom: 1px dashed #333;
+    padding: 14px 0 12px;
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+}
+
+.blockTitle {
+    text-align: center;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #8a8a8a;
+    margin-bottom: 2px;
+}
+
+.showtime {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.showtimeTime {
+    flex-shrink: 0;
+    min-width: 62px;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #fff;
+    background: #2a0a0c;
+    border: 1px solid rgba(229, 9, 20, 0.55);
+    border-radius: 3px;
+    padding: 4px 6px;
+}
+
+.showtimeInfo {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    font-size: 0.9rem;
+    line-height: 1.35;
+    color: #a8a8a8;
+    overflow-wrap: break-word;
+}
+
+.showtimeInfo strong {
+    color: #eee;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.85rem;
+}
+
+/* ---------- Billing block ---------- */
+.credits {
+    font-family: 'Arial Narrow', 'Roboto Condensed', 'Helvetica Neue', Arial, sans-serif;
+    text-transform: uppercase;
+    line-height: 1.35;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 16px;
+    margin-top: auto;
+}
+
+.creditLine {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+.creditLabel {
+    font-size: 0.68rem;
+    letter-spacing: 1.5px;
+    color: #7a7a7a;
+}
+
+.creditValue {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #d8d8d8;
+}
+
+.note {
+    margin-top: 16px;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: #bdbdbd;
+    font-style: italic;
+    overflow-wrap: break-word;
+}
+
+.rsvpButton {
+    margin-top: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 15px;
+    background: #e50914;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-family: inherit;
+    font-weight: 900;
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(229, 9, 20, 0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.rsvpButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 35px rgba(229, 9, 20, 0.6);
+}
+
+.footer {
+    margin-top: 14px;
+    font-size: 0.62rem;
+    letter-spacing: 1px;
+    color: #5a5a5a;
+    text-transform: uppercase;
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 480px) {
+    .cinemaWrapper {
+        padding: 14px 10px;
+    }
+
+    .poster {
+        padding: 26px 16px 18px;
+        border-width: 5px;
+    }
+
     .mainTitle {
-        font-size: 2.2rem;
+        font-size: clamp(1.8rem, 10vw, 2.4rem);
     }
 
     .comingSoon {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
+
+    .topText {
+        letter-spacing: 2.5px;
+    }
+
+    .iconCircle {
+        width: 124px;
+        height: 124px;
+    }
+}
+
+/* Editor phone mockup (container-type: size) */
+@container (max-width: 480px) {
+    .cinemaWrapper {
+        padding: 14px 10px;
+    }
+
+    .poster {
+        padding: 26px 16px 18px;
+        border-width: 5px;
+    }
+
+    .mainTitle {
+        font-size: clamp(1.7rem, 10cqw, 2.4rem);
+    }
+
+    .comingSoon {
+        font-size: 1.1rem;
+    }
+
+    .topText {
+        letter-spacing: 2.5px;
+    }
+
+    .iconCircle {
+        width: 124px;
+        height: 124px;
+    }
+}
+
+/* Editor phone mockup (~300px wide): leave room for the mockup's status bar / notch */
+@container (max-width: 330px) {
+    .cinemaWrapper {
+        padding-top: 40px;
+    }
+}
+
+/* Keep each name together so couples wrap at "&" */
+.namePart {
+    display: inline-block;
+    max-width: 100%;
 }

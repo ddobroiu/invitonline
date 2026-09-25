@@ -7,7 +7,7 @@ export default function Footer() {
         <footer style={{
             background: '#050505',
             borderTop: '1px solid #222',
-            padding: '60px 40px 20px',
+            padding: '60px clamp(16px, 4vw, 40px) 20px',
             color: '#888',
             marginTop: 'auto'
         }}>
@@ -33,24 +33,23 @@ export default function Footer() {
                         <li style={{ marginBottom: '10px' }}><Link href="/" className="hover-text-white">Acasă</Link></li>
                         <li style={{ marginBottom: '10px' }}><Link href="/create" className="hover-text-white">Creează Invitație</Link></li>
                         <li style={{ marginBottom: '10px' }}><Link href="/demo" className="hover-text-white">Modele Demo</Link></li>
-                        <li style={{ marginBottom: '10px' }}><Link href="/login" className="hover-text-white">Contul Meu</Link></li>
+                        <li style={{ marginBottom: '10px' }}><Link href="/blog" className="hover-text-white">Blog & Articole</Link></li>
+                        <li style={{ marginBottom: '10px' }}><Link href="/dashboard" className="hover-text-white">Contul Meu</Link></li>
                     </ul>
                 </div>
 
                 <div>
                     <h4 style={{ color: 'white', marginBottom: '15px', fontSize: '1rem' }}>Contact</h4>
-                    <p style={{ marginBottom: '10px' }}>contact@invitonline.ro</p>
-                    <p style={{ marginBottom: '10px' }}>+40 700 123 456</p>
+                    <p style={{ marginBottom: '10px' }}><a href="mailto:contact@invitonline.ro" className="hover-text-white">contact@invitonline.ro</a></p>
                     <p style={{ marginBottom: '10px' }}>București, România</p>
-                    <Link href="/blog" style={{ color: '#d4af37', textDecoration: 'underline' }}>Blog & Articole</Link>
                 </div>
 
                 <div>
                     <h4 style={{ color: 'white', marginBottom: '15px', fontSize: '1rem' }}>Urmărește-ne</h4>
-                    <div style={{ display: 'flex', gap: '15px' }}>
-                        <a href="#" style={{ color: 'white' }}>Instagram</a>
-                        <a href="#" style={{ color: 'white' }}>Facebook</a>
-                        <a href="#" style={{ color: 'white' }}>TikTok</a>
+                    <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
+                        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" className="hover-text-white">Instagram</a>
+                        <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" className="hover-text-white">Facebook</a>
+                        <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" className="hover-text-white">TikTok</a>
                     </div>
                 </div>
             </div>

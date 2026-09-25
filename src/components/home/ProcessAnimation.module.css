@@ -5,6 +5,8 @@
     position: relative;
     padding: 60px 20px;
     perspective: 2000px;
+    /* Clip off-screen slides (laptop/phone transitions) horizontally without cutting vertical zoom */
+    overflow-x: clip;
 }
 
 /* --- ORB GLOWS (Background Ambiance) --- */
@@ -66,6 +68,17 @@
     /* Changed from 0.4 to 0.6 */
     transition: all 0.5s ease;
     cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+}
+
+.progressItem:focus-visible {
+    outline: 2px solid #d4af37;
+    outline-offset: 4px;
+    border-radius: 12px;
 }
 
 .progressItem.active {
@@ -1147,5 +1160,24 @@
 
     .linkBox {
         min-width: 100%;
+    }
+}
+/* Very narrow phones (360px) — keep the 4 step labels on one line */
+@media (max-width: 400px) {
+    .progressContainer {
+        gap: 6px;
+        justify-content: space-between;
+        padding: 0 4px;
+    }
+
+    .progressItem {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
+    .progressLabel {
+        font-size: 0.5rem;
+        letter-spacing: 0;
+        text-align: center;
     }
 }

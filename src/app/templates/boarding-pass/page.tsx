@@ -1,8 +1,9 @@
 'use client'
 
 import styles from './page.module.css'
+import UseTemplateCta from '../UseTemplateCta'
 
-export default function BoardingPassTemplate() {
+export default function BoardingPassPage() {
     return (
         <div className={styles.container}>
             <div className={styles.ticket}>
@@ -36,7 +37,7 @@ export default function BoardingPassTemplate() {
                         </div>
                         <div>
                             <div className={styles.detailLabel}>DESTINAȚIE</div>
-                            <div className={styles.detailValue}>PALATUL STERBEI</div>
+                            <div className={styles.detailValue}>PALATUL ȘTIRBEI</div>
                         </div>
                         <div>
                             <div className={styles.detailLabel}>POARTA</div>
@@ -51,22 +52,22 @@ export default function BoardingPassTemplate() {
 
                 <div className={styles.stubSection}>
                     <div className={styles.stubTitle}>BOARDING PASS</div>
-                    <div className={styles.detailValue} style={{ marginBottom: '1rem', textAlign: 'center' }}>
+                    <div className={`${styles.detailValue} ${styles.stubNames}`}>
                         Ana & Andrei
                     </div>
-                    {/* Simple QR Code Simulation */}
-                    <div className={styles.qrCode} style={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        alignContent: 'center',
-                        justifyContent: 'center',
-                        padding: '5px'
-                    }}>
-                        <div style={{ width: '90%', height: '90%', background: `url('https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=SpectraEvents') no-repeat center/cover` }}></div>
+                    <div className={styles.qrCode}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https%3A%2F%2Finvitonline.ro"
+                            alt="Cod QR invitație"
+                            width={90}
+                            height={90}
+                        />
                     </div>
                 </div>
 
             </div>
+            <UseTemplateCta templateId="boarding" />
         </div>
     )
 }

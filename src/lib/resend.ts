@@ -1,8 +1,12 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resendClient: Resend | null = null;
 
-export default resend;
+function getResend() {
+    if (!process.env.RESEND_API_KEY) return null;
+    if (!resendClient) resendClient = new Resend(process.env.RESEND_API_KEY);
+    return resendClient;
+}
 
 export const sendEmail = async ({
     to,
@@ -13,6 +17,12 @@ export const sendEmail = async ({
     subject: string;
     html: string;
 }) => {
+    const resend = getResend();
+    if (!resend) {
+        console.warn(`[email] RESEND_API_KEY lipsește — emailul "${subject}" nu a fost trimis.`);
+        return { success: false, error: 'Email not configured' };
+    }
+
     try {
         const data = await resend.emails.send({
             from: process.env.EMAIL_FROM || 'Invitatii Online <contact@invitonline.ro>',

@@ -1,88 +1,533 @@
 .dashboardContainer {
-    min-height: 100vh;
+    min-height: calc(100vh - 80px);
     display: flex;
     background: #050505;
     color: #fff;
     font-family: var(--font-body);
 }
 
-.sidebar {
-    width: 250px;
-    background: rgba(255, 255, 255, 0.03);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 2rem;
+.centerScreen {
+    min-height: calc(100vh - 80px);
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    background: #050505;
 }
 
-.logo {
+.emptyState {
+    max-width: 460px;
+    text-align: center;
+}
+
+.emptyIcon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.emptyState h1 {
     font-family: var(--font-heading);
-    font-size: 1.5rem;
+    font-size: 2.4rem;
+    margin-bottom: 0.75rem;
+}
+
+.emptyState p {
+    color: #888;
+    margin-bottom: 2rem;
+}
+
+/* ---------- Sidebar ---------- */
+
+.sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.02);
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    padding: 1.75rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    position: sticky;
+    top: 80px;
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+}
+
+.sidebarTitle {
+    font-size: 0.7rem;
+    color: #666;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    letter-spacing: 1.5px;
+}
+
+.eventList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.eventListItem {
+    position: relative;
+    text-align: left;
+    padding: 11px 44px 11px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.02);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.eventListItem:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.eventListItemActive {
+    border-color: var(--accent);
+    background: rgba(212, 175, 55, 0.08);
+}
+
+.eventListTitle {
+    font-weight: 700;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.eventListItemActive .eventListTitle {
     color: var(--accent);
-    margin-bottom: 3rem;
-    letter-spacing: 1px;
+}
+
+.eventListMeta {
+    font-size: 0.68rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.eventListCount {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #262626;
+    color: #999;
+    padding: 2px 7px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.eventListItemActive .eventListCount {
+    background: var(--accent);
+    color: #000;
+}
+
+.newBtn {
+    margin-top: 8px;
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    color: #aaa;
+    border: 1px dashed #444;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.newBtn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .navItem {
-    padding: 1rem;
-    margin-bottom: 0.5rem;
-    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
     cursor: pointer;
     color: #888;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     gap: 10px;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: left;
 }
 
-.navItem:hover,
-.activeNav {
+.navItem:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.activeNav,
+.activeNav:hover {
     background: rgba(212, 175, 55, 0.1);
     color: var(--accent);
 }
 
+/* ---------- Main ---------- */
+
 .mainContent {
     flex: 1;
-    padding: 3rem;
-    overflow-y: auto;
+    min-width: 0;
+    padding: 2.5rem;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.titleRow {
+    display: flex;
     align-items: center;
-    margin-bottom: 3rem;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .eventTitle {
     font-family: var(--font-heading);
-    font-size: 2.5rem;
-    background: linear-gradient(to right, #fff, #999);
+    font-size: 2.2rem;
+    line-height: 1.2;
+    background: linear-gradient(to right, #fff, #aaa);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
 }
 
 .eventDate {
-    color: #666;
-    font-size: 1rem;
-    margin-top: 0.5rem;
+    color: #777;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
 }
+
+.pillActive,
+.pillDraft {
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.pillActive {
+    background: var(--accent);
+    color: #000;
+}
+
+.pillDraft {
+    background: #2a2a2a;
+    color: #999;
+}
+
+.headerActions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* ---------- Buttons ---------- */
+
+.primaryBtn,
+.secondaryBtn,
+.whatsappBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.primaryBtn {
+    background: var(--accent);
+    color: #000;
+}
+
+.primaryBtn:hover:not(:disabled) {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.secondaryBtn {
+    background: rgba(255, 255, 255, 0.06);
+    color: #ddd;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.secondaryBtn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+}
+
+.whatsappBtn {
+    background: #25d366;
+    color: #fff;
+}
+
+.primaryBtn:disabled,
+.secondaryBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ---------- Overview cards ---------- */
+
+.eventGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 1.25rem;
+}
+
+.invitationCard {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 22px;
+    padding: 1.4rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.eventGrid .invitationCard:hover {
+    transform: translateY(-4px);
+    border-color: rgba(212, 175, 55, 0.5);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.activeCard {
+    border-color: var(--accent);
+    background: rgba(212, 175, 55, 0.06);
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.1rem;
+}
+
+.cardIcon {
+    width: 46px;
+    height: 46px;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+}
+
+.typeBadge {
+    font-size: 0.65rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: rgba(111, 191, 115, 0.15);
+    color: #7fd483;
+    padding: 4px 9px;
+    border-radius: 6px;
+}
+
+.draftBadge {
+    background: #2a2a2a;
+    color: #999;
+}
+
+.cardBody {
+    flex: 1;
+}
+
+.cardType {
+    font-size: 0.7rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+}
+
+.cardBody h3 {
+    font-size: 1.35rem;
+    margin: 0.2rem 0 0.6rem;
+    font-family: var(--font-heading);
+    line-height: 1.25;
+    word-break: break-word;
+}
+
+.cardDetails {
+    color: #888;
+    font-size: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cardDetails span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cardDetails svg {
+    flex-shrink: 0;
+}
+
+.miniStats {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin: 1.1rem 0;
+    font-size: 0.8rem;
+    color: #bbb;
+}
+
+.miniStats span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cardActions {
+    display: flex;
+    gap: 6px;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    cursor: default;
+}
+
+.actionPrimary,
+.actionGhost,
+.actionDanger,
+.actionWhatsapp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 36px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.actionPrimary {
+    flex: 1;
+    background: var(--accent);
+    color: #000;
+    padding: 0 12px;
+}
+
+.actionPrimary:disabled {
+    opacity: 0.6;
+}
+
+.actionGhost,
+.actionDanger,
+.actionWhatsapp {
+    width: 36px;
+    flex-shrink: 0;
+}
+
+.actionGhost {
+    background: rgba(255, 255, 255, 0.07);
+    color: #ddd;
+}
+
+.actionGhost:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.actionWhatsapp {
+    background: #25d366;
+    color: #fff;
+}
+
+.actionDanger {
+    background: rgba(255, 68, 68, 0.1);
+    color: #ff5c5c;
+}
+
+.actionDanger:hover {
+    background: rgba(255, 68, 68, 0.2);
+}
+
+.newCard {
+    min-height: 240px;
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    background: transparent;
+    border-radius: 22px;
+    color: #666;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.newCard:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ---------- Guests ---------- */
 
 .statsGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 3rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .statCard {
     background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 1.5rem;
-    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 1.2rem 1.3rem;
+    border-radius: 18px;
     position: relative;
     overflow: hidden;
 }
@@ -93,215 +538,452 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 4px;
+    height: 3px;
     background: var(--accent);
     opacity: 0.5;
 }
 
 .statValue {
-    font-size: 3rem;
+    font-size: 2.2rem;
     font-weight: 700;
-    color: #fff;
-    margin-bottom: 0.5rem;
+    line-height: 1.1;
 }
 
 .statLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     color: #888;
-    font-size: 0.9rem;
+    font-size: 0.78rem;
     text-transform: uppercase;
     letter-spacing: 1px;
+    margin-top: 4px;
 }
 
-.guestSection {
+.panel {
     background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 20px;
-    padding: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    overflow-x: auto;
-    /* Enable horizontal scroll for table */
+    padding: 1.5rem;
 }
 
-.sectionTitle {
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
-    color: #ddd;
+.addGuestForm {
+    display: grid;
+    grid-template-columns: 1.3fr 1.3fr 110px auto;
+    gap: 10px;
+    margin-bottom: 1.25rem;
+}
+
+.toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+.searchBox {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.searchBox svg {
+    position: absolute;
+    left: 14px;
+    color: #666;
+}
+
+.searchBox input {
+    width: 100%;
+    padding: 11px 12px 11px 40px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    color: #fff;
+    font-size: 0.9rem;
+    font-family: inherit;
+}
+
+.searchBox input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.tableWrap {
+    overflow-x: auto;
+    margin: 0 -0.5rem;
+    padding: 0 0.5rem;
 }
 
 .guestList {
     width: 100%;
     border-collapse: collapse;
-    min-width: 600px;
-    /* Force minimum width to trigger scroll on small screens */
+    min-width: 640px;
 }
 
 .guestList th {
     text-align: left;
-    padding: 1rem;
+    padding: 0.8rem;
     color: #666;
-    font-size: 0.8rem;
+    font-size: 0.72rem;
     text-transform: uppercase;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .guestList td {
-    padding: 1.2rem 1rem;
+    padding: 0.85rem 0.8rem;
     color: #ccc;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    font-size: 0.9rem;
+    vertical-align: middle;
 }
 
-.statusBadge {
-    padding: 5px 12px;
+.guestList tbody tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.guestName {
+    font-weight: 700;
+    color: #fff !important;
+}
+
+.muted {
+    color: #999 !important;
+}
+
+.messageCell {
+    max-width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #999 !important;
+    font-style: italic;
+}
+
+.emptyRow {
+    text-align: center;
+    padding: 2.5rem 1rem !important;
+    color: #666 !important;
+}
+
+.statusSelect {
+    padding: 5px 10px;
     border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    color-scheme: dark;
+}
+
+.statusSelect option {
+    background: #111;
+    color: #fff;
 }
 
 .confirmed {
-    background: rgba(0, 255, 128, 0.15);
-    color: #00ff80;
+    background: rgba(0, 255, 128, 0.12);
+    color: #3ee08f;
 }
 
 .pending {
-    background: rgba(255, 165, 0, 0.15);
-    color: #ffa500;
+    background: rgba(255, 165, 0, 0.12);
+    color: #ffae3a;
 }
 
 .declined {
-    background: rgba(255, 50, 50, 0.15);
-    color: #ff3232;
+    background: rgba(255, 60, 60, 0.12);
+    color: #ff6060;
 }
 
-.shareButton {
+.iconDanger {
+    background: none;
+    border: none;
+    color: #ff5c5c;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    opacity: 0.6;
+    display: flex;
+}
+
+.iconDanger:hover {
+    opacity: 1;
+    background: rgba(255, 68, 68, 0.1);
+}
+
+/* ---------- Preview ---------- */
+
+.previewWrap {
+    display: flex;
+    gap: 2.5rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.previewPhone {
+    width: 360px;
+    max-width: 100%;
+    height: 700px;
+    max-height: calc(100vh - 220px);
+    min-height: 480px;
+    border: 10px solid #1a1a1a;
+    border-radius: 44px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+}
+
+.previewScroll {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    container-type: size;
+    display: flex;
+    flex-direction: column;
+    perspective: 2000px;
+    scrollbar-width: none;
+}
+
+.previewCentered>* {
+    margin: auto 0;
+}
+
+.previewActions {
+    flex: 1;
+    min-width: 220px;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.previewActions p {
+    color: #888;
+    margin-bottom: 0.5rem;
+}
+
+/* ---------- Shared form classes (used by BillingPanel) ---------- */
+
+/* ---------- Billing ---------- */
+
+.billingSection {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.billingSingle {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.billingLoading {
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.billingCard {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0.015) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 22px;
+    padding: 1.75rem;
+    min-width: 0;
+}
+
+.billingTitle {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    color: #fff;
+    margin: 0;
+}
+
+.billingHint {
+    color: #888;
+    font-size: 0.88rem;
+    margin: 0.35rem 0 1.4rem;
+}
+
+.segmented {
+    display: flex;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 1.4rem;
+}
+
+.segmented button {
+    flex: 1;
+    padding: 10px 8px;
+    border: none;
+    border-radius: 9px;
+    background: transparent;
+    color: #aaa;
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.segmented button:hover {
+    color: #fff;
+}
+
+.segmented .segmentActive,
+.segmented .segmentActive:hover {
     background: var(--accent);
     color: #000;
-    padding: 0.8rem 1.5rem;
-    border-radius: 12px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s ease;
 }
 
-.shareButton:hover {
-    transform: scale(1.05);
-}
-
-.previewContainer {
-    width: 100%;
-    height: 600px;
-    /* Mobile or specific height */
-    background: #111;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    overflow: hidden;
-    margin-bottom: 3rem;
-    position: relative;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+.billingFields {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    gap: 1.1rem;
 }
 
-.previewContainer>div {
-    transform: scale(0.9);
-}
-
-/* Invitation Cards Grid */
-.eventGrid {
+.billingRow {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-bottom: 3rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
 }
 
-.invitationCard {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
-    padding: 1.5rem;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.billingRowWide {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+}
+
+.inputWithIcon {
     position: relative;
-    overflow: hidden;
 }
 
-.invitationCard:hover {
-    transform: translateY(-10px);
-    border-color: var(--accent);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    background: rgba(212, 175, 55, 0.05);
-}
-
-.invitationCard.activeCard {
-    border-color: var(--accent);
-    background: rgba(212, 175, 55, 0.08);
-}
-
-.cardHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1.5rem;
-}
-
-.cardIcon {
-    width: 50px;
-    height: 50px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.inputWithIcon svg {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    margin-top: -9px;
     color: var(--accent);
 }
 
-.cardBody h3 {
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
-    font-family: var(--font-heading);
-}
-
-.cardDetails {
-    color: #888;
-    font-size: 0.85rem;
+.fieldHint,
+.fieldWarning {
+    font-size: 0.78rem;
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 5px;
 }
 
-.cardFooter {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.fieldHint {
+    color: #777;
 }
 
-.guestBadge {
+.fieldWarning {
+    color: #f0b95a;
+}
+
+.statusOk,
+.statusError {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 0.8rem;
-    color: #ccc;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 4px 10px;
+    gap: 8px;
+    padding: 10px 14px;
     border-radius: 12px;
+    font-size: 0.88rem;
+    margin: 0;
 }
 
-.typeBadge {
-    font-size: 0.65rem;
-    font-weight: 900;
+.statusOk {
+    background: rgba(74, 222, 128, 0.1);
+    border: 1px solid rgba(74, 222, 128, 0.25);
+    color: #86efac;
+}
+
+.statusError {
+    background: rgba(248, 113, 113, 0.1);
+    border: 1px solid rgba(248, 113, 113, 0.25);
+    color: #fca5a5;
+}
+
+.billingActions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 0.25rem;
+}
+
+.linkBtn {
+    background: none;
+    border: none;
+    color: #999;
+    font: inherit;
+    font-size: 0.88rem;
+    cursor: pointer;
+    padding: 8px 4px;
+}
+
+.linkBtn:hover:not(:disabled) {
+    color: #fff;
+}
+
+.linkBtn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.billingHistoryHead {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.billingEmpty {
+    color: #777;
+    text-align: center;
+    padding: 2.5rem 1rem;
+    font-size: 0.92rem;
+}
+
+.invoiceTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.invoiceTable th {
+    text-align: left;
+    padding: 10px;
+    color: #666;
+    font-size: 0.72rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    background: var(--accent);
-    color: black;
-    padding: 3px 8px;
-    border-radius: 6px;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.invoiceTable td {
+    padding: 14px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: #ddd;
+}
+
+.invoiceLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--accent);
+    font-weight: 700;
 }
 
 .label {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: #aaa;
     font-weight: 600;
     margin-bottom: 5px;
@@ -309,22 +991,27 @@
 }
 
 .input {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 1.1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    padding: 0.8rem 1rem;
     border-radius: 12px;
     color: #fff;
     font-family: var(--font-body);
-    font-size: 1rem;
-    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
     width: 100%;
     outline: none;
+    color-scheme: dark;
+}
+
+.input option {
+    background: #111;
 }
 
 .input:focus {
     border-color: var(--accent);
     background: rgba(255, 255, 255, 0.06);
-    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.12);
 }
 
 .formGroup {
@@ -333,60 +1020,167 @@
     gap: 8px;
 }
 
+/* ---------- Toast ---------- */
+
+.toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1c1c1c;
+    color: #fff;
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    z-index: 3000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    max-width: calc(100% - 32px);
+    animation: toastIn 0.25s ease;
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+.mobileEventSelect {
+    display: none;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1100px) {
+    .statsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .addGuestForm {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
 @media (max-width: 900px) {
     .dashboardContainer {
         flex-direction: column;
     }
 
     .sidebar {
+        position: static;
         width: 100%;
+        height: auto;
         border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 1.5rem;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        padding: 1rem 16px;
         gap: 1rem;
-        flex-wrap: wrap;
+    }
+
+    .sidebarSection {
+        display: none;
+    }
+
+    .mobileEventSelect {
+        display: block;
+        margin-bottom: 1.25rem;
+    }
+
+    .nav {
+        flex-direction: row;
+        overflow-x: auto;
+        scrollbar-width: none;
     }
 
     .navItem {
-        padding: 0.5rem 1rem;
-        margin-bottom: 0;
-        font-size: 0.9rem;
-    }
-
-    .logo {
-        margin-bottom: 0;
-        font-size: 1.2rem;
+        flex-shrink: 0;
+        padding: 0.6rem 0.9rem;
+        font-size: 0.85rem;
     }
 
     .mainContent {
-        padding: 1.5rem;
+        padding: 1.5rem 16px 3rem;
+    }
+
+    .eventTitle {
+        font-size: 1.7rem;
     }
 
     .header {
-        flex-direction: column;
         align-items: flex-start;
-        gap: 1rem;
     }
 
-    .previewContainer {
-        height: 400px;
+    .billingSection {
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 
 @media (max-width: 600px) {
-    .sidebar {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .statsGrid {
-        grid-template-columns: 1fr;
-    }
-
     .eventGrid {
         grid-template-columns: 1fr;
+    }
+
+    .addGuestForm {
+        grid-template-columns: 1fr;
+    }
+
+    .toolbar {
+        flex-direction: column;
+    }
+
+    .panel {
+        padding: 1rem;
+    }
+
+    .statValue {
+        font-size: 1.8rem;
+    }
+
+    .previewPhone {
+        width: 100%;
+        max-height: 75vh;
+    }
+
+    .nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        overflow: visible;
+    }
+
+    .navItem {
+        justify-content: center;
+        padding: 0.65rem 0.5rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .activeNav,
+    .activeNav:hover {
+        background: rgba(212, 175, 55, 0.1);
+        border-color: rgba(212, 175, 55, 0.35);
+    }
+
+    .navItem span {
+        font-size: 0.8rem;
+    }
+
+    .billingCard {
+        padding: 1.25rem;
+    }
+
+    .billingRow,
+    .billingRowWide {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .billingActions {
+        flex-direction: column-reverse;
+        align-items: stretch;
     }
 }

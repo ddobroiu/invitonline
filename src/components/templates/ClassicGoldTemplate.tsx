@@ -4,15 +4,24 @@ import { useState } from 'react'
 import styles from './ClassicGoldTemplate.module.css'
 import RSVPModal from '@/components/RSVPModal'
 import { Crown } from 'lucide-react'
+import { Cinzel, Pinyon_Script, Lato } from 'next/font/google'
+import {
+    str, getMapUrl, getWazeUrl, getSchedule, getParents, getGodparents,
+    validCustomFields, CustomField,
+} from './templateUtils'
+
+const cinzel = Cinzel({ weight: ['400', '700'], subsets: ['latin', 'latin-ext'], display: 'swap', variable: '--gold-cinzel' })
+const pinyon = Pinyon_Script({ weight: '400', subsets: ['latin', 'latin-ext'], display: 'swap', variable: '--gold-script' })
+const lato = Lato({ weight: ['300', '400', '700'], subsets: ['latin', 'latin-ext'], display: 'swap', variable: '--gold-lato' })
 
 interface Props {
     id?: string
-    title: string
-    date: string
-    location: string
+    title?: string
+    date?: string
+    location?: string
     locationUrl?: string
-    message: string
-    eventType: string
+    message?: string
+    eventType?: string
     groomName?: string
     brideName?: string
     parentsGroom?: string
@@ -22,43 +31,67 @@ interface Props {
     motherName?: string
     fatherName?: string
     godparentsBaptism?: string
+    celebrantName?: string
     civilCeremonyTime?: string
+    civilCeremonyLoc?: string
     religiousCeremonyTime?: string
+    religiousCeremonyLoc?: string
     partyTime?: string
-    customFields?: { label: string, value: string }[]
+    partyLoc?: string
+    churchTime?: string
+    churchLoc?: string
+    restaurantTime?: string
+    restaurantLoc?: string
+    dressCode?: string
     specialInstructions?: string
+    photoUrl?: string
+    customFields?: CustomField[]
 }
 
-export default function ClassicGoldTemplate({
-    id, title, date, location, locationUrl, message, eventType = 'nunta',
-    groomName, brideName, parentsGroom, parentsBride, godparents,
-    childName, motherName, fatherName, godparentsBaptism,
-    civilCeremonyTime, religiousCeremonyTime, partyTime,
-    customFields, specialInstructions
-}: Props) {
+export default function ClassicGoldTemplate(props: Props) {
+    const {
+        id, title, date, location, locationUrl, message, eventType = 'nunta',
+        groomName, brideName, childName, celebrantName,
+        customFields, specialInstructions, dressCode, photoUrl,
+    } = props
 
     const [showRSVP, setShowRSVP] = useState(false)
-    const isWedding = eventType === 'nunta'
+    const isWedding = eventType === 'nunta' || !eventType
     const isBaptism = eventType === 'botez'
 
-    const name1 = isWedding ? groomName : isBaptism ? childName : title
-    const name2 = isWedding ? brideName : null
+    const name1 = isWedding
+        ? (str(groomName) || str(title).split('&')[0]?.trim())
+        : isBaptism ? (str(childName) || str(title)) : (str(title) || str(celebrantName))
+    const name2 = isWedding ? (str(brideName) || str(title).split('&')[1]?.trim() || '') : ''
+
+    const mapUrl = getMapUrl(location, locationUrl)
+    const wazeUrl = getWazeUrl(location)
+    const schedule = getSchedule(props)
+    const parents = getParents(props)
+    const godparentsText = getGodparents(props)
+    const fields = validCustomFields(customFields)
 
     return (
-        <div className={styles.container}>
+        <div className={`${styles.container} ${cinzel.variable} ${pinyon.variable} ${lato.variable}`}>
             <div className={styles.card}>
                 <div className={styles.borderFrame}></div>
 
                 <div className={styles.headerIcon}>
-                    <Crown size={24} strokeWidth={1} />
+                    <Crown size={26} strokeWidth={1.2} aria-hidden="true" />
                 </div>
 
-                <div className={styles.intro}>
-                    {message || "Vă invităm la evenimentul nostru special"}
+                <div className={`${styles.intro} ${str(message).length > 90 ? styles.introLong : ''}`}>
+                    {str(message) || (isWedding ? 'Împreună cu familiile noastre, vă invităm la nunta noastră' : 'Vă invităm la evenimentul nostru special')}
                 </div>
+
+                {photoUrl && (
+                    <div className={styles.photo}>
+                        <img src={photoUrl} alt={name1 || 'Fotografie'} />
+                    </div>
+                )}
 
                 <div className={styles.names}>
-                    {name1 || "Mirele"}
+                    {name1 || 'Invitație'}
                     {name2 && (
                         <>
                             <span className={styles.ampersand}>&</span>
@@ -67,68 +100,78 @@ export default function ClassicGoldTemplate({
                     )}
                 </div>
 
-                <div className={styles.dateSection}>
-                    <div className={styles.dateDisplay}>{date}</div>
-                    <div className={styles.locationDisplay}>{location}</div>
-                </div>
-
-                <div className={styles.detailsGrid}>
-                    {(parentsGroom || parentsBride || motherName || fatherName) && (
-                        <div className={styles.detailCol}>
-                            <h3>Părinți</h3>
-                            {parentsGroom && <div>{parentsGroom}</div>}
-                            {parentsBride && <div>{parentsBride}</div>}
-                            {motherName && <div>{motherName} & {fatherName}</div>}
-                        </div>
-                    )}
-
-                    {(godparents || godparentsBaptism) && (
-                        <div className={styles.detailCol}>
-                            <h3>Nași</h3>
-                            <div>{godparents || godparentsBaptism}</div>
-                        </div>
-                    )}
-                </div>
-
-                <div className={styles.detailsGrid} style={{ marginTop: '1rem' }}>
-                    {civilCeremonyTime && (
-                        <div className={styles.detailCol}>
-                            <h3>Cununia Civilă</h3>
-                            <div>Ora: {civilCeremonyTime}</div>
-                        </div>
-                    )}
-                    {religiousCeremonyTime && (
-                        <div className={styles.detailCol}>
-                            <h3>Biserică</h3>
-                            <div>Ora: {religiousCeremonyTime}</div>
-                        </div>
-                    )}
-                    {partyTime && (
-                        <div className={styles.detailCol}>
-                            <h3>Petrece</h3>
-                            <div>Ora: {partyTime}</div>
-                        </div>
-                    )}
-                </div>
-
-                {locationUrl && (
-                    <div style={{ marginTop: '2rem', zIndex: 1 }}>
-                        <a href={locationUrl} target="_blank" className={styles.locationDisplay} style={{ borderBottom: '1px solid #d4af37', paddingBottom: '2px' }}>
-                            Vezi Harta Locației
-                        </a>
+                {(str(date) || str(location) || mapUrl) && (
+                    <div className={styles.dateSection}>
+                        {str(date) && <div className={styles.dateDisplay}>{str(date)}</div>}
+                        {str(location) && <div className={styles.locationDisplay}>{str(location)}</div>}
+                        {mapUrl && (
+                            <div className={styles.mapLinks}>
+                                <a href={mapUrl} target="_blank" rel="noopener noreferrer">Vezi harta</a>
+                                {wazeUrl && <a href={wazeUrl} target="_blank" rel="noopener noreferrer">Waze</a>}
+                            </div>
+                        )}
                     </div>
                 )}
 
-                <button className={styles.rsvpButton} onClick={() => setShowRSVP(true)}>
+                {(parents.length > 0 || godparentsText) && (
+                    <div className={styles.detailsGrid}>
+                        {parents.length > 0 && (
+                            <div className={styles.detailCol}>
+                                <h3>{isBaptism ? 'Părinții' : 'Părinți'}</h3>
+                                {parents.map((p) => <div key={p}>{p}</div>)}
+                            </div>
+                        )}
+                        {godparentsText && (
+                            <div className={styles.detailCol}>
+                                <h3>Nași</h3>
+                                <div>{godparentsText}</div>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {schedule.length > 0 && (
+                    <div className={styles.detailsGrid}>
+                        {schedule.map((s) => (
+                            <div key={s.key} className={styles.detailCol}>
+                                <h3>{s.label}</h3>
+                                {s.time && <div>Ora: {s.time}</div>}
+                                {s.loc && <div className={styles.small}>{s.loc}</div>}
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {fields.length > 0 && (
+                    <div className={styles.detailsGrid}>
+                        {fields.map((f, i) => (
+                            <div key={`${f.label}-${i}`} className={styles.detailCol}>
+                                <h3>{f.label}</h3>
+                                <div>{f.value}</div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {(str(dressCode) || str(specialInstructions)) && (
+                    <div className={styles.note}>
+                        {str(dressCode) && <div>Ținută: {str(dressCode)}</div>}
+                        {str(specialInstructions) && <div>{str(specialInstructions)}</div>}
+                    </div>
+                )}
+
+                <button type="button" className={styles.rsvpButton} onClick={() => setShowRSVP(true)}>
                     Confirmă Prezența
                 </button>
             </div>
 
-            <RSVPModal
-                isOpen={showRSVP}
-                onClose={() => setShowRSVP(false)}
-                eventId={id}
-            />
+            {showRSVP && (
+                <RSVPModal
+                    isOpen={showRSVP}
+                    onClose={() => setShowRSVP(false)}
+                    eventId={id}
+                />
+            )}
         </div>
     )
 }

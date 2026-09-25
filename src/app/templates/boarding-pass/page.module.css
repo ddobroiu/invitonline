@@ -1,5 +1,6 @@
 .container {
-    min-height: 100vh;
+    min-height: calc(100vh - 80px);
+    padding: 2rem 1rem 6rem;
     background: linear-gradient(135deg, #1a1a1a 0%, #363636 100%);
     display: flex;
     justify-content: center;
@@ -8,14 +9,16 @@
 }
 
 .ticket {
-    width: 800px;
-    height: 300px;
+    width: 100%;
+    max-width: 800px;
+    min-height: 300px;
     background: #fff;
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     display: flex;
     overflow: hidden;
     position: relative;
+    color: #1a1a1a;
 }
 
 .mainSection {
@@ -39,10 +42,12 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    background: radial-gradient(circle at top left, transparent 10px, #e63946 10px) top left,
-        radial-gradient(circle at bottom left, transparent 10px, #e63946 10px) bottom left;
-    background-size: 52% 52%;
-    background-repeat: no-repeat;
+    /* Punched notches on the left edge, solid color everywhere else */
+    background:
+        radial-gradient(circle at top left, transparent 10px, #e63946 10.5px) top left / 51% 51% no-repeat,
+        radial-gradient(circle at bottom left, transparent 10px, #e63946 10.5px) bottom left / 51% 51% no-repeat,
+        linear-gradient(#e63946, #e63946) right / 50% 100% no-repeat;
+    text-align: center;
 }
 
 .header {
@@ -107,6 +112,21 @@
     height: 100px;
     background: white;
     margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+}
+
+.qrCode img {
+    width: 90px;
+    height: 90px;
+    display: block;
+}
+
+.stubNames {
+    margin-bottom: 1rem;
+    text-align: center;
 }
 
 .stubTitle {
@@ -114,4 +134,52 @@
     font-weight: bold;
     margin-bottom: 2rem;
     text-align: center;
+}
+
+@media (max-width: 720px) {
+    .ticket {
+        flex-direction: column;
+        max-width: 420px;
+    }
+
+    .mainSection {
+        border-right: none;
+        border-bottom: 2px dashed #ccc;
+        background: #fff;
+        padding: 1.5rem;
+    }
+
+    .stubSection {
+        background: #e63946;
+        padding: 1.5rem;
+    }
+
+    .stubTitle {
+        margin-bottom: 1rem;
+    }
+
+    .route {
+        font-size: 1.6rem;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .airline {
+        font-size: 1.2rem;
+    }
+
+    .classType {
+        font-size: 0.8rem;
+    }
+
+    .detailsGrid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .detailValue {
+        font-size: 1rem;
+        overflow-wrap: anywhere;
+    }
 }

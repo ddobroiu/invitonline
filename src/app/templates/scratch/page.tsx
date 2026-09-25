@@ -2,11 +2,13 @@
 
 import { useRef, useEffect, useState } from 'react'
 import styles from './page.module.css'
+import UseTemplateCta from '../UseTemplateCta'
 
-export default function ScratchTemplate() {
+export default function ScratchPage() {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const wrapperRef = useRef<HTMLDivElement>(null)
     const [isRevealed, setIsRevealed] = useState(false)
+    const scratchCount = useRef(0)
 
     useEffect(() => {
         const canvas = canvasRef.current
@@ -56,15 +58,20 @@ export default function ScratchTemplate() {
         if (!canvas || !ctx || !wrapper) return
 
         const rect = wrapper.getBoundingClientRect()
-        let x, y
+        let clientX: number, clientY: number
 
         if ('touches' in e) {
-            x = e.touches[0].clientX - rect.left
-            y = e.touches[0].clientY - rect.top
+            if (e.touches.length === 0) return
+            clientX = e.touches[0].clientX
+            clientY = e.touches[0].clientY
         } else {
-            x = (e as React.MouseEvent).clientX - rect.left
-            y = (e as React.MouseEvent).clientY - rect.top
+            clientX = e.clientX
+            clientY = e.clientY
         }
+
+        // Map CSS pixels to canvas pixels (the card can be scaled down on small screens)
+        const x = ((clientX - rect.left) / rect.width) * canvas.width
+        const y = ((clientY - rect.top) / rect.height) * canvas.height
 
         // Scratch effect
         ctx.globalCompositeOperation = 'destination-out'
@@ -82,7 +89,8 @@ export default function ScratchTemplate() {
         if (!canvas || !ctx) return
 
         // Only check every 10th scratch to save performance
-        if (Math.random() > 0.1) return
+        scratchCount.current += 1
+        if (scratchCount.current % 10 !== 0) return
 
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
         const pixels = imageData.data
@@ -124,12 +132,8 @@ export default function ScratchTemplate() {
                         </div>
                     </div>
 
-                    <button style={{
-                        background: '#ff4500', color: 'white', border: 'none',
-                        padding: '10px 30px', borderRadius: '50px', fontWeight: 'bold',
-                        cursor: 'pointer', marginTop: '1rem'
-                    }}>
-                        Vreau sa particip!
+                    <button type="button" className={styles.ctaBtn}>
+                        Vreau să particip!
                     </button>
                 </div>
 
@@ -137,9 +141,11 @@ export default function ScratchTemplate() {
                     ref={canvasRef}
                     className={`${styles.canvas} ${isRevealed ? styles.hidden : ''}`}
                     onMouseMove={handleScratch}
+                    onTouchStart={handleScratch}
                     onTouchMove={handleScratch}
                 />
             </div>
+            <UseTemplateCta templateId="scratch" />
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import { AuthOptions } from "next-auth"
+import { AuthOptions, getServerSession } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import prisma from "@/lib/prisma"
 import bcrypt from "bcryptjs"
@@ -16,8 +16,8 @@ export const authOptions: AuthOptions = {
                     return null
                 }
 
-                const user = await prisma.user.findUnique({
-                    where: { email: credentials.email }
+                const user = await prisma.user.findFirst({
+                    where: { email: { equals: credentials.email.trim(), mode: 'insensitive' } }
                 })
 
                 if (!user) {
@@ -52,4 +52,10 @@ export const authOptions: AuthOptions = {
             return session
         }
     }
+}
+
+// Id of the logged-in user, or null
+export async function getCurrentUserId(): Promise<string | null> {
+    const session = await getServerSession(authOptions)
+    return (session?.user as any)?.id ?? null
 }

@@ -1,169 +1,343 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Pinyon+Script&family=Lato:wght@300;400&display=swap');
+/* Classic Gold — fonts from next/font (Cinzel, Pinyon Script, Lato; latin-ext) */
 
 .container {
+    --gold: #c9a227;
+    --gold-deep: #a8861c;
+    --gold-soft: #f0e6d2;
+    --cinzel: var(--gold-cinzel), 'Cinzel', Georgia, serif;
+    --script: var(--gold-script), 'Pinyon Script', cursive;
+    --sans: var(--gold-lato), 'Lato', system-ui, sans-serif;
+
+    flex: 1 0 auto;
     width: 100%;
-    min-height: 100vh;
-    background-color: #fdfbf7;
-    /* Very light cream */
-    color: #1a1a1a;
-    font-family: 'Lato', sans-serif;
+    min-height: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
+    padding: clamp(1rem, 4cqw, 3rem) clamp(0.75rem, 3cqw, 2rem);
     position: relative;
+    overflow-x: hidden;
+    color: #1f1f1f;
+    font-family: var(--sans);
+    background-color: #f8f3e8;
+    background-image:
+        radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.14), transparent 55%),
+        radial-gradient(circle at 50% 100%, rgba(212, 175, 55, 0.1), transparent 55%),
+        linear-gradient(180deg, #fbf8f1, #f3ecdc);
 }
 
 .card {
+    margin: auto;
     background: #fff;
     width: 100%;
-    max-width: 600px;
-    min-height: 800px;
+    max-width: 620px;
     position: relative;
-    padding: 3rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    padding: clamp(3rem, 10cqw, 4.5rem) clamp(1.75rem, 8cqw, 4rem);
+    box-shadow: 0 2px 4px rgba(120, 95, 20, 0.05), 0 24px 60px rgba(120, 95, 20, 0.14);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    border: 1px solid #eee;
+    border: 1px solid #efe7d4;
+}
+
+.card > * {
+    position: relative;
+    z-index: 1;
+    max-width: 100%;
 }
 
 /* Gold Frame */
-.borderFrame {
+.card > .borderFrame {
     position: absolute;
-    top: 15px;
-    left: 15px;
-    right: 15px;
-    bottom: 15px;
-    border: 2px solid #d4af37;
-    /* Gold */
+    inset: 14px;
+    border: 2px solid var(--gold);
     pointer-events: none;
     z-index: 0;
+    max-width: none;
 }
 
 .borderFrame::after {
     content: '';
     position: absolute;
-    top: 4px;
-    left: 4px;
-    right: 4px;
-    bottom: 4px;
-    border: 1px solid #d4af37;
+    inset: 4px;
+    border: 1px solid var(--gold);
     opacity: 0.5;
 }
 
 .headerIcon {
-    margin-bottom: 2rem;
-    color: #d4af37;
-    z-index: 1;
+    margin-bottom: 1.75rem;
+    color: var(--gold);
 }
 
 .intro {
     text-transform: uppercase;
-    letter-spacing: 3px;
-    font-size: 0.8rem;
-    color: #666;
+    letter-spacing: 0.2em;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: #5f5f5f;
     margin-bottom: 2rem;
-    z-index: 1;
+    max-width: 32em;
+    overflow-wrap: break-word;
+}
+
+.introLong {
+    font-family: var(--font-heading), Georgia, serif;
+    text-transform: none;
+    letter-spacing: 0.02em;
+    font-size: 1.05rem;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.7;
 }
 
 .names {
-    font-family: 'Pinyon Script', cursive;
-    font-size: 3.5rem;
-    color: #d4af37;
-    line-height: 1.2;
-    margin-bottom: 2rem;
-    z-index: 1;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    text-wrap: balance;
+    font-family: var(--script);
+    font-size: clamp(2.6rem, 12cqw, 4rem);
+    font-weight: 400;
+    color: var(--gold-deep);
+    background: linear-gradient(100deg, #9c7a17, #d4af37 45%, #a8861c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.25;
+    padding: 0 0.15em;
+    margin-bottom: 1.5rem;
+    overflow-wrap: break-word;
 }
 
 .ampersand {
-    font-family: 'Cinzel', serif;
-    font-size: 1.5rem;
+    font-family: var(--cinzel);
+    font-size: 1.4rem;
     color: #333;
+    -webkit-text-fill-color: #333;
     display: block;
-    margin: 10px 0;
+    margin: 0.4rem 0;
+    line-height: 1;
 }
 
 .dateSection {
-    margin: 2rem 0;
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee;
-    padding: 1.5rem 0;
-    width: 80%;
-    z-index: 1;
+    margin: 1.5rem 0 1rem;
+    border-top: 1px solid var(--gold-soft);
+    border-bottom: 1px solid var(--gold-soft);
+    padding: 1.5rem 0.5rem;
+    width: min(100%, 440px);
 }
 
 .dateDisplay {
-    font-family: 'Cinzel', serif;
-    font-size: 1.4rem;
-    color: #333;
-    letter-spacing: 2px;
+    font-family: var(--cinzel);
+    font-size: 1.45rem;
+    color: #2a2a2a;
+    letter-spacing: 0.1em;
     margin-bottom: 0.5rem;
+    overflow-wrap: break-word;
 }
 
 .locationDisplay {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #666;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    color: #5f5f5f;
+    overflow-wrap: break-word;
+}
+
+.mapLinks {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.mapLinks a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0.3rem 1rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #4a4a4a;
+    text-decoration: none;
+    border: 1px solid #e3d3a4;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.mapLinks a:hover {
+    background: #fbf6e9;
+    border-color: var(--gold);
 }
 
 .detailsGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.75rem 2rem;
     width: 100%;
     margin-top: 2rem;
-    text-align: center;
-    z-index: 1;
+}
+
+.detailCol {
+    flex: 1 1 200px;
+    max-width: 260px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #2b2b2b;
+    overflow-wrap: break-word;
 }
 
 .detailCol h3 {
-    font-family: 'Cinzel', serif;
+    font-family: var(--cinzel);
     font-size: 0.9rem;
-    color: #d4af37;
-    margin-bottom: 0.5rem;
-    border-bottom: 1px solid #f0e6d2;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--gold-deep);
+    margin: 0 0 0.6rem;
+    border-bottom: 1px solid var(--gold-soft);
     padding-bottom: 5px;
     display: inline-block;
 }
 
-.detailCol p {
+.small {
+    font-size: 0.9rem;
+    color: #6b6b6b;
+}
+
+.note {
+    margin-top: 2rem;
+    font-family: var(--font-heading), Georgia, serif;
+    font-style: italic;
     font-size: 0.95rem;
     line-height: 1.6;
+    color: #5f5f5f;
+    overflow-wrap: break-word;
 }
 
 .rsvpButton {
-    margin-top: auto;
-    background: linear-gradient(45deg, #d4af37, #c5a028);
-    color: white;
+    margin-top: 2.75rem;
+    background: linear-gradient(45deg, #c9a227, #b8931f);
+    color: #fff;
     border: none;
     padding: 1rem 2.5rem;
-    font-family: 'Cinzel', serif;
-    letter-spacing: 2px;
+    min-height: 48px;
+    font-family: var(--cinzel);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
     cursor: pointer;
-    margin-top: 3rem;
-    transition: transform 0.2s;
-    z-index: 1;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 8px 20px rgba(168, 134, 28, 0.25);
 }
 
 .rsvpButton:hover {
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px rgba(168, 134, 28, 0.35);
+}
+
+.rsvpButton:focus-visible,
+.mapLinks a:focus-visible {
+    outline: 2px solid var(--gold-deep);
+    outline-offset: 3px;
+}
+
+.photo {
+    width: 160px;
+    max-width: 55%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 1.75rem;
+    border: 2px solid var(--gold);
+    padding: 4px;
+    background: #fff;
+}
+
+.photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
 }
 
 @media (max-width: 600px) {
-    .names {
-        font-size: 2.5rem;
+    .card > .borderFrame {
+        inset: 8px;
     }
 
-    .card {
-        padding: 2rem 1.5rem;
+    .dateDisplay {
+        font-size: 1.2rem;
+        letter-spacing: 0.06em;
     }
 
-    .detailsGrid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
+    .intro {
+        letter-spacing: 0.14em;
+    }
+
+    .introLong {
+        letter-spacing: 0.01em;
+    }
+
+    .detailCol {
+        flex-basis: 100%;
+        max-width: none;
+    }
+
+    .mapLinks a {
+        padding: 0.3rem 0.8rem;
+        letter-spacing: 0.08em;
+    }
+
+    .rsvpButton {
+        width: 100%;
+        padding: 1rem 1.25rem;
+    }
+}
+
+/* Editor phone mockup / dashboard preview (container-type: size) */
+@container (max-width: 600px) {
+    .card > .borderFrame {
+        inset: 8px;
+    }
+
+    .dateDisplay {
+        font-size: 1.2rem;
+        letter-spacing: 0.06em;
+    }
+
+    .intro {
+        letter-spacing: 0.14em;
+    }
+
+    .introLong {
+        letter-spacing: 0.01em;
+    }
+
+    .detailCol {
+        flex-basis: 100%;
+        max-width: none;
+    }
+
+    .mapLinks a {
+        padding: 0.3rem 0.8rem;
+        letter-spacing: 0.08em;
+    }
+
+    .rsvpButton {
+        width: 100%;
+        padding: 1rem 1.25rem;
+    }
+}
+
+/* Inside a size container (editor mockups, dashboard preview) the host centres its content, which would
+   clip a tall invitation at the top. Make the template its own scroller of exactly the preview height. */
+@container (min-width: 1px) {
+    .container {
+        flex: 0 0 auto;
+        height: 100cqh;
+        min-height: 0;
+        overflow-y: auto;
+        scrollbar-width: thin;
     }
 }

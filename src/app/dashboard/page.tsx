@@ -1,512 +1,511 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import styles from './page.module.css'
-
-import EnvelopeTemplate from '@/components/templates/EnvelopeTemplate'
-import NetflixTemplate from '@/components/templates/NetflixTemplate'
-import BoardingPassTemplate from '@/components/templates/BoardingPassTemplate'
-import VinylTemplate from '@/components/templates/VinylTemplate'
-import ScratchTemplate from '@/components/templates/ScratchTemplate'
-import PassportTemplate from '@/components/templates/PassportTemplate'
-import NewspaperTemplate from '@/components/templates/NewspaperTemplate'
-import CinemaTemplate from '@/components/templates/CinemaTemplate'
-import FestivalTemplate from '@/components/templates/FestivalTemplate'
-import { Search, Plus, Trash2, Mail, Phone, User as UserIcon, Heart, Baby, PartyPopper, Calendar, MapPin, Eye, Users, CheckCircle, Lock, Link as LinkIcon, Receipt, CreditCard, Zap } from 'lucide-react'
+import TemplateRenderer, { CENTERED_TEMPLATES, eventToTemplateProps } from '@/components/TemplateRenderer'
 import BillingPanel from '@/components/dashboard/BillingPanel'
+import {
+    Search, Plus, Trash2, Heart, Baby, PartyPopper, Cake, Calendar, MapPin, Eye, Users, Lock, Link as LinkIcon,
+    Pencil, Download, ExternalLink, Loader2, CheckCircle2, XCircle, Clock, LayoutGrid, Receipt, MessageCircle
+} from 'lucide-react'
 
-export default function Dashboard() {
+type Tab = 'overview' | 'guests' | 'preview' | 'billing'
+
+const TYPE_LABELS: Record<string, string> = { nunta: 'Nuntă', botez: 'Botez', aniversare: 'Aniversare', petrecere: 'Petrecere' }
+const STATUS_LABELS: Record<string, string> = { confirmed: 'Confirmat', declined: 'Refuzat', pending: 'În așteptare' }
+
+function TypeIcon({ type }: { type: string }) {
+    if (type === 'botez') return <Baby size={22} />
+    if (type === 'aniversare') return <Cake size={22} />
+    if (type === 'petrecere') return <PartyPopper size={22} />
+    return <Heart size={22} />
+}
+
+function guestStats(guests: { status: string, persons: number }[]) {
+    const confirmed = guests.filter(g => g.status === 'confirmed')
+    return {
+        total: guests.length,
+        confirmed: confirmed.length,
+        persons: confirmed.reduce((sum, g) => sum + (g.persons || 0), 0),
+        declined: guests.filter(g => g.status === 'declined').length,
+        pending: guests.filter(g => g.status === 'pending').length,
+    }
+}
+
+function DashboardContent() {
     const router = useRouter()
+    const searchParams = useSearchParams()
     const { data: session, status } = useSession()
 
     const [events, setEvents] = useState<any[]>([])
-    const [selectedEvent, setSelectedEvent] = useState<any>(null)
+    const [selectedId, setSelectedId] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [guests, setGuests] = useState<any[]>([])
-    const [newGuest, setNewGuest] = useState({ name: '', email: '' })
+    const [guestsLoading, setGuestsLoading] = useState(false)
+    const [newGuest, setNewGuest] = useState({ name: '', contact: '', persons: 1 })
     const [searchQuery, setSearchQuery] = useState('')
+    const [activeTab, setActiveTab] = useState<Tab>('overview')
+    const [toast, setToast] = useState('')
+    const [payingId, setPayingId] = useState<string | null>(null)
 
-    const fetchAllContent = async () => {
+    const selectedEvent = events.find(e => e.id === selectedId) || null
+
+    const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const showToast = useCallback((msg: string) => {
+        if (toastTimer.current) clearTimeout(toastTimer.current)
+        setToast(msg)
+        toastTimer.current = setTimeout(() => setToast(''), 4000)
+    }, [])
+    useEffect(() => () => { if (toastTimer.current) clearTimeout(toastTimer.current) }, [])
+
+    const fetchEvents = useCallback(async () => {
         try {
             const res = await fetch('/api/events')
             if (res.ok) {
                 const data = await res.json()
-                if (data.events) {
-                    const transformedEvents = data.events.map((ev: any) => ({
-                        ...ev.data,
-                        id: ev.id,
-                        title: ev.title,
-                        date: ev.date,
-                        location: ev.location,
-                        template: ev.template,
-                        message: ev.message,
-                        isPaid: ev.isPaid,
-                        type: ev.type,
-                        _count: ev._count
-                    }))
-                    setEvents(transformedEvents)
-                    if (transformedEvents.length > 0 && !selectedEvent) {
-                        setSelectedEvent(transformedEvents[0])
-                    } else if (transformedEvents.length === 0) {
-                        setSelectedEvent(null)
-                    }
-                }
+                const list = data.events || []
+                setEvents(list)
+                setSelectedId(prev => (prev && list.some((e: any) => e.id === prev)) ? prev : list[0]?.id ?? null)
             }
         } catch (error) {
             console.error('Fetch error:', error)
         } finally {
             setIsLoading(false)
         }
-    }
+    }, [])
 
     useEffect(() => {
-        if (status === 'unauthenticated') {
-            router.push('/login')
-        } else if (status === 'authenticated') {
-            fetchAllContent()
-        }
-    }, [status, router])
+        if (status === 'unauthenticated') router.push('/login?callbackUrl=/dashboard')
+        else if (status === 'authenticated') fetchEvents()
+    }, [status, router, fetchEvents])
 
     useEffect(() => {
-        if (selectedEvent?.id) {
-            fetchGuests()
-        }
-    }, [selectedEvent])
+        if (searchParams.get('canceled')) showToast('Plata a fost anulată. Invitația a rămas salvată ca draft.')
+    }, [searchParams, showToast])
 
-    const fetchGuests = async () => {
-        if (!selectedEvent?.id) return
+    const fetchGuests = useCallback(async (eventId: string) => {
+        setGuestsLoading(true)
         try {
-            const res = await fetch(`/api/guests?eventId=${selectedEvent.id}`)
+            const res = await fetch(`/api/guests?eventId=${eventId}`)
             if (res.ok) {
                 const data = await res.json()
                 setGuests(data.guests || [])
             }
         } catch (error) {
             console.error('Fetch guests error:', error)
+        } finally {
+            setGuestsLoading(false)
         }
-    }
+    }, [])
 
-    const [activeTab, setActiveTab] = useState('overview')
+    useEffect(() => {
+        if (selectedId) fetchGuests(selectedId)
+        else setGuests([])
+    }, [selectedId, fetchGuests])
 
-    const handleAddGuest = async () => {
-        if (!newGuest.name || !selectedEvent?.id) return
+    const inviteUrl = (id: string) => `${typeof window !== 'undefined' ? window.location.origin : ''}/invitatie/${id}`
+
+    const copyLink = async (id: string) => {
         try {
-            const res = await fetch('/api/guests', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...newGuest, eventId: selectedEvent.id })
-            })
-            if (res.ok) {
-                fetchGuests()
-                setNewGuest({ name: '', email: '' })
-            }
-        } catch (error) {
-            console.error('Add guest error:', error)
+            await navigator.clipboard.writeText(inviteUrl(id))
+            showToast('Link copiat! Îl poți trimite invitaților.')
+        } catch {
+            showToast(inviteUrl(id))
         }
     }
 
-    const handleDeleteGuest = async (id: string) => {
-        try {
-            const res = await fetch(`/api/guests?id=${id}`, { method: 'DELETE' })
-            if (res.ok) fetchGuests()
-        } catch (error) {
-            console.error('Delete guest error:', error)
-        }
+    const shareWhatsApp = (ev: any) => {
+        const text = `Ești invitat: ${ev.title}! Deschide invitația și confirmă prezența aici: ${inviteUrl(ev.id)}`
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank', 'noopener')
     }
 
-    const handleDeleteEvent = async (id: string) => {
-        if (!confirm('Ești sigur că vrei să ștergi această invitație? Această acțiune este permanentă.')) return
-        try {
-            const res = await fetch(`/api/events?id=${id}`, { method: 'DELETE' })
-            if (res.ok) {
-                if (selectedEvent?.id === id) {
-                    setSelectedEvent(null)
-                }
-                fetchAllContent()
-            }
-        } catch (error) {
-            console.error('Delete event error:', error)
-        }
-    }
-
-    const handleUpdateEvent = async (field: string, value: string) => {
-        const updated = { ...selectedEvent, [field]: value }
-        setSelectedEvent(updated)
-
-        try {
-            await fetch('/api/events', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    id: updated.id,
-                    ...updated,
-                    template: updated.template,
-                    type: updated.type || 'nunta'
-                })
-            })
-        } catch (error) {
-            console.error('Failed to sync with DB:', error)
-        }
-    }
-
-    const handlePayment = async () => {
-        if (!selectedEvent?.id) return
+    const handlePayment = async (eventId: string) => {
+        setPayingId(eventId)
         try {
             const res = await fetch('/api/checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ eventId: selectedEvent.id })
+                body: JSON.stringify({ eventId })
             })
-            if (res.ok) {
-                const { url } = await res.json()
-                window.location.href = url
+            const data = await res.json().catch(() => ({}))
+            if (res.ok && data.url) {
+                window.location.href = data.url
+                return
             }
-        } catch (error) {
-            console.error('Payment error:', error)
+            showToast(data.message || 'Plata nu a putut fi inițiată.')
+        } catch {
+            showToast('Eroare de rețea.')
+        }
+        setPayingId(null)
+    }
+
+    const handleDeleteEvent = async (id: string) => {
+        if (!confirm('Ești sigur că vrei să ștergi această invitație? Lista de invitați va fi ștearsă definitiv.')) return
+        try {
+            const res = await fetch(`/api/events?id=${id}`, { method: 'DELETE' })
+            if (res.ok) {
+                showToast('Invitația a fost ștearsă.')
+                fetchEvents()
+            } else {
+                showToast('Nu am putut șterge invitația.')
+            }
+        } catch {
+            showToast('Eroare de rețea.')
         }
     }
 
-    if (status === 'loading' || isLoading) return <div className={styles.dashboardContainer} style={{ justifyContent: 'center', alignItems: 'center' }}>Loading...</div>
+    const handleAddGuest = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!newGuest.name.trim() || !selectedId) return
+        try {
+            const res = await fetch('/api/guests', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...newGuest, eventId: selectedId })
+            })
+            if (res.ok) {
+                setNewGuest({ name: '', contact: '', persons: 1 })
+                fetchGuests(selectedId)
+                fetchEvents()
+            } else {
+                const data = await res.json().catch(() => ({}))
+                showToast(data.message || 'Nu am putut adăuga invitatul.')
+            }
+        } catch {
+            showToast('Eroare de rețea.')
+        }
+    }
+
+    const handleGuestStatus = async (id: string, newStatus: string) => {
+        setGuests(prev => prev.map(g => g.id === id ? { ...g, status: newStatus } : g))
+        const res = await fetch('/api/guests', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, status: newStatus })
+        }).catch(() => null)
+        if (!res?.ok && selectedId) fetchGuests(selectedId)
+        else fetchEvents()
+    }
+
+    const handleDeleteGuest = async (id: string) => {
+        if (!confirm('Ștergi acest invitat din listă?')) return
+        const res = await fetch(`/api/guests?id=${id}`, { method: 'DELETE' }).catch(() => null)
+        if (res?.ok && selectedId) {
+            fetchGuests(selectedId)
+            fetchEvents()
+        }
+    }
+
+    const exportCsv = () => {
+        if (!selectedEvent) return
+        const rows = [['Nume', 'Contact', 'Persoane', 'Status', 'Mesaj', 'Data']]
+        guests.forEach(g => rows.push([g.name, g.contact, String(g.persons), STATUS_LABELS[g.status] || g.status, g.message || '', new Date(g.createdAt).toLocaleString('ro-RO')]))
+        const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n')
+        const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `invitati-${selectedEvent.title.replace(/[^\w-]+/g, '_')}.csv`
+        a.click()
+        URL.revokeObjectURL(url)
+    }
+
+    const filteredGuests = useMemo(() => {
+        const q = searchQuery.trim().toLowerCase()
+        if (!q) return guests
+        return guests.filter(g => g.name?.toLowerCase().includes(q) || g.contact?.toLowerCase().includes(q))
+    }, [guests, searchQuery])
+
+    const stats = guestStats(guests)
+
+    if (status === 'loading' || (status === 'authenticated' && isLoading)) {
+        return <div className={styles.centerScreen}><Loader2 className="animate-spin" size={32} color="var(--accent)" /></div>
+    }
+    if (status === 'unauthenticated') return null
 
     if (events.length === 0) {
         return (
-            <div className={styles.dashboardContainer} style={{ flexDirection: 'column', gap: '30px', justifyContent: 'center', alignItems: 'center' }}>
-                <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '3rem' }}>Bun venit!</h1>
-                <p style={{ color: '#888' }}>Încă nu ai creat nicio invitație.</p>
-                <button
-                    onClick={() => router.push('/create')}
-                    style={{ padding: '15px 40px', background: 'var(--accent)', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold' }}
-                >
-                    Creează Prima Invitație
-                </button>
+            <div className={styles.centerScreen}>
+                <div className={styles.emptyState}>
+                    <div className={styles.emptyIcon}>💌</div>
+                    <h1>Bun venit{session?.user?.name ? `, ${session.user.name}` : ''}!</h1>
+                    <p>Încă nu ai creat nicio invitație. Alege un model și personalizează-l în câteva minute.</p>
+                    <button className={styles.primaryBtn} onClick={() => router.push('/create')}>
+                        <Plus size={18} /> Creează prima invitație
+                    </button>
+                </div>
             </div>
         )
     }
 
-    const renderContent = () => {
-        switch (activeTab) {
-            case 'guests':
+    const renderOverview = () => (
+        <div className={styles.eventGrid}>
+            {events.map((ev) => {
+                const s = guestStats(ev.guests || [])
                 return (
-                    <section className={styles.guestSection}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                            <h2 className={styles.sectionTitle} style={{ margin: 0 }}>Lista de Invitați: <span style={{ color: 'var(--accent)' }}>{selectedEvent?.title || '...'}</span></h2>
-                            <div style={{ fontSize: '0.8rem', color: '#888', background: 'rgba(255,255,255,0.05)', padding: '5px 12px', borderRadius: '20px' }}>
-                                {guests.length} {guests.length === 1 ? 'invitat' : 'invitați'} total
+                    <div
+                        key={ev.id}
+                        className={`${styles.invitationCard} ${selectedId === ev.id ? styles.activeCard : ''}`}
+                        onClick={() => setSelectedId(ev.id)}
+                        onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); setSelectedId(ev.id) } }}
+                        role="button"
+                        tabIndex={0}
+                        aria-pressed={selectedId === ev.id}
+                    >
+                        <div className={styles.cardHeader}>
+                            <div className={styles.cardIcon}><TypeIcon type={ev.type} /></div>
+                            <span className={`${styles.typeBadge} ${!ev.isPaid ? styles.draftBadge : ''}`}>
+                                {ev.isPaid ? 'Activă' : 'Draft'}
+                            </span>
+                        </div>
+                        <div className={styles.cardBody}>
+                            <span className={styles.cardType}>{TYPE_LABELS[ev.type] || ev.type}</span>
+                            <h3>{ev.title}</h3>
+                            <div className={styles.cardDetails}>
+                                {ev.date && <span><Calendar size={13} /> {ev.date}</span>}
+                                {ev.location && <span><MapPin size={13} /> {ev.location}</span>}
                             </div>
                         </div>
-
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', marginBottom: '25px', padding: '15px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }}>
-                            <div style={{ flex: 1, minWidth: '200px' }}>
-                                <label style={{ fontSize: '0.7rem', color: '#888', textTransform: 'uppercase', marginBottom: '5px', display: 'block' }}>Adaugă Invitat Nou</label>
-                                <div style={{ display: 'flex', gap: '10px' }}>
-                                    <input
-                                        placeholder="Nume"
-                                        style={{ padding: '10px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', flex: 1 }}
-                                        value={newGuest.name}
-                                        onChange={e => setNewGuest({ ...newGuest, name: e.target.value })}
-                                    />
-                                    <input
-                                        placeholder="Email / Telefon"
-                                        style={{ padding: '10px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', flex: 1 }}
-                                        value={newGuest.email}
-                                        onChange={e => setNewGuest({ ...newGuest, email: e.target.value })}
-                                    />
-                                    <button
-                                        onClick={handleAddGuest}
-                                        style={{ padding: '10px 20px', background: 'var(--accent)', color: 'black', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}
-                                    >
-                                        <Plus size={18} /> Adaugă
-                                    </button>
-                                </div>
-                            </div>
+                        <div className={styles.miniStats}>
+                            <span><CheckCircle2 size={14} /> {s.confirmed} {s.confirmed === 1 ? 'confirmare' : 'confirmări'}</span>
+                            <span><Users size={14} /> {s.persons} {s.persons === 1 ? 'persoană' : 'persoane'}</span>
                         </div>
-
-                        <div style={{ position: 'relative', marginBottom: '20px' }}>
-                            <Search size={18} style={{ position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', color: '#666' }} />
-                            <input
-                                placeholder="Caută după nume, email sau telefon..."
-                                style={{ width: '100%', padding: '12px 12px 12px 45px', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', fontSize: '0.9rem' }}
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                        </div>
-
-                        <table className={styles.guestList}>
-                            <thead>
-                                <tr>
-                                    <th>Nume</th>
-                                    <th>Email / Telefon</th>
-                                    <th>Status</th>
-                                    <th>Acțiuni</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {guests.filter(g =>
-                                    g.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                    g.email.toLowerCase().includes(searchQuery.toLowerCase())
-                                ).map((guest, index) => (
-                                    <tr key={index}>
-                                        <td style={{ fontWeight: '600' }}>{guest.name}</td>
-                                        <td style={{ opacity: 0.8 }}>{guest.email}</td>
-                                        <td>
-                                            <span className={`${styles.statusBadge} ${styles[guest.status]}`}>
-                                                {guest.status === 'confirmed' ? 'Confirmat' : 'În Așteptare'}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <button
-                                                onClick={() => handleDeleteGuest(guest.id)}
-                                                style={{ color: '#ff4444', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}
-                                            >
-                                                <Trash2 size={16} /> Șterge
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                                {guests.filter(g =>
-                                    g.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                    g.contact.toLowerCase().includes(searchQuery.toLowerCase())
-                                ).length === 0 && (
-                                        <tr>
-                                            <td colSpan={4} style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
-                                                Niciun rezultat găsit pentru "{searchQuery}"
-                                            </td>
-                                        </tr>
-                                    )}
-                            </tbody>
-                        </table>
-                    </section>
-                )
-            case 'preview':
-                if (!selectedEvent) return <div>Selectează o invitație pentru previzualizare</div>
-                return (
-                    <>
-                        <h2 className={styles.sectionTitle} style={{ marginBottom: '1rem' }}>Previzualizare Live: <span style={{ color: 'var(--accent)' }}>{selectedEvent.title}</span></h2>
-                        <div className={styles.previewContainer}>
-                            {selectedEvent.template === 'envelope' && <EnvelopeTemplate id={selectedEvent.id} {...selectedEvent} />}
-                            {selectedEvent.template === 'netflix' && <NetflixTemplate id={selectedEvent.id} {...selectedEvent} />}
-                            {selectedEvent.template === 'boarding' && <BoardingPassTemplate id={selectedEvent.id} {...selectedEvent} />}
-                            {selectedEvent.template === 'vinyl' && <VinylTemplate id={selectedEvent.id} {...selectedEvent} />}
-                            {selectedEvent.template === 'scratch' && <ScratchTemplate id={selectedEvent.id} {...selectedEvent} />}
-                            {selectedEvent.template === 'passport' && <PassportTemplate id={selectedEvent.id} {...selectedEvent} />}
-                            {selectedEvent.template === 'news' && <NewspaperTemplate id={selectedEvent.id} {...selectedEvent} />}
-                            {selectedEvent.template === 'cinema' && <CinemaTemplate id={selectedEvent.id} {...selectedEvent} />}
-                            {selectedEvent.template === 'festival' && <FestivalTemplate id={selectedEvent.id} {...selectedEvent} />}
-                        </div>
-                    </>
-                )
-            case 'billing':
-                return <BillingPanel selectedEvent={selectedEvent} handlePayment={handlePayment} />
-
-            default: // overview
-                return (
-                    <div className={styles.eventGrid}>
-                        {events.map((ev) => (
-                            <div
-                                key={ev.id}
-                                className={`${styles.invitationCard} ${selectedEvent?.id === ev.id ? styles.activeCard : ''}`}
-                                onClick={() => {
-                                    setSelectedEvent(ev)
-                                    setActiveTab('overview')
-                                }}
-                            >
-                                <div className={styles.cardHeader}>
-                                    <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-                                        <div className={styles.cardIcon}>
-                                            {ev.type === 'nunta' && <Heart size={24} />}
-                                            {ev.type === 'botez' && <Baby size={24} />}
-                                            {ev.type === 'party' && <PartyPopper size={24} />}
-                                        </div>
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation()
-                                                handleDeleteEvent(ev.id)
-                                            }}
-                                            style={{ background: 'none', border: 'none', color: '#ff4444', cursor: 'pointer', padding: '5px', opacity: 0.5, transition: 'opacity 0.2s' }}
-                                            onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
-                                            onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.5')}
-                                            title="Șterge Invitație"
-                                        >
-                                            <Trash2 size={18} />
-                                        </button>
-                                    </div>
-                                    <span className={`${styles.typeBadge} ${!ev.isPaid ? styles.draftBadge : ''}`}>
-                                        {ev.isPaid ? 'Premium' : 'Draft'}
-                                    </span>
-                                </div>
-                                <div className={styles.cardBody}>
-                                    <h3>{ev.title}</h3>
-                                    <div className={styles.cardDetails}>
-                                        <span><Calendar size={12} style={{ marginRight: '5px' }} /> {ev.date}</span>
-                                        <span><MapPin size={12} style={{ marginRight: '5px' }} /> {ev.location}</span>
-                                    </div>
-                                </div>
-                                <div className={styles.cardFooter} style={{ flexWrap: 'wrap', gap: '10px' }}>
-                                    <div className={styles.guestBadge}>
-                                        <Users size={14} />
-                                        <span>{ev._count?.guests || 0} Invitați</span>
-                                    </div>
-                                    <div style={{ display: 'flex', gap: '8px' }}>
-                                        {!ev.isPaid ? (
-                                            <button
-                                                className={styles.shareButton}
-                                                style={{ padding: '6px 12px', fontSize: '0.75rem', background: '#fff', color: '#000' }}
-                                                onClick={(e) => {
-                                                    e.stopPropagation()
-                                                    setSelectedEvent(ev)
-                                                    handlePayment()
-                                                }}
-                                            >
-                                                <Lock size={12} style={{ marginRight: '5px' }} /> Activează (20€)
-                                            </button>
-                                        ) : (
-                                            <button
-                                                className={styles.shareButton}
-                                                style={{ padding: '6px 12px', fontSize: '0.75rem' }}
-                                                onClick={(e) => {
-                                                    e.stopPropagation()
-                                                    navigator.clipboard.writeText(`${window.location.origin}/invitatie/${ev.id}`)
-                                                    alert('Link copiat!')
-                                                }}
-                                            >
-                                                <LinkIcon size={12} style={{ marginRight: '5px' }} /> Copiază Link
-                                            </button>
-                                        )}
-                                        <button
-                                            className={styles.shareButton}
-                                            style={{ padding: '6px 12px', fontSize: '0.75rem', background: 'rgba(255,255,255,0.1)', color: '#fff' }}
-                                            onClick={(e) => {
-                                                e.stopPropagation()
-                                                setActiveTab('preview')
-                                                setSelectedEvent(ev)
-                                            }}
-                                        >
-                                            <Eye size={14} style={{ marginRight: '5px' }} /> Vezi
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                        <div
-                            className={styles.invitationCard}
-                            style={{ border: '2px dashed rgba(255,255,255,0.1)', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}
-                            onClick={() => router.push('/create')}
-                        >
-                            <div>
-                                <div style={{ marginBottom: '10px', color: '#444' }}><Plus size={40} /></div>
-                                <div style={{ color: '#666', fontWeight: 'bold' }}>Creează Invitație Nouă</div>
-                            </div>
+                        <div className={styles.cardActions} onClick={(e) => e.stopPropagation()}>
+                            {ev.isPaid ? (
+                                <>
+                                    <button className={styles.actionPrimary} onClick={() => copyLink(ev.id)}><LinkIcon size={14} /> Copiază link</button>
+                                    <button className={styles.actionWhatsapp} onClick={() => shareWhatsApp(ev)} aria-label="Trimite pe WhatsApp"><MessageCircle size={14} /></button>
+                                </>
+                            ) : (
+                                <button className={styles.actionPrimary} onClick={() => handlePayment(ev.id)} disabled={payingId === ev.id}>
+                                    {payingId === ev.id ? <Loader2 size={14} className="animate-spin" /> : <Lock size={14} />} Activează (20 €)
+                                </button>
+                            )}
+                            <button className={styles.actionGhost} onClick={() => router.push(`/create?id=${ev.id}`)} aria-label="Editează"><Pencil size={14} /></button>
+                            <a className={styles.actionGhost} href={`/invitatie/${ev.id}`} target="_blank" rel="noopener noreferrer" aria-label="Deschide invitația"><ExternalLink size={14} /></a>
+                            <button className={styles.actionDanger} onClick={() => handleDeleteEvent(ev.id)} aria-label="Șterge"><Trash2 size={14} /></button>
                         </div>
                     </div>
                 )
-        }
+            })}
+            <button className={styles.newCard} onClick={() => router.push('/create')}>
+                <Plus size={36} />
+                <span>Creează invitație nouă</span>
+            </button>
+        </div>
+    )
+
+    const renderGuests = () => (
+        <section>
+            <div className={styles.statsGrid}>
+                <div className={styles.statCard}><div className={styles.statValue}>{stats.confirmed}</div><div className={styles.statLabel}><CheckCircle2 size={14} /> Confirmări</div></div>
+                <div className={styles.statCard}><div className={styles.statValue}>{stats.persons}</div><div className={styles.statLabel}><Users size={14} /> Persoane</div></div>
+                <div className={styles.statCard}><div className={styles.statValue}>{stats.pending}</div><div className={styles.statLabel}><Clock size={14} /> În așteptare</div></div>
+                <div className={styles.statCard}><div className={styles.statValue}>{stats.declined}</div><div className={styles.statLabel}><XCircle size={14} /> Refuzuri</div></div>
+            </div>
+
+            <div className={styles.panel}>
+                <form className={styles.addGuestForm} onSubmit={handleAddGuest}>
+                    <input className={styles.input} placeholder="Nume invitat" value={newGuest.name} onChange={e => setNewGuest({ ...newGuest, name: e.target.value })} required />
+                    <input className={styles.input} placeholder="Email / telefon (opțional)" value={newGuest.contact} onChange={e => setNewGuest({ ...newGuest, contact: e.target.value })} />
+                    <select className={styles.input} value={newGuest.persons} onChange={e => setNewGuest({ ...newGuest, persons: Number(e.target.value) })} aria-label="Număr persoane">
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map(n => <option key={n} value={n}>{n} pers.</option>)}
+                    </select>
+                    <button type="submit" className={styles.primaryBtn}><Plus size={16} /> Adaugă</button>
+                </form>
+
+                <div className={styles.toolbar}>
+                    <div className={styles.searchBox}>
+                        <Search size={16} />
+                        <input placeholder="Caută după nume sau contact..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                    </div>
+                    <button className={styles.secondaryBtn} onClick={exportCsv} disabled={guests.length === 0}><Download size={16} /> Export CSV</button>
+                </div>
+
+                <div className={styles.tableWrap}>
+                    <table className={styles.guestList}>
+                        <thead>
+                            <tr>
+                                <th>Nume</th>
+                                <th>Contact</th>
+                                <th>Pers.</th>
+                                <th>Status</th>
+                                <th>Mesaj</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredGuests.map((guest) => (
+                                <tr key={guest.id}>
+                                    <td className={styles.guestName}>{guest.name}</td>
+                                    <td className={styles.muted}>{guest.contact || '—'}</td>
+                                    <td>{guest.persons}</td>
+                                    <td>
+                                        <select
+                                            className={`${styles.statusSelect} ${styles[guest.status] || ''}`}
+                                            value={guest.status}
+                                            onChange={(e) => handleGuestStatus(guest.id, e.target.value)}
+                                        >
+                                            <option value="confirmed">Confirmat</option>
+                                            <option value="pending">În așteptare</option>
+                                            <option value="declined">Refuzat</option>
+                                        </select>
+                                    </td>
+                                    <td className={styles.messageCell} title={guest.message || ''}>{guest.message || '—'}</td>
+                                    <td>
+                                        <button className={styles.iconDanger} onClick={() => handleDeleteGuest(guest.id)} aria-label="Șterge invitatul">
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                            {!guestsLoading && filteredGuests.length === 0 && (
+                                <tr>
+                                    <td colSpan={6} className={styles.emptyRow}>
+                                        {searchQuery
+                                            ? `Niciun rezultat pentru „${searchQuery}”`
+                                            : selectedEvent?.isPaid
+                                                ? 'Încă nu ai răspunsuri. Trimite link-ul invitației și confirmările apar aici automat.'
+                                                : 'Activează invitația ca să primești confirmări de la invitați.'}
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    )
+
+    const renderPreview = () => {
+        if (!selectedEvent) return null
+        const props = eventToTemplateProps(selectedEvent)
+        const centered = CENTERED_TEMPLATES.includes(selectedEvent.template)
+        return (
+            <div className={styles.previewWrap}>
+                <div className={styles.previewPhone}>
+                    <div className={`${styles.previewScroll} ${centered ? styles.previewCentered : ''}`}>
+                        <TemplateRenderer key={selectedEvent.id} {...props} template={selectedEvent.template} id={undefined} />
+                    </div>
+                </div>
+                <div className={styles.previewActions}>
+                    <p>Așa vor vedea invitații tăi invitația pe telefon.</p>
+                    <button className={styles.primaryBtn} onClick={() => router.push(`/create?id=${selectedEvent.id}`)}><Pencil size={16} /> Editează</button>
+                    <a className={styles.secondaryBtn} href={`/invitatie/${selectedEvent.id}`} target="_blank" rel="noopener noreferrer"><ExternalLink size={16} /> Deschide pe tot ecranul</a>
+                </div>
+            </div>
+        )
     }
+
+    const tabs: { id: Tab, label: string, icon: React.ReactNode }[] = [
+        { id: 'overview', label: 'Invitațiile mele', icon: <LayoutGrid size={18} /> },
+        { id: 'guests', label: 'Lista invitați', icon: <Users size={18} /> },
+        { id: 'preview', label: 'Previzualizare', icon: <Eye size={18} /> },
+        { id: 'billing', label: 'Facturare', icon: <Receipt size={18} /> },
+    ]
 
     return (
         <div className={styles.dashboardContainer}>
             <aside className={styles.sidebar}>
-                <div className={styles.logo}>INVITONLINE</div>
-
-                <h3 style={{ fontSize: '0.7rem', color: '#666', textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '1px' }}>Invitațiile Mele</h3>
-                <div style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                    {events.map((ev) => (
-                        <div
-                            key={ev.id}
-                            onClick={() => setSelectedEvent(ev)}
-                            style={{
-                                padding: '12px',
-                                borderRadius: '10px',
-                                border: '1px solid',
-                                borderColor: selectedEvent?.id === ev.id ? 'var(--accent)' : 'rgba(255,255,255,0.05)',
-                                background: selectedEvent?.id === ev.id ? 'rgba(212,175,55,0.08)' : 'rgba(255,255,255,0.02)',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease',
-                                position: 'relative'
-                            }}
-                        >
-                            <div style={{ fontWeight: 'bold', color: selectedEvent?.id === ev.id ? 'var(--accent)' : 'white', fontSize: '0.9rem' }}>{ev.title}</div>
-                            <div style={{ fontSize: '0.7rem', color: '#666', marginTop: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                {ev.type} • {ev.date}
-                            </div>
-                            {ev._count && (
-                                <div style={{
-                                    position: 'absolute',
-                                    right: '10px',
-                                    top: '50%',
-                                    transform: 'translateY(-50%)',
-                                    background: selectedEvent?.id === ev.id ? 'var(--accent)' : '#333',
-                                    color: selectedEvent?.id === ev.id ? 'black' : '#888',
-                                    padding: '2px 6px',
-                                    borderRadius: '4px',
-                                    fontSize: '0.65rem',
-                                    fontWeight: '900'
-                                }}>
-                                    {ev._count.guests}
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                    <button
-                        onClick={() => router.push('/create')}
-                        style={{ marginTop: '10px', padding: '8px', background: 'rgba(255,255,255,0.05)', color: 'white', border: '1px dashed #444', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem' }}
-                    >
-                        + Creează Nouă
-                    </button>
+                <div className={styles.sidebarSection}>
+                    <h3 className={styles.sidebarTitle}>Invitațiile mele</h3>
+                    <div className={styles.eventList}>
+                        {events.map((ev) => (
+                            <button
+                                key={ev.id}
+                                onClick={() => setSelectedId(ev.id)}
+                                className={`${styles.eventListItem} ${selectedId === ev.id ? styles.eventListItemActive : ''}`}
+                            >
+                                <span className={styles.eventListTitle}>{ev.title}</span>
+                                <span className={styles.eventListMeta}>{TYPE_LABELS[ev.type] || ev.type} • {ev.isPaid ? 'Activă' : 'Draft'}</span>
+                                <span className={styles.eventListCount}>{ev._count?.guests ?? 0}</span>
+                            </button>
+                        ))}
+                    </div>
+                    <button className={styles.newBtn} onClick={() => router.push('/create')}><Plus size={14} /> Invitație nouă</button>
                 </div>
 
-                <nav>
-                    <div
-                        className={`${styles.navItem} ${activeTab === 'overview' ? styles.activeNav : ''}`}
-                        onClick={() => setActiveTab('overview')}
-                    >
-                        Galeria Mea
-                    </div>
-                    <div
-                        className={`${styles.navItem} ${activeTab === 'preview' ? styles.activeNav : ''}`}
-                        onClick={() => setActiveTab('preview')}
-                    >
-                        Previzualizare
-                    </div>
-                    <div
-                        className={`${styles.navItem} ${activeTab === 'guests' ? styles.activeNav : ''}`}
-                        onClick={() => setActiveTab('guests')}
-                    >
-                        Lista Invitați
-                    </div>
-                    <div
-                        className={`${styles.navItem} ${activeTab === 'billing' ? styles.activeNav : ''}`}
-                        onClick={() => setActiveTab('billing')}
-                    >
-                        Facturare & Plată
-                    </div>
+                <nav className={styles.nav}>
+                    {tabs.map(t => (
+                        <button
+                            key={t.id}
+                            className={`${styles.navItem} ${activeTab === t.id ? styles.activeNav : ''}`}
+                            onClick={() => setActiveTab(t.id)}
+                        >
+                            {t.icon} <span>{t.label}</span>
+                        </button>
+                    ))}
                 </nav>
             </aside>
 
-            <main className={styles.mainContent}>
-                <header className={styles.header}>
-                    <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <h1 className={styles.eventTitle}>{selectedEvent?.title || 'Selectează o invitație'}</h1>
-                            {selectedEvent && (
-                                <>
-                                    {selectedEvent.isPaid ? (
-                                        <span style={{ background: 'var(--accent)', color: 'black', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: '900' }}>PREMIUM</span>
-                                    ) : (
-                                        <span style={{ background: '#333', color: '#888', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: '900' }}>DRAFT</span>
-                                    )}
-                                </>
-                            )}
+            <div className={styles.mainContent}>
+                {(activeTab === 'guests' || activeTab === 'preview') && events.length > 1 && (
+                    <select
+                        className={`${styles.input} ${styles.mobileEventSelect}`}
+                        value={selectedId || ''}
+                        onChange={(e) => setSelectedId(e.target.value)}
+                        aria-label="Alege invitația"
+                    >
+                        {events.map(ev => <option key={ev.id} value={ev.id}>{ev.title}</option>)}
+                    </select>
+                )}
+                {(activeTab === 'guests' || activeTab === 'preview') && selectedEvent && (
+                    <header className={styles.header}>
+                        <div>
+                            <div className={styles.titleRow}>
+                                <h1 className={styles.eventTitle}>{selectedEvent.title}</h1>
+                                <span className={selectedEvent.isPaid ? styles.pillActive : styles.pillDraft}>
+                                    {selectedEvent.isPaid ? 'ACTIVĂ' : 'DRAFT'}
+                                </span>
+                            </div>
+                            <p className={styles.eventDate}>{[selectedEvent.date, selectedEvent.location].filter(Boolean).join(' • ')}</p>
                         </div>
-                        {selectedEvent && (
-                            <p className={styles.eventDate}>{selectedEvent.date} • {selectedEvent.location}</p>
+                        {selectedEvent.isPaid ? (
+                            <div className={styles.headerActions}>
+                                <button className={styles.secondaryBtn} onClick={() => copyLink(selectedEvent.id)}><LinkIcon size={16} /> Copiază link</button>
+                                <button className={styles.whatsappBtn} onClick={() => shareWhatsApp(selectedEvent)}><MessageCircle size={16} /> WhatsApp</button>
+                            </div>
+                        ) : (
+                            <button className={styles.primaryBtn} onClick={() => handlePayment(selectedEvent.id)} disabled={payingId === selectedEvent.id}>
+                                <Lock size={16} /> Activează (20 €)
+                            </button>
                         )}
-                    </div>
-                </header>
+                    </header>
+                )}
+                {activeTab === 'billing' && (
+                    <header className={styles.header}>
+                        <div>
+                            <h1 className={styles.eventTitle}>Facturare</h1>
+                            <p className={styles.eventDate}>Datele pentru factură și istoricul plăților</p>
+                        </div>
+                    </header>
+                )}
+                {activeTab === 'overview' && (
+                    <header className={styles.header}>
+                        <div>
+                            <h1 className={styles.eventTitle}>Bun venit{session?.user?.name ? `, ${session.user.name}` : ''}!</h1>
+                            <p className={styles.eventDate}>Gestionează invitațiile și confirmările</p>
+                        </div>
+                    </header>
+                )}
 
-                {renderContent()}
-            </main>
+                {activeTab === 'overview' && renderOverview()}
+                {activeTab === 'guests' && renderGuests()}
+                {activeTab === 'preview' && renderPreview()}
+                {activeTab === 'billing' && <BillingPanel />}
+            </div>
+
+            {toast && <div className={styles.toast}>{toast}</div>}
         </div>
+    )
+}
+
+export default function Dashboard() {
+    return (
+        <Suspense fallback={null}>
+            <DashboardContent />
+        </Suspense>
     )
 }

@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, type CSSProperties } from 'react'
 import styles from './ProcessAnimation.module.css'
-import { Check, Lock, Palette, Info, CreditCard, Send, Smartphone, Crown, Rocket } from 'lucide-react'
+import { Check, Lock, Palette, Info, CreditCard, Send, Crown, Rocket } from 'lucide-react'
 
 export default function ProcessAnimation() {
     const [step, setStep] = useState(0)
@@ -28,16 +28,19 @@ export default function ProcessAnimation() {
                     { label: 'Trimiți', icon: <Send size={24} /> },
                     { label: 'Impresionezi', icon: <Crown size={24} /> },
                 ].map((item, idx) => (
-                    <div
-                        key={idx}
+                    <button
+                        type="button"
+                        key={item.label}
                         className={`${styles.progressItem} ${step === idx ? styles.active : ''}`}
                         onClick={() => setStep(idx)}
+                        aria-label={`Pasul ${idx + 1}: ${item.label}`}
+                        aria-pressed={step === idx}
                     >
                         <div className={styles.progressDot}>
                             {item.icon}
                         </div>
                         <div className={styles.progressLabel}>{item.label}</div>
-                    </div>
+                    </button>
                 ))}
             </div>
 
@@ -119,7 +122,7 @@ export default function ProcessAnimation() {
                     <div className={styles.linkBox}>
                         <div className={styles.linkText}>invitonline.ro/nunta-ta</div>
                         <div className={styles.copyBtn}>
-                            COPY
+                            COPIAZĂ
                         </div>
                     </div>
                 </div>
@@ -154,9 +157,9 @@ export default function ProcessAnimation() {
 
                                     {/* Animated Button */}
                                     <div className={styles.rsvpBtn}>
-                                        <div className="btnText">
+                                        <div className={styles.btnText}>
                                             {step === 3 ? (
-                                                <span className="animate-pulse">CONFIRMĂ PREZENȚA</span>
+                                                <span>CONFIRMĂ PREZENȚA</span>
                                             ) : 'CONFIRMĂ'}
                                         </div>
                                     </div>
@@ -168,9 +171,9 @@ export default function ProcessAnimation() {
                                     <>
                                         <div className={styles.fingerTap}>👆</div>
                                         {/* Confetti Particles */}
-                                        <div className={styles.confetti} style={{ '--tx': '-50px', '--ty': '-80px' } as any}></div>
-                                        <div className={styles.confetti} style={{ '--tx': '50px', '--ty': '-90px' } as any}></div>
-                                        <div className={styles.confetti} style={{ '--tx': '0px', '--ty': '-100px' } as any}></div>
+                                        <div className={styles.confetti} style={{ '--tx': '-50px', '--ty': '-80px' } as CSSProperties}></div>
+                                        <div className={styles.confetti} style={{ '--tx': '50px', '--ty': '-90px' } as CSSProperties}></div>
+                                        <div className={styles.confetti} style={{ '--tx': '0px', '--ty': '-100px' } as CSSProperties}></div>
                                     </>
                                 )}
                             </div>
@@ -182,7 +185,7 @@ export default function ProcessAnimation() {
             </div>
 
             <p style={{ textAlign: 'center', color: '#666', marginTop: '20px', fontSize: '14px' }}>
-                * Exeperiența reală de pe platforma InvitOnline.
+                * Experiența reală de pe platforma InvitOnline.
             </p>
         </div>
     )

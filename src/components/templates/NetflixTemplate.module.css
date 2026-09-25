@@ -1,43 +1,42 @@
 .netflixContainer {
     width: 100%;
     min-height: 100%;
+    flex: 1 0 auto;
     background: #000;
     color: #fff;
     font-family: 'Inter', -apple-system, sans-serif;
     position: relative;
-    overflow-y: auto;
     overflow-x: hidden;
     scroll-behavior: smooth;
+    --pad-x: clamp(16px, 5%, 72px);
 }
 
+/* ---------- Hero ---------- */
 .hero {
     position: relative;
     width: 100%;
-    min-height: 500px;
-    height: auto;
+    /* cqh = editor mockup height; on the public page it falls back to the viewport height */
+    min-height: clamp(520px, 88cqh, 900px);
     background-size: cover;
-    background-position: center;
+    background-position: center 30%;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 60px 5vw 40px;
-    background-attachment: scroll;
+    padding: 60px var(--pad-x) 48px;
 }
 
 .hero::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to top, #000 5%, rgba(0, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0) 70%),
-        linear-gradient(to right, #000 5%, rgba(0, 0, 0, 0) 60%);
+    inset: 0;
+    background: linear-gradient(to top, #000 4%, rgba(0, 0, 0, 0.55) 35%, rgba(0, 0, 0, 0) 70%),
+        linear-gradient(to right, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 65%);
     pointer-events: none;
 }
 
 .heroContent {
-    max-width: 800px;
+    position: relative;
+    max-width: min(920px, 100%);
     z-index: 10;
     animation: fadeInSlideUp 1.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -57,44 +56,47 @@
 .nSeries {
     display: flex;
     align-items: center;
-    gap: 8px;
-    color: #e50914;
-    font-weight: 800;
-    letter-spacing: 3px;
-    font-size: 0.85rem;
-    margin-bottom: 15px;
+    gap: 10px;
+    color: #e5e5e5;
+    font-weight: 700;
+    letter-spacing: 4px;
+    font-size: 0.8rem;
+    margin-bottom: 14px;
     text-transform: uppercase;
 }
 
-.nSeries::before {
-    content: '';
+.nLogo {
     display: inline-block;
-    width: 25px;
-    height: 40px;
-    background: url("https://upload.wikimedia.org/wikipedia/commons/0/0c/Netflix_2015_N_logo.svg") no-repeat center/contain;
+    color: #e50914;
+    font-size: 2.4rem;
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: 0;
+    transform: scaleX(0.8);
+    text-shadow: 0 2px 10px rgba(229, 9, 20, 0.45);
 }
 
 .title {
-    font-size: clamp(2.5rem, 15cqw, 5rem);
+    font-size: clamp(2.3rem, 7cqw, 5rem);
     font-weight: 900;
-    margin-bottom: 15px;
-    line-height: 1;
+    margin: 0 0 16px;
+    line-height: 1.02;
+    letter-spacing: -0.5px;
     text-transform: uppercase;
-    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
-    background: linear-gradient(to right, #fff, #ccc);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: #fff;
+    filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.75));
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 .meta {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 10px;
-    font-size: 0.9rem;
+    gap: 6px 12px;
+    font-size: 0.95rem;
     font-weight: 600;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .match {
@@ -104,220 +106,425 @@
 
 .age {
     border: 1px solid rgba(255, 255, 255, 0.6);
-    padding: 0 10px;
+    padding: 0 8px;
     font-size: 0.85rem;
     border-radius: 2px;
 }
 
 .description {
     font-size: 1.1rem;
-    line-height: 1.45;
+    line-height: 1.5;
     color: #e5e5e5;
-    margin-bottom: 30px;
-    max-width: 600px;
-    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.8);
+    margin-bottom: 28px;
+    max-width: 620px;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.9);
+    overflow-wrap: break-word;
 }
 
+.description p {
+    margin: 0 0 8px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.description p:first-child:not(:has(svg)) {
+    display: block;
+    margin-bottom: 16px;
+}
+
+.inlineIcon {
+    flex-shrink: 0;
+    margin-top: 4px;
+}
+
+/* ---------- Buttons ---------- */
 .buttons {
     display: flex;
-    gap: 15px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.playBtn,
+.infoBtn {
+    border: none;
+    padding: 11px 26px;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    flex: 0 0 auto;
+    text-decoration: none;
+    white-space: nowrap;
 }
 
 .playBtn {
     background: #fff;
     color: #000;
-    border: none;
-    padding: 10px 24px;
-    border-radius: 4px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    cursor: pointer;
-    transition: all 0.25s;
-    flex: 1;
 }
 
 .playBtn:hover {
-    background: rgba(255, 255, 255, 0.75);
-    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.03);
 }
 
 .infoBtn {
     background: rgba(109, 109, 110, 0.7);
     color: #fff;
-    border: none;
-    padding: 10px 24px;
-    border-radius: 4px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    cursor: pointer;
-    transition: all 0.25s;
-    flex: 1;
+    backdrop-filter: blur(4px);
 }
 
 .infoBtn:hover {
-    background: rgba(109, 109, 110, 0.4);
-    transform: scale(1.05);
+    background: rgba(109, 109, 110, 0.45);
+    transform: scale(1.03);
 }
 
-/* Episodes Section */
+.wideBtn {
+    min-width: 0;
+}
+
+/* ---------- Episodes ---------- */
 .episodes {
-    padding: 80px 8vw;
-    background: linear-gradient(to bottom, #000, #050505);
+    padding: 56px var(--pad-x) 72px;
+    background: #000;
 }
 
 .sectionTitle {
-    font-size: 2rem;
+    max-width: 1100px;
+    font-size: 1.6rem;
     font-weight: 800;
-    margin-bottom: 40px;
-    letter-spacing: -0.5px;
+    margin: 0 0 24px;
+    letter-spacing: -0.3px;
 }
 
 .episodeList {
+    max-width: 1100px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 12px;
 }
 
 .episodeCard {
     display: flex;
     align-items: center;
-    gap: 30px;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 10px;
-    padding: 25px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.3s;
-    cursor: pointer;
+    gap: 24px;
+    background: #141414;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: background 0.25s;
 }
 
 .episodeCard:hover {
-    background: rgba(255, 255, 255, 0.08);
-    transform: scale(1.01);
+    background: #1c1c1c;
 }
 
 .episodeThumb {
-    width: 180px;
-    height: 100px;
-    background: #1a1a1a;
+    width: 160px;
+    aspect-ratio: 16 / 9;
+    background: radial-gradient(circle at 50% 40%, #3a0a0d, #1a1a1a 70%);
     border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3rem;
     flex-shrink: 0;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.castCard {
+    align-items: flex-start;
 }
 
 .episodeInfo {
     flex: 1;
+    min-width: 0;
+    overflow-wrap: break-word;
 }
 
 .episodeTitle {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     color: #fff;
 }
 
 .episodeDesc {
     font-size: 1rem;
-    color: #a3a3a3;
-    line-height: 1.4;
+    color: #b3b3b3;
+    line-height: 1.45;
 }
 
 .episodeTime {
     font-weight: 800;
     color: #e50914;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     letter-spacing: 1px;
+    margin-bottom: 2px;
 }
 
-/* Responsive */
-@media (max-width: 900px) {
-    .title {
-        font-size: 3.5rem;
-    }
-
-    .hero {
-        padding: 40px;
-        min-height: 600px;
-    }
-
-    .episodeCard {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-
-    .episodeThumb {
-        width: 100%;
-        height: 180px;
-    }
+.castGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 14px 20px;
+    margin-top: 10px;
 }
 
+.castItem {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.castLabel {
+    font-size: 0.8rem;
+    color: #808080;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.castValue {
+    color: #e5e5e5;
+    font-weight: 500;
+}
+
+.note {
+    margin-top: 16px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid #e50914;
+    border-radius: 4px;
+}
+
+/* ---------- Video ---------- */
+.videoSection {
+    padding-top: 40px;
+    padding-bottom: 8px;
+}
+
+.videoFrame {
+    max-width: 900px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    background: #000;
+}
+
+.video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 70cqh;
+    display: block;
+    background-color: #000;
+    object-fit: contain;
+}
+
+/* ---------- Narrow screens (phones) ---------- */
 @media (max-width: 600px) {
-    .title {
-        font-size: 2.2rem;
-    }
-
-    .buttons {
-        flex-direction: column;
-    }
-
-    .playBtn,
-    .infoBtn {
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-/* Responsive adjustments for extremely small viewports (like the phone mockup) */
-@media (max-width: 450px) {
     .hero {
-        min-height: 80vh;
-        padding: 40px 15px 30px;
+        padding: 48px 16px 32px;
     }
 
     .title {
-        font-size: 2.2rem;
+        font-size: clamp(2rem, 10.5vw, 2.6rem);
     }
 
     .meta {
-        font-size: 0.8rem;
-        gap: 8px;
+        font-size: 0.85rem;
+        gap: 6px 10px;
     }
 
     .description {
-        font-size: 0.95rem;
-        margin-bottom: 25px;
+        font-size: 1rem;
+        margin-bottom: 22px;
     }
 
     .buttons {
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 10px;
     }
 
     .playBtn,
+    .wideBtn {
+        grid-column: 1 / -1;
+    }
+
+    .playBtn,
     .infoBtn {
-        width: 100%;
-        padding: 12px;
+        padding: 12px 10px;
         font-size: 1rem;
     }
 
     .episodes {
-        padding: 40px 15px;
+        padding: 36px 16px 48px;
     }
 
     .sectionTitle {
-        font-size: 1.5rem;
-        margin-bottom: 25px;
+        font-size: 1.3rem;
+        margin-bottom: 16px;
+    }
+
+    .episodeCard {
+        gap: 14px;
+        padding: 14px;
+    }
+
+    .episodeThumb {
+        width: 76px;
+    }
+
+    .episodeThumb svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .episodeTitle {
+        font-size: 1.05rem;
+        margin-bottom: 2px;
+    }
+
+    .episodeDesc {
+        font-size: 0.92rem;
+    }
+
+    .castCard .episodeThumb {
+        display: none;
+    }
+
+    .castGrid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 14px;
+    }
+}
+
+/* Editor mockups (container-type: size) */
+@container (max-width: 600px) {
+    .hero {
+        padding: 48px 16px 32px;
+    }
+
+    .title {
+        font-size: clamp(1.9rem, 10.5cqw, 2.6rem);
+    }
+
+    .meta {
+        font-size: 0.85rem;
+        gap: 6px 10px;
+    }
+
+    .description {
+        font-size: 1rem;
+        margin-bottom: 22px;
+    }
+
+    .buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .playBtn,
+    .wideBtn {
+        grid-column: 1 / -1;
+    }
+
+    .playBtn,
+    .infoBtn {
+        padding: 12px 10px;
+        font-size: 1rem;
+    }
+
+    .episodes {
+        padding: 36px 16px 48px;
+    }
+
+    .sectionTitle {
+        font-size: 1.3rem;
+        margin-bottom: 16px;
+    }
+
+    .episodeCard {
+        gap: 14px;
+        padding: 14px;
+    }
+
+    .episodeThumb {
+        width: 76px;
+    }
+
+    .episodeThumb svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .episodeTitle {
+        font-size: 1.05rem;
+        margin-bottom: 2px;
+    }
+
+    .episodeDesc {
+        font-size: 0.92rem;
+    }
+
+    .castCard .episodeThumb {
+        display: none;
+    }
+
+    .castGrid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 14px;
+    }
+}
+
+@media (max-width: 340px) {
+    .castGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@container (max-width: 340px) {
+    .castGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Keep each name together so couples wrap at "&" */
+.namePart {
+    display: inline-block;
+    max-width: 100%;
+}
+
+/* Medium widths (tablets, editor PC mockup): keep the four buttons on one row */
+@media (min-width: 601px) and (max-width: 1000px) {
+    .playBtn,
+    .infoBtn {
+        padding: 10px 18px;
+        font-size: 1rem;
+        gap: 8px;
+    }
+
+    .buttons {
+        gap: 10px;
+    }
+}
+
+@container (min-width: 601px) and (max-width: 1000px) {
+    .playBtn,
+    .infoBtn {
+        padding: 10px 18px;
+        font-size: 1rem;
+        gap: 8px;
+    }
+
+    .buttons {
+        gap: 10px;
     }
 }

@@ -3,19 +3,23 @@
 import { useState, useEffect, useRef } from 'react'
 import styles from './ChatTemplate.module.css'
 import RSVPModal from '@/components/RSVPModal'
-import { ChevronLeft, Play, Pause, MapPin, Mic, Send, Image as ImageIcon, Phone, Video, MoreVertical, Smile, Paperclip } from 'lucide-react'
+import { ChevronLeft, ChevronsDown, Play, Pause, Mic, Phone, Video, MoreVertical, Smile, Paperclip, MapPin, Send } from 'lucide-react'
+import { useAudioPlayer } from './useAudioPlayer'
+import {
+    str, getMapUrl, getWazeUrl, getMainNames, getSchedule, getParents, getGodparents,
+    validCustomFields, CustomField,
+} from './templateUtils'
 
 interface ChatTemplateProps {
     id?: string
-    title: string
-    date: string
-    location: string
+    title?: string
+    date?: string
+    location?: string
     locationUrl?: string
-    message: string
+    message?: string
     eventType?: string
     audioUrl?: string
     photoUrl?: string
-    // Extra props
     groomName?: string
     brideName?: string
     childName?: string
@@ -31,246 +35,190 @@ interface ChatTemplateProps {
     churchLoc?: string
     restaurantTime?: string
     restaurantLoc?: string
-    birthDate?: string
-    childAge?: string
-    partyType?: string
-    theme?: string
     specialInstructions?: string
     dressCode?: string
-    // Extra
     parentsGroom?: string
     parentsBride?: string
     godparents?: string
     godparentsBaptism?: string
     motherName?: string
     fatherName?: string
+    customFields?: CustomField[]
 }
 
 type MessageType = 'text' | 'image' | 'audio' | 'location'
 
-interface Message {
-    id: number
+interface ScriptMessage {
+    key: string
     type: MessageType
     content: string
-    sender: 'system' | 'me' | 'them'
-    timestamp: string
+    delay: number
 }
 
-export default function ChatTemplate({
-    id, title, date, location, locationUrl, message, eventType = 'nunta',
-    groomName, brideName, childName, celebrantName, age,
-    godparents, godparentsBaptism, parentsGroom, parentsBride,
-    motherName, fatherName, civilCeremonyTime, civilCeremonyLoc, religiousCeremonyTime, religiousCeremonyLoc,
-    partyTime, partyLoc, churchTime, churchLoc, restaurantTime, restaurantLoc,
-    birthDate, childAge, partyType, theme, specialInstructions, dressCode,
-    audioUrl, photoUrl
-}: ChatTemplateProps) {
-    const [messages, setMessages] = useState<Message[]>([])
+function nowTime() {
+    return new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })
+}
+
+export default function ChatTemplate(props: ChatTemplateProps) {
+    const {
+        id, date, location, locationUrl, message, eventType = 'nunta',
+        age, specialInstructions, dressCode, audioUrl, photoUrl, customFields,
+    } = props
+
+    const [shown, setShown] = useState(0)
     const [isTyping, setIsTyping] = useState(false)
-    const [showActions, setShowActions] = useState(false)
     const [showRSVP, setShowRSVP] = useState(false)
-    const [isPlaying, setIsPlaying] = useState(false)
-    const audioRef = useRef<HTMLAudioElement>(null)
+    const { isPlaying, toggle: handleAudioPlay } = useAudioPlayer(audioUrl, false)
     const listRef = useRef<HTMLDivElement>(null)
-    const initialized = useRef(false)
+    const [timestamps, setTimestamps] = useState<string[]>([])
 
-    const scrollToBottom = () => {
-        if (listRef.current) {
-            listRef.current.scrollTo({
-                top: listRef.current.scrollHeight,
-                behavior: 'smooth'
-            })
+    const names = getMainNames(props)
+    const dateText = str(date)
+    const mapUrl = getMapUrl(location, locationUrl)
+    const wazeUrl = getWazeUrl(location)
+    const schedule = getSchedule(props)
+    const parents = getParents(props)
+    const godparentsText = getGodparents(props)
+    const fields = validCustomFields(customFields)
+
+    const announce = (() => {
+        const when = dateText ? ` pe ${dateText}` : ''
+        switch (eventType) {
+            case 'botez': return `Îl/o creștinăm pe ${str(props.childName) || names || 'micuțul nostru'}${when}! 👶✨`
+            case 'aniversare': return `Sărbătorim ${str(age) ? `${str(age)} ani` : 'o aniversare'}${when}! 🎂🎉`
+            case 'petrecere': return `Facem o petrecere${when}! 🎉🥳`
+            default: return `Ne căsătorim${when}! 💍🎉`
         }
-    }
+    })()
 
-    // Scriptul conversației
-    const script = [
-        { type: 'text', content: `Salut! 👋`, delay: 800 },
-        { type: 'text', content: message || `Avem o veste mare!`, delay: 1500 },
-        { type: 'text', content: `Ne ${eventType === 'botez' ? 'vedem la botezul lui' : 'căsătorim pe'} ${date}! 💍🎉`, delay: 1500 },
-        photoUrl ? { type: 'image', content: photoUrl, delay: 1000 } : null,
-        { type: 'location', content: location, delay: 1200 },
-        audioUrl ? { type: 'audio', content: audioUrl, delay: 1000 } : null,
+    const extras = [
+        str(dressCode) ? `Ținută: ${str(dressCode)}` : '',
+        str(specialInstructions),
+        ...fields.map((f) => `${f.label}: ${f.value}`),
+    ].filter(Boolean)
 
-        (groomName || brideName || childName || celebrantName) ? {
+    // Conversation script — rebuilt on every render, so edits in the editor show up live.
+    const script: ScriptMessage[] = ([
+        { key: 'hi', type: 'text', content: 'Salut! 👋', delay: 600 },
+        { key: 'msg', type: 'text', content: str(message) || 'Avem o veste mare!', delay: 700 },
+        { key: 'announce', type: 'text', content: announce, delay: 1100 },
+        photoUrl ? { key: 'photo', type: 'image', content: photoUrl, delay: 1000 } : null,
+        str(location) ? { key: 'location', type: 'location', content: str(location), delay: 900 } : null,
+        audioUrl ? { key: 'audio', type: 'audio', content: audioUrl, delay: 800 } : null,
+        godparentsText ? { key: 'godparents', type: 'text', content: `✨ Alături de nașii: ${godparentsText}`, delay: 800 } : null,
+        parents.length ? { key: 'parents', type: 'text', content: `👨‍👩‍👧 Alături de părinți: ${parents.join(' și ')}`, delay: 800 } : null,
+        schedule.length ? {
+            key: 'schedule',
             type: 'text',
-            content: `Protagonisti: ${[groomName, brideName, childName, celebrantName].filter(Boolean).join(' & ')}`,
-            delay: 1000
+            content: `🕒 Program:\n${schedule.map((s) => `• ${s.label}${s.time ? ` – ${s.time}` : ''}${s.loc ? `, ${s.loc}` : ''}`).join('\n')}`,
+            delay: 800,
         } : null,
+        extras.length ? { key: 'extras', type: 'text', content: `ℹ️ ${extras.join('\n')}`, delay: 1300 } : null,
+        { key: 'bye', type: 'text', content: 'Te așteptăm cu drag! Ce zici, poți ajunge?', delay: 1000 },
+    ] as (ScriptMessage | null)[]).filter((m): m is ScriptMessage => m !== null)
 
-        (godparents || godparentsBaptism) ? {
-            type: 'text',
-            content: `✨ Cu nașii: ${godparents || godparentsBaptism}`,
-            delay: 1200
-        } : null,
+    const scriptLength = script.length
+    const lastDelay = shown > 0 ? (script[Math.min(shown, scriptLength) - 1]?.delay ?? 1000) : 1000
+    const finished = shown >= scriptLength
 
-        (parentsGroom || parentsBride || motherName || fatherName) ? {
-            type: 'text',
-            content: `Alături de părinți: ${[parentsGroom, parentsBride, motherName, fatherName].filter(Boolean).join(' & ')}`,
-            delay: 1200
-        } : null,
-
-        (civilCeremonyTime || religiousCeremonyTime || partyTime || churchTime || restaurantTime) ? {
-            type: 'text',
-            content: `Program: ${[
-                civilCeremonyTime ? `Civilă ${civilCeremonyTime}${civilCeremonyLoc ? ` la ${civilCeremonyLoc}` : ''}` : '',
-                religiousCeremonyTime ? `Religioasă ${religiousCeremonyTime}${religiousCeremonyLoc ? ` la ${religiousCeremonyLoc}` : ''}` : '',
-                churchTime ? `Biserică ${churchTime}${churchLoc ? ` la ${churchLoc}` : ''}` : '',
-                partyTime ? `Petrecere ${partyTime}${partyLoc ? ` la ${partyLoc}` : ''}` : '',
-                restaurantTime ? `Restaurant ${restaurantTime}${restaurantLoc ? ` la ${restaurantLoc}` : ''}` : ''
-            ].filter(Boolean).join(' | ')}`,
-            delay: 1500
-        } : null,
-
-        (age || birthDate || childAge || partyType || theme || specialInstructions || dressCode) ? {
-            type: 'text',
-            content: `Detalii suplimentare: ${[
-                age ? `Vârsta: ${age}` : '',
-                birthDate ? `Data nașterii: ${birthDate}` : '',
-                childAge ? `Vârsta copilului: ${childAge}` : '',
-                partyType ? `Tip petrecere: ${partyType}` : '',
-                theme ? `Tematică: ${theme}` : '',
-                specialInstructions ? `Instrucțiuni speciale: ${specialInstructions}` : '',
-                dressCode ? `Dress code: ${dressCode}` : ''
-            ].filter(Boolean).join(' | ')}`,
-            delay: 1500
-        } : null,
-
-        { type: 'text', content: `Te așteptăm cu drag! Ce zici, poți ajunge?`, delay: 1000 }
-    ].filter(Boolean) as { type: MessageType, content: string, delay: number }[]
-
+    // Reveal messages one by one; every timer is cleaned up.
     useEffect(() => {
-        if (initialized.current) return
-        initialized.current = true
-
-        let timeout: NodeJS.Timeout
-        let msgIndex = 0
-
-        const playNextMessage = () => {
-            if (msgIndex >= script.length) {
-                setShowActions(true)
-                return
-            }
-
+        if (shown >= scriptLength) return
+        let typingTimer: ReturnType<typeof setTimeout> | undefined
+        const waitTimer = setTimeout(() => {
             setIsTyping(true)
-            scrollToBottom()
-
-            // Typing duration logic
-            const typingTime = 1000 + Math.random() * 500
-
-            timeout = setTimeout(() => {
+            typingTimer = setTimeout(() => {
+                const stamp = nowTime()
+                setTimestamps((t) => { const next = [...t]; next[shown] = stamp; return next })
                 setIsTyping(false)
-
-                const msgData = script[msgIndex]
-                const newMsg: Message = {
-                    id: Date.now(),
-                    type: msgData.type,
-                    content: msgData.content,
-                    sender: 'them', // THEM = Left in WhatsApp
-                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                }
-
-                setMessages(prev => [...prev, newMsg])
-
-                // Wait before next
-                setTimeout(() => {
-                    msgIndex++
-                    playNextMessage()
-                }, msgData.delay)
-
-            }, typingTime)
+                setShown((s) => s + 1)
+            }, 700 + Math.random() * 400)
+        }, lastDelay)
+        return () => {
+            clearTimeout(waitTimer)
+            if (typingTimer) clearTimeout(typingTimer)
+            setIsTyping(false)
         }
+    }, [shown, scriptLength, lastDelay])
 
-        setTimeout(playNextMessage, 1000)
-        return () => clearTimeout(timeout)
-    }, [])
-
-    // Scroll to bottom whenever messages change
     useEffect(() => {
-        scrollToBottom()
-    }, [messages, isTyping])
+        const el = listRef.current
+        if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
+    }, [shown, isTyping])
 
-    const handleAudioPlay = () => {
-        if (!audioRef.current) return
-        if (isPlaying) {
-            audioRef.current.pause()
-            setIsPlaying(false)
-        } else {
-            audioRef.current.play()
-            setIsPlaying(true)
-        }
+    const visible = script.slice(0, shown)
+
+    // Lets impatient guests reveal the whole conversation at once.
+    const showAll = () => {
+        const stamp = nowTime()
+        setTimestamps((t) => script.map((_, i) => t[i] || stamp))
+        setIsTyping(false)
+        setShown(scriptLength)
     }
 
     return (
         <div className={styles.chatContainer}>
             <div className={styles.mobileScreen}>
 
-                {/* WHATSAPP HEADER */}
                 <div className={styles.header}>
                     <ChevronLeft className={styles.backBtn} size={24} />
                     <div className={styles.avatar}>
                         {photoUrl ? (
-                            <img src={photoUrl} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        ) : title.charAt(0)}
+                            <img src={photoUrl} alt="" className={styles.avatarImg} />
+                        ) : (names.charAt(0).toUpperCase() || '♥')}
                     </div>
                     <div className={styles.headerInfo}>
-                        <div className={styles.chatTitle}>{title}</div>
+                        <div className={styles.chatTitle}>{names || 'Invitație'}</div>
                         <div className={styles.status}>
-                            {isTyping ? 'typing...' : 'online'}
+                            {isTyping ? 'scrie...' : 'online'}
                         </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '15px' }}>
+                    <div className={styles.headerIcons}>
                         <Video size={20} />
                         <Phone size={20} />
                         <MoreVertical size={20} />
                     </div>
                 </div>
 
-                {/* MESSAGES AREA */}
                 <div className={styles.messagesList} ref={listRef}>
-                    <div style={{ textAlign: 'center', background: 'rgba(225,245,254,0.9)', padding: '5px 10px', borderRadius: '8px', fontSize: '0.75rem', color: '#555', alignSelf: 'center', marginBottom: '15px', boxShadow: '0 1px 1px rgba(0,0,0,0.1)' }}>
-                        Messages are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them.
+                    <div className={styles.systemNote}>
+                        🔒 Mesajele sunt criptate integral. Doar invitații noștri le pot citi.
                     </div>
 
-                    {messages.map(msg => (
-                        <div key={msg.id} className={`${styles.messageRow} ${styles.left}`}>
+                    {visible.map((msg, i) => (
+                        <div key={msg.key} className={`${styles.messageRow} ${styles.left}`}>
                             <div className={styles.bubble}>
-                                {/* TEXT */}
-                                {msg.type === 'text' && msg.content}
+                                {msg.type === 'text' && <span className={styles.text}>{msg.content}</span>}
 
-                                {/* IMAGE */}
                                 {msg.type === 'image' && (
-                                    <img src={msg.content} alt="Event" className={styles.chatImage} />
+                                    <img src={msg.content} alt="Fotografie" className={styles.chatImage} />
                                 )}
 
-                                {/* AUDIO */}
                                 {msg.type === 'audio' && (
                                     <div className={styles.audioBubble}>
-                                        <button className={styles.playBtn} onClick={handleAudioPlay}>
+                                        <button className={styles.playBtn} onClick={handleAudioPlay} aria-label={isPlaying ? 'Pauză' : 'Redă'}>
                                             {isPlaying ? <Pause size={16} fill="white" /> : <Play size={16} fill="white" style={{ marginLeft: '2px' }} />}
                                         </button>
                                         <div className={styles.audioWave}>
-                                            <div className={styles.audioProgress} style={{ width: isPlaying ? '50%' : '0%', animation: isPlaying ? 'pulse 1s infinite' : 'none' }}></div>
+                                            <div className={`${styles.audioProgress} ${isPlaying ? styles.playing : ''}`}></div>
                                         </div>
-                                        <audio ref={audioRef} src={msg.content} onEnded={() => setIsPlaying(false)} />
                                     </div>
                                 )}
 
-                                {/* LOCATION */}
                                 {msg.type === 'location' && (
                                     <div className={styles.locationBubble}>
-                                        <div style={{ fontSize: '0.85rem', fontWeight: '600', marginBottom: '5px' }}>📍 Locație:</div>
+                                        <div className={styles.locationCard}><MapPin size={26} /></div>
+                                        <div className={styles.locationTitle}>Locația evenimentului</div>
                                         <div>{msg.content}</div>
-                                        {locationUrl && (
-                                            <div style={{ color: '#007aff', fontSize: '0.8rem', marginTop: '5px', cursor: 'pointer' }} onClick={() => window.open(locationUrl, '_blank')}>
-                                                Vezi pe Hartă
-                                            </div>
-                                        )}
+                                        <div className={styles.mapLinks}>
+                                            {mapUrl && <a href={mapUrl} target="_blank" rel="noopener noreferrer">Vezi harta</a>}
+                                            {wazeUrl && <a href={wazeUrl} target="_blank" rel="noopener noreferrer">Waze</a>}
+                                        </div>
                                     </div>
                                 )}
 
                                 <div className={styles.metaRow}>
-                                    <span className={styles.timeStamp}>{msg.timestamp}</span>
+                                    <span className={styles.timeStamp}>{timestamps[i] || ''}</span>
                                 </div>
                             </div>
                         </div>
@@ -285,38 +233,46 @@ export default function ChatTemplate({
                     )}
                 </div>
 
-                {/* ACTION ZONE (Floating above footer) */}
-                {showActions && (
-                    <div className={`${styles.actionZone} ${styles.visible}`} style={{ justifyContent: 'center' }}>
+                {!finished && shown > 0 && (
+                    <button type="button" className={styles.skipBtn} onClick={showAll}>
+                        Vezi toată invitația <ChevronsDown size={14} />
+                    </button>
+                )}
+
+                {finished && (
+                    <div className={styles.actionZone}>
                         <button
-                            className={`${styles.whatsappBtn} ${styles.primary}`}
+                            className={styles.whatsappBtn}
                             onClick={() => setShowRSVP(true)}
-                            style={{ width: '80%', textAlign: 'center', justifyContent: 'center', display: 'flex' }}
                         >
-                            DA, Confirm Prezența! 🥂
+                            Da, confirm prezența! 🥂
                         </button>
                     </div>
                 )}
 
-                {/* WHATSAPP FOOTER (Fake Input) */}
-                <div className={styles.footer}>
-                    <Smile size={24} color="#888" />
-                    <Paperclip size={24} color="#888" style={{ marginLeft: '10px' }} />
-                    <div className={styles.fakeInput}>
-                        Type a message
-                    </div>
-                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#075e54', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Mic size={20} color="white" />
-                    </div>
-                </div>
+                {/* The input bar is a shortcut: it reveals the conversation, then opens the RSVP form. */}
+                <button
+                    type="button"
+                    className={styles.footer}
+                    onClick={() => (finished ? setShowRSVP(true) : showAll())}
+                    aria-label="Răspunde la invitație"
+                >
+                    <Smile size={22} color="#888" />
+                    <span className={styles.fakeInput}>{finished ? 'Răspunde la invitație…' : 'Mesaj'}</span>
+                    <Paperclip size={20} color="#888" />
+                    <span className={styles.micBtn}>
+                        {finished ? <Send size={18} color="white" /> : <Mic size={20} color="white" />}
+                    </span>
+                </button>
+            </div>
 
+            {showRSVP && (
                 <RSVPModal
                     isOpen={showRSVP}
                     onClose={() => setShowRSVP(false)}
                     eventId={id}
                 />
-
-            </div>
+            )}
         </div>
     )
 }

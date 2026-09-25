@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Calendar, Clock, ArrowRight } from 'lucide-react'
+import type { Metadata } from 'next'
 import styles from './page.module.css'
 
 // SEO-optimized blog articles about weddings and invitations
@@ -46,7 +47,7 @@ const articles = [
         excerpt: 'Tot ce trebuie să știi despre formulările corecte, termenele și protocoalele invitațiilor de nuntă.',
         date: '5 Ianuarie 2026',
         readTime: '8 min',
-        category: 'Eticheta',
+        category: 'Etichetă',
         image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800&auto=format&fit=crop'
     },
     {
@@ -74,7 +75,7 @@ const articles = [
         date: '28 Decembrie 2025',
         readTime: '7 min',
         category: 'Inovație',
-        image: 'https://images.unsplash.com/photo-1519167758481-83f29da8c6b6?w=800&auto=format&fit=crop'
+        image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&auto=format&fit=crop'
     },
     {
         id: 'buget-invitatii-nunta-2026',
@@ -182,7 +183,7 @@ const articles = [
         date: '25 Ianuarie 2026',
         readTime: '5 min',
         category: 'Decorațiuni',
-        image: 'https://images.unsplash.com/photo-1519167758481-83f29da8c6b6?w=800&auto=format&fit=crop'
+        image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&auto=format&fit=crop'
     },
     {
         id: 'gadgeturi-personalizate-nunta-shopprint',
@@ -218,7 +219,7 @@ const articles = [
         date: '21 Ianuarie 2026',
         readTime: '5 min',
         category: 'Buget',
-        image: 'https://images.unsplash.com/photo-1554224311-beee4ece8db7?w=800&auto=format&fit=crop'
+        image: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=800&auto=format&fit=crop'
     },
     {
         id: 'site-nunta-eweb',
@@ -254,7 +255,7 @@ const articles = [
         date: '17 Ianuarie 2026',
         readTime: '6 min',
         category: 'Decorațiuni',
-        image: 'https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=800&auto=format&fit=crop'
+        image: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=800&auto=format&fit=crop'
     },
     {
         id: 'management-date-sheet',
@@ -335,7 +336,7 @@ const articles = [
         date: '8 Ianuarie 2026',
         readTime: '12 min',
         category: 'Ghiduri',
-        image: 'https://images.unsplash.com/photo-1519167758481-83f29da8c6b6?w=800&auto=format&fit=crop'
+        image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&auto=format&fit=crop'
     },
     {
         id: 'buget-optimizat-nunta-servicii',
@@ -348,9 +349,9 @@ const articles = [
     }
 ]
 
-export const metadata = {
+export const metadata: Metadata = {
     title: 'Blog Nunți & Invitații | Ghiduri Complete, Sfaturi & Tendințe 2026',
-    description: 'Descoperă articole SEO despre invitații de nuntă digitale, tendințe 2026, sfaturi de planificare, eticheta invitațiilor și ghiduri complete pentru evenimentul tău perfect. Peste 50+ articole de specialitate.',
+    description: 'Descoperă articole SEO despre invitații de nuntă digitale, tendințe 2026, sfaturi de planificare, eticheta invitațiilor și ghiduri complete pentru evenimentul tău perfect. Peste 35 de articole de specialitate.',
     keywords: 'blog nunți, ghid invitații nuntă, sfaturi planificare nuntă, tendințe nunți 2026, invitații digitale ghid, eticheta nunții, timeline nuntă, invitații eco-friendly',
     openGraph: {
         title: 'Blog InvitOnline - Ghiduri & Sfaturi pentru Nunți Perfecte',

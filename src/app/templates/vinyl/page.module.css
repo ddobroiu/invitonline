@@ -1,5 +1,6 @@
 .container {
-    min-height: 100vh;
+    min-height: calc(100vh - 80px);
+    padding: 2rem 16px 6rem;
     background: linear-gradient(45deg, #1a0b2e, #4a192c);
     display: flex;
     flex-direction: column;
@@ -12,7 +13,7 @@
 .playerCard {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(20px);
-    padding: 3rem;
+    padding: 3rem 2rem;
     border-radius: 30px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
@@ -20,14 +21,15 @@
     align-items: center;
     gap: 2rem;
     max-width: 450px;
-    width: 90%;
+    width: 100%;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
 .vinylWrapper {
     position: relative;
-    width: 300px;
-    height: 300px;
+    width: 100%;
+    max-width: 300px;
+    aspect-ratio: 1;
 }
 
 .vinyl {
@@ -173,5 +175,21 @@
 
     50% {
         height: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .playerCard {
+        padding: 2rem 1.25rem;
+        gap: 1.5rem;
+    }
+
+    .label {
+        width: 80px;
+        height: 80px;
+    }
+
+    .trackTitle {
+        font-size: 1.6rem;
     }
 }

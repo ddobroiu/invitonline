@@ -1,18 +1,26 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
 import './globals.css'
+import Providers from '@/components/Providers'
+import SiteShell from '@/components/SiteShell'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-body' })
-const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-heading' })
+const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-body' })
+const playfair = Playfair_Display({ subsets: ['latin', 'latin-ext'], variable: '--font-heading' })
 
 export const metadata: Metadata = {
-  title: 'InvitOnline - Invitații Digitale Premium',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://invitonline.ro'),
+  title: {
+    default: 'InvitOnline - Invitații Digitale Premium',
+    template: '%s | InvitOnline',
+  },
   description: 'Creează invitații digitale inovative pentru nunți, botezuri și aniversări.',
 }
 
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import Providers from '@/components/Providers'
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#0a0a0a',
+}
 
 export default function RootLayout({
   children,
@@ -23,11 +31,7 @@ export default function RootLayout({
     <html lang="ro">
       <body className={`${inter.variable} ${playfair.variable} antialiased`}>
         <Providers>
-          <Header />
-          <main style={{ flex: 1, paddingTop: '80px' }}>
-            {children}
-          </main>
-          <Footer />
+          <SiteShell>{children}</SiteShell>
         </Providers>
       </body>
     </html>

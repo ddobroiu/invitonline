@@ -1,80 +1,80 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Search, Loader2, CheckCircle, Receipt, Download, Building, User as UserIcon } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { Loader2, Receipt, Download, CheckCircle, AlertCircle } from 'lucide-react'
 import styles from '@/app/dashboard/page.module.css'
 
 interface BillingInfo {
-    billingType: 'individual' | 'company';
-    companyName: string; // Full Name or Firm Name
-    cui: string;
-    regCom: string;
-    address: string;
-    city: string;
-    county: string;
+    billingType: 'individual' | 'company'
+    companyName: string // Full name or company name
+    cui: string
+    regCom: string
+    address: string
+    city: string
+    county: string
 }
 
 interface Order {
-    id: string;
-    amount: number;
-    currency: string;
-    status: string;
-    invoiceLink: string | null;
-    invoiceSeries: string | null;
-    invoiceNumber: string | null;
-    createdAt: string;
+    id: string
+    amount: number
+    currency: string
+    status: string
+    invoiceLink: string | null
+    invoiceSeries: string | null
+    invoiceNumber: string | null
+    createdAt: string
     event?: {
-        title: string;
+        title: string
     }
 }
 
+const EMPTY: BillingInfo = {
+    billingType: 'company',
+    companyName: '',
+    cui: '',
+    regCom: '',
+    address: '',
+    city: '',
+    county: '',
+}
+
 export default function BillingPanel({
-    selectedEvent,
-    handlePayment,
     hideHistory = false,
-    hideStatus = false,
     onSaveSuccess,
-    buttonText = 'Salvează și Continuă'
+    buttonText = 'Salvează datele',
 }: {
-    selectedEvent?: any,
-    handlePayment?: () => void,
-    hideHistory?: boolean,
-    hideStatus?: boolean,
-    onSaveSuccess?: () => void,
+    hideHistory?: boolean
+    onSaveSuccess?: () => void
     buttonText?: string
 }) {
-    const [billingInfo, setBillingInfo] = useState<BillingInfo>({
-        billingType: 'company',
-        companyName: '',
-        cui: '',
-        regCom: '',
-        address: '',
-        city: '',
-        county: ''
-    })
-
+    const [billingInfo, setBillingInfo] = useState<BillingInfo>(EMPTY)
+    const [savedInfo, setSavedInfo] = useState<BillingInfo>(EMPTY)
     const [transactions, setTransactions] = useState<Order[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [isSearching, setIsSearching] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
     const [searchError, setSearchError] = useState('')
+    const [lastLookup, setLastLookup] = useState('')
+    const [status, setStatus] = useState<{ type: 'ok' | 'error', text: string } | null>(null)
 
-    useEffect(() => {
-        fetchBillingInfo()
-        if (!hideHistory) fetchTransactions()
-    }, [hideHistory])
-
-    const fetchBillingInfo = async () => {
+    const fetchBillingInfo = useCallback(async () => {
         try {
             const res = await fetch('/api/user/billing')
             if (res.ok) {
                 const data = await res.json()
                 if (data && (data.companyName || data.cui)) {
-                    setBillingInfo(prev => ({
-                        ...prev,
-                        ...data,
-                        billingType: data.cui ? 'company' : 'individual'
-                    }))
+                    const info: BillingInfo = {
+                        billingType: data.cui ? 'company' : 'individual',
+                        companyName: data.companyName || '',
+                        cui: data.cui || '',
+                        regCom: data.regCom || '',
+                        address: data.address || '',
+                        city: data.city || '',
+                        county: data.county || '',
+                    }
+                    setBillingInfo(info)
+                    setSavedInfo(info)
+                    setLastLookup(info.cui)
                 }
             }
         } catch (error) {
@@ -82,9 +82,9 @@ export default function BillingPanel({
         } finally {
             setIsLoading(false)
         }
-    }
+    }, [])
 
-    const fetchTransactions = async () => {
+    const fetchTransactions = useCallback(async () => {
         try {
             const res = await fetch('/api/user/orders')
             if (res.ok) {
@@ -94,299 +94,263 @@ export default function BillingPanel({
         } catch (error) {
             console.error('Fetch transactions error:', error)
         }
+    }, [])
+
+    useEffect(() => {
+        fetchBillingInfo()
+        if (!hideHistory) fetchTransactions()
+    }, [hideHistory, fetchBillingInfo, fetchTransactions])
+
+    const set = (patch: Partial<BillingInfo>) => {
+        setBillingInfo(prev => ({ ...prev, ...patch }))
+        setStatus(null)
     }
 
     const handleCuiLookup = async () => {
-        if (!billingInfo.cui) return
+        const cui = billingInfo.cui.replace(/\D/g, '')
+        if (!cui || cui === lastLookup.replace(/\D/g, '')) return
+        setLastLookup(billingInfo.cui)
         setIsSearching(true)
         setSearchError('')
         try {
-            const res = await fetch(`/api/company?cui=${billingInfo.cui}`)
+            const res = await fetch(`/api/company?cui=${encodeURIComponent(cui)}`)
             if (res.ok) {
                 const data = await res.json()
                 setBillingInfo(prev => ({
                     ...prev,
-                    companyName: data.companyName,
-                    regCom: data.regCom,
-                    address: data.address,
-                    city: data.city,
-                    county: data.county
+                    companyName: data.companyName || prev.companyName,
+                    regCom: data.regCom || prev.regCom,
+                    address: data.address || prev.address,
+                    city: data.city && data.city !== '-' ? data.city : prev.city,
+                    county: data.county && data.county !== '-' ? data.county : prev.county,
                 }))
             } else {
-                setSearchError('CUI-ul nu a fost găsit.')
+                setSearchError('Nu am găsit firma automat. Completează datele manual.')
             }
-        } catch (error) {
-            setSearchError('Eroare la căutare.')
+        } catch {
+            setSearchError('Căutarea automată nu este disponibilă acum. Completează datele manual.')
         } finally {
             setIsSearching(false)
         }
     }
 
-    const handleSave = async () => {
+    const handleSave = async (e: React.FormEvent) => {
+        e.preventDefault()
         setIsSaving(true)
+        setStatus(null)
+        const isCompany = billingInfo.billingType === 'company'
+        const payload = {
+            ...billingInfo,
+            cui: isCompany ? billingInfo.cui.trim() : '',
+            regCom: isCompany ? billingInfo.regCom.trim() : '',
+        }
         try {
             const res = await fetch('/api/user/billing', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(billingInfo)
+                body: JSON.stringify(payload)
             })
             if (res.ok) {
-                if (onSaveSuccess) onSaveSuccess()
-                else alert('Salvat cu succes!')
+                const saved = { ...payload }
+                setBillingInfo(saved)
+                setSavedInfo(saved)
+                setStatus({ type: 'ok', text: 'Datele de facturare au fost salvate.' })
+                onSaveSuccess?.()
+            } else {
+                setStatus({ type: 'error', text: 'Nu am putut salva datele. Încearcă din nou.' })
             }
-        } catch (error) {
-            alert('Eroare la salvare.')
+        } catch {
+            setStatus({ type: 'error', text: 'Eroare de rețea. Verifică conexiunea și încearcă din nou.' })
         } finally {
             setIsSaving(false)
         }
     }
 
-    if (isLoading) return <div style={{ padding: '40px', textAlign: 'center' }}><Loader2 className="animate-spin" style={{ margin: '0 auto', color: '#d4af37' }} /></div>
+    const handleReset = () => {
+        setBillingInfo(savedInfo)
+        setSearchError('')
+        setStatus(null)
+    }
 
-    const colorPrimary = '#d4af37'
+    if (isLoading) {
+        return <div className={styles.billingLoading}><Loader2 className="animate-spin" color="var(--accent)" /></div>
+    }
+
+    const isCompany = billingInfo.billingType === 'company'
+    const isDirty = JSON.stringify(billingInfo) !== JSON.stringify(savedInfo)
 
     return (
-        <section className={styles.billingSection} style={{ padding: 0 }}>
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: hideHistory ? '1fr' : '1fr 1.2fr',
-                gap: '30px'
-            }}>
+        <section className={`${styles.billingSection} ${hideHistory ? styles.billingSingle : ''}`}>
+            <form className={styles.billingCard} onSubmit={handleSave}>
+                <h2 className={styles.billingTitle}>Detalii facturare</h2>
+                <p className={styles.billingHint}>Folosim aceste date pentru factura emisă la activarea invitației.</p>
 
-                {/* Left Column: Form */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                    <div className={styles.invitationCard} style={{
-                        background: '#0f0f12',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        borderRadius: '24px',
-                        padding: '30px',
-                        boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
-                        height: 'auto'
-                    }}>
-                        <h2 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '25px', color: '#fff' }}>Detalii Facturare</h2>
-
-                        {/* Toggle Container */}
-                        <div style={{
-                            display: 'flex',
-                            background: 'rgba(255,255,255,0.04)',
-                            borderRadius: '10px',
-                            padding: '4px',
-                            marginBottom: '25px',
-                            border: '1px solid rgba(255,255,255,0.03)'
-                        }}>
-                            <button
-                                type="button"
-                                onClick={() => setBillingInfo({ ...billingInfo, billingType: 'company' })}
-                                style={{
-                                    flex: 1, padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer',
-                                    background: billingInfo.billingType === 'company' ? colorPrimary : 'transparent',
-                                    color: '#fff', fontSize: '0.85rem', fontWeight: 600, transition: 'all 0.2s'
-                                }}
-                            >
-                                Persoană Juridică
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setBillingInfo({ ...billingInfo, billingType: 'individual' })}
-                                style={{
-                                    flex: 1, padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer',
-                                    background: billingInfo.billingType === 'individual' ? colorPrimary : 'transparent',
-                                    color: '#fff', fontSize: '0.85rem', fontWeight: 600, transition: 'all 0.2s'
-                                }}
-                            >
-                                Persoană Fizică
-                            </button>
-                        </div>
-
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-                            {/* Juridica specific: CUI */}
-                            {billingInfo.billingType === 'company' && (
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label} style={{ color: '#aaa', fontSize: '0.9rem', marginBottom: '6px' }}>CUI / CIF</label>
-                                    <div style={{ position: 'relative' }}>
-                                        <input
-                                            className={styles.input}
-                                            value={billingInfo.cui}
-                                            onChange={(e) => setBillingInfo({ ...billingInfo, cui: e.target.value })}
-                                            onBlur={handleCuiLookup}
-                                            placeholder="Introdu CUI pentru autocompletare"
-                                            style={{
-                                                width: '100%',
-                                                background: 'rgba(0,0,0,0.2)',
-                                                border: '1px solid rgba(255,255,255,0.1)',
-                                                borderRadius: '12px',
-                                                padding: '14px 16px',
-                                                color: '#fff',
-                                                fontSize: '1rem',
-                                                outline: 'none'
-                                            }}
-                                        />
-                                        {isSearching && <Loader2 size={18} className="animate-spin" style={{ position: 'absolute', right: '12px', top: '15px', color: colorPrimary }} />}
-                                    </div>
-                                    <p style={{ fontSize: '0.75rem', color: '#666', marginTop: '6px' }}>
-                                        Introducerea CUI-ului va completa automat datele firmei.
-                                    </p>
-                                </div>
-                            )}
-
-                            {/* Name / Firm Name */}
-                            <div style={{ display: 'grid', gridTemplateColumns: billingInfo.billingType === 'company' ? '1.5fr 1fr' : '1fr', gap: '15px' }}>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label} style={{ color: '#aaa', fontSize: '0.9rem', marginBottom: '6px' }}>
-                                        {billingInfo.billingType === 'company' ? 'Denumire Firmă' : 'Nume și Prenume'}
-                                    </label>
-                                    <input
-                                        className={styles.input}
-                                        value={billingInfo.companyName}
-                                        onChange={(e) => setBillingInfo({ ...billingInfo, companyName: e.target.value })}
-                                        style={{ width: '100%', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '14px 16px', color: '#fff', fontSize: '1rem' }}
-                                    />
-                                </div>
-                                {billingInfo.billingType === 'company' && (
-                                    <div className={styles.formGroup}>
-                                        <label className={styles.label} style={{ color: '#aaa', fontSize: '0.9rem', marginBottom: '6px' }}>Reg. Com.</label>
-                                        <input
-                                            className={styles.input}
-                                            value={billingInfo.regCom}
-                                            onChange={(e) => setBillingInfo({ ...billingInfo, regCom: e.target.value })}
-                                            placeholder="J40/..."
-                                            style={{ width: '100%', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '14px 16px', color: '#fff', fontSize: '1rem' }}
-                                        />
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Address */}
-                            <div className={styles.formGroup}>
-                                <label className={styles.label} style={{ color: '#aaa', fontSize: '0.9rem', marginBottom: '6px' }}>Adresa</label>
-                                <input
-                                    className={styles.input}
-                                    value={billingInfo.address}
-                                    onChange={(e) => setBillingInfo({ ...billingInfo, address: e.target.value })}
-                                    placeholder="Stradă, număr, bloc..."
-                                    style={{ width: '100%', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '14px 16px', color: '#fff', fontSize: '1rem' }}
-                                />
-                            </div>
-
-                            {/* City / County */}
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label} style={{ color: '#aaa', fontSize: '0.9rem', marginBottom: '6px' }}>Localitate</label>
-                                    <input
-                                        className={styles.input}
-                                        value={billingInfo.city}
-                                        onChange={(e) => setBillingInfo({ ...billingInfo, city: e.target.value })}
-                                        style={{ width: '100%', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '14px 16px', color: '#fff', fontSize: '1rem' }}
-                                    />
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label} style={{ color: '#aaa', fontSize: '0.9rem', marginBottom: '6px' }}>Județ</label>
-                                    <input
-                                        className={styles.input}
-                                        value={billingInfo.county}
-                                        onChange={(e) => setBillingInfo({ ...billingInfo, county: e.target.value })}
-                                        style={{ width: '100%', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '14px 16px', color: '#fff', fontSize: '1rem' }}
-                                    />
-                                </div>
-                            </div>
-
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '15px', marginTop: '10px' }}>
-                                <button type="button" style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: '0.9rem' }}>Anulează</button>
-                                <button
-                                    onClick={handleSave}
-                                    disabled={isSaving}
-                                    style={{
-                                        padding: '14px 30px',
-                                        background: colorPrimary,
-                                        color: '#fff',
-                                        border: 'none',
-                                        borderRadius: '10px',
-                                        cursor: 'pointer',
-                                        fontWeight: 700,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '10px',
-                                        fontSize: '0.95rem',
-                                        boxShadow: '0 10px 20px rgba(212, 175, 55, 0.2)'
-                                    }}
-                                >
-                                    {isSaving ? <Loader2 size={20} className="animate-spin" /> : buttonText}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div className={styles.segmented} role="group" aria-label="Tip facturare">
+                    <button
+                        type="button"
+                        aria-pressed={isCompany}
+                        className={isCompany ? styles.segmentActive : ''}
+                        onClick={() => set({ billingType: 'company' })}
+                    >
+                        Persoană juridică
+                    </button>
+                    <button
+                        type="button"
+                        aria-pressed={!isCompany}
+                        className={!isCompany ? styles.segmentActive : ''}
+                        onClick={() => { set({ billingType: 'individual' }); setSearchError('') }}
+                    >
+                        Persoană fizică
+                    </button>
                 </div>
 
-                {/* Right Column: Invoices List */}
-                {!hideHistory && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        <div className={styles.invitationCard} style={{
-                            background: '#0a0a0c',
-                            border: '1px solid rgba(255,255,255,0.05)',
-                            borderRadius: '24px',
-                            padding: '25px',
-                            height: '100%'
-                        }}>
-                            <div style={{ padding: '0 0 20px 0', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <Receipt size={20} color={colorPrimary} />
-                                    <span style={{ fontWeight: 700, color: '#fff' }}>Istoric Facturi</span>
-                                </div>
+                <div className={styles.billingFields}>
+                    {isCompany && (
+                        <div className={styles.formGroup}>
+                            <label className={styles.label} htmlFor="billing-cui">CUI / CIF</label>
+                            <div className={styles.inputWithIcon}>
+                                <input
+                                    id="billing-cui"
+                                    className={styles.input}
+                                    value={billingInfo.cui}
+                                    inputMode="numeric"
+                                    onChange={(e) => { set({ cui: e.target.value }); setSearchError('') }}
+                                    onBlur={handleCuiLookup}
+                                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleCuiLookup() } }}
+                                    placeholder="Ex: RO12345678"
+                                />
+                                {isSearching && <Loader2 size={18} className="animate-spin" />}
                             </div>
+                            {searchError
+                                ? <span className={styles.fieldWarning}><AlertCircle size={13} /> {searchError}</span>
+                                : <span className={styles.fieldHint}>Completăm automat datele firmei din ANAF.</span>}
+                        </div>
+                    )}
 
-                            <div style={{ overflowX: 'auto' }}>
-                                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
-                                    <thead>
-                                        <tr style={{ textAlign: 'left', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                                            <th style={{ padding: '12px 10px', color: '#555', fontWeight: 600, textTransform: 'uppercase', fontSize: '0.75rem' }}>Dată</th>
-                                            <th style={{ padding: '12px 10px', color: '#555', fontWeight: 600, textTransform: 'uppercase', fontSize: '0.75rem' }}>Detalii</th>
-                                            <th style={{ padding: '12px 10px', color: '#555', fontWeight: 600, textTransform: 'uppercase', fontSize: '0.75rem' }}>Sumă</th>
-                                            <th style={{ padding: '12px 10px', color: '#555', fontWeight: 600, textTransform: 'uppercase', fontSize: '0.75rem' }}>Factură</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {transactions.length === 0 ? (
-                                            <tr>
-                                                <td colSpan={4} style={{ padding: '40px', textAlign: 'center', color: '#444' }}>
-                                                    Încă nu ai nicio factură emisă.
-                                                </td>
-                                            </tr>
-                                        ) : (
-                                            transactions.map(tx => (
-                                                <tr key={tx.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
-                                                    <td style={{ padding: '15px 10px', color: '#888' }}>
-                                                        {new Date(tx.createdAt).toLocaleDateString('ro-RO')}
-                                                    </td>
-                                                    <td style={{ padding: '15px 10px' }}>
-                                                        <div style={{ fontWeight: 600, color: '#ddd' }}>{tx.event?.title || 'Activare'}</div>
-                                                    </td>
-                                                    <td style={{ padding: '15px 10px', fontWeight: 700, color: '#fff' }}>
-                                                        {tx.amount} {tx.currency}
-                                                    </td>
-                                                    <td style={{ padding: '15px 10px' }}>
-                                                        {tx.invoiceLink ? (
-                                                            <a
-                                                                href={tx.invoiceLink}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                style={{ display: 'flex', alignItems: 'center', gap: '5px', color: colorPrimary, textDecoration: 'none', fontWeight: 700 }}
-                                                            >
-                                                                <Download size={14} /> PDF
-                                                            </a>
-                                                        ) : (
-                                                            <span style={{ color: '#444' }}>-</span>
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        )}
-                                    </tbody>
-                                </table>
+                    <div className={`${styles.billingRow} ${isCompany ? styles.billingRowWide : ''}`}>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label} htmlFor="billing-name">{isCompany ? 'Denumire firmă' : 'Nume și prenume'}</label>
+                            <input
+                                id="billing-name"
+                                className={styles.input}
+                                value={billingInfo.companyName}
+                                onChange={(e) => set({ companyName: e.target.value })}
+                                placeholder={isCompany ? 'Ex: Firma Mea SRL' : 'Ex: Andrei Popescu'}
+                                autoComplete={isCompany ? 'organization' : 'name'}
+                            />
+                        </div>
+                        {isCompany && (
+                            <div className={styles.formGroup}>
+                                <label className={styles.label} htmlFor="billing-regcom">Nr. Reg. Com.</label>
+                                <input
+                                    id="billing-regcom"
+                                    className={styles.input}
+                                    value={billingInfo.regCom}
+                                    onChange={(e) => set({ regCom: e.target.value })}
+                                    placeholder="J40/..."
+                                />
                             </div>
+                        )}
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label className={styles.label} htmlFor="billing-address">Adresă</label>
+                        <input
+                            id="billing-address"
+                            className={styles.input}
+                            value={billingInfo.address}
+                            onChange={(e) => set({ address: e.target.value })}
+                            placeholder="Stradă, număr, bloc..."
+                            autoComplete="street-address"
+                        />
+                    </div>
+
+                    <div className={styles.billingRow}>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label} htmlFor="billing-city">Localitate</label>
+                            <input
+                                id="billing-city"
+                                className={styles.input}
+                                value={billingInfo.city}
+                                onChange={(e) => set({ city: e.target.value })}
+                                placeholder="Ex: București"
+                                autoComplete="address-level2"
+                            />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label} htmlFor="billing-county">Județ</label>
+                            <input
+                                id="billing-county"
+                                className={styles.input}
+                                value={billingInfo.county}
+                                onChange={(e) => set({ county: e.target.value })}
+                                placeholder="Ex: Ilfov"
+                                autoComplete="address-level1"
+                            />
                         </div>
                     </div>
-                )}
-            </div>
+
+                    {status && (
+                        <p className={status.type === 'ok' ? styles.statusOk : styles.statusError} role="status">
+                            {status.type === 'ok' ? <CheckCircle size={16} /> : <AlertCircle size={16} />} {status.text}
+                        </p>
+                    )}
+
+                    <div className={styles.billingActions}>
+                        <button type="button" className={styles.linkBtn} onClick={handleReset} disabled={!isDirty || isSaving}>
+                            Anulează modificările
+                        </button>
+                        <button type="submit" className={styles.primaryBtn} disabled={isSaving}>
+                            {isSaving ? <Loader2 size={18} className="animate-spin" /> : null}
+                            {isSaving ? 'Se salvează...' : buttonText}
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            {!hideHistory && (
+                <div className={styles.billingCard}>
+                    <div className={styles.billingHistoryHead}>
+                        <Receipt size={20} color="var(--accent)" />
+                        <h2 className={styles.billingTitle}>Istoric facturi</h2>
+                    </div>
+
+                    {transactions.length === 0 ? (
+                        <p className={styles.billingEmpty}>Încă nu ai nicio factură emisă. Facturile apar aici după activarea unei invitații.</p>
+                    ) : (
+                        <div className={styles.tableWrap}>
+                            <table className={styles.invoiceTable}>
+                                <thead>
+                                    <tr>
+                                        <th>Dată</th>
+                                        <th>Detalii</th>
+                                        <th>Sumă</th>
+                                        <th>Factură</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {transactions.map(tx => (
+                                        <tr key={tx.id}>
+                                            <td className={styles.muted}>{new Date(tx.createdAt).toLocaleDateString('ro-RO')}</td>
+                                            <td className={styles.guestName}>{tx.event?.title || 'Activare invitație'}</td>
+                                            <td><strong>{tx.amount} {tx.currency?.toUpperCase()}</strong></td>
+                                            <td>
+                                                {tx.invoiceLink ? (
+                                                    <a href={tx.invoiceLink} target="_blank" rel="noopener noreferrer" className={styles.invoiceLink}>
+                                                        <Download size={14} /> PDF
+                                                    </a>
+                                                ) : (
+                                                    <span className={styles.muted}>—</span>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
+            )}
         </section>
     )
 }

@@ -2,13 +2,12 @@
     min-height: 100vh;
     background: #050505;
     color: #fff;
-    padding-bottom: 100px;
     overflow-x: hidden;
 }
 
 .hero {
     text-align: center;
-    padding: 100px 20px 60px;
+    padding: 60px 20px 50px;
     background: radial-gradient(circle at top, #111 0%, #050505 100%);
 }
 
@@ -30,7 +29,7 @@
 
 .heroTitle {
     font-family: var(--font-heading);
-    font-size: 4rem;
+    font-size: clamp(2.2rem, 7vw, 4rem);
     font-weight: 900;
     margin-bottom: 20px;
     line-height: 1.1;
@@ -57,7 +56,7 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 100px;
+    gap: 60px;
 }
 
 .templateCard {
@@ -68,17 +67,19 @@
 }
 
 .templateHeader {
-    padding: 50px;
+    padding: 40px 50px;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    gap: 24px;
     background: linear-gradient(to bottom, rgba(212, 175, 55, 0.05), transparent);
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 .templateName {
     font-family: var(--font-heading);
-    font-size: 2.8rem;
+    font-size: clamp(1.9rem, 5vw, 2.8rem);
+    line-height: 1.15;
     color: #fff;
     margin-bottom: 10px;
     background: linear-gradient(to right, #fff, #888);
@@ -88,7 +89,7 @@
 }
 
 .templateDesc {
-    color: #666;
+    color: #999;
     font-size: 1rem;
 }
 
@@ -103,6 +104,8 @@
     font-weight: 800;
     text-decoration: none;
     transition: all 0.3s;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .useBtn:hover {
@@ -112,7 +115,7 @@
 
 .templatePreviewArea {
     display: grid;
-    grid-template-columns: 1fr 400px;
+    grid-template-columns: minmax(0, 1fr) 340px;
     gap: 40px;
     padding: 40px;
     background: #000;
@@ -121,7 +124,7 @@
 
 .viewLabel {
     font-size: 0.75rem;
-    color: #444;
+    color: #666;
     text-transform: uppercase;
     letter-spacing: 3px;
     font-weight: 800;
@@ -203,7 +206,7 @@
 
 /* Centered mode for objects like envelopes on PC */
 .centeredScaler .pcInner {
-    justify-content: center;
+    justify-content: safe center;
     align-items: center;
     overflow-y: hidden;
 }
@@ -296,7 +299,7 @@
 }
 
 .centeredScaler .mobileInner {
-    justify-content: center;
+    justify-content: safe center;
     align-items: center;
     overflow: hidden;
 }
@@ -320,11 +323,199 @@
     color: #000;
     padding: 20px 50px;
     border-radius: 100px;
-    font-weight: 950;
+    font-weight: 900;
     font-size: 1.2rem;
     text-transform: uppercase;
     letter-spacing: 2px;
     text-decoration: none;
+}
+
+/* Header extras */
+.templateHeaderText {
+    min-width: 0;
+}
+
+.templateIndex {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 6px;
+}
+
+.badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 4px 0 12px;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+}
+
+.badgeVideo {
+    background: rgba(229, 9, 20, 0.15);
+    color: #ff6b6b;
+    border-color: rgba(229, 9, 20, 0.3);
+}
+
+.badgeAudio {
+    background: rgba(29, 185, 84, 0.15);
+    color: #1ed760;
+    border-color: rgba(29, 185, 84, 0.3);
+}
+
+.badgePhoto {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border-color: rgba(56, 189, 248, 0.3);
+}
+
+.quickNav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    max-width: 900px;
+    margin: 30px auto 0;
+}
+
+.quickNavItem {
+    padding: 6px 14px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.03);
+    color: #bbb;
+    font-size: 0.82rem;
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+.quickNavItem:hover {
+    border-color: rgba(212, 175, 55, 0.5);
+    color: #fff;
+}
+
+.templateCard {
+    scroll-margin-top: 100px;
+}
+
+.pcUrl {
+    margin-left: 12px;
+    flex: 1;
+    max-width: 320px;
+    height: 20px;
+    border-radius: 6px;
+    background: #111;
+    color: #777;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.statusIcons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.signal {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.signal span {
+    width: 2px;
+    background: #fff;
+}
+
+.signal span:nth-child(1) { height: 4px; }
+.signal span:nth-child(2) { height: 6px; }
+.signal span:nth-child(3) { height: 8px; }
+.signal span:nth-child(4) { height: 10px; background: rgba(255, 255, 255, 0.3); }
+
+.battery {
+    position: relative;
+    width: 18px;
+    height: 9px;
+    border: 1px solid #fff;
+    border-radius: 2px;
+    padding: 1px;
+    display: flex;
+    align-items: center;
+}
+
+.battery::after {
+    content: '';
+    position: absolute;
+    right: -3px;
+    width: 2px;
+    height: 4px;
+    background: #fff;
+    border-radius: 0 1px 1px 0;
+}
+
+.batteryLevel {
+    width: 80%;
+    height: 100%;
+    background: #fff;
+    border-radius: 1px;
+}
+
+.lazyMount {
+    width: 100%;
+    flex: 1;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.centeredScaler .lazyMount {
+    justify-content: safe center;
+    align-items: center;
+}
+
+.previewPlaceholder {
+    flex: 1;
+    width: 100%;
+    min-height: 300px;
+    background: linear-gradient(110deg, #0a0a0a 30%, #151515 50%, #0a0a0a 70%);
+    background-size: 200% 100%;
+    animation: shimmer 1.6s linear infinite;
+}
+
+@keyframes shimmer {
+    to {
+        background-position: -200% 0;
+    }
+}
+
+.footerTitle {
+    font-family: var(--font-heading);
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    margin-bottom: 12px;
+}
+
+.footerText {
+    color: #999;
+    max-width: 520px;
+    margin: 0 auto 30px;
 }
 
 /* Responsive */
@@ -334,41 +525,68 @@
         padding: 40px 20px;
         gap: 50px;
     }
-
-    .heroTitle {
-        font-size: 3rem;
-    }
 }
 
 @media (max-width: 768px) {
     .hero {
-        padding: 60px 15px 40px;
+        padding: 40px 16px 30px;
     }
 
-    .heroTitle {
-        font-size: 2.2rem;
+    .heroSubtitle {
+        font-size: 1.05rem;
+    }
+
+    .quickNav {
+        margin-top: 20px;
+    }
+
+    .showcaseGrid {
+        padding: 16px;
+        gap: 40px;
+    }
+
+    .templateCard {
+        border-radius: 22px;
     }
 
     .templateHeader {
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
         text-align: center;
-        padding: 30px 20px;
+        padding: 28px 20px;
+        gap: 16px;
+    }
+
+    .badges {
+        justify-content: center;
     }
 
     .useBtn {
         width: 100%;
         justify-content: center;
-        margin-top: 20px;
+    }
+
+    /* Desktop mockup is pointless on phones — show only the mobile preview */
+    .pcView {
+        display: none;
     }
 
     .templatePreviewArea {
-        padding: 30px 10px;
+        padding: 24px 10px 30px;
     }
 
     .phoneFrame {
         width: 100%;
         max-width: 300px;
         height: 600px;
+    }
+
+    .finalCta {
+        padding: 18px 36px;
+        font-size: 1rem;
+    }
+
+    .demoFooter {
+        padding: 70px 16px;
     }
 }

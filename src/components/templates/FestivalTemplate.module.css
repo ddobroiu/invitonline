@@ -1,28 +1,48 @@
 .festivalWrapper {
+    --bg: #0d001a;
+    --pink: #ff2bd6;
+    --gold: #ffd700;
+    flex: 1 0 auto;
     width: 100%;
     min-height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #0d001a;
-    padding: 30px 15px;
+    background:
+        radial-gradient(ellipse 60% 40% at 15% 0%, rgba(255, 0, 255, 0.16), transparent 70%),
+        radial-gradient(ellipse 60% 40% at 85% 0%, rgba(0, 200, 255, 0.12), transparent 70%),
+        radial-gradient(ellipse 80% 40% at 50% 100%, rgba(157, 80, 187, 0.18), transparent 70%),
+        var(--bg);
+    padding: 24px 14px;
+    container-type: inline-size;
+    color: #fff;
 }
 
 .ticket {
     width: 100%;
-    max-width: 360px;
-    height: auto;
-    min-height: 600px;
+    max-width: 400px;
     margin: 0 auto;
-    background: linear-gradient(135deg, #1a0033 0%, #4d0099 100%);
-    border-radius: 30px;
+    background: linear-gradient(160deg, #1a0033 0%, #3a0078 55%, #4d0099 100%);
+    border-radius: 28px;
     position: relative;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 60px rgba(157, 80, 187, 0.25);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    animation: ticketIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes ticketIn {
+    from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
 }
 
 .ticket::before {
@@ -32,7 +52,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, transparent 45%, rgba(255, 255, 255, 0.05) 50%, transparent 55%);
+    background: linear-gradient(45deg, transparent 45%, rgba(255, 255, 255, 0.06) 50%, transparent 55%);
     animation: holo 6s infinite linear;
     pointer-events: none;
 }
@@ -47,117 +67,559 @@
     }
 }
 
+.colA,
+.colB {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+}
+
 .header {
-    padding: 30px 20px;
+    padding: 30px 20px 24px;
     text-align: center;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.22);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .festivalName {
     font-family: var(--font-heading);
-    font-size: 2.22rem;
+    font-size: 2.3rem;
     text-transform: uppercase;
-    background: linear-gradient(to bottom, #fff, #9d50bb);
+    background: linear-gradient(to bottom, #fff 30%, #c77dff);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     line-height: 1.1;
+    letter-spacing: 1px;
 }
 
 .ticketType {
-    font-size: 0.65rem;
-    letter-spacing: 5px;
+    font-size: 0.72rem;
+    letter-spacing: 4px;
     text-transform: uppercase;
-    color: #ff00ff;
-    margin-top: 8px;
+    color: var(--pink);
     font-weight: 900;
 }
 
+.audioBtn {
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--gold);
+    border: none;
+    border-radius: 50px;
+    padding: 9px 18px;
+    cursor: pointer;
+    color: #000;
+    font-weight: 900;
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: inherit;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.45);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.audioBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.7);
+}
+
+.audioNote {
+    opacity: 0.6;
+}
+
+.audioOn .audioNote {
+    opacity: 1;
+    animation: bob 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes bob {
+    to {
+        transform: translateY(-3px) rotate(-10deg);
+    }
+}
+
 .mainSection {
-    padding: 25px 20px;
+    position: relative;
+    z-index: 1;
+    padding: 24px 22px 28px;
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
+}
+
+.photo {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 22px;
+    border: 1px solid rgba(255, 0, 255, 0.45);
+    box-shadow: 0 0 25px rgba(157, 80, 187, 0.45);
+}
+
+.photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .lineupTitle {
-    font-size: 0.55rem;
-    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.55);
     text-transform: uppercase;
-    letter-spacing: 3px;
-    margin-bottom: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    width: 100%;
+    letter-spacing: 4px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     text-align: center;
-    padding-bottom: 8px;
+    padding-bottom: 10px;
 }
 
 .performerGrid {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 22px;
+    width: 100%;
+    overflow-wrap: break-word;
 }
 
 .mainPerformer {
-    font-size: 1.6rem;
+    font-size: clamp(1.4rem, 8cqi, 2.1rem);
     font-weight: 900;
+    line-height: 1.12;
     text-transform: uppercase;
-    margin-bottom: 5px;
+    margin-bottom: 14px;
     color: #fff;
+    text-shadow: 0 0 24px rgba(255, 43, 214, 0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.headliner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+}
+
+.amp {
+    font-family: var(--font-heading);
+    color: var(--pink);
+    font-size: 0.7em;
+    line-height: 1.2;
+}
+
+.supportAct {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #ffb3f0;
+    letter-spacing: 0.5px;
+    line-height: 1.45;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.supportLine {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.supportLabel {
+    font-size: 0.68rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 800;
+    margin-bottom: 1px;
+}
+
+.inlineAct {
+    display: block;
+}
+
+.setTimes {
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(0, 0, 0, 0.15);
+    padding: 12px 14px;
+    border-radius: 14px;
+    margin-bottom: 16px;
+}
+
+.setTimesTitle {
+    font-size: 0.72rem;
+    font-weight: 900;
+    margin-bottom: 8px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-align: center;
+}
+
+.setTimesList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.setRow {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.88rem;
+}
+
+.setTime {
+    flex-shrink: 0;
+    min-width: 52px;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    color: var(--gold);
+}
+
+.setBody {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow-wrap: break-word;
+}
+
+.setName {
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.setLoc {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.65);
 }
 
 .infoLine {
     display: flex;
+    gap: 14px;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 15px;
-    background: rgba(255, 255, 255, 0.03);
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.infoLine {
+    flex-wrap: wrap;
+}
+
+.infoBlock {
+    min-width: 0;
+    flex: 1 1 150px;
+}
+
+.infoDate {
+    text-align: right;
+    flex: 0 1 auto;
+    margin-left: auto;
+}
+
+.infoLabel {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 4px;
+    font-weight: 800;
+}
+
+.infoDate .infoLabel {
+    justify-content: flex-end;
 }
 
 .infoValue {
-    font-size: 0.75rem;
-    font-weight: bold;
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1.35;
+    overflow-wrap: break-word;
 }
 
+.mapLinks {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 14px;
+}
+
+.mapLinks a {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--gold);
+    font-size: 0.8rem;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    border-radius: 50px;
+    padding: 10px 12px;
+    transition: background 0.2s;
+}
+
+.mapLinks a:hover {
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.rules {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 10px;
+    overflow-wrap: break-word;
+}
+
+.rules strong {
+    color: var(--gold);
+    letter-spacing: 1px;
+}
+
+.message {
+    margin-top: 6px;
+    text-align: center;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.85);
+    font-style: italic;
+    overflow-wrap: break-word;
+}
+
+.rsvpButton {
+    margin-top: 22px;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 15px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(90deg, #ff00ff, #9d50bb);
+    color: #fff;
+    font-weight: 900;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(255, 0, 255, 0.45);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.rsvpButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 35px rgba(255, 0, 255, 0.7);
+}
+
+/* ---------- Tear-off stub ---------- */
 .qrSection {
-    background: white;
-    padding: 20px;
-    margin-top: auto;
+    background: #fff;
+    padding: 24px 20px 20px;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     position: relative;
+    border-top: 2px dashed rgba(0, 0, 0, 0.25);
 }
 
 .qrSection::before,
 .qrSection::after {
     content: "";
     position: absolute;
-    top: -15px;
+    top: -16px;
     width: 30px;
     height: 30px;
-    background: #0d001a;
+    background: var(--bg);
     border-radius: 50%;
 }
 
 .qrSection::before {
-    left: -15px;
+    left: -16px;
 }
 
 .qrSection::after {
-    right: -15px;
+    right: -16px;
 }
 
 .qrCode {
     width: 100px;
     height: 100px;
+    border-radius: 10px;
     background: #111;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.qrText {
+    color: #333;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.barcode {
+    width: 100%;
+    max-width: 260px;
+    height: 32px;
+    background: repeating-linear-gradient(90deg, #111 0, #111 2px, #fff 2px, #fff 4px, #111 4px, #111 5px, #fff 5px, #fff 8px);
+    opacity: 0.75;
+}
+
+.admit {
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: #7a3fb0;
+}
+
+/* ---------- Narrow phones / editor phone mockup ---------- */
+@container (max-width: 360px) {
+    .ticket {
+        border-radius: 22px;
+    }
+
+    .festivalName {
+        font-size: 1.9rem;
+    }
+
+    .ticketType {
+        letter-spacing: 2.5px;
+    }
+
+    .mainSection {
+        padding: 20px 16px 24px;
+    }
+
+    .infoLine {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .infoDate,
+    .infoDate .infoLabel {
+        text-align: left;
+        justify-content: flex-start;
+    }
+}
+
+/* ---------- Wide (desktop, editor PC mockup): horizontal ticket with side stub ---------- */
+@container (min-width: 700px) {
+    .ticket {
+        max-width: 960px;
+        flex-direction: row;
+        margin: 24px auto;
+    }
+
+    .header {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        text-align: left;
+        padding: 26px 36px;
+        gap: 6px 20px;
+    }
+
+    .festivalName {
+        font-size: 2.6rem;
+    }
+
+    .audioBtn {
+        margin-top: 0;
+    }
+
+    .mainSection {
+        padding: 26px 32px 30px;
+    }
+
+    .qrSection {
+        width: 220px;
+        flex-shrink: 0;
+        border-top: none;
+        border-left: 2px dashed rgba(0, 0, 0, 0.25);
+        padding: 30px 24px;
+        gap: 14px;
+    }
+
+    .qrSection::before,
+    .qrSection::after {
+        left: -16px;
+        right: auto;
+    }
+
+    .qrSection::before {
+        top: -16px;
+    }
+
+    .qrSection::after {
+        top: auto;
+        bottom: -16px;
+    }
+
+    .qrCode {
+        width: 130px;
+        height: 130px;
+    }
+}
+
+/* Large screens: line-up on the left, practical info on the right */
+@container (min-width: 1000px) {
+    .mainSection {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+        column-gap: 36px;
+        align-items: start;
+        padding: 28px 36px 32px;
+    }
+
+    .performerGrid {
+        margin-bottom: 0;
+    }
+
+    .rsvpButton {
+        margin-top: 14px;
+    }
+
+    .qrSection {
+        width: 250px;
+    }
 }

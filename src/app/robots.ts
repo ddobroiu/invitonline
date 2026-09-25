@@ -4,7 +4,7 @@ export default function robots() {
             {
                 userAgent: '*',
                 allow: '/',
-                disallow: ['/api/', '/dashboard/'],
+                disallow: ['/api/', '/dashboard', '/invitatie/', '/checkout/'],
             },
         ],
         sitemap: 'https://invitonline.ro/sitemap.xml',

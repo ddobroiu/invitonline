@@ -1,172 +1,484 @@
 .paperWrapper {
+    flex: 1 0 auto;
     width: 100%;
     min-height: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #1a1a1a;
-    padding: 30px 15px;
+    justify-content: safe center;
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(244, 236, 216, 0.07) 0%, transparent 60%),
+        linear-gradient(180deg, #202020 0%, #151515 100%);
+    padding: 32px 16px;
+    container: paper-page / inline-size;
 }
 
 .newspaper {
     width: 100%;
-    max-width: 440px;
-    height: auto;
+    max-width: 460px;
     background: #f4ecd8;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
-    padding: 25px 20px;
+    padding: 26px 22px;
     position: relative;
     color: #222;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Times New Roman', Times, Georgia, serif;
     border: 1px solid #dcd1b3;
+    container: paper / inline-size;
 }
 
 .newspaper::after {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
     opacity: 0.2;
     pointer-events: none;
+    z-index: 2;
+}
+
+.newspaper > * {
+    position: relative;
+    z-index: 1;
 }
 
 .headerMeta {
     display: flex;
+    flex-wrap: wrap;
+    gap: 2px 14px;
     justify-content: space-between;
     border-bottom: 3px double #222;
     border-top: 1px solid #222;
-    padding: 4px 0;
-    margin-bottom: 15px;
-    font-size: 0.6rem;
-    font-weight: 800;
+    padding: 5px 0;
+    margin-bottom: 14px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
 }
 
 .masthead {
     text-align: center;
-    padding-bottom: 15px;
+    padding-bottom: 12px;
 }
 
 .masthead h1 {
-    font-size: 3rem;
+    overflow-wrap: break-word;
+    font-size: clamp(2rem, 8.4cqw, 4.2rem);
     text-transform: uppercase;
     font-weight: 900;
-    margin: 10px 0;
-    line-height: 0.8;
+    margin: 8px 0 10px;
+    line-height: 0.9;
+    letter-spacing: -0.5px;
+    text-wrap: balance;
+}
+
+.slogan {
+    font-style: italic;
+    font-size: 0.85rem;
+}
+
+.doubleRule {
+    border-top: 3px solid #222;
+    border-bottom: 1px solid #222;
+    height: 5px;
+    margin-bottom: 16px;
 }
 
 .mainHeadline {
-    font-size: 2.22rem;
-    line-height: 1;
+    overflow-wrap: break-word;
+    hyphens: manual;
+    font-size: clamp(1.5rem, 7.2cqw, 2.9rem);
+    line-height: 1.02;
     font-weight: 900;
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     text-transform: uppercase;
+    text-wrap: balance;
+}
+
+.subHeadline {
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.35;
+    margin-bottom: 16px;
+    text-wrap: balance;
 }
 
 .articleBody {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    grid-template-columns: 1fr;
+    gap: 16px;
     text-align: justify;
-    font-size: 0.8rem;
-    line-height: 1.4;
+    hyphens: auto;
+    font-size: 1rem;
+    line-height: 1.45;
+}
+
+.firstColumn,
+.secondColumn {
+    min-width: 0;
 }
 
 .dropCap {
     float: left;
-    font-size: 3.5rem;
+    font-size: 3.6rem;
     line-height: 0.8;
-    padding-right: 8px;
+    padding: 4px 8px 0 0;
     font-weight: 900;
 }
 
 .eventPhotoContainer {
-    margin: 15px 0;
+    position: relative;
+    margin: 4px 0 16px;
     border: 1px solid #222;
-    padding: 4px;
+    padding: 5px;
     background: #fff;
     transform: rotate(-1deg);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
 .actualPhoto {
     width: 100%;
-    height: auto;
+    max-height: 420px;
+    object-fit: cover;
     display: block;
     filter: sepia(0.4) grayscale(0.2);
 }
 
+.placeholderPhoto {
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e8dfc8;
+    color: #555;
+}
+
+.stamp {
+    position: absolute;
+    top: 10px;
+    right: -4px;
+    background: #c62828;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    padding: 3px 8px;
+    transform: rotate(8deg);
+}
+
+.photoCaption {
+    font-size: 0.75rem;
+    font-style: italic;
+    margin-top: 5px;
+    text-align: left;
+}
+
+.articleText {
+    overflow-wrap: break-word;
+}
+
+.leadStory h3 {
+    font-size: 1.1rem;
+    line-height: 1.2;
+    font-weight: 900;
+    text-align: left;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 5px;
+}
+
+.quoteBox {
+    margin: 14px 0;
+    padding: 8px 12px;
+    border-left: 4px solid #222;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 1.05rem;
+    line-height: 1.4;
+    text-align: left;
+    overflow-wrap: break-word;
+}
+
 .infoGrid {
     border: 2px solid #222;
-    padding: 8px;
-    margin-top: 15px;
+    padding: 8px 10px;
+    margin-top: 14px;
+    text-align: left;
+    hyphens: manual;
 }
 
 .infoItem {
     display: flex;
+    gap: 12px;
     justify-content: space-between;
-    font-size: 0.7rem;
+    align-items: baseline;
+    font-size: 0.9rem;
     border-bottom: 1px dashed #999;
-    padding: 2px 0;
+    padding: 4px 0;
 }
 
 .infoLabel {
     font-weight: 900;
+    flex-shrink: 0;
+}
+
+.infoValue {
+    text-align: right;
+    overflow-wrap: break-word;
+    min-width: 0;
+}
+
+.mapLinks {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    padding-top: 8px;
+}
+
+.mapLinks a {
+    color: #c62828;
+    font-weight: 900;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    text-decoration: underline;
+    padding: 4px 0;
+}
+
+.classifiedsTitle {
+    margin-top: 22px;
+    text-align: center;
+    font-weight: 900;
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+    border-top: 3px double #222;
+    padding-top: 8px;
 }
 
 .classifiedsGrid {
-    grid-column: span 2;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    border: 2px solid #222;
-    margin-top: 20px;
+    grid-template-columns: 1fr;
+    border-top: 1px solid #222;
+    border-left: 1px solid #222;
+    margin-top: 8px;
 }
 
 .classifiedBox {
-    padding: 10px;
-    font-size: 0.65rem;
+    overflow-wrap: break-word;
+    border-right: 1px solid #222;
+    border-bottom: 1px solid #222;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    line-height: 1.4;
     text-align: center;
+}
+
+.classifiedBox h4 {
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    font-weight: 900;
+    border-bottom: 1px solid #222;
+    margin-bottom: 6px;
+    padding-bottom: 3px;
+}
+
+.classifiedBox p + p {
+    margin-top: 2px;
+}
+
+.darkBox {
+    grid-column: 1 / -1;
+    background: #222;
+    color: #f4ecd8;
+    font-family: inherit;
+    border-top: none;
+    border-left: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.darkBox:hover {
+    background: #333;
+}
+
+.darkBoxTitle {
+    display: block;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    font-weight: 900;
+    border-bottom: 1px solid #f4ecd8;
+    margin-bottom: 6px;
+    padding-bottom: 3px;
+}
+
+.footerBar {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    border-top: 1px solid #222;
+    padding-top: 6px;
+}
+
+.rsvpWrapper {
+    width: 100%;
+}
+
+.cutLine {
+    margin-top: 26px;
+    border-top: 2px dashed #555;
+    position: relative;
+    height: 0;
+}
+
+.cutLine span {
+    position: absolute;
+    left: 10px;
+    top: -13px;
+    background: #f4ecd8;
+    padding: 0 4px;
+    font-size: 1rem;
 }
 
 .rsvpCoupon {
     border: 3px dashed #222;
-    padding: 15px;
+    padding: 16px;
     background: #fff8e1;
-    margin-top: 25px;
+    margin: 18px auto 0;
+    max-width: 560px;
+    text-align: center;
+}
+
+.rsvpHeader {
+    font-weight: 900;
+    letter-spacing: 3px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+}
+
+.rsvpContent {
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.rsvpSub {
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+.rsvpFine {
+    font-size: 0.72rem;
+    margin-top: 10px;
+    font-style: italic;
 }
 
 .rsvpButton {
+    font-family: inherit;
+    letter-spacing: 1px;
     background: #c62828;
     color: #fff;
     width: 100%;
-    padding: 12px;
+    padding: 13px;
+    font-size: 0.95rem;
     font-weight: 800;
     text-transform: uppercase;
     cursor: pointer;
     border: 2px solid #222;
-    margin-top: 10px;
+    margin-top: 12px;
+    transition: background 0.2s, transform 0.2s;
 }
 
-@media (max-width: 500px) {
+.rsvpButton:hover {
+    background: #a51f1f;
+    transform: translateY(-1px);
+}
+
+/* Small phones: slimmer page margins, meta line centred */
+@container paper-page (max-width: 480px) {
+    .newspaper {
+        padding: 20px 14px;
+    }
+}
+
+@container paper (max-width: 440px) {
+    .headerMeta {
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
     .paperWrapper {
-        padding: 5px;
+        padding: 12px 8px;
+    }
+}
+
+@media (min-width: 900px) {
+    .paperWrapper {
+        padding: 48px 32px;
+    }
+}
+
+@container paper (max-width: 300px) {
+    .headerMeta {
+        font-size: 0.62rem;
     }
 
     .articleBody {
-        grid-template-columns: 1fr;
+        font-size: 0.92rem;
+    }
+
+    .classifiedBox {
+        font-size: 0.85rem;
+    }
+}
+
+/* Medium: classifieds in two columns */
+@container paper (min-width: 400px) {
+    .classifiedsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Wide (desktop / PC mockup): a real broadsheet with columns */
+@container paper-page (min-width: 700px) {
+    .newspaper {
+        max-width: 900px;
+        padding: 36px 44px 40px;
+    }
+}
+
+@container paper (min-width: 600px) {
+    .mainHeadline {
+        font-size: clamp(2rem, 5.6cqw, 2.9rem);
+    }
+
+    .headerMeta {
+        font-size: 0.72rem;
+    }
+
+    .slogan {
+        font-size: 0.95rem;
+    }
+
+    .articleBody {
+        grid-template-columns: 1.15fr 1fr;
+        gap: 30px;
+        font-size: 1.02rem;
+    }
+
+    .secondColumn {
+        border-left: 1px solid #222;
+        padding-left: 30px;
+    }
+
+    .placeholderPhoto {
+        height: 200px;
     }
 
     .classifiedsGrid {
-        grid-template-columns: 1fr;
-    }
-
-    .masthead h1 {
-        font-size: 2.2rem;
-    }
-
-    .mainHeadline {
-        font-size: 1.6rem;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
 }

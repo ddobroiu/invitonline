@@ -1,55 +1,46 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
+import { escapeHtml, getSiteUrl } from '@/lib/utils'
 
 export async function POST(req: Request) {
     try {
-        const { email, password, name } = await req.json()
+        const body = await req.json()
+        const email = String(body.email || '').trim().toLowerCase()
+        const password = String(body.password || '')
+        const name = String(body.name || '').trim().slice(0, 120) || null
 
-        if (!email || !password) {
-            return NextResponse.json(
-                { message: 'Email and password are required' },
-                { status: 400 }
-            )
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return NextResponse.json({ message: 'Adresa de email nu este validă.' }, { status: 400 })
+        }
+        if (password.length < 6) {
+            return NextResponse.json({ message: 'Parola trebuie să aibă cel puțin 6 caractere.' }, { status: 400 })
         }
 
-        const existingUser = await prisma.user.findUnique({
-            where: { email }
+        const existingUser = await prisma.user.findFirst({
+            where: { email: { equals: email, mode: 'insensitive' } }
         })
-
         if (existingUser) {
-            return NextResponse.json(
-                { message: 'User already exists' },
-                { status: 409 }
-            )
+            return NextResponse.json({ message: 'Există deja un cont cu acest email.' }, { status: 409 })
         }
-
-        const hashedPassword = await bcrypt.hash(password, 10)
 
         const user = await prisma.user.create({
-            data: {
-                email,
-                password: hashedPassword,
-                name
-            }
+            data: { email, password: await bcrypt.hash(password, 10), name }
         })
 
-        // Send Welcome Email
         try {
             const { sendEmail } = await import('@/lib/resend')
             await sendEmail({
                 to: email,
-                subject: 'Bun venit la Invitatii Online! 💌',
+                subject: 'Bun venit la InvitOnline! 💌',
                 html: `
                     <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
-                        <h1 style="color: #d4af37;">Bună, ${name || 'utilizator nou'}!</h1>
-                        <p>Ne bucurăm să te avem alături de noi.</p>
-                        <p>Contul tău a fost creat cu succes. Acum poți începe să creezi invitații digitale premium pentru evenimentele tale speciale.</p>
+                        <h1 style="color: #d4af37;">Bună, ${escapeHtml(name || 'și bine ai venit')}!</h1>
+                        <p>Contul tău a fost creat cu succes. Acum poți crea invitații digitale premium pentru evenimentele tale speciale.</p>
                         <div style="margin: 30px 0;">
-                            <a href="${process.env.NEXT_PUBLIC_SITE_URL}/create" style="background: #000; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Creează Prima Invitație</a>
+                            <a href="${getSiteUrl(req)}/create" style="background: #000; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Creează prima invitație</a>
                         </div>
-                        <p>Dacă ai întrebări, suntem aici să te ajutăm.</p>
-                        <p>O zi minunată,<br/>Echipa Invitatii Online</p>
+                        <p>O zi minunată,<br/>Echipa InvitOnline</p>
                     </div>
                 `
             })
@@ -57,14 +48,9 @@ export async function POST(req: Request) {
             console.error('Welcome email failed:', emailErr)
         }
 
-        return NextResponse.json(
-            { message: 'User created', userId: user.id },
-            { status: 201 }
-        )
+        return NextResponse.json({ message: 'User created', userId: user.id }, { status: 201 })
     } catch (error) {
-        return NextResponse.json(
-            { message: 'Internal server error' },
-            { status: 500 }
-        )
+        console.error('Register error:', error)
+        return NextResponse.json({ message: 'Eroare de server. Încearcă din nou.' }, { status: 500 })
     }
 }

@@ -3,6 +3,17 @@ import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
+const BILLING_FIELDS = {
+    companyName: true,
+    cui: true,
+    regCom: true,
+    address: true,
+    city: true,
+    county: true,
+    bank: true,
+    iban: true,
+} as const;
+
 export async function POST(request: Request) {
     try {
         const session = await getServerSession(authOptions);
@@ -11,25 +22,28 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        const { companyName, cui, regCom, address, city, county, bank, iban } = body;
+        const clean = (v: unknown, max = 200) => (typeof v === 'string' ? v.trim().slice(0, max) : '') || null;
 
-        const updatedUser = await prisma.user.update({
+        // Only billing fields are returned (never the password hash)
+        const billing = await prisma.user.update({
             where: { email: session.user.email },
             data: {
-                companyName,
-                cui,
-                regCom,
-                address,
-                city,
-                county,
-                bank,
-                iban
-            }
+                companyName: clean(body.companyName),
+                cui: clean(body.cui, 20),
+                regCom: clean(body.regCom, 40),
+                address: clean(body.address, 300),
+                city: clean(body.city, 100),
+                county: clean(body.county, 100),
+                bank: clean(body.bank, 100),
+                iban: clean(body.iban, 40),
+            },
+            select: BILLING_FIELDS,
         });
 
-        return NextResponse.json(updatedUser);
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json(billing);
+    } catch (error) {
+        console.error('Save billing error:', error);
+        return NextResponse.json({ error: 'Nu am putut salva datele de facturare.' }, { status: 500 });
     }
 }
 
@@ -42,20 +56,12 @@ export async function GET() {
 
         const user = await prisma.user.findUnique({
             where: { email: session.user.email },
-            select: {
-                companyName: true,
-                cui: true,
-                regCom: true,
-                address: true,
-                city: true,
-                county: true,
-                bank: true,
-                iban: true
-            }
+            select: BILLING_FIELDS,
         });
 
         return NextResponse.json(user);
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    } catch (error) {
+        console.error('Get billing error:', error);
+        return NextResponse.json({ error: 'Eroare de server.' }, { status: 500 });
     }
 }

@@ -1,27 +1,36 @@
 .container {
+    --notch: 13px;
+    --blue: #2563eb;
+    --ink: #0f172a;
+    --muted: #64748b;
+    flex: 1 0 auto;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     min-height: 100%;
-    background: radial-gradient(circle at center, #2c3e50, #000);
-    padding: 20px;
+    background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(96, 165, 250, 0.22), transparent 70%),
+        radial-gradient(circle at center, #2c3e50, #05080d);
+    padding: 24px 14px;
     overflow-x: hidden;
     container-type: inline-size;
 }
 
 .ticketWrapper {
     perspective: 1500px;
-    animation: flightIn 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+    animation: flightIn 1.2s cubic-bezier(0.22, 1, 0.36, 1);
     width: 100%;
     display: flex;
     justify-content: center;
+    /* drop-shadow follows the notched outline (box-shadow would be a plain rectangle) */
+    filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.55));
 }
 
 @keyframes flightIn {
     from {
         opacity: 0;
-        transform: translateY(100px) rotateX(30deg);
+        transform: translateY(80px) rotateX(25deg);
     }
 
     to {
@@ -30,23 +39,36 @@
     }
 }
 
+/* ---------- Ticket: stacked by default (phones), horizontal on wide containers ---------- */
 .ticket {
     display: flex;
+    flex-direction: column;
     width: 100%;
-    max-width: 850px;
-    min-height: 340px;
-    height: auto;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+    max-width: 440px;
     position: relative;
-    overflow: hidden;
     color: #1a1a1a;
-    background-image: url("https://www.transparenttextures.com/patterns/cardboard-flat.png");
 }
 
-/* Shimmer/Glossy Effect */
-.ticket::before {
+.mainSection {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border-radius: 16px 16px 0 0;
+    padding: 22px 20px 22px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    /* half-circle notches at the perforation (bottom corners) */
+    -webkit-mask:
+        radial-gradient(circle var(--notch) at 0 100%, #0000 98%, #000) left / 51% 100% no-repeat,
+        radial-gradient(circle var(--notch) at 100% 100%, #0000 98%, #000) right / 51% 100% no-repeat;
+    mask:
+        radial-gradient(circle var(--notch) at 0 100%, #0000 98%, #000) left / 51% 100% no-repeat,
+        radial-gradient(circle var(--notch) at 100% 100%, #0000 98%, #000) right / 51% 100% no-repeat;
+}
+
+/* Glossy shimmer */
+.mainSection::before {
     content: '';
     position: absolute;
     top: -150%;
@@ -56,13 +78,12 @@
     background: linear-gradient(45deg,
             transparent 0%,
             rgba(255, 255, 255, 0) 45%,
-            rgba(255, 255, 255, 0.5) 50%,
+            rgba(255, 255, 255, 0.55) 50%,
             rgba(255, 255, 255, 0) 55%,
             transparent 100%);
-    transform: rotate(45deg);
     animation: shimmer 8s infinite cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 10;
     pointer-events: none;
+    z-index: 2;
 }
 
 @keyframes shimmer {
@@ -76,214 +97,469 @@
     }
 }
 
-.mainSection {
-    flex: 2.3;
-    padding: 30px 40px;
-    border-right: 2px dashed #cbd5e1;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-/* Notches for boarding pass look */
-.mainSection::after,
-.mainSection::before {
-    content: '';
-    position: absolute;
-    right: -12px;
-    width: 24px;
-    height: 24px;
-    background: #1a1a1a;
-    border-radius: 50%;
-    z-index: 10;
-}
-
-.mainSection::after {
-    top: -12px;
-}
-
-.mainSection::before {
-    bottom: -12px;
-}
-
 .stubSection {
-    flex: 1;
-    background: #f1f5f9;
-    padding: 25px;
+    background: #eef2f7;
+    border-radius: 0 0 16px 16px;
+    border-top: 2px dashed #cbd5e1;
+    padding: 22px 20px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    gap: 16px;
     text-align: center;
-    border-left: 1px solid #e2e8f0;
+    -webkit-mask:
+        radial-gradient(circle var(--notch) at 0 0, #0000 98%, #000) left / 51% 100% no-repeat,
+        radial-gradient(circle var(--notch) at 100% 0, #0000 98%, #000) right / 51% 100% no-repeat;
+    mask:
+        radial-gradient(circle var(--notch) at 0 0, #0000 98%, #000) left / 51% 100% no-repeat,
+        radial-gradient(circle var(--notch) at 100% 0, #0000 98%, #000) right / 51% 100% no-repeat;
 }
 
+/* ---------- Main section content ---------- */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .airline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     font-weight: 950;
-    font-size: 1.6rem;
-    color: #0f172a;
-    letter-spacing: -0.5px;
+    font-size: 1.2rem;
+    color: var(--ink);
+    letter-spacing: -0.3px;
     text-transform: uppercase;
 }
 
-.airline span {
-    color: #2563eb;
+.airlineIcon {
+    color: var(--blue);
 }
 
 .classType {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 900;
-    color: #64748b;
+    color: var(--muted);
     border: 1px solid #e2e8f0;
-    padding: 2px 10px;
+    background: #fff;
+    padding: 3px 10px;
     border-radius: 4px;
+    letter-spacing: 1px;
 }
 
 .route {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 15px 0;
+    gap: 10px;
 }
 
 .cityCode {
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
+}
+
+.cityTo {
+    text-align: right;
 }
 
 .code {
-    font-size: 4rem;
+    font-size: 2.6rem;
     font-weight: 900;
     color: #1e293b;
     line-height: 1;
+    letter-spacing: -1px;
 }
 
 .cityName {
-    font-size: 0.8rem;
+    font-size: 0.72rem;
     color: #94a3b8;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
+    margin-top: 4px;
+}
+
+.flightPath {
+    flex: 1;
+    min-width: 40px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--blue);
+}
+
+.pathLine {
+    flex: 1;
+    border-top: 2px dotted #93c5fd;
 }
 
 .planeIcon {
-    color: #2563eb;
-    margin: 0 40px;
+    flex-shrink: 0;
+}
+
+.passengerCell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 12px 14px;
+    background: #f1f5f9;
+    border-radius: 12px;
+}
+
+.passengerText {
+    min-width: 0;
+}
+
+.passengerName {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: var(--ink);
+    line-height: 1.2;
+    overflow-wrap: break-word;
+    text-wrap: balance;
+}
+
+.avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid var(--blue);
 }
 
 .detailsGrid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 18px;
+}
+
+.gateCell {
+    grid-column: 1 / -1;
 }
 
 .detailLabel {
-    font-size: 0.65rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.7rem;
     color: #94a3b8;
     font-weight: 800;
     text-transform: uppercase;
-    margin-bottom: 2px;
+    letter-spacing: 0.8px;
+    margin-bottom: 4px;
 }
 
 .detailValue {
     font-size: 1rem;
     font-weight: 850;
-    color: #0f172a;
-    word-break: break-word;
-    /* Allow long addresses to wrap */
-    line-height: 1.2;
+    color: var(--ink);
+    overflow-wrap: break-word;
+    line-height: 1.3;
+}
+
+.extraDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.extraGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px 24px;
+    overflow-wrap: break-word;
+}
+
+.message {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #334155;
+}
+
+.crew {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #334155;
+    overflow-wrap: break-word;
+}
+
+.crewLabel {
+    font-weight: 800;
+    color: var(--ink);
+}
+
+.dress {
+    color: var(--blue);
+    font-weight: 800;
+    margin-top: 4px;
+}
+
+.itinerary {
+    min-width: 0;
+}
+
+.scheduleList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px 18px;
+}
+
+.scheduleRow {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #334155;
+}
+
+.scheduleTime {
+    flex-shrink: 0;
+    font-weight: 900;
+    color: #fff;
+    background: var(--blue);
+    border-radius: 6px;
+    padding: 1px 7px;
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+    margin-top: 1px;
+}
+
+.scheduleBody {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow-wrap: break-word;
+    line-height: 1.35;
+}
+
+.scheduleBody strong {
+    color: var(--ink);
+}
+
+.scheduleLoc {
+    font-size: 0.84rem;
+    color: var(--muted);
+}
+
+.rules {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #334155;
+    background: #fff7ed;
+    border-left: 3px solid #f59e0b;
+    padding: 8px 12px;
+    border-radius: 6px;
+    overflow-wrap: break-word;
+}
+
+/* ---------- Stub ---------- */
+.stubTitle {
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: var(--muted);
 }
 
 .qrCode {
-    width: 100px;
-    height: 100px;
+    width: 116px;
+    height: 116px;
     background: #fff;
     padding: 8px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.qrCode svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.stubActions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.security {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #16a34a;
+    margin-bottom: 2px;
 }
 
 .checkInBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-sizing: border-box;
+    text-align: center;
+    text-decoration: none;
     width: 100%;
+    min-height: 48px;
     background: #000;
     color: #fff;
     border: none;
-    padding: 15px;
-    border-radius: 8px;
+    padding: 13px 12px;
+    border-radius: 10px;
     font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     font-size: 0.85rem;
+    font-family: inherit;
 }
 
 .checkInBtn:hover {
-    background: #2563eb;
+    background: var(--blue);
     transform: scale(1.02);
+}
+
+.mapRow {
+    display: flex;
+    gap: 8px;
+}
+
+.mapRow .checkInBtn {
+    flex: 1;
+    min-width: 0;
+}
+
+.mapBtn {
+    background: var(--blue);
+}
+
+.mapBtn:hover {
+    background: #1d4ed8;
+}
+
+.wazeBtn {
+    background: #33ccff;
+    color: var(--ink);
+}
+
+.wazeBtn:hover {
+    background: #22b8ea;
 }
 
 .barcode {
     width: 100%;
-    height: 35px;
-    background: repeating-linear-gradient(90deg, #333 0, #333 1px, #fff 1px, #fff 3px, #000 3px, #000 4px, #fff 4px, #fff 6px);
-    opacity: 0.4;
-    border-radius: 4px;
+    height: 38px;
+    background: repeating-linear-gradient(90deg, #333 0, #333 1px, transparent 1px, transparent 3px, #000 3px, #000 4px, transparent 4px, transparent 6px);
+    opacity: 0.45;
+    border-radius: 2px;
 }
 
-/* Responsive */
-@media (max-width: 480px) {
-    .container {
-        padding: 5px;
-    }
-}
-
-@container (max-width: 700px) {
-    .ticket {
-        flex-direction: column;
-        width: 100%;
-        max-width: 340px;
-        height: auto;
-        margin: 20px auto;
-    }
-
+/* ---------- Very narrow (editor phone mockup, small phones) ---------- */
+@container (max-width: 340px) {
     .mainSection {
-        border-right: none;
-        border-bottom: 2px dashed #e2e8f0;
-        padding: 20px 15px;
-    }
-
-    .mainSection::after,
-    .mainSection::before {
-        display: none;
+        padding: 18px 16px;
     }
 
     .code {
-        font-size: 2.2rem;
+        font-size: 2.1rem;
     }
 
     .airline {
-        font-size: 1.2rem;
+        font-size: 1.05rem;
     }
 
-    .planeIcon {
-        margin: 0 15px;
+    .passengerName {
+        font-size: 1.1rem;
+    }
+}
+
+/* ---------- Wide: classic horizontal boarding pass ---------- */
+@container (min-width: 700px) {
+    .ticket {
+        flex-direction: row;
+        max-width: 980px;
+        margin: 24px auto;
     }
 
-    .detailsGrid {
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
+    .mainSection {
+        flex: 1;
+        min-width: 0;
+        border-radius: 18px 0 0 18px;
+        padding: 30px 36px;
+        -webkit-mask:
+            radial-gradient(circle var(--notch) at 100% 0, #0000 98%, #000) top / 100% 51% no-repeat,
+            radial-gradient(circle var(--notch) at 100% 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
+        mask:
+            radial-gradient(circle var(--notch) at 100% 0, #0000 98%, #000) top / 100% 51% no-repeat,
+            radial-gradient(circle var(--notch) at 100% 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
     }
 
     .stubSection {
-        padding: 20px 15px;
-        border-left: none;
+        width: 270px;
+        flex-shrink: 0;
+        border-radius: 0 18px 18px 0;
+        border-top: none;
+        border-left: 2px dashed #cbd5e1;
+        padding: 30px 24px;
+        gap: 18px;
+        -webkit-mask:
+            radial-gradient(circle var(--notch) at 0 0, #0000 98%, #000) top / 100% 51% no-repeat,
+            radial-gradient(circle var(--notch) at 0 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
+        mask:
+            radial-gradient(circle var(--notch) at 0 0, #0000 98%, #000) top / 100% 51% no-repeat,
+            radial-gradient(circle var(--notch) at 0 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
+    }
+
+    .airline {
+        font-size: 1.5rem;
+    }
+
+    .code {
+        font-size: 3.6rem;
+    }
+
+    .flightPath {
+        padding: 0 16px;
+    }
+
+    .passengerName {
+        font-size: 1.5rem;
+    }
+
+    .detailsGrid {
+        grid-template-columns: auto auto minmax(0, 1fr);
+        gap: 14px 32px;
+    }
+
+    .gateCell {
+        grid-column: auto;
+    }
+
+    .qrCode {
+        width: 140px;
+        height: 140px;
+        margin-top: auto;
+    }
+
+    .stubActions {
+        margin-bottom: auto;
     }
 }

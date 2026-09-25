@@ -1,21 +1,23 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import styles from './NetflixTemplate.module.css'
 import RSVPModal from '@/components/RSVPModal'
-import { Play, Info, CheckCircle, Plus, Users, Calendar, MapPin, Navigation } from 'lucide-react'
+import { Play, Info, CheckCircle, Plus, Users, Calendar, MapPin, Navigation, Church, PartyPopper } from 'lucide-react'
+import {
+    str, getMapUrl, getWazeUrl, getMainNames, splitNames, getSchedule, parseDate, validCustomFields, eventLabel, CustomField,
+} from './templateUtils'
 
 interface Props {
     id?: string
-    title: string
-    date: string
-    location: string
+    title?: string
+    date?: string
+    location?: string
     locationUrl?: string
-    message: string
-    eventType: string
+    message?: string
+    eventType?: string
     childName?: string
     celebrantName?: string
-    // Wedding
     groomName?: string
     brideName?: string
     parentsGroom?: string
@@ -27,85 +29,129 @@ interface Props {
     religiousCeremonyLoc?: string
     partyTime?: string
     partyLoc?: string
-    // Baptism
     motherName?: string
     fatherName?: string
     godparentsBaptism?: string
-    birthDate?: string
-    childAge?: string
     churchTime?: string
     churchLoc?: string
     restaurantTime?: string
     restaurantLoc?: string
-    // Party
     age?: string
-    partyType?: string
-    theme?: string
     specialInstructions?: string
     dressCode?: string
-    customFields?: { label: string, value: string }[]
+    customFields?: CustomField[]
     videoUrl?: string
     photoUrl?: string
 }
 
+const SEGMENT_META: Record<string, { icon: React.ReactNode, desc: string }> = {
+    civil: { icon: <CheckCircle size={32} />, desc: 'Jurămintele oficiale.' },
+    religious: { icon: <Church size={32} />, desc: 'Binecuvântarea spirituală.' },
+    church: { icon: <Church size={32} />, desc: 'Taina Sfântului Botez.' },
+    party: { icon: <PartyPopper size={32} />, desc: 'Sărbătorim până dimineața!' },
+    main: { icon: <Calendar size={32} />, desc: 'Premiera mult așteptată.' },
+    restaurant: { icon: <Plus size={32} />, desc: 'Masa festivă și distracție.' },
+}
 
-export default function NetflixTemplate({
-    id, title, date, location, locationUrl, message, eventType = 'nunta',
-    groomName, brideName, childName, celebrantName,
-    godparents, godparentsBaptism, parentsGroom, parentsBride,
-    motherName, fatherName, birthDate, childAge,
-    civilCeremonyTime, civilCeremonyLoc, religiousCeremonyTime, religiousCeremonyLoc,
-    partyTime, partyLoc, churchTime, churchLoc, restaurantTime, restaurantLoc,
-    age, partyType, theme, specialInstructions, dressCode,
-    customFields, videoUrl, photoUrl
-}: Props) {
+export default function NetflixTemplate(props: Props) {
+    const {
+        id, date, location, locationUrl, message, eventType = 'nunta',
+        groomName, brideName, childName, celebrantName,
+        godparents, godparentsBaptism, parentsGroom, parentsBride,
+        motherName, fatherName, age, specialInstructions, dressCode,
+        customFields, videoUrl, photoUrl,
+    } = props
 
     const [showRSVP, setShowRSVP] = useState(false)
+    const detailsRef = useRef<HTMLElement>(null)
 
-    let genre = 'Romance'
+    let genre = 'Romantic'
     let ageRating = '12+'
-
     if (eventType === 'botez') {
-        genre = 'Family'
-        ageRating = 'All'
+        genre = 'Familie'
+        ageRating = 'AG'
     } else if (eventType === 'petrecere') {
-        genre = 'Reality TV'
+        genre = 'Reality show'
         ageRating = '18+'
+    } else if (eventType === 'aniversare') {
+        genre = 'Comedie'
+        ageRating = '15+'
     }
 
-    const segments = [
-        civilCeremonyTime && { title: 'Cununia Civilă', time: civilCeremonyTime, icon: <CheckCircle size={32} />, desc: civilCeremonyLoc || 'Jurămintele oficiale.' },
-        (religiousCeremonyTime || churchTime) && { title: 'Cununia Religioasă', time: religiousCeremonyTime || churchTime, icon: <MapPin size={32} />, desc: religiousCeremonyLoc || churchLoc || 'Binecuvântarea spirituală.' },
-        (partyTime || restaurantTime) && { title: 'Marea Petrecere', time: partyTime || restaurantTime, icon: <Plus size={32} />, desc: partyLoc || restaurantLoc || 'Sărbătorim până dimineața!' }
-    ].filter(Boolean) as any[]
+    const names = getMainNames(props)
+    const nameParts = splitNames(names)
+    const year = parseDate(date).year
+    const mapUrl = getMapUrl(location, locationUrl)
+    const wazeUrl = getWazeUrl(location)
+    const baseSchedule = getSchedule(props)
+    // Without a detailed program, show the event itself as the single "episode".
+    const schedule = baseSchedule.length > 0
+        ? baseSchedule
+        : (str(location) || str(date))
+            ? [{ key: 'main', label: eventLabel(eventType), time: '', loc: [str(date), str(location)].filter(Boolean).join(' · ') }]
+            : []
+    const fields = validCustomFields(customFields)
+    const isWedding = eventType === 'nunta' || !eventType
+    const isBaptism = eventType === 'botez'
+
+    const cast: { label: string, value: string }[] = []
+    if (isWedding) {
+        if (str(groomName)) cast.push({ label: 'Mire', value: str(groomName) })
+        if (str(brideName)) cast.push({ label: 'Mireasă', value: str(brideName) })
+        if (str(parentsGroom)) cast.push({ label: 'Părinții mirelui', value: str(parentsGroom) })
+        if (str(parentsBride)) cast.push({ label: 'Părinții miresei', value: str(parentsBride) })
+        if (str(godparents)) cast.push({ label: 'Nași', value: str(godparents) })
+    } else if (isBaptism) {
+        if (str(childName)) cast.push({ label: 'Micuțul/Micuța', value: str(childName) })
+        if (str(motherName)) cast.push({ label: 'Mama', value: str(motherName) })
+        if (str(fatherName)) cast.push({ label: 'Tata', value: str(fatherName) })
+        if (str(godparentsBaptism) || str(godparents)) cast.push({ label: 'Nași', value: str(godparentsBaptism) || str(godparents) })
+    } else {
+        if (str(celebrantName)) cast.push({ label: 'Sărbătorit', value: str(celebrantName) })
+        if (str(age)) cast.push({ label: 'Vârstă', value: `${str(age)} ani` })
+    }
+    fields.forEach((f) => cast.push({ label: f.label, value: f.value }))
+    if (str(dressCode)) cast.push({ label: 'Ținută', value: str(dressCode) })
+
+    const heroImage = photoUrl || 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=2070'
 
     return (
         <div className={styles.netflixContainer}>
             <div
                 className={styles.hero}
                 style={{
-                    backgroundImage: `linear-gradient(to top, #000 5%, transparent 95%), url("${photoUrl || 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=2070'}")`
+                    backgroundImage: `url("${heroImage}")`
                 }}
             >
                 <div className={styles.heroContent}>
-                    <div className={styles.nSeries}>{eventType.toUpperCase()} SERIES</div>
-                    <h1 className={styles.title}>{title}</h1>
+                    <div className={styles.nSeries}><span className={styles.nLogo} aria-hidden="true">N</span>SERIALUL {eventLabel(eventType).toLocaleUpperCase('ro-RO')}</div>
+                    <h1 className={styles.title}>
+                    {nameParts.length === 2 ? (
+                        <>
+                            <span className={styles.namePart}>{nameParts[0]}</span>
+                            {' & '}
+                            <span className={styles.namePart}>{nameParts[1]}</span>
+                        </>
+                    ) : (names || 'Invitație')}
+                </h1>
 
                     <div className={styles.meta}>
-                        <span className={styles.match}>99% Match</span>
-                        <span>{date.split(' ').pop()}</span>
+                        <span className={styles.match}>99% potrivire</span>
+                        {year && <span>{year}</span>}
                         <span className={styles.age}>{ageRating}</span>
-                        <span>1 Season</span>
+                        <span>1 sezon</span>
                         <span>{genre}</span>
                     </div>
 
-                    <p className={styles.description}>
-                        {message}
-                        <br /><br />
-                        <MapPin size={18} style={{ display: 'inline', marginRight: '5px' }} /> {location}
-                        <br />
-                        <Calendar size={18} style={{ display: 'inline', marginRight: '5px' }} /> {date}
-                    </p>
+                    <div className={styles.description}>
+                        {str(message) && <p>{str(message)}</p>}
+                        {str(location) && (
+                            <p><MapPin size={18} className={styles.inlineIcon} /> {str(location)}</p>
+                        )}
+                        {str(date) && (
+                            <p><Calendar size={18} className={styles.inlineIcon} /> {str(date)}</p>
+                        )}
+                    </div>
 
                     <div className={styles.buttons}>
                         <button className={styles.playBtn} onClick={() => setShowRSVP(true)}>
@@ -113,120 +159,98 @@ export default function NetflixTemplate({
                             Confirmă Prezența
                         </button>
                         <button
-                            className={styles.infoBtn}
-                            onClick={() => document.getElementById('details')?.scrollIntoView({ behavior: 'smooth' })}
+                            className={`${styles.infoBtn} ${styles.wideBtn}`}
+                            onClick={() => detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
                         >
                             <Info size={24} />
                             Mai multe detalii
                         </button>
-                        {locationUrl && (
-                            <button className={styles.infoBtn} onClick={() => window.open(locationUrl, '_blank')}>
+                        {mapUrl && (
+                            <a className={`${styles.infoBtn} ${wazeUrl ? '' : styles.wideBtn}`} href={mapUrl} target="_blank" rel="noopener noreferrer">
+                                <MapPin size={22} />
+                                Vezi harta
+                            </a>
+                        )}
+                        {wazeUrl && (
+                            <a className={`${styles.infoBtn} ${mapUrl ? '' : styles.wideBtn}`} href={wazeUrl} target="_blank" rel="noopener noreferrer">
                                 <Navigation size={24} />
-                                Vezi Locația
-                            </button>
+                                Waze
+                            </a>
                         )}
                     </div>
                 </div>
             </div>
 
-            {/* Video Section - If uploaded */}
             {videoUrl && (
-                <section className={styles.episodes} style={{ paddingTop: '2rem', paddingBottom: '1rem' }}>
-                    <h2 className={styles.sectionTitle}>🎬 Trailer Oficial</h2>
-                    <div style={{
-                        maxWidth: '900px',
-                        margin: '0 auto',
-                        borderRadius: '12px',
-                        overflow: 'hidden',
-                        boxShadow: '0 8px 32px rgba(0,0,0,0.4)'
-                    }}>
+                <section className={`${styles.episodes} ${styles.videoSection}`}>
+                    <h2 className={styles.sectionTitle}>🎬 Trailer oficial</h2>
+                    <div className={styles.videoFrame}>
                         <video
+                            key={videoUrl}
+                            src={videoUrl}
                             controls
-                            style={{
-                                width: '100%',
-                                display: 'block',
-                                backgroundColor: '#000'
-                            }}
-                            poster="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&q=80&w=2070"
+                            playsInline
+                            preload="metadata"
+                            poster={photoUrl || undefined}
+                            className={styles.video}
                         >
-                            <source src={videoUrl} type="video/mp4" />
-                            Browser-ul tău nu suportă redarea video.
+                            Browserul tău nu suportă redarea video.
                         </video>
                     </div>
                 </section>
             )}
 
-            <section id="details" className={styles.episodes}>
-                <h2 className={styles.sectionTitle}>Episoadele Evenimentului</h2>
+            <section ref={detailsRef} className={styles.episodes}>
+                <h2 className={styles.sectionTitle}>Episoadele evenimentului</h2>
                 <div className={styles.episodeList}>
-                    {segments.map((seg, idx) => (
-                        <div key={idx} className={styles.episodeCard}>
+                    {schedule.map((seg, idx) => (
+                        <div key={seg.key} className={styles.episodeCard}>
                             <div className={styles.episodeThumb}>
-                                {seg.icon}
+                                {SEGMENT_META[seg.key]?.icon}
                             </div>
                             <div className={styles.episodeInfo}>
-                                <div className={styles.episodeTime}>ORA {seg.time}</div>
+                                {seg.time && <div className={styles.episodeTime}>ORA {seg.time}</div>}
                                 <div className={styles.episodeTitle}>
-                                    {idx + 1}. {seg.title}
+                                    {idx + 1}. {seg.label}
                                 </div>
-                                <p className={styles.episodeDesc}>{seg.desc}</p>
+                                <p className={styles.episodeDesc}>{seg.loc || SEGMENT_META[seg.key]?.desc}</p>
                             </div>
                         </div>
                     ))}
 
-                    <div className={styles.episodeCard} style={{ opacity: 0.9 }}>
-                        <div className={styles.episodeThumb}><Users size={32} /></div>
-                        <div className={styles.episodeInfo}>
-                            <div className={styles.episodeTitle}>DISTRIBUȚIE SPECIALĂ (CAST)</div>
-                            <div className={styles.episodeDesc}>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '20px', marginTop: '10px' }}>
-                                    {/* Explicit Cast Members */}
-                                    {groomName && <div><strong>Mire:</strong><br />{groomName}</div>}
-                                    {brideName && <div><strong>Mireasă:</strong><br />{brideName}</div>}
-                                    {parentsGroom && <div><strong>Părinți Mire:</strong><br />{parentsGroom}</div>}
-                                    {parentsBride && <div><strong>Părinți Mireasă:</strong><br />{parentsBride}</div>}
-                                    {godparents && <div><strong>Nași:</strong><br />{godparents}</div>}
-
-                                    {childName && <div><strong>Copil:</strong><br />{childName}</div>}
-                                    {motherName && <div><strong>Mama:</strong><br />{motherName}</div>}
-                                    {fatherName && <div><strong>Tata:</strong><br />{fatherName}</div>}
-                                    {godparentsBaptism && <div><strong>Nași:</strong><br />{godparentsBaptism}</div>}
-
-                                    {celebrantName && <div><strong>Sărbătorit:</strong><br />{celebrantName}</div>}
-                                    {age && <div><strong>Vârstă:</strong><br />{age} ani</div>}
-
-                                    {customFields && customFields.map((field, i) => (
-                                        field.label && field.value && (
-                                            <div key={i}>
-                                                <strong>{field.label}:</strong><br />
-                                                {field.value}
+                    {(cast.length > 0 || str(specialInstructions)) && (
+                        <div className={`${styles.episodeCard} ${styles.castCard}`}>
+                            <div className={styles.episodeThumb}><Users size={32} /></div>
+                            <div className={styles.episodeInfo}>
+                                <div className={styles.episodeTitle}>DISTRIBUȚIA</div>
+                                <div className={styles.episodeDesc}>
+                                    <div className={styles.castGrid}>
+                                        {cast.map((c, i) => (
+                                            <div key={`${c.label}-${i}`} className={styles.castItem}>
+                                                <span className={styles.castLabel}>{c.label}</span>
+                                                <span className={styles.castValue}>{c.value}</span>
                                             </div>
-                                        )
-                                    ))}
-                                    {dressCode && (
-                                        <div>
-                                            <strong>Dress Code:</strong><br />
-                                            {dressCode}
+                                        ))}
+                                    </div>
+                                    {str(specialInstructions) && (
+                                        <div className={styles.note}>
+                                            <strong>Notă:</strong> {str(specialInstructions)}
                                         </div>
                                     )}
                                 </div>
-                                {specialInstructions && (
-                                    <div style={{ marginTop: '15px', padding: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px' }}>
-                                        <strong>Notă:</strong> {specialInstructions}
-                                    </div>
-                                )}
                             </div>
-
                         </div>
-                    </div>
+                    )}
                 </div>
             </section>
 
-            <RSVPModal
-                isOpen={showRSVP}
-                onClose={() => setShowRSVP(false)}
-                eventId={id}
-            />
+            {showRSVP && (
+                <RSVPModal
+                    isOpen={showRSVP}
+                    onClose={() => setShowRSVP(false)}
+                    eventId={id}
+                />
+            )}
         </div>
     )
 }

@@ -1,17 +1,23 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styles from './EnvelopeTemplate.module.css'
 import RSVPModal from '@/components/RSVPModal'
-import { Heart, Calendar, MapPin, Users, Music, Star, Navigation } from 'lucide-react'
+import { Heart, Calendar, MapPin, Users, Star, Navigation, Mail } from 'lucide-react'
+import { Great_Vibes } from 'next/font/google'
+import {
+    str, getMapUrl, getWazeUrl, getMainNames, getSchedule, splitNames, validCustomFields, CustomField,
+} from './templateUtils'
+
+const script = Great_Vibes({ weight: '400', subsets: ['latin', 'latin-ext'], display: 'swap', variable: '--env-script' })
 
 interface Props {
     id?: string
-    title: string
-    date: string
-    location: string
+    title?: string
+    date?: string
+    location?: string
     locationUrl?: string
-    message: string
+    message?: string
     eventType?: string
     groomName?: string
     brideName?: string
@@ -24,180 +30,213 @@ interface Props {
     religiousCeremonyLoc?: string
     partyTime?: string
     partyLoc?: string
-    // Baptism
     childName?: string
     motherName?: string
     fatherName?: string
     godparentsBaptism?: string
-    birthDate?: string
-    childAge?: string
     churchTime?: string
     churchLoc?: string
     restaurantTime?: string
     restaurantLoc?: string
-    // Party
     celebrantName?: string
     age?: string
-    partyType?: string
     theme?: string
+    host?: string
     specialInstructions?: string
     dressCode?: string
-    customFields?: { label: string, value: string }[]
+    photoUrl?: string
+    customFields?: CustomField[]
 }
 
-export default function EnvelopeTemplate({
-    id, title, date, location, locationUrl, message, eventType = 'nunta',
-    groomName, brideName, childName, celebrantName,
-    godparents, godparentsBaptism, parentsGroom, parentsBride,
-    civilCeremonyTime, civilCeremonyLoc, religiousCeremonyTime, religiousCeremonyLoc,
-    partyTime, partyLoc, churchTime, churchLoc, restaurantTime, restaurantLoc,
-    motherName, fatherName, birthDate, childAge,
-    age, partyType, theme, specialInstructions, dressCode,
-    customFields
-}: Props) {
-    const [isOpen, setIsOpen] = useState(false)
-    const [showRSVP, setShowRSVP] = useState(false)
+type Stage = 'closed' | 'opening' | 'open'
 
-    const handleConfirm = (e: React.MouseEvent) => {
-        e.stopPropagation()
-        setShowRSVP(true)
+export default function EnvelopeTemplate(props: Props) {
+    const {
+        id, date, location, locationUrl, message, eventType = 'nunta',
+        groomName, brideName, childName, celebrantName,
+        godparents, godparentsBaptism, parentsGroom, parentsBride,
+        motherName, fatherName, age, theme, host, specialInstructions, dressCode,
+        photoUrl, customFields,
+    } = props
+    const [stage, setStage] = useState<Stage>('closed')
+    const [showRSVP, setShowRSVP] = useState(false)
+    const letterRef = useRef<HTMLElement>(null)
+
+    // Two-phase opening: the flap/letter animation plays, then the full letter replaces the envelope
+    // (normal document flow, so long content simply scrolls with the page).
+    useEffect(() => {
+        if (stage !== 'opening') return
+        const t = setTimeout(() => setStage('open'), 1150)
+        return () => clearTimeout(t)
+    }, [stage])
+
+    useEffect(() => {
+        if (stage === 'open') letterRef.current?.focus({ preventScroll: true })
+    }, [stage])
+
+    const names = getMainNames(props)
+    const nameParts = splitNames(names)
+    const mapUrl = getMapUrl(location, locationUrl)
+    const wazeUrl = getWazeUrl(location)
+    const schedule = getSchedule(props)
+    const fields = validCustomFields(customFields)
+
+    const isWedding = eventType === 'nunta' || !eventType
+    const isBaptism = eventType === 'botez'
+
+    const sealText = nameParts.length > 1 && nameParts[0] && nameParts[1]
+        ? `${nameParts[0].charAt(0)}${nameParts[1].charAt(0)}`.toLocaleUpperCase('ro-RO')
+        : (nameParts[0] ? nameParts[0].charAt(0).toLocaleUpperCase('ro-RO') : '')
+
+    const cast: { label: string, value: string }[] = []
+    if (isWedding) {
+        if (str(groomName)) cast.push({ label: 'Mire', value: str(groomName) })
+        if (str(brideName)) cast.push({ label: 'Mireasă', value: str(brideName) })
+        if (str(parentsGroom)) cast.push({ label: 'Părinții mirelui', value: str(parentsGroom) })
+        if (str(parentsBride)) cast.push({ label: 'Părinții miresei', value: str(parentsBride) })
+        if (str(godparents)) cast.push({ label: 'Nași', value: str(godparents) })
+    } else if (isBaptism) {
+        if (str(childName)) cast.push({ label: 'Micuțul/Micuța', value: str(childName) })
+        if (str(motherName)) cast.push({ label: 'Mama', value: str(motherName) })
+        if (str(fatherName)) cast.push({ label: 'Tata', value: str(fatherName) })
+        if (str(godparentsBaptism) || str(godparents)) cast.push({ label: 'Nași', value: str(godparentsBaptism) || str(godparents) })
+    } else {
+        if (str(celebrantName)) cast.push({ label: 'Sărbătorit', value: str(celebrantName) })
+        if (str(age)) cast.push({ label: 'Vârstă', value: `${str(age)} ani` })
+        if (str(host)) cast.push({ label: 'Gazda', value: str(host) })
+    }
+    fields.forEach((f) => cast.push({ label: f.label, value: f.value }))
+    const castTitle = isWedding || isBaptism ? 'Familia' : 'Detalii'
+
+    const openEnvelope = () => {
+        if (stage === 'closed') setStage('opening')
     }
 
     return (
-        <div className={styles.container}>
-            <div
-                className={`${styles.envelopeWrapper} ${isOpen ? styles.open : ''}`}
-                onClick={() => !showRSVP && setIsOpen(!isOpen)}
-            >
-                <div className={styles.interior}></div>
-                <div className={styles.flap}></div>
-                <div className={styles.pocket}></div>
-
-                <div className={styles.card}>
-                    <Heart size={32} style={{ color: '#d4af37', marginBottom: '10px' }} />
-                    <h1 className={styles.title}>{title}</h1>
-                    <div className={styles.date}><Calendar size={16} style={{ display: 'inline', marginRight: '5px' }} /> {date}</div>
-
-                    <p className={styles.message}>{message}</p>
-                    <p className={styles.location}><MapPin size={16} style={{ display: 'inline', marginRight: '5px' }} /> {location}</p>
-
-                    <div className={styles.extraDetails} style={{ marginTop: '20px', textAlign: 'left', width: '100%', fontSize: '0.8rem', color: '#666' }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                <div style={{ fontWeight: 800, color: '#b8860b', borderBottom: '1px solid #eee', marginBottom: '4px' }}><Users size={12} /> Distribuție</div>
-
-                                {/* Wedding Details */}
-                                {groomName && <div><strong>Mire:</strong> {groomName}</div>}
-                                {brideName && <div><strong>Mireasă:</strong> {brideName}</div>}
-                                {parentsGroom && <div><strong>Părinți Mire:</strong> {parentsGroom}</div>}
-                                {parentsBride && <div><strong>Părinți Mireasă:</strong> {parentsBride}</div>}
-                                {godparents && <div><strong>Nași:</strong> {godparents}</div>}
-
-                                {/* Baptism Details */}
-                                {childName && <div><strong>Copil:</strong> {childName}</div>}
-                                {motherName && <div><strong>Mama:</strong> {motherName}</div>}
-                                {fatherName && <div><strong>Tata:</strong> {fatherName}</div>}
-                                {godparentsBaptism && <div><strong>Nași:</strong> {godparentsBaptism}</div>}
-
-                                {/* Party Details */}
-                                {celebrantName && <div><strong>Sărbătorit:</strong> {celebrantName}</div>}
-                                {age && <div><strong>Vârstă:</strong> {age} ani</div>}
-
-                                {customFields && customFields.map((field, i) => (
-                                    field.label && field.value && (
-                                        <div key={i}><strong>{field.label}:</strong> {field.value}</div>
-                                    )
-                                ))}
-
-                                {dressCode && <div style={{ marginTop: '8px', color: '#d4af37' }}><strong>Dress Code:</strong> {dressCode}</div>}
-                            </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                <div style={{ fontWeight: 800, color: '#b8860b', borderBottom: '1px solid #eee', marginBottom: '4px' }}><Star size={12} /> Program</div>
-                                {civilCeremonyTime && (
-                                    <div>
-                                        <strong>Civilă:</strong> {civilCeremonyTime}<br />
-                                        <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>{civilCeremonyLoc}</span>
-                                    </div>
-                                )}
-                                {religiousCeremonyTime && (
-                                    <div style={{ marginTop: '4px' }}>
-                                        <strong>Religioasă:</strong> {religiousCeremonyTime}<br />
-                                        <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>{religiousCeremonyLoc}</span>
-                                    </div>
-                                )}
-                                {(churchTime || churchLoc) && (
-                                    <div style={{ marginTop: '4px' }}>
-                                        <strong>Biserică:</strong> {churchTime}<br />
-                                        <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>{churchLoc}</span>
-                                    </div>
-                                )}
-                                {partyTime && (
-                                    <div style={{ marginTop: '4px' }}>
-                                        <strong>Petrecere:</strong> {partyTime}<br />
-                                        <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>{partyLoc}</span>
-                                    </div>
-                                )}
-                                {(restaurantTime || restaurantLoc) && (
-                                    <div style={{ marginTop: '4px' }}>
-                                        <strong>Local:</strong> {restaurantTime}<br />
-                                        <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>{restaurantLoc}</span>
-                                    </div>
-                                )}
+        <div className={`${styles.container} ${script.variable}`}>
+            {stage !== 'open' ? (
+                <div className={styles.scene}>
+                    <div
+                        className={`${styles.envelope} ${stage === 'opening' ? styles.opening : ''}`}
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Deschide invitația"
+                        onClick={openEnvelope}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openEnvelope() }
+                        }}
+                    >
+                        <div className={styles.interior} />
+                        <div className={styles.peek}>
+                            <span className={styles.peekNames}>{names || 'Invitație'}</span>
+                            {str(date) && <span className={styles.peekDate}>{str(date)}</span>}
+                        </div>
+                        <div className={styles.sides} />
+                        <div className={styles.pocket}>
+                            <div className={styles.address}>
+                                <span className={styles.addressNames}>{names || 'Invitație'}</span>
+                                {str(date) && <span className={styles.addressDate}>{str(date)}</span>}
                             </div>
                         </div>
-                        {specialInstructions && (
-                            <div style={{ marginTop: '10px', fontSize: '0.75rem', background: '#f9f9f9', padding: '8px', borderRadius: '4px' }}>
-                                <strong>Notă:</strong> {specialInstructions}
-                            </div>
-                        )}
-                        {theme && <div style={{ marginTop: '5px' }}><strong>Tematică:</strong> {theme}</div>}
+                        <div className={styles.flap} />
+                        <div className={styles.seal} aria-hidden="true">
+                            {sealText ? <span>{sealText}</span> : <Heart size={20} fill="currentColor" />}
+                        </div>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-                        <button
-                            className={styles.confirmButton}
-                            onClick={handleConfirm}
-                            style={{ marginTop: 0 }}
-                        >
+                    <button type="button" className={styles.hint} onClick={openEnvelope} disabled={stage !== 'closed'}>
+                        <Mail size={18} aria-hidden="true" /> Deschide invitația
+                    </button>
+                </div>
+            ) : (
+                <article className={styles.letter} ref={letterRef} tabIndex={-1} aria-label="Invitație">
+                    {photoUrl ? (
+                        <img src={photoUrl} alt={names || 'Fotografie'} className={styles.photo} />
+                    ) : (
+                        <Heart size={30} className={styles.topHeart} aria-hidden="true" />
+                    )}
+                    <h1 className={styles.title}>
+                        {nameParts.length > 1 ? (
+                            <>
+                                {nameParts[0]}
+                                <span className={styles.amp}>&amp;</span>
+                                {nameParts.slice(1).join(' & ')}
+                            </>
+                        ) : (names || 'Invitație')}
+                    </h1>
+                    {str(date) && (
+                        <div className={styles.date}><Calendar size={16} aria-hidden="true" /> <span>{str(date)}</span></div>
+                    )}
+
+                    {str(message) && <p className={styles.message}>{str(message)}</p>}
+                    {str(location) && (
+                        <p className={styles.location}><MapPin size={16} aria-hidden="true" /> <span>{str(location)}</span></p>
+                    )}
+
+                    {(cast.length > 0 || schedule.length > 0 || str(dressCode)) && (
+                        <div className={styles.extraDetails}>
+                            {(cast.length > 0 || str(dressCode)) && (
+                                <div className={styles.column}>
+                                    <div className={styles.columnTitle}><Users size={14} aria-hidden="true" /> {castTitle}</div>
+                                    {cast.map((c, i) => (
+                                        <div key={`${c.label}-${i}`}><strong>{c.label}:</strong> {c.value}</div>
+                                    ))}
+                                    {str(dressCode) && <div className={styles.dress}><strong>Ținută:</strong> {str(dressCode)}</div>}
+                                </div>
+                            )}
+                            {schedule.length > 0 && (
+                                <div className={styles.column}>
+                                    <div className={styles.columnTitle}><Star size={14} aria-hidden="true" /> Program</div>
+                                    {schedule.map((s) => (
+                                        <div key={s.key}>
+                                            <strong>{s.label}{s.time ? ':' : ''}</strong> {s.time}
+                                            {s.loc && <span className={styles.subtle}>{s.loc}</span>}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {str(specialInstructions) && (
+                        <div className={styles.note}>
+                            <strong>Notă:</strong> {str(specialInstructions)}
+                        </div>
+                    )}
+                    {str(theme) && <div className={styles.note}><strong>Tematică:</strong> {str(theme)}</div>}
+
+                    <div className={styles.buttons}>
+                        <button type="button" className={styles.confirmButton} onClick={() => setShowRSVP(true)}>
                             Confirmă Prezența
                         </button>
-                        {locationUrl && (
-                            <button
-                                className={styles.confirmButton}
-                                style={{ background: '#d4af37', color: '#000', marginTop: 0 }}
-                                onClick={(e) => { e.stopPropagation(); window.open(locationUrl, '_blank') }}
-                            >
-                                <Navigation size={16} style={{ display: 'inline', marginRight: '5px' }} /> Locație
-                            </button>
+                        {(mapUrl || wazeUrl) && (
+                            <div className={styles.mapRow}>
+                                {mapUrl && (
+                                    <a className={`${styles.confirmButton} ${styles.mapButton}`} href={mapUrl} target="_blank" rel="noopener noreferrer">
+                                        <Navigation size={14} aria-hidden="true" /> Vezi harta
+                                    </a>
+                                )}
+                                {wazeUrl && (
+                                    <a className={`${styles.confirmButton} ${styles.mapButton}`} href={wazeUrl} target="_blank" rel="noopener noreferrer">
+                                        Waze
+                                    </a>
+                                )}
+                            </div>
                         )}
                     </div>
-                    <div style={{ marginTop: '10px' }}>
-                        <Music size={14} style={{ color: '#ccc' }} />
-                    </div>
-                </div>
-            </div>
 
-            <RSVPModal
-                isOpen={showRSVP}
-                onClose={() => setShowRSVP(false)}
-                eventId={id}
-            />
+                    <button type="button" className={styles.back} onClick={() => setStage('closed')}>
+                        <Mail size={14} aria-hidden="true" /> Înapoi la plic
+                    </button>
+                </article>
+            )}
 
-            {!isOpen && (
-                <p style={{
-                    position: 'absolute',
-                    bottom: '10%',
-                    color: '#d4af37',
-                    fontWeight: 'bold',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px'
-                }}
-                    onClick={() => setIsOpen(true)}
-                >
-                    <Heart size={20} /> Desfă invitația magică
-                </p>
+            {showRSVP && (
+                <RSVPModal
+                    isOpen={showRSVP}
+                    onClose={() => setShowRSVP(false)}
+                    eventId={id}
+                />
             )}
         </div>
     )

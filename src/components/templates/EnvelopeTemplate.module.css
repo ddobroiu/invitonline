@@ -1,231 +1,616 @@
+/* Plic 3D — closed envelope with a gold wax seal; opening slides the letter out, then shows it full size. */
+
 .container {
-    perspective: 2500px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    --gold: #d4af37;
+    --gold-deep: #b8860b;
+    --navy: #2c3e50;
+    --navy-light: #34495e;
+    --script: var(--env-script), 'Great Vibes', cursive;
+
+    flex: 1 0 auto;
     width: 100%;
     min-height: 100%;
-    background: radial-gradient(circle at center, #1a1a1a, #000);
+    display: flex;
+    flex-direction: column;
+    padding: clamp(24px, 5cqh, 56px) 16px;
+    overflow-x: hidden;
+    color: #333;
+    font-family: var(--font-body), system-ui, sans-serif;
+    background:
+        radial-gradient(ellipse at 50% 40%, rgba(212, 175, 55, 0.08), transparent 60%),
+        radial-gradient(circle at center, #1c1c1c, #050505);
 }
 
-.envelopeWrapper {
+/* ---------- Closed envelope ---------- */
+
+.scene {
+    margin: auto;
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    padding-top: 12px;
+}
+
+.envelope {
     position: relative;
-    width: 96%;
-    max-width: 520px;
+    width: 100%;
     aspect-ratio: 3 / 2;
-    background: #2c3e50;
-    border-radius: 0 0 20px 20px;
+    background: var(--navy);
+    border-radius: 6px;
     cursor: pointer;
-    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), inset 0 -10px 20px rgba(0, 0, 0, 0.3);
-    transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-    transform-style: preserve-3d;
+    perspective: 1400px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.75), 0 6px 18px rgba(0, 0, 0, 0.5);
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
 }
 
-.envelopeWrapper:hover {
-    transform: translateY(-15px) rotateX(10deg);
+.envelope:focus-visible {
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.7), 0 30px 80px rgba(0, 0, 0, 0.75);
 }
 
-/* Interior lining of the envelope */
+@media (hover: hover) {
+    .envelope:not(.opening):hover {
+        transform: translateY(-8px) rotate(-0.6deg);
+    }
+}
+
 .interior {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #34495e;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    border-radius: 0 0 20px 20px;
+    inset: 0;
+    border-radius: 6px;
+    background-color: var(--navy-light);
+    background-image: radial-gradient(circle, rgba(212, 175, 55, 0.16) 1px, transparent 1.5px);
+    background-size: 18px 18px;
     z-index: 1;
-    background-image: radial-gradient(circle, rgba(212, 175, 55, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
 }
 
-/* The flap (top part) */
+/* Letter waiting inside the envelope */
+.peek {
+    position: absolute;
+    left: 6%;
+    right: 6%;
+    top: 7%;
+    height: 86%;
+    background: #fffdf7;
+    border: 1px solid var(--gold);
+    border-radius: 3px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 7% 8% 0;
+    gap: 6px;
+    text-align: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.4s;
+}
+
+.peekNames {
+    font-family: var(--script);
+    font-size: clamp(1.4rem, 6.5cqw, 2.4rem);
+    color: var(--gold-deep);
+    line-height: 1.15;
+    overflow-wrap: break-word;
+    max-width: 100%;
+}
+
+.peekDate {
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #666;
+}
+
+/* Side flaps */
+.sides {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #2a3b4c 0%, #31465a 50%, #2a3b4c 100%);
+    clip-path: polygon(0 0, 50% 48%, 100% 0, 100% 100%, 0 100%);
+}
+
+/* Bottom pocket */
+.pocket {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    border-radius: 0 0 6px 6px;
+    background: linear-gradient(180deg, #3d556c 0%, #34495e 60%, #2f4255 100%);
+    clip-path: polygon(0 100%, 50% 42%, 100% 100%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 6%;
+}
+
+.address {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    max-width: 58%;
+    text-align: center;
+}
+
+.addressNames {
+    font-family: var(--script);
+    font-size: clamp(1.2rem, 5.5cqw, 2rem);
+    color: var(--gold);
+    line-height: 1.1;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.addressDate {
+    font-size: clamp(0.62rem, 2.2cqw, 0.78rem);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.65);
+    white-space: nowrap;
+}
+
+/* Top flap */
 .flap {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #2c3e50;
-    clip-path: polygon(0 0, 50% 50%, 100% 0);
+    inset: 0;
     z-index: 5;
-    transform-origin: top;
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px 6px 0 0;
+    background: linear-gradient(180deg, #33495f 0%, #435d78 100%);
+    clip-path: polygon(0 0, 50% 50%, 100% 0);
+    transform-origin: top center;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s linear 0.35s;
 }
 
-.open .flap {
+/* Gold wax seal on the flap tip */
+.seal {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: clamp(46px, 14cqw, 72px);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5a430a;
+    font-family: var(--font-heading), Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(0.95rem, 4cqw, 1.35rem);
+    letter-spacing: 0.02em;
+    background: radial-gradient(circle at 35% 30%, #f6e3a1 0%, #d4af37 42%, #a07d16 100%);
+    box-shadow:
+        0 0 0 3px rgba(160, 125, 22, 0.55),
+        inset 0 0 0 4px rgba(255, 255, 255, 0.18),
+        inset 0 -4px 8px rgba(90, 67, 10, 0.35),
+        0 6px 14px rgba(0, 0, 0, 0.45);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.opening {
+    cursor: default;
+    transform: translateY(18%);
+}
+
+.opening .seal {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+}
+
+.opening .flap {
     transform: rotateX(180deg);
     z-index: 0;
 }
 
-/* The front parts (bottom and sides) */
-.pocket {
-    position: absolute;
-    top: 0;
-    left: 0;
+.opening .peek {
+    transform: translateY(-62%);
+}
+
+.hint {
+    background: none;
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    border-radius: 999px;
+    color: var(--gold);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    padding: 12px 24px;
+    min-height: 48px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    animation: hintPulse 2.2s ease-in-out infinite;
+    transition: background 0.2s, opacity 0.3s;
+}
+
+.hint:hover {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.hint:disabled {
+    opacity: 0;
+    animation: none;
+    cursor: default;
+}
+
+@keyframes hintPulse {
+    0%,
+    100% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* ---------- Opened letter ---------- */
+
+.letter {
+    margin: auto;
     width: 100%;
-    height: 100%;
-    z-index: 4;
+    max-width: 600px;
+    position: relative;
+    background: linear-gradient(180deg, #fffdf7 0%, #fbf6ea 100%);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    padding: clamp(2.25rem, 8cqw, 3.5rem) clamp(1.35rem, 6cqw, 3.25rem) clamp(1.5rem, 5cqw, 2.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+    animation: letterIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    outline: none;
+}
+
+.letter::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 2px;
     pointer-events: none;
 }
 
-.pocket::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #34495e;
-    clip-path: polygon(0 100%, 50% 50%, 100% 100%);
-    z-index: 4;
-    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+.letter > * {
+    position: relative;
+    max-width: 100%;
 }
 
-.pocket::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #2c3e50;
-    clip-path: polygon(0 0, 0 100%, 50% 50%, 100% 100%, 100% 0);
-    z-index: 3;
+@keyframes letterIn {
+    from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
 }
 
-/* Luxury Card */
-.card {
-    position: absolute;
-    top: 5%;
-    left: 4%;
-    width: 92%;
-    height: 90%;
+.topHeart {
+    color: var(--gold);
+    margin-bottom: 12px;
+    flex-shrink: 0;
+}
+
+.photo {
+    width: clamp(96px, 28cqw, 140px);
+    aspect-ratio: 1;
+    height: auto;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--gold);
+    padding: 3px;
     background: #fff;
-    border: 1px solid #d4af37;
-    border-radius: 4px;
-    padding: 20px 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    /* Better for scroll */
-    align-items: center;
-    text-align: center;
-    transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-    z-index: 2;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    background-image:
-        url("https://www.transparenttextures.com/patterns/cream-paper.png"),
-        linear-gradient(rgba(212, 175, 55, 0.02) 1px, transparent 1px);
-    overflow-y: auto;
-    /* Handle extra content */
-    scrollbar-width: none;
-}
-
-.card::-webkit-scrollbar {
-    display: none;
-}
-
-.open .card {
-    transform: translateY(-85%) rotate(-1deg) scale(1.02);
-    z-index: 10;
-    box-shadow: 0 50px 100px rgba(0, 0, 0, 0.5);
+    margin-bottom: 16px;
+    flex-shrink: 0;
 }
 
 .title {
-    font-family: var(--font-heading);
-    font-size: clamp(1.5rem, 6vw, 2.5rem);
-    color: #b8860b;
-    margin-bottom: 5px;
+    text-wrap: balance;
+    font-family: var(--font-heading), Georgia, serif;
+    font-size: clamp(1.9rem, 8.5cqw, 3rem);
+    font-weight: 800;
+    line-height: 1.12;
+    margin: 0 0 4px;
+    overflow-wrap: break-word;
     background: linear-gradient(to right, #b8860b, #d4af37, #b8860b);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    font-weight: 800;
+    -webkit-text-fill-color: transparent;
+}
+
+.amp {
+    display: block;
+    font-family: var(--script);
+    font-weight: 400;
+    font-size: 0.75em;
     line-height: 1.1;
+    margin: 0.05em 0;
 }
 
 .date {
-    font-family: var(--font-body);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     font-weight: 800;
-    letter-spacing: 2px;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    font-size: clamp(0.6rem, 2vw, 0.85rem);
+    font-size: clamp(0.8rem, 3cqw, 0.95rem);
     color: #444;
-    border-top: 1px double #d4af37;
-    border-bottom: 1px double #d4af37;
-    padding: 8px 0;
-    margin: 15px 0;
-    width: 90%;
+    border-top: 3px double var(--gold);
+    border-bottom: 3px double var(--gold);
+    padding: 10px 4px;
+    margin: 18px 0 20px;
+    width: min(100%, 420px);
+}
+
+.date svg,
+.location svg {
+    flex-shrink: 0;
+    color: var(--gold-deep);
 }
 
 .message {
+    font-family: var(--font-heading), Georgia, serif;
     font-style: italic;
-    font-size: 1rem;
+    font-size: 1.05rem;
     line-height: 1.7;
     color: #555;
-    margin-bottom: 25px;
-    max-width: 90%;
+    margin: 0 0 20px;
+    max-width: 32em;
+    overflow-wrap: break-word;
 }
 
 .location {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
+    margin: 0;
+    overflow-wrap: break-word;
     font-weight: 700;
     color: #1a1a1a;
     font-size: 0.95rem;
+    line-height: 1.5;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.06em;
+}
+
+.location svg {
+    margin-top: 3px;
+}
+
+.extraDetails {
+    margin-top: 24px;
+    text-align: left;
+    width: 100%;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #555;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    gap: 20px 28px;
+    overflow-wrap: break-word;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.column strong {
+    color: #333;
+}
+
+.columnTitle {
+    font-weight: 800;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    border-bottom: 1px solid #eadfbf;
+    padding-bottom: 6px;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.subtle {
+    display: block;
+    font-size: 0.875rem;
+    color: #777;
+}
+
+.dress {
+    margin-top: 4px;
+    color: #8a6508;
+}
+
+.dress strong {
+    color: #8a6508;
+}
+
+.note {
+    margin-top: 14px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    background: rgba(212, 175, 55, 0.08);
+    border-left: 3px solid var(--gold);
+    padding: 10px 12px;
+    border-radius: 4px;
+    width: 100%;
+    text-align: left;
+    color: #555;
+    overflow-wrap: break-word;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+    width: 100%;
+}
+
+.mapRow {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
 }
 
 .confirmButton {
-    margin-top: 30px;
-    background: #000;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+    background: #111;
     color: #fff;
     border: none;
-    padding: 12px 35px;
+    padding: 14px 36px;
+    min-height: 48px;
     border-radius: 4px;
+    font-family: inherit;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 0.14em;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    font-size: 0.8rem;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    font-size: 0.85rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
 }
 
 .confirmButton:hover {
-    transform: scale(1.05) translateY(-2px);
-    background: #d4af37;
+    transform: translateY(-2px);
+    background: var(--gold);
     color: #000;
-    box-shadow: 0 15px 30px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 14px 26px rgba(212, 175, 55, 0.35);
 }
 
-/* Responsive */
+.mapButton {
+    background: var(--gold);
+    color: #000;
+    padding: 10px 20px;
+    min-height: 42px;
+    font-size: 0.8rem;
+    box-shadow: none;
+}
+
+.mapButton:hover {
+    background: #e2c35a;
+}
+
+.confirmButton:focus-visible,
+.back:focus-visible,
+.hint:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+}
+
+.back {
+    margin-top: 22px;
+    background: none;
+    border: none;
+    color: #8a7440;
+    font-family: inherit;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .envelope,
+    .flap,
+    .peek,
+    .seal,
+    .letter,
+    .hint {
+        transition: none;
+        animation: none;
+    }
+}
+
+/* Phones */
 @media (max-width: 600px) {
-    .container {
-        padding: 40px 15px;
-        align-items: center;
-    }
-
-    .envelopeWrapper {
+    .confirmButton {
         width: 100%;
-        max-width: 330px;
-        margin-top: 60px;
-        /* Reduced to avoid hitting Dynamic Island */
+        padding: 14px 18px;
+        letter-spacing: 0.1em;
     }
 
-    .open .card {
-        transform: translateY(-92%) scale(1.0);
+    .mapRow {
+        width: 100%;
     }
 
-    .title {
-        font-size: 1.6rem;
+    .mapButton {
+        flex: 1 1 0;
+        width: auto;
+        padding: 10px 12px;
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+    }
+}
+
+/* Editor phone mockup / dashboard preview (container-type: size) */
+@container (max-width: 600px) {
+    .confirmButton {
+        width: 100%;
+        padding: 14px 18px;
+        letter-spacing: 0.1em;
     }
 
-    .message {
-        font-size: 0.9rem;
-        margin-bottom: 15px;
+    .mapRow {
+        width: 100%;
+    }
+
+    .mapButton {
+        flex: 1 1 0;
+        width: auto;
+        padding: 10px 12px;
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+    }
+}
+
+/* Inside a size container (editor mockups, dashboard preview) the host centres its content, which would
+   clip a tall invitation at the top. Make the template its own scroller of exactly the preview height. */
+@container (min-width: 1px) {
+    .container {
+        flex: 0 0 auto;
+        height: 100cqh;
+        min-height: 0;
+        overflow-y: auto;
+        scrollbar-width: thin;
     }
 }

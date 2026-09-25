@@ -4,8 +4,9 @@ import { Pool } from 'pg'
 
 const prismaClientSingleton = () => {
     const connectionString = process.env.DATABASE_URL
+    // Don't throw at import time (it would break `next build`); queries will fail with a clear log instead
     if (!connectionString) {
-        throw new Error('DATABASE_URL is not defined in environment variables')
+        console.warn('DATABASE_URL is not defined in environment variables')
     }
     const pool = new Pool({ connectionString })
     const adapter = new PrismaPg(pool)

@@ -52,6 +52,7 @@ export interface OblioProduct {
     description?: string;
     price: number;
     quantity: number;
+    currency?: string;
     vatName?: string;
     vatPercentage?: number;
     vatIncluded?: boolean;
@@ -88,7 +89,7 @@ export async function createInvoice(clientData: any, products: OblioProduct[]) {
             description: p.description || '',
             price: p.price,
             measuringUnitName: 'buc',
-            currency: 'RON',
+            currency: p.currency || 'RON',
             vatName: p.vatName || 'Normal',
             vatPercentage: p.vatPercentage ?? 19,
             vatIncluded: p.vatIncluded ?? true,

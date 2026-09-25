@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 import styles from './page.module.css'
+import UseTemplateCta from '../UseTemplateCta'
 
-export default function VinylTemplate() {
+export default function VinylPage() {
     const [isPlaying, setIsPlaying] = useState(false)
 
     return (
@@ -39,7 +40,7 @@ export default function VinylTemplate() {
                         <path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z" />
                     </svg>
 
-                    <button className={styles.playBtn} onClick={() => setIsPlaying(!isPlaying)}>
+                    <button type="button" className={styles.playBtn} onClick={() => setIsPlaying(!isPlaying)} aria-label={isPlaying ? 'Pauză' : 'Redă'}>
                         {isPlaying ? (
                             <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
@@ -65,6 +66,7 @@ export default function VinylTemplate() {
                     <p style={{ marginTop: '10px', fontWeight: 'bold' }}>25 AUGUST 2026 • PALATUL ȘTIRBEI</p>
                 </div>
             </div>
+            <UseTemplateCta templateId="vinyl" />
         </div>
     )
 }

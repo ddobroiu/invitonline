@@ -14,10 +14,12 @@ export default function MediaUploader({ type, currentUrl, onUploadComplete, onRe
     const [isUploading, setIsUploading] = useState(false)
     const [uploadProgress, setUploadProgress] = useState(0)
     const fileInputRef = useRef<HTMLInputElement>(null)
+    const [error, setError] = useState('')
 
     const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (!file) return
+        setError('')
 
         // Validate file type
         const validAudioTypes = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg']
@@ -25,14 +27,14 @@ export default function MediaUploader({ type, currentUrl, onUploadComplete, onRe
         const validTypes = type === 'audio' ? validAudioTypes : validVideoTypes
 
         if (!validTypes.includes(file.type)) {
-            alert(`Tip de fișier invalid. Te rog încarcă un fișier ${type === 'audio' ? 'audio (MP3, WAV)' : 'video (MP4, WebM)'}.`)
+            setError(`Tip de fișier invalid. Te rog încarcă un fișier ${type === 'audio' ? 'audio (MP3, WAV)' : 'video (MP4, WebM)'}.`)
             return
         }
 
         // Validate file size (max 50MB for audio, 100MB for video)
         const maxSize = type === 'audio' ? 50 * 1024 * 1024 : 100 * 1024 * 1024
         if (file.size > maxSize) {
-            alert(`Fișierul este prea mare. Mărimea maximă este ${type === 'audio' ? '50MB' : '100MB'}.`)
+            setError(`Fișierul este prea mare. Mărimea maximă este ${type === 'audio' ? '50MB' : '100MB'}.`)
             return
         }
 
@@ -49,16 +51,17 @@ export default function MediaUploader({ type, currentUrl, onUploadComplete, onRe
                 body: formData
             })
 
+            const data = await response.json().catch(() => ({}))
             if (!response.ok) {
-                throw new Error('Upload failed')
+                throw new Error(data.error || 'Upload failed')
             }
 
-            const data = await response.json()
             onUploadComplete(data.url)
             setUploadProgress(100)
         } catch (error) {
             console.error('Upload error:', error)
-            alert('Eroare la încărcarea fișierului. Te rog încearcă din nou.')
+            const msg = error instanceof Error && error.message !== 'Upload failed' ? error.message : ''
+            setError(msg || 'Eroare la încărcarea fișierului. Te rog încearcă din nou.')
         } finally {
             setIsUploading(false)
             setUploadProgress(0)
@@ -74,7 +77,7 @@ export default function MediaUploader({ type, currentUrl, onUploadComplete, onRe
             border: '1px solid rgba(255,255,255,0.1)',
             borderRadius: '12px',
             padding: '20px',
-            marginTop: '15px'
+            marginTop: '0'
         }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -85,6 +88,7 @@ export default function MediaUploader({ type, currentUrl, onUploadComplete, onRe
                 </div>
                 {currentUrl && (
                     <button
+                        type="button"
                         onClick={onRemove}
                         style={{
                             background: 'rgba(255, 68, 68, 0.1)',
@@ -110,10 +114,11 @@ export default function MediaUploader({ type, currentUrl, onUploadComplete, onRe
                         ref={fileInputRef}
                         type="file"
                         accept={type === 'audio' ? 'audio/*' : 'video/*'}
-                        onChange={handleFileSelect}
+                        onChange={(e) => { handleFileSelect(e); e.target.value = '' }}
                         style={{ display: 'none' }}
                     />
                     <button
+                        type="button"
                         onClick={() => fileInputRef.current?.click()}
                         disabled={isUploading}
                         style={{
@@ -148,6 +153,11 @@ export default function MediaUploader({ type, currentUrl, onUploadComplete, onRe
                     <p style={{ fontSize: '0.7rem', color: '#666', marginTop: '8px', textAlign: 'center' }}>
                         {type === 'audio' ? 'MP3, WAV (max 50MB)' : 'MP4, WebM (max 100MB)'}
                     </p>
+                    {error && (
+                        <p role="alert" style={{ fontSize: '0.8rem', color: '#fca5a5', background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.25)', borderRadius: '8px', padding: '8px 12px', marginTop: '10px', textAlign: 'center' }}>
+                            {error}
+                        </p>
+                    )}
                 </>
             ) : (
                 <div style={{

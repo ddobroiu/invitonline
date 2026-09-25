@@ -1,23 +1,54 @@
 .container {
+    /* may shrink to the viewport height: the editor centres us with unsafe centering,
+       so overflowing content must flow downwards (scrollable) instead of upwards */
+    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 30px 15px;
+    justify-content: safe center;
+    padding: 32px 16px;
     width: 100%;
     min-height: 100%;
     font-family: 'Courier New', monospace;
+    overflow-x: clip;
+    background:
+        radial-gradient(ellipse at 50% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 55%),
+        radial-gradient(circle at center, #1a1a1a, #000);
+    container-type: inline-size;
+}
+
+.layout {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.cardCol {
+    width: 100%;
+    max-width: 460px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     perspective: 1200px;
-    background: radial-gradient(circle at center, #1a1a1a, #000);
 }
 
 .scene {
     width: 100%;
-    max-width: 440px;
     aspect-ratio: 85.6 / 53.98;
     position: relative;
     cursor: pointer;
     container-type: inline-size;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.scene:focus-visible {
+    outline: 2px solid #d4af37;
+    outline-offset: 6px;
+    border-radius: 18px;
 }
 
 .card {
@@ -34,52 +65,83 @@
 
 .face {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     backface-visibility: hidden;
-    border-radius: 18px;
+    -webkit-backface-visibility: hidden;
+    border-radius: clamp(12px, 4cqw, 18px);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
     overflow: hidden;
-    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+    background: linear-gradient(135deg, #1f1f1f 0%, #0a0a0a 100%);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
 }
 
-.back {
-    transform: rotateY(180deg);
-}
-
+/* ---------- FRONT ---------- */
 .front {
-    padding: 20px;
+    padding: 5.5cqw 6cqw;
     display: flex;
     flex-direction: column;
+}
+
+.front::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.06) 45%, transparent 60%);
+    pointer-events: none;
 }
 
 .topRow {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    gap: 8px;
 }
 
 .bankName {
-    font-size: 0.7rem;
-    letter-spacing: 2px;
-    color: rgba(255, 255, 255, 0.5);
+    min-width: 0;
+    font-size: clamp(9px, 3.4cqw, 15px);
+    letter-spacing: 0.5cqw;
+    color: rgba(255, 255, 255, 0.6);
     text-transform: uppercase;
 }
 
+.contactless {
+    width: 6cqw;
+    height: 6cqw;
+    flex-shrink: 0;
+    transform: rotate(90deg);
+}
+
 .chip {
-    width: 45px;
-    height: 32px;
-    background: linear-gradient(135deg, #d4af37 0%, #f1c40f 100%);
-    border-radius: 4px;
-    margin-top: 5px;
+    width: 12cqw;
+    height: 9cqw;
+    background:
+        linear-gradient(90deg, transparent 32%, rgba(0, 0, 0, 0.18) 33%, transparent 34%, transparent 65%, rgba(0, 0, 0, 0.18) 66%, transparent 67%),
+        linear-gradient(0deg, transparent 48%, rgba(0, 0, 0, 0.18) 49%, transparent 51%),
+        linear-gradient(135deg, #d4af37 0%, #f1c40f 100%);
+    border-radius: 1.2cqw;
+    margin-top: 3cqw;
+}
+
+.logo {
+    position: absolute;
+    top: 29%;
+    right: 6cqw;
+    font-size: clamp(9px, 3.2cqw, 15px);
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 0.5cqw;
+    color: rgba(212, 175, 55, 0.85);
 }
 
 .number {
-    font-size: 1.2rem;
+    white-space: nowrap;
+    font-size: clamp(14px, 6cqw, 28px);
     color: #d4af37;
-    letter-spacing: 2px;
-    margin-top: 15px;
+    letter-spacing: 0.4cqw;
+    margin-top: 4cqw;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
 }
 
 .details {
@@ -87,117 +149,393 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    gap: 3cqw;
+}
+
+.holder {
+    min-width: 0;
+    flex: 1;
+}
+
+.validOn {
+    flex-shrink: 0;
+    text-align: right;
+}
+
+.label {
+    font-size: clamp(7px, 2.4cqw, 11px);
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 0.6cqw;
 }
 
 .value {
     color: #fff;
-    font-size: 0.8rem;
-    letter-spacing: 1px;
+    font-size: clamp(10px, 3.4cqw, 16px);
+    font-weight: 700;
+    letter-spacing: 0.2cqw;
+    white-space: nowrap;
+}
+
+.holderName {
+    white-space: normal;
+    line-height: 1.2;
+    overflow-wrap: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ---------- BACK ---------- */
+.back {
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
 }
 
 .magneticStrip {
+    flex-shrink: 0;
     width: 100%;
-    height: 44px;
+    height: 9cqw;
     background: #000;
-    margin-top: 25px;
+    margin-top: 5cqw;
 }
 
 .signatureRow {
-    padding: 0 20px;
-    margin-top: 15px;
+    flex-shrink: 0;
+    padding: 0 5cqw;
+    margin-top: 3cqw;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 2.5cqw;
 }
 
 .signatureArea {
     flex: 1;
-    height: 34px;
-    background: #eee;
-    padding-left: 10px;
-    color: #000;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    height: 8cqw;
+    line-height: 8cqw;
+    background: repeating-linear-gradient(-45deg, #f2f2f2 0 6px, #e6e6e6 6px 12px);
+    padding: 0 2.5cqw;
+    color: #111;
     font-style: italic;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
+    font-size: clamp(11px, 3.8cqw, 17px);
 }
 
 .cvv {
+    flex-shrink: 0;
     background: #fff;
-    padding: 2px 6px;
+    color: #111;
+    padding: 0.8cqw 1.8cqw;
     font-weight: bold;
-    font-size: 0.7rem;
+    font-style: italic;
+    font-size: clamp(10px, 3cqw, 14px);
 }
 
 .backContent {
-    padding: 15px 20px;
-    font-size: 0.65rem;
-    color: #888;
+    flex: 1;
+    min-height: 0;
+    padding: 3cqw 5cqw 4cqw;
+    color: #ccc;
+    display: flex;
+    gap: 3cqw;
+    align-items: flex-start;
+}
+
+.backText {
+    flex: 1;
+    min-width: 0;
+    max-height: 100%;
+    overflow: hidden;
+}
+
+.message {
+    font-size: clamp(11px, 3.5cqw, 15px);
+    line-height: 1.35;
+    overflow-wrap: break-word;
+}
+
+.access {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.access strong {
+    color: #fff;
+}
+
+.accessIcon {
+    display: inline;
+    width: 1em;
+    height: 1em;
+    margin-right: 4px;
+    vertical-align: -2px;
+    color: #d4af37;
+}
+
+.backQuote {
+    margin-top: 1.5cqw;
+    font-style: italic;
+    color: #bbb;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2cqw;
+    flex-shrink: 0;
+}
+
+.qr {
+    background: #fff;
+    padding: 0.8cqw;
+    border-radius: 4px;
+    line-height: 0;
+}
+
+.qr svg {
+    width: 10cqw;
+    height: 10cqw;
 }
 
 .rsvpBtn {
     background: #d4af37;
     color: #000;
-    padding: 8px 16px;
+    padding: 1.8cqw 3.5cqw;
+    font-family: inherit;
     font-weight: bold;
     border-radius: 4px;
     text-transform: uppercase;
-    font-size: 0.65rem;
-    margin-top: 10px;
+    font-size: clamp(10px, 3cqw, 14px);
     border: none;
     cursor: pointer;
 }
 
 .instruction {
     text-align: center;
-    color: #666;
+    color: #8a8a8a;
     font-size: 0.8rem;
-    margin-top: 20px;
-    opacity: 0.7;
+    margin-top: 18px;
+    text-wrap: balance;
     animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
     0% {
-        opacity: 0.4;
+        opacity: 0.55;
     }
 
     50% {
-        opacity: 0.8;
+        opacity: 1;
     }
 
     100% {
-        opacity: 0.4;
+        opacity: 0.55;
     }
 }
 
-/* Container Queries for Perfect Scaling */
-@container (max-width: 500px) {
-    .bankName {
-        font-size: 3.5cqw;
+/* ---------- Statement panel (all details, always readable) ---------- */
+.statement {
+    width: 100%;
+    max-width: 460px;
+    background: linear-gradient(135deg, #151515 0%, #0a0a0a 100%);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 14px;
+    padding: 20px;
+    color: #ddd;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    container: statement / inline-size;
+}
+
+.statementTitle {
+    color: #d4af37;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 0.78rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+    border-bottom: 1px dashed rgba(212, 175, 55, 0.3);
+    padding-bottom: 8px;
+}
+
+.statementRow {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-bottom: 6px;
+    overflow-wrap: break-word;
+    color: #fff;
+}
+
+.statementRow span {
+    min-width: 0;
+}
+
+.statementRow svg {
+    color: #d4af37;
+    flex-shrink: 0;
+    margin-top: 3px;
+}
+
+.statementBlock {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.statementLine {
+    font-size: 0.86rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.statementLine span {
+    color: #a5a5a5;
+    min-width: 0;
+    overflow-wrap: break-word;
+}
+
+.statementLine em {
+    font-style: normal;
+    color: #808080;
+}
+
+.statementLine strong {
+    color: #fff;
+    text-align: right;
+    min-width: 0;
+    max-width: 62%;
+    overflow-wrap: break-word;
+}
+
+.statementLine .castLabel {
+    flex: 0 0 auto;
+    max-width: 52%;
+}
+
+.statementLine .castValue {
+    flex: 1 1 0;
+    max-width: none;
+}
+
+.statementLine strong.time {
+    white-space: nowrap;
+    flex-shrink: 0;
+    color: #d4af37;
+}
+
+.statementNote {
+    margin-top: 12px;
+    font-style: italic;
+    color: #bbb;
+}
+
+.statementActions {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.primaryBtn,
+.secondaryBtn {
+    flex: 1 1 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 14px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.primaryBtn {
+    flex-basis: 100%;
+    background: #d4af37;
+    color: #000;
+    border: none;
+}
+
+.primaryBtn:hover {
+    background: #e2bf4a;
+    transform: translateY(-1px);
+}
+
+.secondaryBtn {
+    background: transparent;
+    color: #d4af37;
+    border: 1px solid rgba(212, 175, 55, 0.6);
+}
+
+.secondaryBtn:hover {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+/* Narrow statement (phones / editor phone mockup): label above value */
+@container statement (max-width: 360px) {
+    .castLine {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1px;
     }
 
-    .number {
-        font-size: 6cqw;
+    .statementLine .castLabel {
+        max-width: none;
+        font-size: 0.78rem;
     }
 
-    .label {
-        font-size: 2.5cqw;
+    .statementLine .castValue {
+        flex: none;
+        text-align: left;
+    }
+}
+
+/* Wide screens: card and statement side by side */
+@container (min-width: 900px) {
+    .layout {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 56px;
     }
 
-    .value {
-        font-size: 3.2cqw;
+    .cardCol {
+        max-width: 500px;
+        flex: 1 1 500px;
     }
 
-    .logo {
-        font-size: 3cqw;
+    .statement {
+        flex: 0 1 420px;
     }
+}
 
-    .signatureArea {
-        font-size: 4cqw;
-    }
-
-    .message {
-        font-size: 3cqw;
+@media (max-width: 360px) {
+    .container {
+        padding: 24px 12px;
     }
 }
