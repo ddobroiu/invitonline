@@ -1,6 +1,6 @@
 # Rulare pe server: `docker compose up -d --build`
 #
-# Portul 3010 al gazdei → 3000 în container. Secretele vin din `.env` (fișier
+# Portul 3005 al gazdei → 3000 în container. Secretele vin din `.env` (fișier
 # pe server, niciodată în depozit); baza de date e cea partajată, deja
 # existentă, cu rolul invitonline_app, limitat la baza invitonline.
 
@@ -14,7 +14,7 @@ services:
     container_name: invitonline
     restart: unless-stopped
     ports:
-      - "3010:3000"
+      - "3005:3000"
     env_file:
       - .env
     environment:
