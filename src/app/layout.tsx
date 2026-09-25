@@ -29,6 +29,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ro">
+      <head>
+        {/* mydashboard.ro: vizite, surse de trafic și legătura cu plățile (proiectul invitonline) */}
+        <script defer src="https://mydashboard.ro/t.js" data-site="b6a9d9d1b5b7a1da" />
+      </head>
       <body className={`${inter.variable} ${playfair.variable} antialiased`}>
         <Providers>
           <SiteShell>{children}</SiteShell>

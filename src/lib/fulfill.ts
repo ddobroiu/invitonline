@@ -8,6 +8,8 @@ import { escapeHtml, getSiteUrl } from '@/lib/utils'
  * both the Stripe webhook and the success page call it.
  */
 export async function fulfillCheckout(session: Stripe.Checkout.Session) {
+    // contul Stripe e comun aplicatiilor: platile altor proiecte nu sunt ale noastre
+    if (session.metadata?.project && session.metadata.project !== 'invitonline') return { fulfilled: false }
     const eventId = session.metadata?.eventId
     if (!eventId || session.payment_status !== 'paid') return { fulfilled: false }
 
@@ -49,39 +51,21 @@ export async function fulfillCheckout(session: Stripe.Checkout.Session) {
     let invSeries: string | null = null
     let invNumber: string | null = null
 
-    if ((user.cui || user.companyName) && process.env.OBLIO_API_KEY) {
+    // Factura Oblio pe datele cerute de Stripe la plata (orice cumparator), cota TVA implicita din Oblio
+    const { isOblioConfigured, issueInvoice } = await import('@/lib/billing/oblio-stripe')
+    if (isOblioConfigured()) {
         try {
-            const { createInvoice } = await import('@/lib/oblio')
-            const invoiceData = await createInvoice({
-                cif: user.cui || '',
-                name: user.companyName || user.name || 'Client',
-                rc: user.regCom || '',
-                address: user.address || '-',
-                city: user.city || '-',
-                county: user.county || '-',
-                email: user.email
-            }, [{
-                name: `Pachet Invitatie Online - ${updatedEvent.type} (${updatedEvent.title})`,
-                quantity: 1,
-                price: amount,
-                currency,
-                vatName: 'Normal',
-                vatPercentage: 19,
-                vatIncluded: true,
-            }])
-
-            const getField = (obj: any, key: string) => obj?.[key] ?? obj?.data?.[key] ?? obj?.data?.data?.[key] ?? null
-            invLink = getField(invoiceData, 'link') || getField(invoiceData, 'url')
-            invSeries = getField(invoiceData, 'seriesName') || getField(invoiceData, 'series')
-            invNumber = getField(invoiceData, 'number')
-
+            const inv = await issueInvoice(session, {
+                name: `Invitație online - ${updatedEvent.type} (${updatedEvent.title})`,
+                amountCents: session.amount_total || 0,
+                currency: session.currency || 'eur',
+            })
+            invLink = inv.url
+            invSeries = inv.series
+            invNumber = inv.number
             await prisma.order.update({
                 where: { id: order.id },
-                data: {
-                    invoiceLink: invLink ? String(invLink) : null,
-                    invoiceSeries: invSeries ? String(invSeries) : null,
-                    invoiceNumber: invNumber ? String(invNumber) : null,
-                }
+                data: { invoiceLink: invLink, invoiceSeries: invSeries, invoiceNumber: invNumber },
             })
         } catch (err: any) {
             console.error('Oblio Generation Failed:', err?.message)

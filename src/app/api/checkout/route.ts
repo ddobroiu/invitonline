@@ -30,6 +30,9 @@ export async function POST(req: Request) {
         }
 
         const siteUrl = getSiteUrl(req)
+        // Contul Stripe „Applications” e comun aplicatiilor: eticheta de proiect separa platile in mydashboard
+        const vid = (req.headers.get('cookie') || '').split(';').map((c) => c.trim().split('=')).find(([k]) => k === '_md_vid')?.[1]
+        const tag = { project: 'invitonline', ...(vid && { md_vid: vid.slice(0, 64) }) }
         const checkoutSession = await stripe.checkout.sessions.create({
             line_items: [
                 {
@@ -48,7 +51,11 @@ export async function POST(req: Request) {
             customer_email: session?.user?.email || undefined,
             success_url: `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${siteUrl}/dashboard?canceled=true`,
-            metadata: { eventId: event.id, userId },
+            metadata: { ...tag, eventId: event.id, userId },
+            payment_intent_data: { metadata: { ...tag, eventId: event.id, userId } },
+            // Numele, adresa si (pentru firme) CUI-ul pentru factura Oblio, cerute de Stripe la plata
+            billing_address_collection: 'required',
+            tax_id_collection: { enabled: true },
         })
 
         await prisma.event.update({
