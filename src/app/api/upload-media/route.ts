@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary'
 import { getCurrentUserId } from '@/lib/auth'
+import { alerta, faraCredite } from '@/lib/alerts'
 
 const MAX_SIZE: Record<string, number> = {
     image: 10 * 1024 * 1024,
@@ -59,6 +60,11 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ success: true, url: result.secure_url, publicId: result.public_id })
     } catch (error) {
         console.error('Upload error:', error)
+        // cota Cloudinary depasita -> alerta; celelalte erori de upload nu sunt alerte
+        const text = (error as { message?: string } | null)?.message ?? String(error)
+        if (faraCredite(error) || /quota|limit/i.test(text)) {
+            void alerta('credits', 'cloudinary', `InvitOnline: Cloudinary refuza incarcarile (cota/limita atinsa) - pozele/muzica/video nu se mai pot incarca: ${text}`)
+        }
         return NextResponse.json({ error: 'Încărcarea a eșuat. Încearcă din nou.' }, { status: 500 })
     }
 }

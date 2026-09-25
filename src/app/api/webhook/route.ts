@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import type Stripe from 'stripe'
 import { getStripe } from '@/lib/stripe'
 import { fulfillCheckout } from '@/lib/fulfill'
+import { alerta } from '@/lib/alerts'
 
 export async function POST(req: Request) {
     const stripe = getStripe()
@@ -26,6 +27,7 @@ export async function POST(req: Request) {
             await fulfillCheckout(event.data.object as Stripe.Checkout.Session)
         } catch (error) {
             console.error('Error processing checkout session:', error)
+            void alerta('error', 'stripe-webhook', `InvitOnline: plata Stripe ${(event.data.object as Stripe.Checkout.Session).id} nu a fost procesata (webhook 500): ${error instanceof Error ? error.message : String(error)}`)
             return NextResponse.json({ error: 'Processing failed' }, { status: 500 })
         }
     }

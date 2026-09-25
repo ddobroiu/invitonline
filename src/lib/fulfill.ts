@@ -1,6 +1,7 @@
 import type Stripe from 'stripe'
 import prisma from '@/lib/prisma'
 import { escapeHtml, getSiteUrl } from '@/lib/utils'
+import { alerta } from '@/lib/alerts'
 
 /**
  * Marks the event as paid, creates the order (with invoice when billing data exists)
@@ -69,6 +70,7 @@ export async function fulfillCheckout(session: Stripe.Checkout.Session) {
             })
         } catch (err: any) {
             console.error('Oblio Generation Failed:', err?.message)
+            void alerta('error', 'oblio', `InvitOnline: factura Oblio nu s-a emis (sesiune ${session.id}): ${err?.message ?? err}`)
         }
     }
 
