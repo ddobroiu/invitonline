@@ -9,7 +9,10 @@ const prismaClientSingleton = () => {
         console.warn('DATABASE_URL is not defined in environment variables')
     }
     const pool = new Pool({ connectionString })
-    const adapter = new PrismaPg(pool)
+    // Baza e comuna cu celelalte proiecte (toateproiectele); tabelele InvitOnline stau in schema din ?schema=
+    let schema: string | undefined
+    try { schema = connectionString ? new URL(connectionString).searchParams.get('schema') || undefined : undefined } catch { schema = undefined }
+    const adapter = new PrismaPg(pool, schema ? { schema } : undefined)
     return new PrismaClient({ adapter })
 }
 

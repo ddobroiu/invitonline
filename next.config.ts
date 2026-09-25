@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // serverul autonom pentru imaginea Docker (vezi Dockerfile)
+  output: "standalone",
 };
 
 export default nextConfig;
