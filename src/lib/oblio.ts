@@ -90,8 +90,9 @@ export async function createInvoice(clientData: any, products: OblioProduct[]) {
             price: p.price,
             measuringUnitName: 'buc',
             currency: p.currency || 'RON',
-            vatName: p.vatName || 'Normal',
-            vatPercentage: p.vatPercentage ?? 19,
+            // Societatea nu este platitoare de TVA: fara cota impusa, se aplica setarea firmei din Oblio
+            ...(p.vatName ? { vatName: p.vatName } : {}),
+            ...(p.vatPercentage !== undefined ? { vatPercentage: p.vatPercentage } : {}),
             vatIncluded: p.vatIncluded ?? true,
             quantity: p.quantity,
             save: false

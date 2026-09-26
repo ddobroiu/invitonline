@@ -8,6 +8,9 @@ import TemplateRenderer, { CENTERED_TEMPLATES } from '@/components/TemplateRende
 import LocationPicker from '@/components/LocationPicker'
 import MediaUploader from '@/components/MediaUploader'
 import ImageUploader from '@/components/ImageUploader'
+import CheckoutConsent, { CHECKOUT_CONSENT_REQUIRED } from '@/components/legal/CheckoutConsent'
+import RegisterTermsConsent from '@/components/legal/RegisterTermsConsent'
+import { PRICE_NOTE } from '@/config/legal'
 import {
     Zap, Palette, Info, Trash2, Plus, Music, Video, Image as ImageIcon, Monitor, Smartphone, Lock, CreditCard,
     MailOpen, Clapperboard, Plane, Disc, Ticket, Globe, Newspaper, Film, Tent, Crown, MessageCircle, Flower2, Gem,
@@ -143,6 +146,8 @@ function CreateEventContent() {
     const [authData, setAuthData] = useState({ email: '', password: '', name: '' })
     const [authError, setAuthError] = useState('')
     const [isAuthLoading, setIsAuthLoading] = useState(false)
+    const [acceptTerms, setAcceptTerms] = useState(false)
+    const [checkoutConsent, setCheckoutConsent] = useState(false)
 
     // Load the event being edited, or restore an unsaved draft
     useEffect(() => {
@@ -340,6 +345,10 @@ function CreateEventContent() {
             return
         }
         if (status !== 'authenticated') return
+        if (shouldPay && !isPaid && !checkoutConsent) {
+            setSaveError(CHECKOUT_CONSENT_REQUIRED)
+            return
+        }
 
         setIsSaving(true)
         setSaveError('')
@@ -368,7 +377,7 @@ function CreateEventContent() {
                 const checkoutRes = await fetch('/api/checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ eventId: data.event.id })
+                    body: JSON.stringify({ eventId: data.event.id, consent: checkoutConsent })
                 })
                 const checkout = await checkoutRes.json().catch(() => ({}))
                 if (checkoutRes.ok && checkout.url) {
@@ -397,7 +406,7 @@ function CreateEventContent() {
                 const res = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(authData)
+                    body: JSON.stringify({ ...authData, acceptTerms })
                 })
                 if (!res.ok) {
                     const data = await res.json().catch(() => ({}))
@@ -742,6 +751,7 @@ function CreateEventContent() {
                                     )}
                                     <input className={styles.input} type="email" required aria-label="Email" placeholder="Email" autoComplete="email" value={authData.email} onChange={e => setAuthData({ ...authData, email: e.target.value })} />
                                     <input className={styles.input} type="password" required aria-label="Parolă" minLength={authMode === 'register' ? 6 : undefined} placeholder={authMode === 'register' ? 'Parolă (minim 6 caractere)' : 'Parolă'} autoComplete={authMode === 'register' ? 'new-password' : 'current-password'} value={authData.password} onChange={e => setAuthData({ ...authData, password: e.target.value })} />
+                                    {authMode === 'register' && <RegisterTermsConsent checked={acceptTerms} onChange={setAcceptTerms} />}
                                     {authError && <p className={styles.errorText}>{authError}</p>}
                                     <button type="submit" className={styles.btnGenerate} disabled={isAuthLoading}>
                                         {isAuthLoading ? 'Se procesează...' : authMode === 'register' ? 'Creează cont și continuă' : 'Intră în cont'}
@@ -758,6 +768,7 @@ function CreateEventContent() {
                                 ) : (
                                     <div className={styles.priceCard}>
                                         <div className={styles.price}>20 €<span> / invitație</span></div>
+                                        <p style={{ fontSize: '0.8rem', color: '#999', margin: '4px 0 8px' }}>{PRICE_NOTE}.</p>
                                         <ul>
                                             <li><Check size={14} /> Link unic, fără limită de invitați</li>
                                             <li><Check size={14} /> Confirmări RSVP live + notificări pe email</li>
@@ -766,6 +777,8 @@ function CreateEventContent() {
                                         </ul>
                                     </div>
                                 )}
+
+                                {!isPaid && <CheckoutConsent checked={checkoutConsent} onChange={(v) => { setCheckoutConsent(v); if (v) setSaveError('') }} />}
 
                                 {saveError && <p className={styles.errorBox}>{saveError}</p>}
 

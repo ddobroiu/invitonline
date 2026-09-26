@@ -41,6 +41,8 @@ export async function fulfillCheckout(session: Stripe.Checkout.Session) {
                 currency,
                 stripeSessionId: session.id,
                 status: 'completed',
+                termsAcceptedAt: session.metadata?.terms_accepted_at ? new Date(session.metadata.terms_accepted_at) : null,
+                termsVersion: session.metadata?.terms_version || null,
             }
         })
     } catch {
@@ -93,6 +95,7 @@ export async function fulfillCheckout(session: Stripe.Checkout.Session) {
                         <p style="margin: 10px 0; font-size: 1.1rem; color: #000;">${inviteUrl}</p>
                         <a href="${inviteUrl}" style="display: inline-block; background: #000; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 6px; margin-top: 10px;">Vezi invitația</a>
                     </div>
+                    <p style="font-size: 0.85rem; color: #666;">Confirmăm că, înainte de plată, ai fost de acord cu Termenii și condițiile (versiunea ${escapeHtml(session.metadata?.terms_version || '')}) și ai solicitat furnizarea imediată a serviciului digital, luând la cunoștință că, odată cu începerea executării, îți pierzi dreptul de retragere de 14 zile (OUG 34/2014, art. 16 lit. a și m). Termenii: <a href="${siteUrl}/termeni-si-conditii" style="color: #d4af37;">${siteUrl}/termeni-si-conditii</a>. Preț final; furnizorul nu este plătitor de TVA.</p>
                     ${invLink ? `<p>Factura ta fiscală: <a href="${escapeHtml(invLink)}" style="color: #d4af37; font-weight: bold;">Descarcă factura (PDF)</a></p>` : ''}
                 </div>
             `

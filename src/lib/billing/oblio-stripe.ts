@@ -38,24 +38,12 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
   return body.data as T;
 }
 
-// The company's own VAT setting in Oblio (e.g. a non-VAT payer has only its
-// exempt rate), so invoices follow the company configuration instead of a
-// hardcoded rate.
-let vatRate: { name: string } | null | undefined;
-
-async function defaultVatRate(): Promise<{ name: string } | null> {
-  if (vatRate !== undefined) return vatRate;
-  try {
-    const rates = await call<{ name: string; percent?: number; default?: boolean }[]>(
-      `/nomenclature/vat_rates?cif=${encodeURIComponent(env.OBLIO_CIF_FIRMA!)}`,
-    );
-    const pick = rates.find((r) => r.default) ?? rates[0];
-    vatRate = pick ? { name: pick.name } : null;
-  } catch (error: unknown) {
-    console.error("[oblio] vat rates:", error);
-    vatRate = null;
-  }
-  return vatRate;
+// The company is NOT a VAT payer ("neplatitor de TVA"): products carry no VAT rate, so Oblio applies the
+// company's own VAT setting and the invoiced total equals the amount paid. OBLIO_VAT_NAME can force a
+// specific rate name from the company's Oblio nomenclature if ever needed (leave unset by default).
+function vatOverride(): { vatName: string } | Record<string, never> {
+  const name = env.OBLIO_VAT_NAME?.trim();
+  return name ? { vatName: name } : {};
 }
 
 export type IssuedInvoice = { series: string; number: string; url: string | null };
@@ -68,7 +56,6 @@ export async function issueInvoice(
   const address = buyer?.address;
   const country: string = (address?.country ?? "RO").toUpperCase();
   const taxId: string | undefined = buyer?.tax_ids?.[0]?.value ?? undefined;
-  const vat = await defaultVatRate();
   // The invoice date is the Romanian calendar day (UTC would give yesterday between 00:00 and 03:00)
   const today: string = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Bucharest" }).format(new Date());
 
@@ -102,7 +89,7 @@ export async function issueInvoice(
           productType: "Serviciu",
           currency: line.currency.toUpperCase(),
           vatIncluded: 1,
-          ...(vat ? { vatName: vat.name } : {}),
+          ...vatOverride(),
         },
       ],
     }),

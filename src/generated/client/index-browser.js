@@ -134,7 +134,9 @@ exports.Prisma.UserScalarFieldEnum = {
   city: 'city',
   county: 'county',
   bank: 'bank',
-  iban: 'iban'
+  iban: 'iban',
+  termsAcceptedAt: 'termsAcceptedAt',
+  termsVersion: 'termsVersion'
 };
 
 exports.Prisma.EventScalarFieldEnum = {
@@ -166,6 +168,8 @@ exports.Prisma.OrderScalarFieldEnum = {
   invoiceSeries: 'invoiceSeries',
   invoiceNumber: 'invoiceNumber',
   invoiceLink: 'invoiceLink',
+  termsAcceptedAt: 'termsAcceptedAt',
+  termsVersion: 'termsVersion',
   createdAt: 'createdAt'
 };
 

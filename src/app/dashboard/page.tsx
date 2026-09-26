@@ -6,6 +6,8 @@ import { useSession } from 'next-auth/react'
 import styles from './page.module.css'
 import TemplateRenderer, { CENTERED_TEMPLATES, eventToTemplateProps } from '@/components/TemplateRenderer'
 import BillingPanel from '@/components/dashboard/BillingPanel'
+import CheckoutConsent from '@/components/legal/CheckoutConsent'
+import { PRICE_NOTE } from '@/config/legal'
 import {
     Search, Plus, Trash2, Heart, Baby, PartyPopper, Cake, Calendar, MapPin, Eye, Users, Lock, Link as LinkIcon,
     Pencil, Download, ExternalLink, Loader2, CheckCircle2, XCircle, Clock, LayoutGrid, Receipt, MessageCircle
@@ -49,6 +51,9 @@ function DashboardContent() {
     const [activeTab, setActiveTab] = useState<Tab>('overview')
     const [toast, setToast] = useState('')
     const [payingId, setPayingId] = useState<string | null>(null)
+    // Invitatia pentru care cerem acordul inainte de plata (OUG 34/2014)
+    const [consentFor, setConsentFor] = useState<string | null>(null)
+    const [checkoutConsent, setCheckoutConsent] = useState(false)
 
     const selectedEvent = events.find(e => e.id === selectedId) || null
 
@@ -121,13 +126,20 @@ function DashboardContent() {
         window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank', 'noopener')
     }
 
-    const handlePayment = async (eventId: string) => {
+    const handlePayment = (eventId: string) => {
+        setCheckoutConsent(false)
+        setConsentFor(eventId)
+    }
+
+    const startPayment = async (eventId: string) => {
+        if (!checkoutConsent) return
+        setConsentFor(null)
         setPayingId(eventId)
         try {
             const res = await fetch('/api/checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ eventId })
+                body: JSON.stringify({ eventId, consent: true })
             })
             const data = await res.json().catch(() => ({}))
             if (res.ok && data.url) {
@@ -498,6 +510,28 @@ function DashboardContent() {
             </div>
 
             {toast && <div className={styles.toast}>{toast}</div>}
+            {consentFor && (
+                <div
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="checkout-consent-title"
+                    onClick={() => setConsentFor(null)}
+                    onKeyDown={(e) => { if (e.key === 'Escape') setConsentFor(null) }}
+                    style={{ position: 'fixed', inset: 0, zIndex: 9000, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}
+                >
+                    <div onClick={(e) => e.stopPropagation()} style={{ background: '#111', border: '1px solid #333', borderRadius: '16px', padding: '20px', maxWidth: '460px', width: '100%', color: '#ddd' }}>
+                        <h2 id="checkout-consent-title" style={{ fontFamily: 'var(--font-heading)', fontSize: '1.3rem', color: '#fff', marginBottom: '6px' }}>Activează invitația – 20 €</h2>
+                        <p style={{ fontSize: '0.85rem', color: '#999' }}>{PRICE_NOTE}. Plata se face securizat prin Stripe.</p>
+                        <CheckoutConsent checked={checkoutConsent} onChange={setCheckoutConsent} />
+                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                            <button type="button" className={styles.secondaryBtn} onClick={() => setConsentFor(null)}>Renunță</button>
+                            <button type="button" className={styles.primaryBtn} disabled={!checkoutConsent} style={{ opacity: checkoutConsent ? 1 : 0.5 }} onClick={() => startPayment(consentFor)}>
+                                <Lock size={16} /> Continuă la plată
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

@@ -1,6 +1,8 @@
 'use client'
 
 import Link from 'next/link'
+import { ANPC_SAL_URL, ANPC_URL, COMPANY, COMPANY_ADDRESS_LINE, LEGAL_LINKS } from '@/config/legal'
+import { openCookieSettings } from '@/lib/consent'
 
 export default function Footer() {
     return (
@@ -40,8 +42,24 @@ export default function Footer() {
 
                 <div>
                     <h4 style={{ color: 'white', marginBottom: '15px', fontSize: '1rem' }}>Contact</h4>
-                    <p style={{ marginBottom: '10px' }}><a href="mailto:contact@invitonline.ro" className="hover-text-white">contact@invitonline.ro</a></p>
-                    <p style={{ marginBottom: '10px' }}>București, România</p>
+                    <p style={{ marginBottom: '10px' }}><a href={`mailto:${COMPANY.email}`} className="hover-text-white">{COMPANY.email}</a></p>
+                    <p style={{ marginBottom: '10px' }}><Link href={LEGAL_LINKS.contact} className="hover-text-white">Date de contact și identificare</Link></p>
+                </div>
+
+                <div>
+                    <h4 style={{ color: 'white', marginBottom: '15px', fontSize: '1rem' }}>Informații legale</h4>
+                    <ul style={{ listStyle: 'none', padding: 0 }}>
+                        <li style={{ marginBottom: '10px' }}><Link href={LEGAL_LINKS.terms} className="hover-text-white">Termeni și condiții</Link></li>
+                        <li style={{ marginBottom: '10px' }}><Link href={LEGAL_LINKS.privacy} className="hover-text-white">Politica de confidențialitate</Link></li>
+                        <li style={{ marginBottom: '10px' }}><Link href={LEGAL_LINKS.cookies} className="hover-text-white">Politica de cookies</Link></li>
+                        <li style={{ marginBottom: '10px' }}>
+                            <button type="button" onClick={openCookieSettings} className="hover-text-white" style={{ background: 'none', border: 'none', color: 'inherit', padding: 0, cursor: 'pointer', font: 'inherit' }}>
+                                Setări cookies
+                            </button>
+                        </li>
+                        <li style={{ marginBottom: '10px' }}><a href={ANPC_SAL_URL} target="_blank" rel="noopener noreferrer" className="hover-text-white">ANPC – SAL (Soluționarea alternativă a litigiilor)</a></li>
+                        <li style={{ marginBottom: '10px' }}><a href={ANPC_URL} target="_blank" rel="noopener noreferrer" className="hover-text-white">ANPC</a></li>
+                    </ul>
                 </div>
 
                 <div>
@@ -60,6 +78,10 @@ export default function Footer() {
                 borderTop: '1px solid #111',
                 fontSize: '0.8rem'
             }}>
+                <p style={{ marginBottom: '8px', lineHeight: 1.6 }}>
+                    InvitOnline este operat de {COMPANY.name} · CUI {COMPANY.cui} ({COMPANY.vatStatus}) · Nr. Reg. Com. {COMPANY.regCom} ·
+                    Sediu: {COMPANY_ADDRESS_LINE} · <a href={`mailto:${COMPANY.email}`} className="hover-text-white">{COMPANY.email}</a>
+                </p>
                 <p>&copy; {new Date().getFullYear()} InvitOnline. Toate drepturile rezervate.</p>
             </div>
         </footer>

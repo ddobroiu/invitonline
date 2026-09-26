@@ -1239,6 +1239,8 @@ export namespace Prisma {
     county: string | null
     bank: string | null
     iban: string | null
+    termsAcceptedAt: Date | null
+    termsVersion: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1256,6 +1258,8 @@ export namespace Prisma {
     county: string | null
     bank: string | null
     iban: string | null
+    termsAcceptedAt: Date | null
+    termsVersion: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1273,6 +1277,8 @@ export namespace Prisma {
     county: number
     bank: number
     iban: number
+    termsAcceptedAt: number
+    termsVersion: number
     _all: number
   }
 
@@ -1292,6 +1298,8 @@ export namespace Prisma {
     county?: true
     bank?: true
     iban?: true
+    termsAcceptedAt?: true
+    termsVersion?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1309,6 +1317,8 @@ export namespace Prisma {
     county?: true
     bank?: true
     iban?: true
+    termsAcceptedAt?: true
+    termsVersion?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1326,6 +1336,8 @@ export namespace Prisma {
     county?: true
     bank?: true
     iban?: true
+    termsAcceptedAt?: true
+    termsVersion?: true
     _all?: true
   }
 
@@ -1416,6 +1428,8 @@ export namespace Prisma {
     county: string | null
     bank: string | null
     iban: string | null
+    termsAcceptedAt: Date | null
+    termsVersion: string | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1450,6 +1464,8 @@ export namespace Prisma {
     county?: boolean
     bank?: boolean
     iban?: boolean
+    termsAcceptedAt?: boolean
+    termsVersion?: boolean
     events?: boolean | User$eventsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1470,6 +1486,8 @@ export namespace Prisma {
     county?: boolean
     bank?: boolean
     iban?: boolean
+    termsAcceptedAt?: boolean
+    termsVersion?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1487,6 +1505,8 @@ export namespace Prisma {
     county?: boolean
     bank?: boolean
     iban?: boolean
+    termsAcceptedAt?: boolean
+    termsVersion?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -1504,9 +1524,11 @@ export namespace Prisma {
     county?: boolean
     bank?: boolean
     iban?: boolean
+    termsAcceptedAt?: boolean
+    termsVersion?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "createdAt" | "updatedAt" | "companyName" | "cui" | "regCom" | "address" | "city" | "county" | "bank" | "iban", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "createdAt" | "updatedAt" | "companyName" | "cui" | "regCom" | "address" | "city" | "county" | "bank" | "iban" | "termsAcceptedAt" | "termsVersion", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     events?: boolean | User$eventsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -1536,6 +1558,8 @@ export namespace Prisma {
       county: string | null
       bank: string | null
       iban: string | null
+      termsAcceptedAt: Date | null
+      termsVersion: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -1975,6 +1999,8 @@ export namespace Prisma {
     readonly county: FieldRef<"User", 'String'>
     readonly bank: FieldRef<"User", 'String'>
     readonly iban: FieldRef<"User", 'String'>
+    readonly termsAcceptedAt: FieldRef<"User", 'DateTime'>
+    readonly termsVersion: FieldRef<"User", 'String'>
   }
     
 
@@ -3702,6 +3728,8 @@ export namespace Prisma {
     invoiceSeries: string | null
     invoiceNumber: string | null
     invoiceLink: string | null
+    termsAcceptedAt: Date | null
+    termsVersion: string | null
     createdAt: Date | null
   }
 
@@ -3716,6 +3744,8 @@ export namespace Prisma {
     invoiceSeries: string | null
     invoiceNumber: string | null
     invoiceLink: string | null
+    termsAcceptedAt: Date | null
+    termsVersion: string | null
     createdAt: Date | null
   }
 
@@ -3730,6 +3760,8 @@ export namespace Prisma {
     invoiceSeries: number
     invoiceNumber: number
     invoiceLink: number
+    termsAcceptedAt: number
+    termsVersion: number
     createdAt: number
     _all: number
   }
@@ -3754,6 +3786,8 @@ export namespace Prisma {
     invoiceSeries?: true
     invoiceNumber?: true
     invoiceLink?: true
+    termsAcceptedAt?: true
+    termsVersion?: true
     createdAt?: true
   }
 
@@ -3768,6 +3802,8 @@ export namespace Prisma {
     invoiceSeries?: true
     invoiceNumber?: true
     invoiceLink?: true
+    termsAcceptedAt?: true
+    termsVersion?: true
     createdAt?: true
   }
 
@@ -3782,6 +3818,8 @@ export namespace Prisma {
     invoiceSeries?: true
     invoiceNumber?: true
     invoiceLink?: true
+    termsAcceptedAt?: true
+    termsVersion?: true
     createdAt?: true
     _all?: true
   }
@@ -3883,6 +3921,8 @@ export namespace Prisma {
     invoiceSeries: string | null
     invoiceNumber: string | null
     invoiceLink: string | null
+    termsAcceptedAt: Date | null
+    termsVersion: string | null
     createdAt: Date
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
@@ -3916,6 +3956,8 @@ export namespace Prisma {
     invoiceSeries?: boolean
     invoiceNumber?: boolean
     invoiceLink?: boolean
+    termsAcceptedAt?: boolean
+    termsVersion?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     event?: boolean | Order$eventArgs<ExtArgs>
@@ -3932,6 +3974,8 @@ export namespace Prisma {
     invoiceSeries?: boolean
     invoiceNumber?: boolean
     invoiceLink?: boolean
+    termsAcceptedAt?: boolean
+    termsVersion?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     event?: boolean | Order$eventArgs<ExtArgs>
@@ -3948,6 +3992,8 @@ export namespace Prisma {
     invoiceSeries?: boolean
     invoiceNumber?: boolean
     invoiceLink?: boolean
+    termsAcceptedAt?: boolean
+    termsVersion?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     event?: boolean | Order$eventArgs<ExtArgs>
@@ -3964,10 +4010,12 @@ export namespace Prisma {
     invoiceSeries?: boolean
     invoiceNumber?: boolean
     invoiceLink?: boolean
+    termsAcceptedAt?: boolean
+    termsVersion?: boolean
     createdAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "eventId" | "amount" | "currency" | "stripeSessionId" | "status" | "invoiceSeries" | "invoiceNumber" | "invoiceLink" | "createdAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "eventId" | "amount" | "currency" | "stripeSessionId" | "status" | "invoiceSeries" | "invoiceNumber" | "invoiceLink" | "termsAcceptedAt" | "termsVersion" | "createdAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     event?: boolean | Order$eventArgs<ExtArgs>
@@ -3998,6 +4046,8 @@ export namespace Prisma {
       invoiceSeries: string | null
       invoiceNumber: string | null
       invoiceLink: string | null
+      termsAcceptedAt: Date | null
+      termsVersion: string | null
       createdAt: Date
     }, ExtArgs["result"]["order"]>
     composites: {}
@@ -4434,6 +4484,8 @@ export namespace Prisma {
     readonly invoiceSeries: FieldRef<"Order", 'String'>
     readonly invoiceNumber: FieldRef<"Order", 'String'>
     readonly invoiceLink: FieldRef<"Order", 'String'>
+    readonly termsAcceptedAt: FieldRef<"Order", 'DateTime'>
+    readonly termsVersion: FieldRef<"Order", 'String'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
   }
     
@@ -6040,7 +6092,9 @@ export namespace Prisma {
     city: 'city',
     county: 'county',
     bank: 'bank',
-    iban: 'iban'
+    iban: 'iban',
+    termsAcceptedAt: 'termsAcceptedAt',
+    termsVersion: 'termsVersion'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -6078,6 +6132,8 @@ export namespace Prisma {
     invoiceSeries: 'invoiceSeries',
     invoiceNumber: 'invoiceNumber',
     invoiceLink: 'invoiceLink',
+    termsAcceptedAt: 'termsAcceptedAt',
+    termsVersion: 'termsVersion',
     createdAt: 'createdAt'
   };
 
@@ -6242,6 +6298,8 @@ export namespace Prisma {
     county?: StringNullableFilter<"User"> | string | null
     bank?: StringNullableFilter<"User"> | string | null
     iban?: StringNullableFilter<"User"> | string | null
+    termsAcceptedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    termsVersion?: StringNullableFilter<"User"> | string | null
     events?: EventListRelationFilter
     orders?: OrderListRelationFilter
   }
@@ -6261,6 +6319,8 @@ export namespace Prisma {
     county?: SortOrderInput | SortOrder
     bank?: SortOrderInput | SortOrder
     iban?: SortOrderInput | SortOrder
+    termsAcceptedAt?: SortOrderInput | SortOrder
+    termsVersion?: SortOrderInput | SortOrder
     events?: EventOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
   }
@@ -6283,6 +6343,8 @@ export namespace Prisma {
     county?: StringNullableFilter<"User"> | string | null
     bank?: StringNullableFilter<"User"> | string | null
     iban?: StringNullableFilter<"User"> | string | null
+    termsAcceptedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    termsVersion?: StringNullableFilter<"User"> | string | null
     events?: EventListRelationFilter
     orders?: OrderListRelationFilter
   }, "id" | "email">
@@ -6302,6 +6364,8 @@ export namespace Prisma {
     county?: SortOrderInput | SortOrder
     bank?: SortOrderInput | SortOrder
     iban?: SortOrderInput | SortOrder
+    termsAcceptedAt?: SortOrderInput | SortOrder
+    termsVersion?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -6325,6 +6389,8 @@ export namespace Prisma {
     county?: StringNullableWithAggregatesFilter<"User"> | string | null
     bank?: StringNullableWithAggregatesFilter<"User"> | string | null
     iban?: StringNullableWithAggregatesFilter<"User"> | string | null
+    termsAcceptedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    termsVersion?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type EventWhereInput = {
@@ -6452,6 +6518,8 @@ export namespace Prisma {
     invoiceSeries?: StringNullableFilter<"Order"> | string | null
     invoiceNumber?: StringNullableFilter<"Order"> | string | null
     invoiceLink?: StringNullableFilter<"Order"> | string | null
+    termsAcceptedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    termsVersion?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     event?: XOR<EventNullableScalarRelationFilter, EventWhereInput> | null
@@ -6468,6 +6536,8 @@ export namespace Prisma {
     invoiceSeries?: SortOrderInput | SortOrder
     invoiceNumber?: SortOrderInput | SortOrder
     invoiceLink?: SortOrderInput | SortOrder
+    termsAcceptedAt?: SortOrderInput | SortOrder
+    termsVersion?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
     event?: EventOrderByWithRelationInput
@@ -6487,6 +6557,8 @@ export namespace Prisma {
     invoiceSeries?: StringNullableFilter<"Order"> | string | null
     invoiceNumber?: StringNullableFilter<"Order"> | string | null
     invoiceLink?: StringNullableFilter<"Order"> | string | null
+    termsAcceptedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    termsVersion?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     event?: XOR<EventNullableScalarRelationFilter, EventWhereInput> | null
@@ -6503,6 +6575,8 @@ export namespace Prisma {
     invoiceSeries?: SortOrderInput | SortOrder
     invoiceNumber?: SortOrderInput | SortOrder
     invoiceLink?: SortOrderInput | SortOrder
+    termsAcceptedAt?: SortOrderInput | SortOrder
+    termsVersion?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
@@ -6525,6 +6599,8 @@ export namespace Prisma {
     invoiceSeries?: StringNullableWithAggregatesFilter<"Order"> | string | null
     invoiceNumber?: StringNullableWithAggregatesFilter<"Order"> | string | null
     invoiceLink?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    termsAcceptedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+    termsVersion?: StringNullableWithAggregatesFilter<"Order"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
   }
 
@@ -6620,6 +6696,8 @@ export namespace Prisma {
     county?: string | null
     bank?: string | null
     iban?: string | null
+    termsAcceptedAt?: Date | string | null
+    termsVersion?: string | null
     events?: EventCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
   }
@@ -6639,6 +6717,8 @@ export namespace Prisma {
     county?: string | null
     bank?: string | null
     iban?: string | null
+    termsAcceptedAt?: Date | string | null
+    termsVersion?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
   }
@@ -6658,6 +6738,8 @@ export namespace Prisma {
     county?: NullableStringFieldUpdateOperationsInput | string | null
     bank?: NullableStringFieldUpdateOperationsInput | string | null
     iban?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
   }
@@ -6677,6 +6759,8 @@ export namespace Prisma {
     county?: NullableStringFieldUpdateOperationsInput | string | null
     bank?: NullableStringFieldUpdateOperationsInput | string | null
     iban?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -6696,6 +6780,8 @@ export namespace Prisma {
     county?: string | null
     bank?: string | null
     iban?: string | null
+    termsAcceptedAt?: Date | string | null
+    termsVersion?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -6713,6 +6799,8 @@ export namespace Prisma {
     county?: NullableStringFieldUpdateOperationsInput | string | null
     bank?: NullableStringFieldUpdateOperationsInput | string | null
     iban?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -6730,6 +6818,8 @@ export namespace Prisma {
     county?: NullableStringFieldUpdateOperationsInput | string | null
     bank?: NullableStringFieldUpdateOperationsInput | string | null
     iban?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EventCreateInput = {
@@ -6874,6 +6964,8 @@ export namespace Prisma {
     invoiceSeries?: string | null
     invoiceNumber?: string | null
     invoiceLink?: string | null
+    termsAcceptedAt?: Date | string | null
+    termsVersion?: string | null
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutOrdersInput
     event?: EventCreateNestedOneWithoutOrdersInput
@@ -6890,6 +6982,8 @@ export namespace Prisma {
     invoiceSeries?: string | null
     invoiceNumber?: string | null
     invoiceLink?: string | null
+    termsAcceptedAt?: Date | string | null
+    termsVersion?: string | null
     createdAt?: Date | string
   }
 
@@ -6902,6 +6996,8 @@ export namespace Prisma {
     invoiceSeries?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceLink?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     event?: EventUpdateOneWithoutOrdersNestedInput
@@ -6918,6 +7014,8 @@ export namespace Prisma {
     invoiceSeries?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceLink?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6932,6 +7030,8 @@ export namespace Prisma {
     invoiceSeries?: string | null
     invoiceNumber?: string | null
     invoiceLink?: string | null
+    termsAcceptedAt?: Date | string | null
+    termsVersion?: string | null
     createdAt?: Date | string
   }
 
@@ -6944,6 +7044,8 @@ export namespace Prisma {
     invoiceSeries?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceLink?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6958,6 +7060,8 @@ export namespace Prisma {
     invoiceSeries?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceLink?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7085,6 +7189,17 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type EventListRelationFilter = {
     every?: EventWhereInput
     some?: EventWhereInput
@@ -7125,6 +7240,8 @@ export namespace Prisma {
     county?: SortOrder
     bank?: SortOrder
     iban?: SortOrder
+    termsAcceptedAt?: SortOrder
+    termsVersion?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -7142,6 +7259,8 @@ export namespace Prisma {
     county?: SortOrder
     bank?: SortOrder
     iban?: SortOrder
+    termsAcceptedAt?: SortOrder
+    termsVersion?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -7159,6 +7278,8 @@ export namespace Prisma {
     county?: SortOrder
     bank?: SortOrder
     iban?: SortOrder
+    termsAcceptedAt?: SortOrder
+    termsVersion?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -7209,6 +7330,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -7367,6 +7502,8 @@ export namespace Prisma {
     invoiceSeries?: SortOrder
     invoiceNumber?: SortOrder
     invoiceLink?: SortOrder
+    termsAcceptedAt?: SortOrder
+    termsVersion?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -7385,6 +7522,8 @@ export namespace Prisma {
     invoiceSeries?: SortOrder
     invoiceNumber?: SortOrder
     invoiceLink?: SortOrder
+    termsAcceptedAt?: SortOrder
+    termsVersion?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -7399,6 +7538,8 @@ export namespace Prisma {
     invoiceSeries?: SortOrder
     invoiceNumber?: SortOrder
     invoiceLink?: SortOrder
+    termsAcceptedAt?: SortOrder
+    termsVersion?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -7536,6 +7677,10 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type EventUpdateManyWithoutUserNestedInput = {
@@ -7795,6 +7940,17 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -7863,6 +8019,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedBoolFilter<$PrismaModel = never> = {
@@ -8001,6 +8171,8 @@ export namespace Prisma {
     invoiceSeries?: string | null
     invoiceNumber?: string | null
     invoiceLink?: string | null
+    termsAcceptedAt?: Date | string | null
+    termsVersion?: string | null
     createdAt?: Date | string
     event?: EventCreateNestedOneWithoutOrdersInput
   }
@@ -8015,6 +8187,8 @@ export namespace Prisma {
     invoiceSeries?: string | null
     invoiceNumber?: string | null
     invoiceLink?: string | null
+    termsAcceptedAt?: Date | string | null
+    termsVersion?: string | null
     createdAt?: Date | string
   }
 
@@ -8095,6 +8269,8 @@ export namespace Prisma {
     invoiceSeries?: StringNullableFilter<"Order"> | string | null
     invoiceNumber?: StringNullableFilter<"Order"> | string | null
     invoiceLink?: StringNullableFilter<"Order"> | string | null
+    termsAcceptedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    termsVersion?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
   }
 
@@ -8113,6 +8289,8 @@ export namespace Prisma {
     county?: string | null
     bank?: string | null
     iban?: string | null
+    termsAcceptedAt?: Date | string | null
+    termsVersion?: string | null
     orders?: OrderCreateNestedManyWithoutUserInput
   }
 
@@ -8131,6 +8309,8 @@ export namespace Prisma {
     county?: string | null
     bank?: string | null
     iban?: string | null
+    termsAcceptedAt?: Date | string | null
+    termsVersion?: string | null
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -8180,6 +8360,8 @@ export namespace Prisma {
     invoiceSeries?: string | null
     invoiceNumber?: string | null
     invoiceLink?: string | null
+    termsAcceptedAt?: Date | string | null
+    termsVersion?: string | null
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutOrdersInput
   }
@@ -8194,6 +8376,8 @@ export namespace Prisma {
     invoiceSeries?: string | null
     invoiceNumber?: string | null
     invoiceLink?: string | null
+    termsAcceptedAt?: Date | string | null
+    termsVersion?: string | null
     createdAt?: Date | string
   }
 
@@ -8233,6 +8417,8 @@ export namespace Prisma {
     county?: NullableStringFieldUpdateOperationsInput | string | null
     bank?: NullableStringFieldUpdateOperationsInput | string | null
     iban?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     orders?: OrderUpdateManyWithoutUserNestedInput
   }
 
@@ -8251,6 +8437,8 @@ export namespace Prisma {
     county?: NullableStringFieldUpdateOperationsInput | string | null
     bank?: NullableStringFieldUpdateOperationsInput | string | null
     iban?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -8316,6 +8504,8 @@ export namespace Prisma {
     county?: string | null
     bank?: string | null
     iban?: string | null
+    termsAcceptedAt?: Date | string | null
+    termsVersion?: string | null
     events?: EventCreateNestedManyWithoutUserInput
   }
 
@@ -8334,6 +8524,8 @@ export namespace Prisma {
     county?: string | null
     bank?: string | null
     iban?: string | null
+    termsAcceptedAt?: Date | string | null
+    termsVersion?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -8411,6 +8603,8 @@ export namespace Prisma {
     county?: NullableStringFieldUpdateOperationsInput | string | null
     bank?: NullableStringFieldUpdateOperationsInput | string | null
     iban?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUpdateManyWithoutUserNestedInput
   }
 
@@ -8429,6 +8623,8 @@ export namespace Prisma {
     county?: NullableStringFieldUpdateOperationsInput | string | null
     bank?: NullableStringFieldUpdateOperationsInput | string | null
     iban?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -8600,6 +8796,8 @@ export namespace Prisma {
     invoiceSeries?: string | null
     invoiceNumber?: string | null
     invoiceLink?: string | null
+    termsAcceptedAt?: Date | string | null
+    termsVersion?: string | null
     createdAt?: Date | string
   }
 
@@ -8667,6 +8865,8 @@ export namespace Prisma {
     invoiceSeries?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceLink?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     event?: EventUpdateOneWithoutOrdersNestedInput
   }
@@ -8681,6 +8881,8 @@ export namespace Prisma {
     invoiceSeries?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceLink?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -8694,6 +8896,8 @@ export namespace Prisma {
     invoiceSeries?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceLink?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -8718,6 +8922,8 @@ export namespace Prisma {
     invoiceSeries?: string | null
     invoiceNumber?: string | null
     invoiceLink?: string | null
+    termsAcceptedAt?: Date | string | null
+    termsVersion?: string | null
     createdAt?: Date | string
   }
 
@@ -8763,6 +8969,8 @@ export namespace Prisma {
     invoiceSeries?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceLink?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
   }
@@ -8777,6 +8985,8 @@ export namespace Prisma {
     invoiceSeries?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceLink?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -8790,6 +9000,8 @@ export namespace Prisma {
     invoiceSeries?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceLink?: NullableStringFieldUpdateOperationsInput | string | null
+    termsAcceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

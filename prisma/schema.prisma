@@ -26,6 +26,10 @@ model User {
   bank          String?
   iban          String?
 
+  // Acceptarea Termenilor la crearea contului
+  termsAcceptedAt DateTime?
+  termsVersion    String?
+
   events        Event[]
   orders        Order[]
 }
@@ -66,6 +70,10 @@ model Order {
   invoiceSeries   String?
   invoiceNumber   String?
   invoiceLink     String?
+
+  // Acordul la plata: termeni + furnizare imediata / pierderea dreptului de retragere (OUG 34/2014)
+  termsAcceptedAt DateTime?
+  termsVersion    String?
 
   createdAt       DateTime @default(now())
 }

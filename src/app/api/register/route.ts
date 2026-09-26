@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { escapeHtml, getSiteUrl } from '@/lib/utils'
+import { LEGAL_VERSION } from '@/config/legal'
 
 export async function POST(req: Request) {
     try {
@@ -12,6 +13,9 @@ export async function POST(req: Request) {
 
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             return NextResponse.json({ message: 'Adresa de email nu este validă.' }, { status: 400 })
+        }
+        if (body.acceptTerms !== true) {
+            return NextResponse.json({ message: 'Pentru a crea contul trebuie să accepți Termenii și condițiile.' }, { status: 400 })
         }
         if (password.length < 6) {
             return NextResponse.json({ message: 'Parola trebuie să aibă cel puțin 6 caractere.' }, { status: 400 })
@@ -25,7 +29,13 @@ export async function POST(req: Request) {
         }
 
         const user = await prisma.user.create({
-            data: { email, password: await bcrypt.hash(password, 10), name }
+            data: {
+                email,
+                password: await bcrypt.hash(password, 10),
+                name,
+                termsAcceptedAt: new Date(),
+                termsVersion: LEGAL_VERSION,
+            }
         })
 
         try {

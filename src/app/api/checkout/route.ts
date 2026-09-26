@@ -5,6 +5,8 @@ import prisma from '@/lib/prisma'
 import { getStripe, INVITATION_CURRENCY, INVITATION_PRICE } from '@/lib/stripe'
 import { fulfillCheckout } from '@/lib/fulfill'
 import { getSiteUrl } from '@/lib/utils'
+import { LEGAL_VERSION } from '@/config/legal'
+import { getCookieValue, hasAnalyticsConsent } from '@/lib/consent'
 
 export async function POST(req: Request) {
     try {
@@ -19,7 +21,12 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: 'Plățile nu sunt configurate încă (STRIPE_SECRET_KEY lipsește).' }, { status: 503 })
         }
 
-        const { eventId } = await req.json()
+        const { eventId, consent } = await req.json()
+        // Acordul pentru furnizarea imediata si pierderea dreptului de retragere (OUG 34/2014, art. 16 lit. a si m)
+        if (consent !== true) {
+            return NextResponse.json({ message: 'Trebuie să accepți Termenii și condițiile și furnizarea imediată a serviciului digital.' }, { status: 400 })
+        }
+        const consentAt = new Date().toISOString()
         const event = eventId ? await prisma.event.findUnique({ where: { id: eventId } }) : null
 
         if (!event || event.userId !== userId) {
@@ -31,8 +38,11 @@ export async function POST(req: Request) {
 
         const siteUrl = getSiteUrl(req)
         // Contul Stripe „Applications” e comun aplicatiilor: eticheta de proiect separa platile in mydashboard
-        const vid = (req.headers.get('cookie') || '').split(';').map((c) => c.trim().split('=')).find(([k]) => k === '_md_vid')?.[1]
+        // Identificatorul de vizitator mydashboard se trimite doar cu acord pentru cookies analitice
+        const cookieHeader = req.headers.get('cookie')
+        const vid = hasAnalyticsConsent(cookieHeader) ? getCookieValue(cookieHeader, '_md_vid') : undefined
         const tag = { project: 'invitonline', ...(vid && { md_vid: vid.slice(0, 64) }) }
+        const consentMeta = { terms_version: LEGAL_VERSION, terms_accepted_at: consentAt, withdrawal_waiver: 'true' }
         const checkoutSession = await stripe.checkout.sessions.create({
             line_items: [
                 {
@@ -51,7 +61,7 @@ export async function POST(req: Request) {
             customer_email: session?.user?.email || undefined,
             success_url: `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${siteUrl}/dashboard?canceled=true`,
-            metadata: { ...tag, eventId: event.id, userId },
+            metadata: { ...tag, ...consentMeta, eventId: event.id, userId },
             payment_intent_data: { metadata: { ...tag, eventId: event.id, userId } },
             // Numele, adresa si (pentru firme) CUI-ul pentru factura Oblio, cerute de Stripe la plata
             billing_address_collection: 'required',

@@ -3,6 +3,8 @@ import { Inter, Playfair_Display } from 'next/font/google'
 import './globals.css'
 import Providers from '@/components/Providers'
 import SiteShell from '@/components/SiteShell'
+import CookieConsent from '@/components/CookieConsent'
+import { BRAND, COMPANY, SITE_URL } from '@/config/legal'
 
 const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-body' })
 const playfair = Playfair_Display({ subsets: ['latin', 'latin-ext'], variable: '--font-heading' })
@@ -22,6 +24,25 @@ export const viewport: Viewport = {
   themeColor: '#0a0a0a',
 }
 
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: BRAND,
+  legalName: COMPANY.name,
+  url: SITE_URL,
+  email: COMPANY.email,
+  taxID: COMPANY.cui,
+  identifier: COMPANY.euid,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: COMPANY.address.street,
+    addressLocality: COMPANY.address.locality,
+    addressRegion: COMPANY.address.county,
+    postalCode: COMPANY.address.postalCode,
+    addressCountry: COMPANY.address.countryCode,
+  },
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -29,13 +50,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ro">
-      <head>
-        {/* mydashboard.ro: vizite, surse de trafic și legătura cu plățile (proiectul invitonline) */}
-        <script defer src="https://mydashboard.ro/t.js" data-site="b6a9d9d1b5b7a1da" />
-      </head>
       <body className={`${inter.variable} ${playfair.variable} antialiased`}>
+        {/* Tracker-ul mydashboard.ro se încarcă din CookieConsent, doar după acordul pentru cookies analitice */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd).replace(/</g, '\\u003c') }}
+        />
         <Providers>
           <SiteShell>{children}</SiteShell>
+          <CookieConsent />
         </Providers>
       </body>
     </html>

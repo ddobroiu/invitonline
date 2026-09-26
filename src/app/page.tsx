@@ -225,7 +225,7 @@ export default function Home() {
             <span className={styles.priceValue}>20 €</span>
             <span className={styles.priceUnit}>/ invitație</span>
           </div>
-          <p className={styles.priceNote}>Plată unică per eveniment</p>
+          <p className={styles.priceNote}>Plată unică per eveniment · Preț final; furnizorul nu este plătitor de TVA</p>
           <ul className={styles.includedList}>
             {included.map(({ icon: Icon, text }) => (
               <li key={text}>

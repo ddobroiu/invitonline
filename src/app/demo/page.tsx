@@ -233,7 +233,7 @@ export default function DemoPage() {
 
             <footer className={styles.demoFooter}>
                 <h2 className={styles.footerTitle}>Gata să-ți creezi propria invitație?</h2>
-                <p className={styles.footerText}>Alege modelul preferat și personalizează-l în câteva minute. 20 € per invitație, fără limită de invitați.</p>
+                <p className={styles.footerText}>Alege modelul preferat și personalizează-l în câteva minute. 20 € per invitație (preț final; furnizorul nu este plătitor de TVA), fără limită de invitați.</p>
                 <Link href="/create" className={styles.finalCta}>Începe Acum</Link>
             </footer>
         </div>

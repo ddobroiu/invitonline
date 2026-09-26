@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { signIn, useSession } from 'next-auth/react'
 import styles from './page.module.css'
+import RegisterTermsConsent from '@/components/legal/RegisterTermsConsent'
 
 // Only allow redirects inside the site
 function safeCallback(url: string | null) {
@@ -19,6 +20,7 @@ function LoginContent() {
     const [isLogin, setIsLogin] = useState(tab !== 'register')
     const [error, setError] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [acceptTerms, setAcceptTerms] = useState(false)
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -46,7 +48,7 @@ function LoginContent() {
                 const res = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
+                    body: JSON.stringify({ ...formData, acceptTerms })
                 })
                 if (!res.ok) {
                     const data = await res.json().catch(() => ({}))
@@ -142,6 +144,8 @@ function LoginContent() {
                         />
                         {!isLogin && <span className={styles.hint}>Minim 6 caractere</span>}
                     </div>
+
+                    {!isLogin && <RegisterTermsConsent checked={acceptTerms} onChange={setAcceptTerms} />}
 
                     <button type="submit" className={styles.submitBtn} disabled={isLoading}>
                         {isLoading ? 'Se procesează...' : (isLogin ? 'Autentificare' : 'Creează contul')}

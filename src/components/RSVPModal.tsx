@@ -184,6 +184,11 @@ export default function RSVPModal({ isOpen, onClose, onSubmit, eventId }: RSVPMo
                             <button type="submit" style={{ ...submitBtnStyle, opacity: isSending ? 0.7 : 1 }} disabled={isSending}>
                                 {isSending ? 'Se trimite...' : 'Trimite răspunsul'}
                             </button>
+                            <p style={{ color: '#888', fontSize: '0.72rem', lineHeight: 1.45, margin: 0 }}>
+                                Răspunsul tău ajunge la organizatorul evenimentului (operatorul datelor); InvitOnline îl stochează în numele acestuia.
+                                Te rugăm să nu incluzi informații despre sănătate (ex. alergii) decât dacă sunt necesare.{' '}
+                                <a href="/politica-de-confidentialitate" target="_blank" rel="noopener noreferrer" style={{ color: '#7a5f12', textDecoration: 'underline' }}>Politica de confidențialitate</a>
+                            </p>
                         </form>
                     </>
                 )}
