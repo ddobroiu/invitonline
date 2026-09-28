@@ -4,6 +4,25 @@ import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import styles from './page.module.css'
+import { hasAnalyticsConsent } from '@/lib/consent'
+
+// GA4 purchase event: only with analytics consent (gtag exists only after the cookie
+// banner loaded GA), once per Stripe session, no personal data
+function trackPurchase(sessionId: string, value: number, currency: string) {
+    const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag
+    if (typeof gtag !== 'function' || !hasAnalyticsConsent(document.cookie)) return
+    const key = `ga_purchase_${sessionId}`
+    try {
+        if (localStorage.getItem(key)) return
+        localStorage.setItem(key, '1')
+    } catch { /* storage blocat: trimitem o data pentru afisarea curenta */ }
+    gtag('event', 'purchase', {
+        transaction_id: sessionId,
+        value,
+        currency,
+        items: [{ item_id: 'invitatie_premium', item_name: 'Invitație premium', quantity: 1 }],
+    })
+}
 
 const MAX_ATTEMPTS = 10
 
@@ -62,6 +81,9 @@ function SuccessContent() {
                     const data = await res.json()
                     if (data.paid && data.eventId) {
                         if (cancelled) return
+                        if (typeof data.amount === 'number' && data.amount > 0) {
+                            trackPurchase(sessionId, data.amount, String(data.currency || 'EUR'))
+                        }
                         setInvitationUrl(`${window.location.origin}/invitatie/${data.eventId}`)
                         setState('done')
                         return
