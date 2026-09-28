@@ -1,0 +1,43 @@
+# InvitOnline
+
+> InvitOnline (invitonline.ro) este un serviciu online din România prin care oricine își creează o invitație digitală pentru nuntă, botez, aniversare sau petrecere. Invitația primește un link unic, care se trimite pe WhatsApp, Messenger, SMS sau e-mail și se deschide direct în browser, fără aplicație; oaspeții confirmă prezența online (RSVP), iar organizatorul vede confirmările în timp real în contul său.
+
+Există 15 modele (template-uri) interactive, de exemplu Classic Gold, Plic 3D de Lux, Cinematic Netflix, Boarding Pass, Vinyl Record și Loz Norocos. Invitația include hărți Google Maps și Waze, muzică și video, lista de invitați și nu are limită de invitați. Prețul listat pe site este de 20 € per invitație (eveniment), plată unică, fără abonament; preț final, furnizorul nu este plătitor de TVA. Detaliile invitației (ora, locația, programul) se pot modifica și după plată.
+
+## Servicii
+
+- [Pagina principală](https://invitonline.ro): prezentarea serviciului, cum funcționează, preț și întrebări frecvente
+- [Creează invitația](https://invitonline.ro/create): alegi modelul și completezi detaliile evenimentului
+- [Modele de invitații](https://invitonline.ro/demo): toate cele 15 modele, cu previzualizare
+
+## Prețuri
+
+- [Preț](https://invitonline.ro/#preturi): un singur plan, 20 € per invitație, plată unică per eveniment
+
+## Întrebări frecvente
+
+- [Întrebări frecvente](https://invitonline.ro/#intrebari): cum primesc oaspeții invitația, modificări după plată, limita de invitați, confirmări
+
+## Ghiduri (blog)
+
+- [Blog](https://invitonline.ro/blog): articole despre invitații de nuntă și evenimente
+- [Invitații digitale vs tradiționale](https://invitonline.ro/blog/invitatii-digitale-vs-traditionale): comparație între invitațiile online și cele tipărite
+- [Cum să alegi modelul perfect de invitație](https://invitonline.ro/blog/cum-sa-alegi-modelul-perfect): criterii de alegere a modelului
+- [Eticheta invitațiilor de nuntă](https://invitonline.ro/blog/eticheta-invitatiilor-nunta): reguli de formulare și trimitere
+- [Când să trimiți invitațiile de nuntă](https://invitonline.ro/blog/timeline-perfect-invitatii): calendarul recomandat de trimitere
+- [Exemple de texte pentru invitații de nuntă](https://invitonline.ro/blog/text-invitatie-nunta-exemple): formulări pentru invitație
+- [Bugetul pentru invitații de nuntă](https://invitonline.ro/blog/buget-invitatii-nunta-2026): cât costă invitațiile de nuntă
+
+## Contact
+
+- [Contact](https://invitonline.ro/contact): datele operatorului; e-mail contact@invitonline.ro
+
+## Informații legale
+
+- [Termeni și condiții](https://invitonline.ro/termeni-si-conditii): condițiile de utilizare a serviciului
+- [Politica de confidențialitate](https://invitonline.ro/politica-de-confidentialitate): prelucrarea datelor personale
+- [Politica de cookie-uri](https://invitonline.ro/politica-cookies): cookie-urile folosite pe site
+
+## Operator
+
+- CULOAREA DIN VIAȚA SA S.R.L., CUI 44820819. Contact exclusiv pe email: contact@invitonline.ro

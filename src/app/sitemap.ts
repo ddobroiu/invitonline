@@ -47,12 +47,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'daily',
             priority: 0.8,
         },
-        {
-            url: `${baseUrl}/login`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.5,
-        },
         ...['/contact', '/termeni-si-conditii', '/politica-de-confidentialitate', '/politica-cookies'].map((path) => ({
             url: `${baseUrl}${path}`,
             lastModified: new Date('2026-09-26'),

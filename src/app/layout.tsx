@@ -26,21 +26,36 @@ export const viewport: Viewport = {
 
 const organizationJsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: BRAND,
-  legalName: COMPANY.name,
-  url: SITE_URL,
-  email: COMPANY.email,
-  taxID: COMPANY.cui,
-  identifier: COMPANY.euid,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: COMPANY.address.street,
-    addressLocality: COMPANY.address.locality,
-    addressRegion: COMPANY.address.county,
-    postalCode: COMPANY.address.postalCode,
-    addressCountry: COMPANY.address.countryCode,
-  },
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${SITE_URL}/#organization`,
+      name: BRAND,
+      legalName: COMPANY.name,
+      url: SITE_URL,
+      logo: `${SITE_URL}/icon.svg`,
+      email: COMPANY.email,
+      taxID: COMPANY.cui,
+      identifier: COMPANY.euid,
+      address: {
+        '@type': 'PostalAddress',
+        // Satul si numarul; comuna este addressLocality
+        streetAddress: 'Sat Topliceni nr. 214',
+        addressLocality: COMPANY.address.locality,
+        addressRegion: COMPANY.address.county,
+        postalCode: COMPANY.address.postalCode,
+        addressCountry: COMPANY.address.countryCode,
+      },
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: BRAND,
+      inLanguage: 'ro-RO',
+      publisher: { '@id': `${SITE_URL}/#organization` },
+    },
+  ],
 }
 
 export default function RootLayout({
