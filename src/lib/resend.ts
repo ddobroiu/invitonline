@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { alerta } from './alerts';
 
 let resendClient: Resend | null = null;
 
@@ -30,10 +31,17 @@ export const sendEmail = async ({
             subject,
             html,
         });
+        // Resend nu arunca la un e-mail refuzat: intoarce { error }
+        if (data.error) {
+            console.error('Error sending email:', data.error);
+            void alerta('error', 'resend', `InvitOnline: un e-mail nu a plecat: ${data.error.name}: ${data.error.message}`);
+            return { success: false, error: data.error };
+        }
 
         return { success: true, data };
     } catch (error) {
         console.error('Error sending email:', error);
+        void alerta('error', 'resend', `InvitOnline: un e-mail nu a plecat: ${error instanceof Error ? error.message : String(error)}`);
         return { success: false, error };
     }
 };
