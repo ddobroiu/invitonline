@@ -5,7 +5,22 @@ import { CONSENT_COOKIE, getCookieValue, parseConsent } from '@/lib/consent'
 export const TIKTOK_PIXEL_ID = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID || 'DATFVURC77U3L597V800'
 export const TIKTOK_CURRENCY = 'EUR'
 
-const TIKTOK_COOKIES = ['_ttp', '_tt_enable_cookie']
+// tt_ttclid: identificatorul de click TikTok (?ttclid= din linkul reclamei), pastrat 30 de zile DOAR cu acord de marketing,
+// ca checkout-ul sa-l poata trimite serverului pentru TikTok Events API (lib/tiktok-events.ts)
+const TTCLID_COOKIE = 'tt_ttclid'
+const TIKTOK_COOKIES = ['_ttp', '_tt_enable_cookie', TTCLID_COOKIE]
+
+// Salveaza ?ttclid= din URL-ul curent pentru 30 de zile (apelat doar cu acord de marketing)
+function captureTtclid() {
+    try {
+        const ttclid = new URLSearchParams(location.search).get('ttclid')
+        if (ttclid && ttclid.length <= 500) {
+            document.cookie = `${TTCLID_COOKIE}=${encodeURIComponent(ttclid)}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax${location.protocol === 'https:' ? '; Secure' : ''}`
+        }
+    } catch {
+        // nu strica pagina
+    }
+}
 
 // Site-ul nu are o lista de excludere pentru GA4, asa ca o definim aici.
 // /checkout/success (pagina de multumire) ramane permisa, pentru evenimentul CompletePayment.
@@ -37,6 +52,8 @@ export function isTikTokLoaded(): boolean {
 // Idempotent: se incarca o singura data pe durata paginii; la un nou acord doar reacorda consimtamantul.
 export function loadTikTok() {
     if (typeof window === 'undefined') return
+    if (!hasTikTokConsent()) return
+    captureTtclid()
     const w = window as TtWindow
     if (loaded) {
         w.ttq?.grantConsent()
@@ -56,7 +73,7 @@ export function loadTikTok() {
     w.ttq.grantConsent()
 }
 
-// Retragerea acordului: revokeConsent (daca era incarcat) si stergerea cookie-urilor _ttp / _tt_enable_cookie
+// Retragerea acordului: revokeConsent (daca era incarcat) si stergerea cookie-urilor _ttp / _tt_enable_cookie / tt_ttclid
 export function revokeTikTok() {
     if (typeof window === 'undefined') return
     const w = window as TtWindow
@@ -79,9 +96,10 @@ export function tiktokPage(pathname: string | null | undefined) {
 
 // Eveniment TikTok: no-op fara acord de marketing sau pe paginile excluse.
 // Daca acordul exista dar pixelul nu e inca incarcat, il incarca (stub-ul pune evenimentul in coada).
-export function trackTikTok(event: string, params?: Record<string, unknown>): boolean {
+// `options.event_id`: deduplicarea cu evenimentul trimis de server (TikTok Events API, lib/tiktok-events.ts).
+export function trackTikTok(event: string, params?: Record<string, unknown>, options?: { event_id?: string }): boolean {
     if (typeof window === 'undefined' || !hasTikTokConsent() || isTikTokExcludedPath(location.pathname)) return false
     if (!loaded) loadTikTok()
-    ;(window as TtWindow).ttq?.track(event, params ?? {})
+    ;(window as TtWindow).ttq?.track(event, params ?? {}, options ?? {})
     return true
 }

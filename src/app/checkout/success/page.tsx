@@ -26,7 +26,8 @@ function trackPurchase(sessionId: string, value: number, currency: string) {
 }
 
 // TikTok CompletePayment: only with marketing consent, once per Stripe session, no personal data.
-// If consent is given later on this page (banner), it fires then.
+// If consent is given later on this page (banner), it fires then. event_id = Stripe session id, the same
+// id the server-side Events API uses after the payment (lib/fulfill.ts), so TikTok deduplicates them.
 function trackTikTokPurchase(sessionId: string, value: number, currency: string): () => void {
     const key = `tt_purchase_${sessionId}`
     const fire = (): boolean => {
@@ -38,7 +39,7 @@ function trackTikTokPurchase(sessionId: string, value: number, currency: string)
             contents: [{ content_id: 'invitatie_premium', content_name: 'Invitație premium', quantity: 1, price: value }],
             order_id: sessionId,
             event_id: sessionId,
-        })
+        }, { event_id: sessionId })
         if (sent) {
             try { localStorage.setItem(key, '1') } catch { /* storage blocat */ }
         }

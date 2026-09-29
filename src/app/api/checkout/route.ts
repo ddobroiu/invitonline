@@ -6,7 +6,8 @@ import { getStripe, INVITATION_CURRENCY, INVITATION_PRICE } from '@/lib/stripe'
 import { fulfillCheckout } from '@/lib/fulfill'
 import { getSiteUrl } from '@/lib/utils'
 import { LEGAL_VERSION } from '@/config/legal'
-import { getCookieValue, hasAnalyticsConsent } from '@/lib/consent'
+import { getCookieValue, hasAnalyticsConsent, hasMarketingConsent } from '@/lib/consent'
+import { clientIp, tiktokCheckoutMetadata } from '@/lib/tiktok-events'
 
 export async function POST(req: Request) {
     try {
@@ -43,6 +44,14 @@ export async function POST(req: Request) {
         const vid = hasAnalyticsConsent(cookieHeader) ? getCookieValue(cookieHeader, '_md_vid') : undefined
         const tag = { project: 'invitonline', ...(vid && { md_vid: vid.slice(0, 64) }) }
         const consentMeta = { terms_version: LEGAL_VERSION, terms_accepted_at: consentAt, withdrawal_waiver: 'true' }
+        // TikTok Events API (lib/tiktok-events.ts): consimtamant + _ttp/ttclid/IP/UA, doar cu acord pentru marketing
+        const tiktok = tiktokCheckoutMetadata({
+            marketing: hasMarketingConsent(cookieHeader),
+            ttp: getCookieValue(cookieHeader, '_ttp'),
+            ttclid: getCookieValue(cookieHeader, 'tt_ttclid'),
+            ip: clientIp(req.headers),
+            userAgent: req.headers.get('user-agent'),
+        })
         const checkoutSession = await stripe.checkout.sessions.create({
             line_items: [
                 {
@@ -61,7 +70,7 @@ export async function POST(req: Request) {
             customer_email: session?.user?.email || undefined,
             success_url: `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${siteUrl}/dashboard?canceled=true`,
-            metadata: { ...tag, ...consentMeta, eventId: event.id, userId },
+            metadata: { ...tag, ...consentMeta, eventId: event.id, userId, ...tiktok },
             payment_intent_data: { metadata: { ...tag, eventId: event.id, userId } },
             // Numele, adresa si (pentru firme) CUI-ul pentru factura Oblio, cerute de Stripe la plata
             billing_address_collection: 'required',

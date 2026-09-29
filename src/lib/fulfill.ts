@@ -2,6 +2,7 @@ import type Stripe from 'stripe'
 import prisma from '@/lib/prisma'
 import { escapeHtml, getSiteUrl } from '@/lib/utils'
 import { alerta } from '@/lib/alerts'
+import { sendTikTokPurchase } from '@/lib/tiktok-events'
 
 /**
  * Marks the event as paid, creates the order (with invoice when billing data exists)
@@ -48,6 +49,20 @@ export async function fulfillCheckout(session: Stripe.Checkout.Session) {
     } catch {
         return { fulfilled: true, alreadyProcessed: true }
     }
+
+    // TikTok CompletePayment (server), o singura data: doar apelul care a creat comanda ajunge aici.
+    // Doar cu acordul pentru marketing salvat pe sesiune; event_id = id-ul sesiunii Stripe, ca pixelul din /checkout/success.
+    void sendTikTokPurchase({
+        eventId: session.id,
+        value: amount,
+        currency: session.currency || 'eur',
+        contents: [{ content_id: 'invitatie_premium', content_name: 'Invitație premium', quantity: 1, price: amount }],
+        pageUrl: `${getSiteUrl()}/checkout/success`,
+        email: session.customer_details?.email ?? user.email,
+        phone: session.customer_details?.phone,
+        externalId: user.id,
+        metadata: session.metadata,
+    })
 
     // Automated invoicing (Oblio) when the user saved billing details
     let invLink: string | null = null
