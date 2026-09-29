@@ -19,8 +19,8 @@ COPY . .
 
 # Variabilele NEXT_PUBLIC_* se coc în bundle la build, deci trebuie să existe
 # aici, nu doar la rulare.
-ARG NEXT_PUBLIC_SITE_URL=https://www.invitonline.ro
-ARG NEXT_PUBLIC_APP_URL=https://www.invitonline.ro
+ARG NEXT_PUBLIC_SITE_URL=https://invitonline.ro
+ARG NEXT_PUBLIC_APP_URL=https://invitonline.ro
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
 ENV NEXT_TELEMETRY_DISABLED=1

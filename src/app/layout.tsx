@@ -11,12 +11,22 @@ const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-body' }
 const playfair = Playfair_Display({ subsets: ['latin', 'latin-ext'], variable: '--font-heading' })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://invitonline.ro'),
+  // Canonical host is fixed (apex, https) so canonicals/OG never follow a www or localhost env value
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: 'InvitOnline - Invitații Digitale Premium',
+    default: 'InvitOnline - Invitații digitale pentru nuntă și botez',
     template: '%s | InvitOnline',
   },
-  description: 'Creează invitații digitale inovative pentru nunți, botezuri și aniversări.',
+  description: 'Creează invitații digitale interactive pentru nunți, botezuri și aniversări, cu confirmări RSVP online și hărți integrate.',
+  applicationName: BRAND,
+  openGraph: {
+    siteName: BRAND,
+    locale: 'ro_RO',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
 }
 
 export const viewport: Viewport = {

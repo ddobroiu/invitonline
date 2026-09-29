@@ -1,24 +1,27 @@
 'use client'
 
 import styles from './page.module.css'
-import EnvelopeTemplate from '@/components/templates/EnvelopeTemplate'
-import NetflixTemplate from '@/components/templates/NetflixTemplate'
-import BoardingPassTemplate from '@/components/templates/BoardingPassTemplate'
-import VinylTemplate from '@/components/templates/VinylTemplate'
-import ScratchTemplate from '@/components/templates/ScratchTemplate'
-import PassportTemplate from '@/components/templates/PassportTemplate'
-import NewspaperTemplate from '@/components/templates/NewspaperTemplate'
-import CinemaTemplate from '@/components/templates/CinemaTemplate'
-import FestivalTemplate from '@/components/templates/FestivalTemplate'
-import VipCardTemplate from '@/components/templates/VipCardTemplate'
-import StoryTemplate from '@/components/templates/StoryTemplate'
-import ChatTemplate from '@/components/templates/ChatTemplate'
-import ClassicTemplate from '@/components/templates/ClassicTemplate'
-import ClassicGoldTemplate from '@/components/templates/ClassicGoldTemplate'
-import ClassicMinimalTemplate from '@/components/templates/ClassicMinimalTemplate'
 import { Sparkles, ArrowRight, Search, Video, Music, Camera } from 'lucide-react'
 import Link from 'next/link'
 import { useState, useEffect, useRef, type ComponentType, type ReactNode } from 'react'
+import dynamic from 'next/dynamic'
+
+// Each template is its own chunk, loaded only when its preview scrolls into view (see LazyMount)
+const EnvelopeTemplate = dynamic(() => import('@/components/templates/EnvelopeTemplate'))
+const NetflixTemplate = dynamic(() => import('@/components/templates/NetflixTemplate'))
+const BoardingPassTemplate = dynamic(() => import('@/components/templates/BoardingPassTemplate'))
+const VinylTemplate = dynamic(() => import('@/components/templates/VinylTemplate'))
+const ScratchTemplate = dynamic(() => import('@/components/templates/ScratchTemplate'))
+const PassportTemplate = dynamic(() => import('@/components/templates/PassportTemplate'))
+const NewspaperTemplate = dynamic(() => import('@/components/templates/NewspaperTemplate'))
+const CinemaTemplate = dynamic(() => import('@/components/templates/CinemaTemplate'))
+const FestivalTemplate = dynamic(() => import('@/components/templates/FestivalTemplate'))
+const VipCardTemplate = dynamic(() => import('@/components/templates/VipCardTemplate'))
+const StoryTemplate = dynamic(() => import('@/components/templates/StoryTemplate'))
+const ChatTemplate = dynamic(() => import('@/components/templates/ChatTemplate'))
+const ClassicTemplate = dynamic(() => import('@/components/templates/ClassicTemplate'))
+const ClassicGoldTemplate = dynamic(() => import('@/components/templates/ClassicGoldTemplate'))
+const ClassicMinimalTemplate = dynamic(() => import('@/components/templates/ClassicMinimalTemplate'))
 
 const demoProps = {
     // No id: RSVP in the demo is simulated instead of being sent to the API

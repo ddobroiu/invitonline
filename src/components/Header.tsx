@@ -104,7 +104,9 @@ export default function Header() {
                         <Mail size={22} color="#000" strokeWidth={2.5} />
                     </div>
                     <div>
-                        <h2 style={{
+                        {/* Logo text is not a heading: every page has its own h1/h2 outline */}
+                        <span style={{
+                            display: 'block',
                             fontSize: '1.3rem',
                             fontWeight: '900',
                             fontFamily: 'var(--font-heading)',
@@ -115,7 +117,7 @@ export default function Header() {
                             textTransform: 'uppercase'
                         }}>
                             INVIT<span style={{ color: 'var(--accent)' }}>ONLINE</span>
-                        </h2>
+                        </span>
                         <span style={{
                             fontSize: '0.55rem',
                             color: 'rgba(255,255,255,0.6)',

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Calendar, Clock, ArrowRight } from 'lucide-react'
 import type { Metadata } from 'next'
+import { OG_BASE } from '@/lib/seo'
 import styles from './page.module.css'
 
 // SEO-optimized blog articles about weddings and invitations
@@ -80,7 +81,7 @@ const articles = [
     {
         id: 'buget-invitatii-nunta-2026',
         title: 'Bugetul pentru Invitații de Nuntă: Ghid Complet 2026',
-        excerpt: 'Află cât costă invitațiile de nuntă în 2026 și cum să economisești până la 70% cu soluții digitale premium.',
+        excerpt: 'Află cât costă invitațiile de nuntă în 2026 și cât poți economisi alegând invitații digitale.',
         date: '20 Ianuarie 2026',
         readTime: '6 min',
         category: 'Buget',
@@ -314,7 +315,7 @@ const articles = [
     {
         id: 'promovare-nunta-anuntul',
         title: 'Promovarea Serviciilor de Nuntă cu Anuntul.net',
-        excerpt: 'Dacă oferi servicii pentru nunți, descoperă cum Anuntul.net te ajută să ajungi la mii de viitori miri.',
+        excerpt: 'Dacă oferi servicii pentru nunți, descoperă cum Anuntul.net te ajută să ajungi la viitorii miri.',
         date: '10 Ianuarie 2026',
         readTime: '5 min',
         category: 'Business',
@@ -341,7 +342,7 @@ const articles = [
     {
         id: 'buget-optimizat-nunta-servicii',
         title: 'Cum să Optimizezi Bugetul de Nuntă cu Servicii Integrate',
-        excerpt: 'Economisește până la 40% din bugetul de nuntă folosind platformele integrate - de la invitații la decorațiuni.',
+        excerpt: 'Cum reduci cheltuielile de nuntă folosind platforme integrate - de la invitații la decorațiuni.',
         date: '7 Ianuarie 2026',
         readTime: '9 min',
         category: 'Buget',
@@ -350,13 +351,15 @@ const articles = [
 ]
 
 export const metadata: Metadata = {
-    title: 'Blog Nunți & Invitații | Ghiduri Complete, Sfaturi & Tendințe 2026',
-    description: 'Descoperă articole SEO despre invitații de nuntă digitale, tendințe 2026, sfaturi de planificare, eticheta invitațiilor și ghiduri complete pentru evenimentul tău perfect. Peste 35 de articole de specialitate.',
-    keywords: 'blog nunți, ghid invitații nuntă, sfaturi planificare nuntă, tendințe nunți 2026, invitații digitale ghid, eticheta nunții, timeline nuntă, invitații eco-friendly',
+    title: 'Blog: ghiduri pentru invitații de nuntă și botez',
+    description: 'Ghiduri și sfaturi despre invitații de nuntă și botez: invitații digitale vs tipărite, texte pentru invitații, etichetă, calendar de trimitere, buget și tendințe 2026.',
+    alternates: { canonical: '/blog' },
     openGraph: {
-        title: 'Blog InvitOnline - Ghiduri & Sfaturi pentru Nunți Perfecte',
-        description: 'Articole de specialitate despre invitații, planificare nunți și tendințe 2026',
+        ...OG_BASE,
+        title: 'Blog InvitOnline: ghiduri pentru invitații de nuntă și botez',
+        description: 'Ghiduri și sfaturi despre invitații, planificarea nunții și tendințe 2026.',
         type: 'website',
+        url: '/blog',
     },
 }
 

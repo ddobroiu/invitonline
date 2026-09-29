@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { cache } from 'react'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import prisma from '@/lib/prisma'
 import { getCurrentUserId } from '@/lib/auth'
 import InvitationView from './InvitationView'
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     const { id } = await params
     const event = await getEvent(id)
     if (!event || !event.isPaid) {
-        return { title: 'Invitație', robots: { index: false } }
+        return { title: 'Invitație', robots: { index: false, follow: false } }
     }
     const description = [event.date, event.location].filter(Boolean).join(' • ')
     return {
@@ -39,9 +40,11 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function PublicInvitation({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
     const event = await getEvent(id)
-    const isOwner = event ? (await getCurrentUserId()) === event.userId : false
+    // Unknown link: real 404 status (not a 200 "not available" page)
+    if (!event) notFound()
+    const isOwner = (await getCurrentUserId()) === event.userId
 
-    if (!event || (!event.isPaid && !isOwner)) {
+    if (!event.isPaid && !isOwner) {
         return (
             <div className={styles.error}>
                 <div className={styles.errorCard}>

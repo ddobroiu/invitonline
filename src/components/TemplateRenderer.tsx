@@ -1,21 +1,24 @@
 'use client'
 
 import type { ComponentType } from 'react'
-import EnvelopeTemplate from '@/components/templates/EnvelopeTemplate'
-import NetflixTemplate from '@/components/templates/NetflixTemplate'
-import BoardingPassTemplate from '@/components/templates/BoardingPassTemplate'
-import VinylTemplate from '@/components/templates/VinylTemplate'
-import ScratchTemplate from '@/components/templates/ScratchTemplate'
-import PassportTemplate from '@/components/templates/PassportTemplate'
-import NewspaperTemplate from '@/components/templates/NewspaperTemplate'
-import CinemaTemplate from '@/components/templates/CinemaTemplate'
-import FestivalTemplate from '@/components/templates/FestivalTemplate'
-import ChatTemplate from '@/components/templates/ChatTemplate'
-import StoryTemplate from '@/components/templates/StoryTemplate'
-import VipCardTemplate from '@/components/templates/VipCardTemplate'
-import ClassicTemplate from '@/components/templates/ClassicTemplate'
-import ClassicGoldTemplate from '@/components/templates/ClassicGoldTemplate'
-import ClassicMinimalTemplate from '@/components/templates/ClassicMinimalTemplate'
+import dynamic from 'next/dynamic'
+
+// One chunk per template: an invitation page downloads only the template it uses (still server-rendered)
+const EnvelopeTemplate = dynamic(() => import('@/components/templates/EnvelopeTemplate'))
+const NetflixTemplate = dynamic(() => import('@/components/templates/NetflixTemplate'))
+const BoardingPassTemplate = dynamic(() => import('@/components/templates/BoardingPassTemplate'))
+const VinylTemplate = dynamic(() => import('@/components/templates/VinylTemplate'))
+const ScratchTemplate = dynamic(() => import('@/components/templates/ScratchTemplate'))
+const PassportTemplate = dynamic(() => import('@/components/templates/PassportTemplate'))
+const NewspaperTemplate = dynamic(() => import('@/components/templates/NewspaperTemplate'))
+const CinemaTemplate = dynamic(() => import('@/components/templates/CinemaTemplate'))
+const FestivalTemplate = dynamic(() => import('@/components/templates/FestivalTemplate'))
+const ChatTemplate = dynamic(() => import('@/components/templates/ChatTemplate'))
+const StoryTemplate = dynamic(() => import('@/components/templates/StoryTemplate'))
+const VipCardTemplate = dynamic(() => import('@/components/templates/VipCardTemplate'))
+const ClassicTemplate = dynamic(() => import('@/components/templates/ClassicTemplate'))
+const ClassicGoldTemplate = dynamic(() => import('@/components/templates/ClassicGoldTemplate'))
+const ClassicMinimalTemplate = dynamic(() => import('@/components/templates/ClassicMinimalTemplate'))
 
 export const TEMPLATE_COMPONENTS: Record<string, ComponentType<any>> = {
     'classic': ClassicTemplate,

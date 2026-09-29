@@ -1,58 +1,42 @@
-import { MetadataRoute } from 'next'
+import type { MetadataRoute } from 'next'
+import { LEGAL_LINKS, LEGAL_VERSION, SITE_URL } from '@/config/legal'
+import { articleDateISO, articlesContent } from './blog/[slug]/articles'
 
+// Only public, indexable pages. Excluded on purpose: /create (editor), /login, /dashboard,
+// /checkout/*, /api/*, /templates/* (standalone demos) and every /invitatie/* guest invitation.
+// lastModified uses real content dates only (article dates, legal version) — never the request time.
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://invitonline.ro'
+    const blogUrls = Object.entries(articlesContent).map(([slug, article]) => {
+        const date = articleDateISO(article.date)
+        return {
+            url: `${SITE_URL}/blog/${slug}`,
+            ...(date ? { lastModified: date } : {}),
+            changeFrequency: 'monthly' as const,
+            priority: 0.6,
+        }
+    })
 
-    // Blog articles
-    const blogArticles = [
-        'personalizare-invitatii-digitale',
-        'invitatii-digitale-vs-traditionale',
-        'cum-sa-alegi-modelul-perfect',
-        'top-10-greseli-invitatii',
-        'invitatii-eco-friendly',
-        'eticheta-invitatiilor-nunta',
-        'timeline-perfect-invitatii',
-        'invitatii-interactive-2026',
-    ]
-
-    const blogUrls = blogArticles.map((slug) => ({
-        url: `${baseUrl}/blog/${slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly' as const,
-        priority: 0.7,
-    }))
+    const latestArticle = blogUrls
+        .map((u) => u.lastModified)
+        .filter((d): d is string => !!d)
+        .sort()
+        .pop()
 
     return [
+        { url: SITE_URL, changeFrequency: 'weekly', priority: 1 },
+        { url: `${SITE_URL}/demo`, changeFrequency: 'monthly', priority: 0.9 },
         {
-            url: baseUrl,
-            lastModified: new Date(),
-            changeFrequency: 'daily',
-            priority: 1,
-        },
-        {
-            url: `${baseUrl}/create`,
-            lastModified: new Date(),
-            changeFrequency: 'daily',
-            priority: 0.9,
-        },
-        {
-            url: `${baseUrl}/demo`,
-            lastModified: new Date(),
+            url: `${SITE_URL}/blog`,
+            ...(latestArticle ? { lastModified: latestArticle } : {}),
             changeFrequency: 'weekly',
-            priority: 0.8,
+            priority: 0.7,
         },
-        {
-            url: `${baseUrl}/blog`,
-            lastModified: new Date(),
-            changeFrequency: 'daily',
-            priority: 0.8,
-        },
-        ...['/contact', '/termeni-si-conditii', '/politica-de-confidentialitate', '/politica-cookies'].map((path) => ({
-            url: `${baseUrl}${path}`,
-            lastModified: new Date('2026-09-26'),
+        ...blogUrls,
+        ...Object.values(LEGAL_LINKS).map((path) => ({
+            url: `${SITE_URL}${path}`,
+            lastModified: LEGAL_VERSION,
             changeFrequency: 'yearly' as const,
             priority: 0.3,
         })),
-        ...blogUrls,
     ]
 }
