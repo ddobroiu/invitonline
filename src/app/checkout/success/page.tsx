@@ -4,7 +4,8 @@ import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import styles from './page.module.css'
-import { hasAnalyticsConsent } from '@/lib/consent'
+import { CONSENT_CHANGE_EVENT, hasAnalyticsConsent } from '@/lib/consent'
+import { trackTikTok } from '@/lib/tiktok'
 
 // GA4 purchase event: only with analytics consent (gtag exists only after the cookie
 // banner loaded GA), once per Stripe session, no personal data
@@ -22,6 +23,31 @@ function trackPurchase(sessionId: string, value: number, currency: string) {
         currency,
         items: [{ item_id: 'invitatie_premium', item_name: 'Invitație premium', quantity: 1 }],
     })
+}
+
+// TikTok CompletePayment: only with marketing consent, once per Stripe session, no personal data.
+// If consent is given later on this page (banner), it fires then.
+function trackTikTokPurchase(sessionId: string, value: number, currency: string): () => void {
+    const key = `tt_purchase_${sessionId}`
+    const fire = (): boolean => {
+        try { if (localStorage.getItem(key)) return true } catch { /* storage blocat */ }
+        const sent = trackTikTok('CompletePayment', {
+            value,
+            currency,
+            content_type: 'product',
+            contents: [{ content_id: 'invitatie_premium', content_name: 'Invitație premium', quantity: 1, price: value }],
+            order_id: sessionId,
+            event_id: sessionId,
+        })
+        if (sent) {
+            try { localStorage.setItem(key, '1') } catch { /* storage blocat */ }
+        }
+        return sent
+    }
+    if (fire()) return () => {}
+    const onChange = () => { if (fire()) window.removeEventListener(CONSENT_CHANGE_EVENT, onChange) }
+    window.addEventListener(CONSENT_CHANGE_EVENT, onChange)
+    return () => window.removeEventListener(CONSENT_CHANGE_EVENT, onChange)
 }
 
 const MAX_ATTEMPTS = 10
@@ -68,6 +94,7 @@ function SuccessContent() {
         let attempts = 0
         let timer: ReturnType<typeof setTimeout>
         let cancelled = false
+        let stopTikTok: (() => void) | undefined
 
         const verifyPayment = async () => {
             attempts++
@@ -83,6 +110,7 @@ function SuccessContent() {
                         if (cancelled) return
                         if (typeof data.amount === 'number' && data.amount > 0) {
                             trackPurchase(sessionId, data.amount, String(data.currency || 'EUR'))
+                            stopTikTok = trackTikTokPurchase(sessionId, data.amount, String(data.currency || 'EUR'))
                         }
                         setInvitationUrl(`${window.location.origin}/invitatie/${data.eventId}`)
                         setState('done')
@@ -101,6 +129,7 @@ function SuccessContent() {
         return () => {
             cancelled = true
             clearTimeout(timer)
+            stopTikTok?.()
         }
     }, [sessionId])
 

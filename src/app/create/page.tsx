@@ -11,6 +11,7 @@ import ImageUploader from '@/components/ImageUploader'
 import CheckoutConsent, { CHECKOUT_CONSENT_REQUIRED } from '@/components/legal/CheckoutConsent'
 import RegisterTermsConsent from '@/components/legal/RegisterTermsConsent'
 import { PRICE_NOTE } from '@/config/legal'
+import { TIKTOK_CURRENCY, trackTikTok } from '@/lib/tiktok'
 import {
     Zap, Palette, Info, Trash2, Plus, Music, Video, Image as ImageIcon, Monitor, Smartphone, Lock, CreditCard,
     MailOpen, Clapperboard, Plane, Disc, Ticket, Globe, Newspaper, Film, Tent, Crown, MessageCircle, Flower2, Gem,
@@ -374,6 +375,12 @@ function CreateEventContent() {
             try { localStorage.removeItem(DRAFT_KEY) } catch { /* ignore */ }
 
             if (shouldPay && !isPaid) {
+                // TikTok InitiateCheckout (no-op without marketing consent)
+                trackTikTok('InitiateCheckout', {
+                    currency: TIKTOK_CURRENCY,
+                    content_type: 'product',
+                    contents: [{ content_id: 'invitatie_premium', content_name: 'Invitație premium', quantity: 1 }],
+                })
                 const checkoutRes = await fetch('/api/checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

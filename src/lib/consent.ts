@@ -2,9 +2,12 @@
 // Valoare: JSON { v: versiune, analytics, marketing, ts }.
 
 export const CONSENT_COOKIE = 'cookie_consent'
-export const CONSENT_VERSION = 1
+// v2: categoria Marketing (TikTok Pixel) — toata lumea este intrebata din nou
+export const CONSENT_VERSION = 2
 export const CONSENT_MAX_AGE = 60 * 60 * 24 * 180 // 6 luni, apoi intrebam din nou
 export const OPEN_CONSENT_EVENT = 'open-cookie-settings'
+// Emis pe window dupa fiecare alegere salvata; detail = ConsentState (analytics + marketing)
+export const CONSENT_CHANGE_EVENT = 'cookie-consent-change'
 
 export type ConsentState = {
     v: number
@@ -42,6 +45,14 @@ export function getCookieValue(cookieHeader: string | null | undefined, name: st
 
 export function hasAnalyticsConsent(cookieHeader: string | null | undefined): boolean {
     return parseConsent(getCookieValue(cookieHeader, CONSENT_COOKIE))?.analytics === true
+}
+
+export function hasMarketingConsent(cookieHeader: string | null | undefined): boolean {
+    return parseConsent(getCookieValue(cookieHeader, CONSENT_COOKIE))?.marketing === true
+}
+
+export function notifyConsentChange(state: ConsentState) {
+    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent<ConsentState>(CONSENT_CHANGE_EVENT, { detail: state }))
 }
 
 export function openCookieSettings() {

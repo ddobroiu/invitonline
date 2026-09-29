@@ -4,6 +4,7 @@ import './globals.css'
 import Providers from '@/components/Providers'
 import SiteShell from '@/components/SiteShell'
 import CookieConsent from '@/components/CookieConsent'
+import TikTokPixel from '@/components/TikTokPixel'
 import { BRAND, COMPANY, SITE_URL } from '@/config/legal'
 
 const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-body' })
@@ -74,6 +75,8 @@ export default function RootLayout({
         <Providers>
           <SiteShell>{children}</SiteShell>
           <CookieConsent />
+          {/* TikTok Pixel: doar cu acord pentru cookies de marketing */}
+          <TikTokPixel />
         </Providers>
       </body>
     </html>
