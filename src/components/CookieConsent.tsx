@@ -8,6 +8,7 @@ import {
     CONSENT_VERSION,
     OPEN_CONSENT_EVENT,
     getCookieValue,
+    notifyConsentChange,
     parseConsent,
     type ConsentState,
 } from '@/lib/consent'
@@ -51,6 +52,56 @@ function removeTracker(): boolean {
     return Boolean(document.querySelector(`script[src="${TRACKER_SRC}"]`))
 }
 
+// Google Analytics 4 (proprietatea InvitOnline.ro) — tot doar cu acord pentru cookies analitice
+const GA_ID = 'G-RZWJHYS1WB'
+
+type GaWindow = Window & { dataLayer?: unknown[]; gtag?: (...args: unknown[]) => void } & Record<string, unknown>
+
+// Semnalele Google Consent Mode v2 pentru alegerea curenta (ads raman denied fara acord de marketing)
+function consentSignals(analytics: boolean, marketing: boolean): Record<string, string> {
+    const ads = marketing ? 'granted' : 'denied'
+    return { analytics_storage: analytics ? 'granted' : 'denied', ad_storage: ads, ad_user_data: ads, ad_personalization: ads }
+}
+
+function loadGA(marketing: boolean) {
+    const w = window as unknown as GaWindow
+    w[`ga-disable-${GA_ID}`] = false
+    w.dataLayer = w.dataLayer || []
+    if (!w.gtag) {
+        w.gtag = function gtag() {
+            // gtag.js cere obiectul `arguments`, nu un array
+            // eslint-disable-next-line prefer-rest-params
+            w.dataLayer!.push(arguments)
+        }
+        // Consent Mode v2: implicit totul denied, inainte de config
+        w.gtag('consent', 'default', consentSignals(false, false))
+    }
+    w.gtag('consent', 'update', consentSignals(true, marketing))
+    if (document.querySelector(`script[src^="https://www.googletagmanager.com/gtag/js"]`)) return
+    w.gtag('js', new Date())
+    w.gtag('config', GA_ID, { anonymize_ip: true })
+    const s = document.createElement('script')
+    s.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`
+    s.async = true
+    document.head.appendChild(s)
+}
+
+// Opreste GA si sterge cookie-urile _ga*; intoarce true daca scriptul era incarcat
+function removeGA(): boolean {
+    const w = window as unknown as GaWindow
+    w.gtag?.('consent', 'update', consentSignals(false, false))
+    w[`ga-disable-${GA_ID}`] = true
+    const host = location.hostname.replace(/^www\./, '')
+    for (const c of document.cookie.split(';')) {
+        const name = c.split('=')[0].trim()
+        if (name.startsWith('_ga')) {
+            document.cookie = `${name}=; path=/; max-age=0`
+            document.cookie = `${name}=; path=/; domain=.${host}; max-age=0`
+        }
+    }
+    return Boolean(document.querySelector(`script[src^="https://www.googletagmanager.com/gtag/js"]`))
+}
+
 function saveConsent(analytics: boolean, marketing: boolean): ConsentState {
     const state: ConsentState = { v: CONSENT_VERSION, analytics, marketing, ts: new Date().toISOString() }
     const secure = location.protocol === 'https:' ? '; Secure' : ''
@@ -68,7 +119,8 @@ export default function CookieConsent() {
     const apply = useCallback((state: ConsentState) => {
         if (state.analytics) {
             loadTracker()
-        } else if (removeTracker()) {
+            loadGA(state.marketing)
+        } else if ([removeTracker(), removeGA()].some(Boolean)) {
             // Scriptul era deja incarcat: o reincarcare garanteaza ca nu mai trimite nimic
             window.location.reload()
         }
@@ -80,8 +132,8 @@ export default function CookieConsent() {
             if (current) {
                 setAnalytics(current.analytics)
                 setMarketing(current.marketing)
-                if (current.analytics) loadTracker()
-                else removeTracker()
+                if (current.analytics) { loadTracker(); loadGA(current.marketing) }
+                else { removeTracker(); removeGA() }
             } else {
                 setOpen(true)
             }
@@ -106,7 +158,9 @@ export default function CookieConsent() {
         setMarketing(m)
         setOpen(false)
         setShowDetails(false)
-        apply(saveConsent(a, m))
+        const state = saveConsent(a, m)
+        notifyConsentChange(state)
+        apply(state)
     }
 
     if (!open) return null
@@ -117,7 +171,7 @@ export default function CookieConsent() {
                 <h2 id={`${uid}-title`} style={titleStyle}>Folosim cookies</h2>
                 <p id={`${uid}-desc`} style={textStyle}>
                     Folosim cookies strict necesare pentru funcționarea site-ului (autentificare, securitate, salvarea opțiunii tale).
-                    Cu acordul tău, folosim și cookies analitice pentru a înțelege cum este folosit site-ul. Poți schimba oricând
+                    Cu acordul tău, folosim și cookies analitice pentru a înțelege cum este folosit site-ul și cookies de marketing pentru măsurarea reclamelor. Poți schimba oricând
                     alegerea din „Setări cookies” (în subsolul paginii). Detalii în{' '}
                     <Link href={LEGAL_LINKS.cookies} style={linkStyle}>Politica de cookies</Link> și{' '}
                     <Link href={LEGAL_LINKS.privacy} style={linkStyle}>Politica de confidențialitate</Link>.
@@ -131,17 +185,17 @@ export default function CookieConsent() {
                         </label>
                         <label style={rowStyle}>
                             <input type="checkbox" checked={analytics} onChange={(e) => setAnalytics(e.target.checked)} />
-                            <span><strong>Analitice</strong> — statistici de trafic (mydashboard.ro, operat de noi).</span>
+                            <span><strong>Analitice</strong> — statistici de trafic (mydashboard.ro, operat de noi, și Google Analytics 4).</span>
                         </label>
                         <label style={rowStyle}>
                             <input type="checkbox" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} />
-                            <span><strong>Marketing</strong> — momentan nu folosim cookies de marketing.</span>
+                            <span><strong>Marketing / reclame</strong> — ne permite să măsurăm eficiența reclamelor (ex. TikTok) și să vă arătăm reclame relevante.</span>
                         </label>
                     </div>
                 )}
 
                 <div style={btnRowStyle}>
-                    <button type="button" style={btnSecondary} onClick={() => decide(false, false)}>Refuză</button>
+                    <button type="button" style={btnPrimary} onClick={() => decide(false, false)}>Refuză</button>
                     {showDetails ? (
                         <button type="button" style={btnSecondary} onClick={() => decide(analytics, marketing)}>Salvează alegerea</button>
                     ) : (

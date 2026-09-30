@@ -1,0 +1,427 @@
+/* Boho Floral — Cormorant Garamond + Parisienne, terracotta / sage / sand, arched photo. */
+
+.root {
+    --sand: #f3ebe0;
+    --sand-2: #eadcc8;
+    --terra: #b86b4b;
+    --terra-deep: #97502f;
+    --sage: #7d8f6c;
+    --ink: #4a3a30;
+    --muted: #836d5d;
+    --serif: var(--boho-serif), 'Cormorant Garamond', Georgia, serif;
+    --script: var(--boho-script), 'Parisienne', cursive;
+
+    container-type: inline-size;
+    flex: 1 0 auto;
+    width: 100%;
+    min-height: 100%;
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.55;
+    overflow-x: hidden;
+    background-color: var(--sand);
+    background-image:
+        radial-gradient(circle at 10% 8%, rgba(184, 107, 75, 0.1), transparent 35%),
+        radial-gradient(circle at 92% 30%, rgba(125, 143, 108, 0.12), transparent 38%),
+        radial-gradient(circle at 20% 90%, rgba(217, 160, 127, 0.14), transparent 40%);
+}
+
+.page {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 20px 64px;
+}
+
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.kicker {
+    font-family: var(--script);
+    font-size: 1.7rem;
+    color: var(--terra);
+    line-height: 1.2;
+    margin-bottom: 18px;
+}
+
+.archWrap {
+    position: relative;
+    width: min(78%, 340px);
+    margin: 0 auto 30px;
+    animation: rise 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.arch {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 999px 999px 14px 14px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #f7efe4, var(--sand-2));
+    border: 6px solid #fbf6ef;
+    box-shadow: 0 18px 40px rgba(74, 58, 48, 0.18);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.rainbow {
+    width: 86%;
+    margin-bottom: 18%;
+}
+
+.bouquet {
+    position: absolute;
+    bottom: -34px;
+    width: 58%;
+    height: auto;
+    pointer-events: none;
+}
+
+.bouquetLeft {
+    left: -22%;
+}
+
+.bouquetRight {
+    right: -22%;
+    transform: scaleX(-1);
+}
+
+.names {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(1.9rem, 9cqw, 3.4rem);
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+    margin-top: 16px;
+}
+
+.name {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+}
+
+.nameText {
+    overflow-wrap: anywhere;
+    max-width: 100%;
+}
+
+.amp {
+    font-family: var(--script);
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--terra);
+    font-size: 1.35em;
+    line-height: 1;
+    margin: 0.05em 0 0.1em;
+}
+
+.dateRow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 14px;
+    margin-top: 22px;
+    width: 100%;
+    max-width: 420px;
+}
+
+.dateSide {
+    border-top: 1px solid rgba(131, 109, 93, 0.45);
+    border-bottom: 1px solid rgba(131, 109, 93, 0.45);
+    padding: 6px 0;
+    font-size: 0.82rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.dateDay {
+    font-size: 3rem;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--terra);
+}
+
+.dateText {
+    margin-top: 18px;
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+}
+
+.body {
+    text-align: center;
+    margin-top: 34px;
+}
+
+.message {
+    font-style: italic;
+    font-size: 1.3rem;
+    max-width: 30ch;
+    margin: 0 auto;
+    overflow-wrap: anywhere;
+}
+
+.sprig {
+    display: block;
+    width: 150px;
+    margin: 28px auto;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.sectionTitle {
+    font-family: var(--script);
+    font-weight: 400;
+    font-size: 2rem;
+    color: var(--terra);
+    line-height: 1.2;
+}
+
+.sectionTitleNext {
+    margin-top: 12px;
+}
+
+.sectionText {
+    font-size: 1.15rem;
+    overflow-wrap: anywhere;
+}
+
+.accentText {
+    font-style: italic;
+    font-size: 1.25rem;
+}
+
+.schedule {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-width: 440px;
+}
+
+.scheduleItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 16px;
+    border: 1px solid rgba(184, 107, 75, 0.25);
+    border-radius: 999px 999px 18px 18px;
+    background: rgba(255, 252, 247, 0.6);
+}
+
+.scheduleTime {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--terra);
+    line-height: 1.2;
+}
+
+.scheduleBody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+}
+
+.scheduleLabel {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.95rem;
+    overflow-wrap: anywhere;
+}
+
+.scheduleLoc {
+    font-style: italic;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+}
+
+.fieldGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 460px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+.fieldLabel {
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sage);
+    font-weight: 600;
+}
+
+.fieldValue {
+    font-size: 1.1rem;
+    overflow-wrap: anywhere;
+}
+
+.note {
+    color: var(--muted);
+    font-style: italic;
+}
+
+.locationText {
+    font-size: 1.25rem;
+    max-width: 32ch;
+    overflow-wrap: anywhere;
+}
+
+.links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(184, 107, 75, 0.45);
+    background: #fbf6ef;
+    color: var(--terra-deep);
+    font: 600 0.95rem/1 var(--serif);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.link:hover,
+.link:focus-visible {
+    background: var(--terra);
+    color: #fff;
+}
+
+.countdown {
+    margin-top: 34px;
+}
+
+.countdownLabel {
+    font-family: var(--script);
+    font-size: 1.6rem;
+    color: var(--terra);
+}
+
+.countdownRow {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.countdownUnit {
+    width: 84px;
+    padding: 12px 4px 10px;
+    border-radius: 999px 999px 12px 12px;
+    background: rgba(255, 252, 247, 0.75);
+    border: 1px solid rgba(184, 107, 75, 0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.countdownNum {
+    font-size: 1.9rem;
+    font-weight: 600;
+    color: var(--terra);
+    line-height: 1.1;
+    font-variant-numeric: lining-nums tabular-nums;
+}
+
+.countdownText {
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.rsvpWrap {
+    margin-top: 36px;
+}
+
+.rsvpButton {
+    min-height: 54px;
+    width: 100%;
+    max-width: 340px;
+    border: none;
+    border-radius: 999px;
+    background: var(--terra);
+    color: #fff;
+    font: 600 1.05rem/1 var(--serif);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(184, 107, 75, 0.3);
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.rsvpButton:hover {
+    background: var(--terra-deep);
+    transform: translateY(-1px);
+}
+
+.signature {
+    margin-top: 36px;
+    font-family: var(--script);
+    font-size: 1.6rem;
+    color: var(--terra);
+    overflow-wrap: anywhere;
+}
+
+@container (min-width: 760px) {
+    .page {
+        padding-top: 64px;
+    }
+
+    .fieldGrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        max-width: 560px;
+    }
+}
+
+@keyframes rise {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .archWrap {
+        animation: none;
+    }
+}

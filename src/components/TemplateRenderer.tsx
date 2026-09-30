@@ -2,6 +2,7 @@
 
 import type { ComponentType } from 'react'
 import dynamic from 'next/dynamic'
+import { TEMPLATES } from '@/config/templates'
 
 // One chunk per template: an invitation page downloads only the template it uses (still server-rendered)
 const EnvelopeTemplate = dynamic(() => import('@/components/templates/EnvelopeTemplate'))
@@ -39,7 +40,7 @@ export const TEMPLATE_COMPONENTS: Record<string, ComponentType<any>> = {
 }
 
 // Templates that are a card centered on the page (vs. full-height scrolling layouts)
-export const CENTERED_TEMPLATES = ['classic', 'classic-gold', 'classic-minimal', 'envelope', 'vinyl', 'scratch', 'vip', 'passport']
+export const CENTERED_TEMPLATES = TEMPLATES.filter((t) => t.centered).map((t) => t.id)
 
 /**
  * Converts an Event row from the API into the flat props the templates expect.

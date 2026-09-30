@@ -85,6 +85,11 @@ export default function PrivacyPage() {
                             <td>Art. 6 alin. (1) lit. a) – consimțământ (cookies analitice), pe care îl poți retrage oricând din „Setări cookies”</td>
                         </tr>
                         <tr>
+                            <td>Date de marketing: identificatori pseudonimi TikTok (cookie-urile _ttp și tt_ttclid), pagini vizitate, evenimente (ex. inițierea plății, plata finalizată – valoare, monedă, identificatorul comenzii), adresă IP și browser; la o plată confirmată, trimise de pe serverul nostru (TikTok Events API), și emailul, telefonul și identificatorul contului, criptate ireversibil (SHA-256)</td>
+                            <td>Măsurarea eficienței reclamelor și afișarea de reclame relevante (retargeting)</td>
+                            <td>Art. 6 alin. (1) lit. a) – consimțământ (cookies de marketing), pe care îl poți retrage oricând din „Setări cookies”</td>
+                        </tr>
+                        <tr>
                             <td><strong>Date ale invitaților</strong> (în calitate de împuternicit): nume, email sau telefon, răspuns (particip / nu particip), număr de persoane, mesaj opțional pentru gazde</td>
                             <td>Colectarea confirmărilor pentru organizator, afișarea listei în contul lui, notificarea organizatorului pe email și trimiterea unui email de confirmare invitatului (dacă a indicat o adresă de email)</td>
                             <td>Temeiul este stabilit de organizator (operator), de regulă interesul legitim de a organiza evenimentul sau demersurile solicitate de invitat; noi prelucrăm conform art. 28 GDPR</td>
@@ -109,7 +114,7 @@ export default function PrivacyPage() {
             <h2>4. Este obligatoriu să ne furnizezi datele?</h2>
             <p>
                 Emailul și parola sunt necesare pentru crearea contului; datele de facturare sunt necesare pentru emiterea facturii (obligație legală);
-                fără ele nu îți putem furniza serviciul. Numele, datele de facturare salvate în cont și consimțământul pentru cookies analitice sunt
+                fără ele nu îți putem furniza serviciul. Numele, datele de facturare salvate în cont și consimțământul pentru cookies analitice și de marketing sunt
                 opționale. Pentru invitați, numele și un mod de contact sunt cerute de formular pentru ca organizatorul să poată identifica răspunsul.
             </p>
 
@@ -160,6 +165,16 @@ export default function PrivacyPage() {
                             <td>mydashboard.ro (operat de aceeași societate)</td>
                             <td>Statistici interne de trafic (doar cu consimțământ) și alerte tehnice de funcționare</td>
                             <td>Serviciu intern, găzduit în UE</td>
+                        </tr>
+                        <tr>
+                            <td>Google Ireland Ltd. (Google Analytics 4)</td>
+                            <td>Statistici agregate de trafic (doar cu consimțământ pentru cookies analitice), cu adresa IP anonimizată</td>
+                            <td>Irlanda / SUA – EU-US Data Privacy Framework și clauze contractuale standard</td>
+                        </tr>
+                        <tr>
+                            <td>TikTok Technology Limited (TikTok Pixel)</td>
+                            <td>Măsurarea eficienței reclamelor și retargeting, inclusiv plățile confirmate trimise de pe serverul nostru (TikTok Events API), cu emailul, telefonul și identificatorul contului criptate SHA-256 (doar cu consimțământ pentru cookies de marketing)</td>
+                            <td>Irlanda; posibile transferuri în afara UE – clauze contractuale standard</td>
                         </tr>
                         <tr>
                             <td>Contabil / auditori, avocați, autorități și instanțe</td>
@@ -224,6 +239,7 @@ export default function PrivacyPage() {
 
             <h2>10. Cookies</h2>
             <p>
+                Cookies analitice și de marketing (ex. TikTok Pixel) se folosesc doar cu consimțământul tău, pe care îl poți retrage oricând din „Setări cookies”.
                 Detalii despre cookies și tehnologiile similare găsești în <Link href={LEGAL_LINKS.cookies}>Politica de cookies</Link>.
             </p>
 

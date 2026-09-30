@@ -28,8 +28,8 @@ export default function CookiesPage() {
             <h2>2. Categorii</h2>
             <ul>
                 <li><strong>Strict necesare</strong> – autentificare, securitate, memorarea alegerii tale privind cookies, salvarea ciornei invitației. Nu necesită consimțământ și nu pot fi dezactivate din banner.</li>
-                <li><strong>Analitice</strong> – statistici de trafic prin serviciul intern mydashboard.ro. Se activează doar dacă îți dai acordul.</li>
-                <li><strong>Marketing</strong> – în prezent nu folosim cookies de marketing sau publicitate. Dacă vom folosi pe viitor, se vor activa doar cu acordul tău.</li>
+                <li><strong>Analitice</strong> – statistici de trafic prin serviciul intern mydashboard.ro și prin Google Analytics 4 (Google Ireland Limited). Se activează doar dacă îți dai acordul.</li>
+                <li><strong>Marketing / reclame</strong> – TikTok Pixel (TikTok Technology Limited, Irlanda), pentru măsurarea eficienței reclamelor și afișarea de reclame relevante (retargeting). Se activează doar dacă îți dai acordul pentru această categorie. Tot numai cu acest acord (dat înainte de plată), după o plată confirmată serverul nostru trimite direct către TikTok (TikTok Events API) valoarea, moneda, identificatorul comenzii, emailul, telefonul și identificatorul contului criptate ireversibil (SHA-256), adresa IP, browserul și identificatorii _ttp și tt_ttclid, ca plata să poată fi atribuită reclamei; fără acord nu trimitem nimic.</li>
             </ul>
 
             <h2>3. Lista cookies și a elementelor stocate</h2>
@@ -88,6 +88,41 @@ export default function CookiesPage() {
                             <td>Identificator de sesiune și momentul ultimei activități (o vizită nouă începe după 30 de minute de inactivitate)</td>
                             <td>Până la ștergerea datelor din browser sau retragerea acordului</td>
                         </tr>
+                        <tr>
+                            <td>_ga</td>
+                            <td>Cookie first-party (Google Analytics)</td>
+                            <td>Analitic</td>
+                            <td>Identificator pseudonim de vizitator, pentru statistici agregate de trafic (Google Analytics 4, cu IP anonimizat)</td>
+                            <td>2 ani</td>
+                        </tr>
+                        <tr>
+                            <td>_ga_*</td>
+                            <td>Cookie first-party (Google Analytics)</td>
+                            <td>Analitic</td>
+                            <td>Păstrează starea sesiunii în Google Analytics 4</td>
+                            <td>2 ani</td>
+                        </tr>
+                        <tr>
+                            <td>_ttp</td>
+                            <td>Cookie (TikTok Pixel – TikTok Technology Limited, Irlanda)</td>
+                            <td>Marketing</td>
+                            <td>Identificator pseudonim pentru măsurarea eficienței reclamelor TikTok și retargeting; datele pot fi transferate în afara UE (ex. în baza clauzelor contractuale standard)</td>
+                            <td>~13 luni</td>
+                        </tr>
+                        <tr>
+                            <td>_tt_enable_cookie</td>
+                            <td>Cookie (TikTok Pixel – TikTok Technology Limited, Irlanda)</td>
+                            <td>Marketing</td>
+                            <td>Indică faptul că browserul acceptă cookies pentru TikTok Pixel (măsurarea reclamelor)</td>
+                            <td>~13 luni</td>
+                        </tr>
+                        <tr>
+                            <td>tt_ttclid</td>
+                            <td>Cookie first-party (invitonline.ro)</td>
+                            <td>Marketing</td>
+                            <td>Identificatorul de click din linkul unei reclame TikTok (ttclid), trimis la TikTok după o plată confirmată, pentru atribuirea plății reclamei</td>
+                            <td>30 de zile</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -105,7 +140,7 @@ export default function CookiesPage() {
             </p>
             <p><CookieSettingsButton /></p>
             <p>
-                Dacă retragi acordul pentru cookies analitice, oprim tracker-ul și ștergem identificatorii _md_vid, _md_sid și _md_last. Poți, de asemenea,
+                Dacă retragi acordul pentru cookies analitice, oprim tracker-ul și Google Analytics și ștergem identificatorii _md_vid, _md_sid, _md_last, _ga și _ga_*. Dacă retragi acordul pentru cookies de marketing, oprim TikTok Pixel (revocarea consimțământului) și ștergem cookie-urile _ttp, _tt_enable_cookie și tt_ttclid. Poți, de asemenea,
                 șterge sau bloca cookies din setările browserului; blocarea celor strict necesare poate împiedica autentificarea.
             </p>
 

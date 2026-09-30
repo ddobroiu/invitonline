@@ -1,0 +1,436 @@
+/* Modern Minimal — Bodoni Moda + Manrope (next/font, latin-ext), paper white, ink, hairlines.
+   Container queries (not media queries): the editor's 320 px phone preview behaves like a phone. */
+
+.root {
+    --paper: #f6f3ee;
+    --paper-2: #efeae2;
+    --ink: #161514;
+    --muted: #6d665e;
+    --line: rgba(22, 21, 20, 0.14);
+    --accent: #9a7b4f;
+    --display: var(--modern-display), 'Bodoni Moda', Didot, Georgia, serif;
+    --sans: var(--modern-sans), 'Manrope', system-ui, sans-serif;
+
+    container-type: inline-size;
+    flex: 1 0 auto;
+    width: 100%;
+    min-height: 100%;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+.page {
+    width: 100%;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+    display: flex;
+    flex-direction: column;
+}
+
+.heroText {
+    padding: 56px 24px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+    animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.kicker {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.names {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(2.4rem, 13cqw, 5.6rem);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+    max-width: 100%;
+}
+
+.name {
+    display: block;
+}
+
+.amp {
+    display: block;
+    font-style: italic;
+    font-size: 0.55em;
+    color: var(--accent);
+    margin: 0.1em 0;
+}
+
+.date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    margin-top: 10px;
+}
+
+.weekday {
+    font-size: 0.75rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.dateMain {
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+}
+
+.place {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+}
+
+.photoWrap {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    max-height: 78cqh;
+    overflow: hidden;
+    background: var(--paper-2);
+}
+
+.photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    animation: fade 1.2s ease both;
+}
+
+.monogram {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 24px;
+}
+
+.monogram span {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 2.2rem;
+    color: var(--accent);
+}
+
+/* ---------- Body ---------- */
+
+.body {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 24px 64px;
+}
+
+.message {
+    font-family: var(--display);
+    font-size: clamp(1.25rem, 5cqw, 1.6rem);
+    line-height: 1.45;
+    text-align: center;
+    margin: 0 auto 40px;
+    max-width: 34ch;
+    overflow-wrap: anywhere;
+}
+
+.section {
+    border-top: 1px solid var(--line);
+    padding: 28px 0;
+    display: grid;
+    gap: 10px;
+}
+
+.sectionTitle {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.sectionTitleNext {
+    margin-top: 14px;
+}
+
+.sectionText {
+    font-size: 1.05rem;
+    overflow-wrap: anywhere;
+}
+
+.accentText {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 1.25rem;
+}
+
+.schedule {
+    list-style: none;
+    display: grid;
+    gap: 16px;
+}
+
+.scheduleItem {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 14px;
+    align-items: baseline;
+}
+
+.scheduleTime {
+    font-family: var(--display);
+    font-size: 1.35rem;
+    font-variant-numeric: lining-nums;
+}
+
+.scheduleBody {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    grid-column: 2;
+}
+
+.scheduleLabel {
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.scheduleLoc {
+    color: var(--muted);
+    font-size: 0.95rem;
+    overflow-wrap: anywhere;
+}
+
+.fieldGrid {
+    display: grid;
+    gap: 14px;
+}
+
+.field {
+    display: grid;
+    gap: 2px;
+}
+
+.fieldLabel {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.fieldValue {
+    font-weight: 500;
+    overflow-wrap: anywhere;
+}
+
+.note {
+    color: var(--muted);
+}
+
+.locationText {
+    font-family: var(--display);
+    font-size: 1.3rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+.links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink);
+    font: 600 0.85rem/1 var(--sans);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.link:hover,
+.link:focus-visible {
+    background: var(--ink);
+    color: var(--paper);
+}
+
+.countdown {
+    border-top: 1px solid var(--line);
+    padding: 32px 0 8px;
+    text-align: center;
+}
+
+.countdownLabel {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+}
+
+.countdownRow {
+    display: flex;
+    justify-content: center;
+    gap: clamp(18px, 8cqw, 48px);
+}
+
+.countdownUnit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.countdownNum {
+    font-family: var(--display);
+    font-size: clamp(2rem, 10cqw, 3.2rem);
+    line-height: 1;
+    font-variant-numeric: lining-nums tabular-nums;
+}
+
+.countdownText {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 6px;
+}
+
+.rsvpWrap {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.rsvpButton {
+    width: 100%;
+    max-width: 360px;
+    min-height: 56px;
+    border: none;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--paper);
+    font: 700 0.85rem/1 var(--sans);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.rsvpButton:hover {
+    background: #2c2926;
+    transform: translateY(-1px);
+}
+
+.signature {
+    margin-top: 48px;
+    text-align: center;
+    font-family: var(--display);
+    font-style: italic;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+}
+
+/* ---------- Wider screens ---------- */
+
+@container (min-width: 700px) {
+    .section {
+        grid-template-columns: 180px 1fr;
+        column-gap: 32px;
+        align-items: start;
+    }
+
+    .section > .sectionTitle {
+        grid-column: 1;
+        padding-top: 4px;
+    }
+
+    .section > :not(.sectionTitle) {
+        grid-column: 2;
+    }
+
+    .fieldGrid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@container (min-width: 960px) {
+    .hero.heroWithPhoto {
+        display: grid;
+        grid-template-columns: 1.05fr 1fr;
+        min-height: min(100cqh, 900px);
+    }
+
+    .heroWithPhoto .heroText {
+        padding: 64px clamp(32px, 5cqw, 80px);
+        justify-content: center;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .heroWithPhoto .names,
+    .heroWithPhoto .date {
+        align-items: flex-start;
+    }
+
+    .heroWithPhoto .photoWrap {
+        aspect-ratio: auto;
+        height: 100%;
+        max-height: none;
+    }
+
+    .heroText {
+        padding-top: 96px;
+    }
+}
+
+@keyframes rise {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .heroText,
+    .photo {
+        animation: none;
+    }
+}
