@@ -3,7 +3,7 @@
 import { CONSENT_COOKIE, getCookieValue, parseConsent } from '@/lib/consent'
 
 export const TIKTOK_PIXEL_ID = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID || 'DATFVURC77U3L597V800'
-export const TIKTOK_CURRENCY = 'EUR'
+export const TIKTOK_CURRENCY = 'RON'
 
 // tt_ttclid: identificatorul de click TikTok (?ttclid= din linkul reclamei), pastrat 30 de zile DOAR cu acord de marketing,
 // ca checkout-ul sa-l poata trimite serverului pentru TikTok Events API (lib/tiktok-events.ts)

@@ -134,7 +134,7 @@ export async function GET(req: Request) {
             eventId: checkoutSession.metadata?.eventId,
             // For the GA4 purchase event on the success page (no personal data)
             amount: (checkoutSession.amount_total ?? 0) / 100,
-            currency: (checkoutSession.currency ?? 'eur').toUpperCase(),
+            currency: (checkoutSession.currency ?? 'ron').toUpperCase(),
         })
     } catch (error) {
         console.error('Checkout verify error:', error)

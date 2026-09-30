@@ -29,7 +29,7 @@ export async function fulfillCheckout(session: Stripe.Checkout.Session) {
 
     const user = updatedEvent.user
     const amount = (session.amount_total || 0) / 100
-    const currency = session.currency?.toUpperCase() || 'EUR'
+    const currency = session.currency?.toUpperCase() || 'RON'
 
     // Create the order first so a concurrent call hits the unique constraint instead of duplicating
     let order
@@ -55,7 +55,7 @@ export async function fulfillCheckout(session: Stripe.Checkout.Session) {
     void sendTikTokPurchase({
         eventId: session.id,
         value: amount,
-        currency: session.currency || 'eur',
+        currency: session.currency || 'ron',
         contents: [{ content_id: 'invitatie_premium', content_name: 'Invitație premium', quantity: 1, price: amount }],
         pageUrl: `${getSiteUrl()}/checkout/success`,
         email: session.customer_details?.email ?? user.email,
@@ -76,7 +76,7 @@ export async function fulfillCheckout(session: Stripe.Checkout.Session) {
             const inv = await issueInvoice(session, {
                 name: `Invitație online - ${updatedEvent.type} (${updatedEvent.title})`,
                 amountCents: session.amount_total || 0,
-                currency: session.currency || 'eur',
+                currency: session.currency || 'ron',
             })
             invLink = inv.url
             invSeries = inv.series

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     alternates: { canonical: LEGAL_LINKS.terms },
 }
 
-const price = `${INVITATION_PRICE / 100} €`
+const price = `${INVITATION_PRICE / 100} lei`
 
 export default function TermsPage() {
     return (
@@ -71,7 +71,7 @@ export default function TermsPage() {
             <h2>5. Prețuri și plată</h2>
             <ul>
                 <li>Crearea contului și a ciornelor este gratuită.</li>
-                <li>Activarea unei invitații costă <strong>{price}</strong> (euro), plată unică pe invitație (eveniment), fără abonament și fără reînnoire automată. Numărul de invitați este nelimitat.</li>
+                <li>Activarea unei invitații costă <strong>{price}</strong>, plată unică pe invitație (eveniment), fără abonament și fără reînnoire automată. Numărul de invitați este nelimitat.</li>
                 <li><strong>{PRICE_NOTE}.</strong> Prețul afișat este prețul total pe care îl plătești.</li>
                 <li>Plata se face online, prin procesatorul de plăți Stripe (pagina securizată Stripe Checkout). Nu stocăm datele cardului tău; acestea sunt prelucrate direct de Stripe. Eventualele comisioane de conversie valutară percepute de banca ta nu sunt controlate de noi.</li>
                 <li>Contractul se încheie în momentul confirmării plății; invitația se activează automat imediat după confirmare.</li>

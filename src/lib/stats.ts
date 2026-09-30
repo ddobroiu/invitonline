@@ -18,7 +18,7 @@ const PERIODS: Record<StatsPeriod, string> = {
 }
 
 // Moneda in care se incaseaza invitatiile (src/lib/stripe.ts); comenzile in alta moneda nu intra in suma
-export const STATS_CURRENCY = 'EUR'
+export const STATS_CURRENCY = 'RON'
 
 type KpiRow = {
     period: StatsPeriod

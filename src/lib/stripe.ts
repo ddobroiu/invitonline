@@ -1,8 +1,8 @@
 import Stripe from 'stripe'
 
 // Price for activating one invitation (in cents)
-export const INVITATION_PRICE = 2000
-export const INVITATION_CURRENCY = 'eur'
+export const INVITATION_PRICE = 9900
+export const INVITATION_CURRENCY = 'ron'
 
 let stripeClient: Stripe | null = null
 

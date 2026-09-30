@@ -774,7 +774,7 @@ function CreateEventContent() {
                                     <p className={styles.cardText}>Invitația este deja activă. Modificările apar imediat la link-ul trimis oaspeților.</p>
                                 ) : (
                                     <div className={styles.priceCard}>
-                                        <div className={styles.price}>20 €<span> / invitație</span></div>
+                                        <div className={styles.price}>99 lei<span> / invitație</span></div>
                                         <p style={{ fontSize: '0.8rem', color: '#999', margin: '4px 0 8px' }}>{PRICE_NOTE}.</p>
                                         <ul>
                                             <li><Check size={14} /> Link unic, fără limită de invitați</li>
@@ -790,7 +790,7 @@ function CreateEventContent() {
                                 {saveError && <p className={styles.errorBox}>{saveError}</p>}
 
                                 <button type="button" onClick={() => handleSave(!isPaid)} className={styles.btnGenerate} style={{ width: '100%' }} disabled={isSaving}>
-                                    {isSaving ? 'Se procesează...' : isPaid ? 'Salvează modificările' : 'Plătește și activează (20 €)'}
+                                    {isSaving ? 'Se procesează...' : isPaid ? 'Salvează modificările' : 'Plătește și activează (99 lei)'}
                                 </button>
                                 {!isPaid && (
                                     <button type="button" onClick={() => handleSave(false)} className={styles.btnSecondary} style={{ width: '100%', marginTop: '10px' }} disabled={isSaving}>

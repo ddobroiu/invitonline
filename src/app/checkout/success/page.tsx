@@ -110,8 +110,8 @@ function SuccessContent() {
                     if (data.paid && data.eventId) {
                         if (cancelled) return
                         if (typeof data.amount === 'number' && data.amount > 0) {
-                            trackPurchase(sessionId, data.amount, String(data.currency || 'EUR'))
-                            stopTikTok = trackTikTokPurchase(sessionId, data.amount, String(data.currency || 'EUR'))
+                            trackPurchase(sessionId, data.amount, String(data.currency || 'RON'))
+                            stopTikTok = trackTikTokPurchase(sessionId, data.amount, String(data.currency || 'RON'))
                         }
                         setInvitationUrl(`${window.location.origin}/invitatie/${data.eventId}`)
                         setState('done')

@@ -21,16 +21,16 @@ import { INVITATION_PRICE } from '@/lib/stripe'
 import { OG_BASE, jsonLdString } from '@/lib/seo'
 
 // Single source for the price (cents in lib/stripe)
-const PRICE_EUR = INVITATION_PRICE / 100
+const PRICE_RON = INVITATION_PRICE / 100
 
 export const metadata: Metadata = {
   title: { absolute: 'Invitații digitale pentru nuntă și botez | InvitOnline' },
-  description: 'Creează invitații digitale interactive pentru nuntă, botez sau aniversare: 15 modele animate, confirmări RSVP online, hărți Google Maps și Waze. 20 € per invitație.',
+  description: 'Creează invitații digitale interactive pentru nuntă, botez sau aniversare: 15 modele animate, confirmări RSVP online, hărți Google Maps și Waze. 99 lei per invitație.',
   alternates: { canonical: '/' },
   openGraph: {
     ...OG_BASE,
     title: 'InvitOnline - Invitații digitale pentru nuntă și botez',
-    description: 'Invitații digitale interactive, cu confirmări RSVP online și hărți integrate. 20 € per invitație, fără limită de invitați.',
+    description: 'Invitații digitale interactive, cu confirmări RSVP online și hărți integrate. 99 lei per invitație, fără limită de invitați.',
     type: 'website',
     url: '/',
   },
@@ -126,8 +126,8 @@ const homeJsonLd = {
       url: `${SITE_URL}/#preturi`,
       offers: {
         '@type': 'Offer',
-        price: String(PRICE_EUR),
-        priceCurrency: 'EUR',
+        price: String(PRICE_RON),
+        priceCurrency: 'RON',
         availability: 'https://schema.org/InStock',
         url: `${SITE_URL}/#preturi`,
         seller: { '@id': `${SITE_URL}/#organization` },
@@ -263,7 +263,7 @@ export default function Home() {
           <div className={styles.pricingBadge}>Cel mai ales</div>
           <h3 className={styles.planName}>Invitație Premium</h3>
           <div className={styles.price}>
-            <span className={styles.priceValue}>{PRICE_EUR} €</span>
+            <span className={styles.priceValue}>{PRICE_RON} lei</span>
             <span className={styles.priceUnit}>/ invitație</span>
           </div>
           <p className={styles.priceNote}>Plată unică per eveniment · Preț final; furnizorul nu este plătitor de TVA</p>

@@ -292,7 +292,7 @@ function DashboardContent() {
                                 </>
                             ) : (
                                 <button className={styles.actionPrimary} onClick={() => handlePayment(ev.id)} disabled={payingId === ev.id}>
-                                    {payingId === ev.id ? <Loader2 size={14} className="animate-spin" /> : <Lock size={14} />} Activează (20 €)
+                                    {payingId === ev.id ? <Loader2 size={14} className="animate-spin" /> : <Lock size={14} />} Activează (99 lei)
                                 </button>
                             )}
                             <button className={styles.actionGhost} onClick={() => router.push(`/create?id=${ev.id}`)} aria-label="Editează"><Pencil size={14} /></button>
@@ -481,7 +481,7 @@ function DashboardContent() {
                             </div>
                         ) : (
                             <button className={styles.primaryBtn} onClick={() => handlePayment(selectedEvent.id)} disabled={payingId === selectedEvent.id}>
-                                <Lock size={16} /> Activează (20 €)
+                                <Lock size={16} /> Activează (99 lei)
                             </button>
                         )}
                     </header>
@@ -520,7 +520,7 @@ function DashboardContent() {
                     style={{ position: 'fixed', inset: 0, zIndex: 9000, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}
                 >
                     <div onClick={(e) => e.stopPropagation()} style={{ background: '#111', border: '1px solid #333', borderRadius: '16px', padding: '20px', maxWidth: '460px', width: '100%', color: '#ddd' }}>
-                        <h2 id="checkout-consent-title" style={{ fontFamily: 'var(--font-heading)', fontSize: '1.3rem', color: '#fff', marginBottom: '6px' }}>Activează invitația – 20 €</h2>
+                        <h2 id="checkout-consent-title" style={{ fontFamily: 'var(--font-heading)', fontSize: '1.3rem', color: '#fff', marginBottom: '6px' }}>Activează invitația – 99 lei</h2>
                         <p style={{ fontSize: '0.85rem', color: '#999' }}>{PRICE_NOTE}. Plata se face securizat prin Stripe.</p>
                         <CheckoutConsent checked={checkoutConsent} onChange={setCheckoutConsent} />
                         <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
