@@ -11,6 +11,7 @@ import ImageUploader from '@/components/ImageUploader'
 import CheckoutConsent, { CHECKOUT_CONSENT_REQUIRED } from '@/components/legal/CheckoutConsent'
 import RegisterTermsConsent from '@/components/legal/RegisterTermsConsent'
 import RegisterMarketingChoice from '@/components/legal/RegisterMarketingChoice'
+import GoogleSignInButton from '@/components/auth/GoogleSignInButton'
 import { PRICE_NOTE } from '@/config/legal'
 import { TIKTOK_CURRENCY, trackTikTok } from '@/lib/tiktok'
 import {
@@ -196,6 +197,8 @@ function CreateEventContent() {
                 setFormData(prev => ({ ...prev, ...draft }))
                 setTitleTouched(true)
                 if (!searchParams.get('template') && TEMPLATE_IDS.includes(template)) setSelectedTemplate(template)
+                // Intoarcerea de la „Continuă cu Google”: direct la pasul final, cu ciorna restaurata
+                if (searchParams.get('pas') === 'final') setCurrentStep(3)
             }
         } catch { /* ignore corrupt draft */ }
     }, [editId, status, router, searchParams])
@@ -767,6 +770,12 @@ function CreateEventContent() {
                                         {isAuthLoading ? 'Se procesează...' : authMode === 'register' ? 'Creează cont și continuă' : 'Intră în cont'}
                                     </button>
                                 </form>
+                                <GoogleSignInButton
+                                    callbackUrl="/create?pas=final"
+                                    termsAccepted={authMode === 'register' && acceptTerms}
+                                    requireTerms={authMode === 'register'}
+                                    onBlocked={setAuthError}
+                                />
                             </>
                         ) : (
                             <div style={{ textAlign: 'center' }}>

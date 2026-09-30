@@ -14,6 +14,7 @@ import { daysUntil, eventInfo, hourRo, rsvpCounts, type EventInfo, type RsvpCoun
  * Cronul e-mailurilor: cine ce primeste acum. Reguli, verificate la fiecare rulare:
  *   - doar conturile create dupa lansare (EmailSettings, pus de migrare); conturile vechi nu primesc nimic;
  *   - niciodata cui a bifat „Nu vreau…” la inregistrare, s-a dezabonat sau e in EmailUnsubscribe;
+ *   - niciodata conturilor fara alegere la inregistrare (marketingChoiceAt NULL: create cu Google, fara bifa);
  *   - doar titularii de cont: invitatii care raspund la o invitatie (Guest) nu primesc niciodata marketing;
  *   - fiecare fel o singura data pe adresa (EmailLog.dedupeKey); rezumatul RSVP o data pe invitatie platita;
  *   - cel mult un e-mail la 48 de ore pe adresa, in afara de bun venit;
@@ -90,7 +91,7 @@ async function collectJobs(now: number): Promise<{ jobs: Job[]; launchedAt: Date
     const unsubscribed = new Set((await prisma.emailUnsubscribe.findMany({ select: { email: true } })).map((u) => u.email.toLowerCase()))
 
     const users = await prisma.user.findMany({
-        where: { createdAt: { gte: launchedAt }, marketingOptOut: false },
+        where: { createdAt: { gte: launchedAt }, marketingOptOut: false, marketingChoiceAt: { not: null } },
         select: {
             id: true,
             email: true,
@@ -225,10 +226,10 @@ function build(job: Job): Message {
 async function stillWanted(job: Job): Promise<boolean> {
     if (job.kind === 'welcome') return true
     const [user, unsub] = await Promise.all([
-        prisma.user.findUnique({ where: { id: job.userId }, select: { marketingOptOut: true } }),
+        prisma.user.findUnique({ where: { id: job.userId }, select: { marketingOptOut: true, marketingChoiceAt: true } }),
         prisma.emailUnsubscribe.findUnique({ where: { email: job.email }, select: { email: true } }),
     ])
-    if (!user || user.marketingOptOut || unsub) return false
+    if (!user || user.marketingOptOut || !user.marketingChoiceAt || unsub) return false
     if (job.kind === 'draft_reminder' && job.event) {
         const ev = await prisma.event.findUnique({ where: { id: job.event.id }, select: { isPaid: true } })
         if (!ev || ev.isPaid) return false

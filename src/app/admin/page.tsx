@@ -55,6 +55,7 @@ export default async function AdminPage() {
                 email: true,
                 name: true,
                 createdAt: true,
+                googleId: true,
                 _count: { select: { events: true, orders: { where: { status: 'completed' } } } },
             },
         }),
@@ -278,6 +279,7 @@ export default async function AdminPage() {
                                     <td>
                                         {u.email}
                                         {u.name && <span className={styles.hint}>{u.name}</span>}
+                                        {u.googleId && <span className={styles.hint}>intră cu Google</span>}
                                     </td>
                                     <td className={styles.num}>{u._count.events}</td>
                                     <td className={styles.num}>{u._count.orders}</td>

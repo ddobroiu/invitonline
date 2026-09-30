@@ -6,6 +6,8 @@ import { signIn, useSession } from 'next-auth/react'
 import styles from './page.module.css'
 import RegisterTermsConsent from '@/components/legal/RegisterTermsConsent'
 import RegisterMarketingChoice from '@/components/legal/RegisterMarketingChoice'
+import GoogleSignInButton from '@/components/auth/GoogleSignInButton'
+import { googleErrorMessage } from '@/lib/google-auth-shared'
 
 // Only allow redirects inside the site
 function safeCallback(url: string | null) {
@@ -17,6 +19,7 @@ function LoginContent() {
     const searchParams = useSearchParams()
     const callbackUrl = safeCallback(searchParams.get('callbackUrl'))
     const tab = searchParams.get('tab')
+    const urlError = searchParams.get('error')
     const { status } = useSession()
     const [isLogin, setIsLogin] = useState(tab !== 'register')
     const [error, setError] = useState('')
@@ -34,6 +37,12 @@ function LoginContent() {
         setIsLogin(tab !== 'register')
         setError('')
     }, [tab])
+
+    // Intoarcerea de la Google cu eroare (/login?error=…)
+    useEffect(() => {
+        const message = googleErrorMessage(urlError)
+        if (message) setError(message)
+    }, [urlError])
 
     // Already signed in: nothing to do here
     useEffect(() => {
@@ -154,6 +163,13 @@ function LoginContent() {
                         {isLoading ? 'Se procesează...' : (isLogin ? 'Autentificare' : 'Creează contul')}
                     </button>
                 </form>
+
+                <GoogleSignInButton
+                    callbackUrl={callbackUrl}
+                    termsAccepted={!isLogin && acceptTerms}
+                    requireTerms={!isLogin}
+                    onBlocked={setError}
+                />
 
                 <div className={styles.footer}>
                     {isLogin ? 'Nu ai cont?' : 'Ai deja cont?'}

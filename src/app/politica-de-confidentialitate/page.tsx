@@ -50,6 +50,11 @@ export default function PrivacyPage() {
                             <td>Art. 6 alin. (1) lit. b) – executarea contractului</td>
                         </tr>
                         <tr>
+                            <td>Intrarea cu Google („Continuă cu Google”), doar dacă o alegi: de la Google Ireland Ltd. primim adresa de email și confirmarea că Google a verificat-o, numele, fotografia de profil și identificatorul contului Google. Nu primim parola Google și nu avem acces la alte date din contul Google</td>
+                            <td>Crearea contului sau intrarea în cont fără parolă; dacă există deja un cont InvitOnline cu aceeași adresă de email (verificată de Google), îl legăm de contul Google, ca să intri în același cont</td>
+                            <td>Art. 6 alin. (1) lit. b) – executarea contractului (crearea și accesul la cont, la cererea ta)</td>
+                        </tr>
+                        <tr>
                             <td>Conținutul invitației: tipul și titlul evenimentului, data, locația, mesaje, nume (ex. miri, părinți, copilul botezat), fotografii, muzică, video încărcate</td>
                             <td>Crearea, găzduirea și afișarea invitației persoanelor care au link-ul</td>
                             <td>Art. 6 alin. (1) lit. b) – contract (pentru datele terților incluse în invitație, organizatorul răspunde de temeiul legal)</td>
@@ -77,7 +82,7 @@ export default function PrivacyPage() {
                         <tr>
                             <td>Emailuri cu sfaturi despre contul și invitațiile tale (titularii de cont): emailul, numele, data creării contului, starea invitațiilor (ciornă / activată, tipul, titlul, data, locația), data plății, numărul de răspunsuri RSVP (doar cifre), jurnalul emailurilor trimise și al dezabonărilor</td>
                             <td>Pași de început, amintirea unei ciorne neactivate, sfaturi după activare, rezumatul confirmărilor înainte de eveniment, un singur email de revenire după o perioadă lungă de inactivitate; cel mult unul la 48 de ore. Invitații care răspund la o invitație nu primesc astfel de emailuri</td>
-                            <td>Art. 6 alin. (1) lit. f) – interes legitim, cu art. 12 alin. (2) din Legea nr. 506/2004 (servicii similare, pentru clienții care și-au făcut cont): poți refuza gratuit la crearea contului (bifa „Nu vreau emailuri cu sfaturi și noutăți”) și oricând, cu un click, din linkul de dezabonare din fiecare email</td>
+                            <td>Art. 6 alin. (1) lit. f) – interes legitim, cu art. 12 alin. (2) din Legea nr. 506/2004 (servicii similare, pentru clienții care și-au făcut cont): poți refuza gratuit la crearea contului (bifa „Nu vreau emailuri cu sfaturi și noutăți”) și oricând, cu un click, din linkul de dezabonare din fiecare email. Conturilor create cu Google, unde această alegere nu s-a putut face, nu le trimitem astfel de emailuri (doar emailul de bun venit)</td>
                         </tr>
                         <tr>
                             <td>Date tehnice: adresă IP, tip de browser, jurnale de server, cookies strict necesare de sesiune și securitate</td>
@@ -118,7 +123,7 @@ export default function PrivacyPage() {
 
             <h2>4. Este obligatoriu să ne furnizezi datele?</h2>
             <p>
-                Emailul și parola sunt necesare pentru crearea contului; datele de facturare sunt necesare pentru emiterea facturii (obligație legală);
+                Emailul și parola (sau, la alegere, intrarea cu Google) sunt necesare pentru crearea contului; datele de facturare sunt necesare pentru emiterea facturii (obligație legală);
                 fără ele nu îți putem furniza serviciul. Numele, datele de facturare salvate în cont și consimțământul pentru cookies analitice și de marketing sunt
                 opționale. Pentru invitați, numele și un mod de contact sunt cerute de formular pentru ca organizatorul să poată identifica răspunsul.
             </p>
@@ -164,6 +169,11 @@ export default function PrivacyPage() {
                         <tr>
                             <td>Google (Google Ireland Ltd. / Google LLC)</td>
                             <td>Completarea automată a locației evenimentului (Google Maps Places) în editorul de invitații; Google primește textul căutat și adresa IP</td>
+                            <td>Irlanda / SUA – EU-US Data Privacy Framework și clauze contractuale standard</td>
+                        </tr>
+                        <tr>
+                            <td>Google Ireland Ltd. (Sign in with Google)</td>
+                            <td>Autentificarea cu contul Google, doar dacă alegi „Continuă cu Google”: Google află că intri în InvitOnline și ne transmite datele de profil de mai sus. Google acționează ca operator independent pentru contul tău Google (vezi politica de confidențialitate Google)</td>
                             <td>Irlanda / SUA – EU-US Data Privacy Framework și clauze contractuale standard</td>
                         </tr>
                         <tr>
