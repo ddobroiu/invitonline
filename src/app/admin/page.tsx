@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import prisma from '@/lib/prisma'
 import { getAdmin } from '@/lib/admin'
-import { getKpis, STATS_CURRENCY, TYPE_LABELS, type Kpi } from '@/lib/stats'
+import { getEmailAdminStats, getKpis, STATS_CURRENCY, TYPE_LABELS, type Kpi } from '@/lib/stats'
+import { EMAIL_KINDS, KIND_LABELS } from '@/lib/lifecycle/send'
+import { SEND_HOURS, WINDOWS } from '@/lib/lifecycle/run'
 import styles from './page.module.css'
 
 // Pagina interna pentru proprietar (doar ADMIN_EMAILS, vezi lib/admin.ts): conturi, plati, incasari.
@@ -26,8 +28,9 @@ export default async function AdminPage() {
     const admin = await getAdmin()
     if (!admin) notFound()
 
-    const [kpis, orders, users, unpaid] = await Promise.all([
+    const [kpis, emails, orders, users, unpaid] = await Promise.all([
         getKpis(),
+        getEmailAdminStats(),
         prisma.order.findMany({
             where: { status: 'completed' },
             orderBy: { createdAt: 'desc' },
@@ -63,6 +66,13 @@ export default async function AdminPage() {
         }),
     ])
 
+    // Felurile din ciclul de viata mereu (si cu 0), plus ce mai apare in jurnal (ex. confirmarea platii)
+    const emailKinds = emails
+        ? [...EMAIL_KINDS, ...emails.kinds.map((k) => k.kind).filter((k) => !(EMAIL_KINDS as string[]).includes(k))].map(
+              (kind) => emails.kinds.find((k) => k.kind === kind) ?? { kind, sent: 0, sent7: 0, sent30: 0, failed: 0, failed30: 0, lastAt: null },
+          )
+        : []
+
     return (
         <main className={styles.page}>
             <h1 className={styles.title}>Admin</h1>
@@ -96,6 +106,80 @@ export default async function AdminPage() {
                         </tbody>
                     </table>
                 </div>
+            </section>
+
+            <section className={styles.card}>
+                <h2>E-mailuri automate</h2>
+                {!emails ? (
+                    <p className={`${styles.muted} ${styles.cardNote}`}>Tabelele e-mailurilor lipsesc: rulează migrarea 20261001120000_lifecycle_emails.</p>
+                ) : (
+                    <>
+                        <p className={`${styles.muted} ${styles.cardNote}`}>
+                            {emails.launchedAt
+                                ? `Lansate pe ${fmtDate(emails.launchedAt)}: doar conturile create după această dată primesc e-mailurile periodice.`
+                                : 'Nelansate (lipsește rândul din EmailSettings).'}{' '}
+                            Cel mult unul la 48 de ore pe adresă (în afară de bun venit), între {SEND_HOURS.from}:00 și {SEND_HOURS.to}:00, ora României.
+                            Dezabonări: {emails.unsubscribes.total} (7 zile: {emails.unsubscribes.d7}, 30 de zile: {emails.unsubscribes.d30}).
+                            Conturi fără e-mailuri cu sfaturi (bifă la înregistrare sau dezabonare): {emails.optedOut}.
+                        </p>
+                        <div className={styles.scroll}>
+                            <table className={styles.table}>
+                                <thead>
+                                    <tr>
+                                        <th>Fel</th>
+                                        <th className={styles.num}>7 zile</th>
+                                        <th className={styles.num}>30 de zile</th>
+                                        <th className={styles.num}>Total</th>
+                                        <th className={styles.num}>Eșuate (30 z / total)</th>
+                                        <th>Ultimul</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {emailKinds.map((k) => (
+                                        <tr key={k.kind}>
+                                            <td>
+                                                {KIND_LABELS[k.kind] ?? k.kind}
+                                                {k.kind in WINDOWS && <span className={styles.hint}>{WINDOWS[k.kind as keyof typeof WINDOWS]}</span>}
+                                            </td>
+                                            <td className={styles.num}>{k.sent7}</td>
+                                            <td className={styles.num}>{k.sent30}</td>
+                                            <td className={styles.num}>{k.sent}</td>
+                                            <td className={styles.num}>{k.failed30} / {k.failed}</td>
+                                            <td className={styles.nowrap}>{k.lastAt ? fmtDate(new Date(k.lastAt)) : '–'}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        {emails.failures.length > 0 && (
+                            <>
+                                <h3>Ultimele eșecuri</h3>
+                                <div className={styles.scroll}>
+                                    <table className={styles.table}>
+                                        <thead>
+                                            <tr>
+                                                <th>Data</th>
+                                                <th>Adresă</th>
+                                                <th>Fel</th>
+                                                <th>Eroare</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {emails.failures.map((f) => (
+                                                <tr key={f.id}>
+                                                    <td className={styles.nowrap}>{fmtDate(f.sentAt)}</td>
+                                                    <td>{f.email}</td>
+                                                    <td>{KIND_LABELS[f.kind] ?? f.kind}</td>
+                                                    <td>{f.error}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </>
+                        )}
+                    </>
+                )}
             </section>
 
             <section className={styles.card}>

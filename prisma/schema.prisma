@@ -34,8 +34,14 @@ model User {
   termsAcceptedAt DateTime?
   termsVersion    String?
 
+  // Bifa „Nu vreau emailuri cu sfaturi și noutăți” de la înregistrare sau dezabonarea din e-mail
+  // (Legea 506/2004 art. 12 alin. 2), cu momentul alegerii
+  marketingOptOut   Boolean   @default(false)
+  marketingChoiceAt DateTime?
+
   events        Event[]
   orders        Order[]
+  emailLogs     EmailLog[]
 }
 
 // One-time e-mail links: sign-in without password ("login") and password reset ("reset").
@@ -126,3 +132,37 @@ model Guest {
   updatedAt DateTime @updatedAt
 }
 
+// Momentul lansarii e-mailurilor din ciclul de viata (randul 1, pus de migrare).
+// Doar conturile create dupa el primesc e-mailurile periodice.
+model EmailSettings {
+  id                  Int      @id @default(1)
+  lifecycleLaunchedAt DateTime @default(now())
+}
+
+// Fiecare e-mail din ciclul de viata (si confirmarile de plata): cine, ce fel, cand, rezultatul.
+// dedupeKey unic („adresa:fel”, la rezumatul RSVP „adresa:fel:eveniment”) opreste dublurile;
+// o trimitere esuata isi elibereaza cheia (NULL). Id-ul (uuid aleator) e cheia linkului de dezabonare.
+model EmailLog {
+  id        String   @id @default(uuid())
+  email     String
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // invitatia la care se refera e-mailul (ciorna, rezumat RSVP); fara cheie straina, invitatia se poate sterge
+  eventId   String?
+  kind      String
+  dedupeKey String?  @unique
+  sentAt    DateTime @default(now())
+  resendId  String?
+  error     String?
+
+  @@index([email, sentAt(sort: Desc)])
+  @@index([kind, sentAt(sort: Desc)])
+  @@index([userId])
+}
+
+// Adresele dezabonate (din linkul din e-mail sau din antetul List-Unsubscribe)
+model EmailUnsubscribe {
+  email          String   @id
+  unsubscribedAt DateTime @default(now())
+  emailLogId     String?
+}

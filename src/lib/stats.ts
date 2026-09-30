@@ -33,7 +33,14 @@ type KpiRow = {
     active: number
 }
 
-export type KpiKey = Exclude<keyof KpiRow, 'period'>
+type EmailKpiRow = {
+    period: StatsPeriod
+    emailsSent: number
+    emailsFailed: number
+    unsubscribes: number
+}
+
+export type KpiKey = Exclude<keyof KpiRow, 'period'> | Exclude<keyof EmailKpiRow, 'period'>
 
 export type Kpi = {
     key: KpiKey
@@ -94,19 +101,35 @@ export async function getKpis(): Promise<Kpi[]> {
           where g.status in ('confirmed', 'declined') and coalesce(g."respondedAt", g."createdAt") >= ${since})::int as rsvps,
         (select count(distinct "userId") from ${s}."Event" where "updatedAt" >= ${since})::int as active`,
     )
-    const rows = await prisma.$queryRawUnsafe<KpiRow[]>(parts.join(' union all '))
+    const [rows, emailRows] = await Promise.all([
+        prisma.$queryRawUnsafe<KpiRow[]>(parts.join(' union all ')),
+        getEmailKpiRows(),
+    ])
     const byPeriod = Object.fromEntries(rows.map((r) => [r.period, r])) as Partial<Record<StatsPeriod, KpiRow>>
+    const emailByPeriod = Object.fromEntries((emailRows ?? []).map((r) => [r.period, r])) as Partial<Record<StatsPeriod, EmailKpiRow>>
 
+    const value = (period: StatsPeriod, key: KpiKey): number => {
+        const r = { ...byPeriod[period], ...emailByPeriod[period] } as Record<string, unknown>
+        return Number(r[key] ?? 0)
+    }
     const row = (key: KpiKey, label: string, unit: Kpi['unit'], hint?: string): Kpi => ({
         key,
         label,
         unit,
         ...(hint && { hint }),
-        today: Number(byPeriod.today?.[key] ?? 0),
-        d7: Number(byPeriod.d7?.[key] ?? 0),
-        d30: Number(byPeriod.d30?.[key] ?? 0),
-        total: Number(byPeriod.total?.[key] ?? 0),
+        today: value('today', key),
+        d7: value('d7', key),
+        d30: value('d30', key),
+        total: value('total', key),
     })
+
+    const emailKpis = emailRows
+        ? [
+              row('emailsSent', 'E-mailuri automate trimise', 'count', 'bun venit, ciornă, sfaturi, rezumat RSVP, revenire'),
+              row('emailsFailed', 'E-mailuri eșuate', 'count', 'automate și confirmări de plată'),
+              row('unsubscribes', 'Dezabonări', 'count', 'din linkul sau antetul e-mailurilor'),
+          ]
+        : []
 
     return [
         row('users', 'Conturi noi', 'count'),
@@ -118,7 +141,74 @@ export async function getKpis(): Promise<Kpi[]> {
         row('unpaid', 'Checkout-uri neplătite', 'count', 'invitații trimise la plată, dar neactivate'),
         row('rsvps', 'Răspunsuri RSVP', 'count', 'invitați care au confirmat sau refuzat'),
         row('active', 'Utilizatori activi', 'count', 'au creat sau modificat o invitație'),
+        ...emailKpis,
     ]
+}
+
+/**
+ * Cifrele e-mailurilor pe perioade. null cand tabelele lipsesc (migrarea 20261001120000_lifecycle_emails
+ * n-a rulat inca): restul statisticilor merg mai departe, fara randurile de e-mail.
+ */
+async function getEmailKpiRows(): Promise<EmailKpiRow[] | null> {
+    const s = `"${schemaDb()}"`
+    const parts = Object.entries(PERIODS).map(
+        ([key, since]) => `
+      select '${key}' as period,
+        (select count(*) from ${s}."EmailLog" where error is null and kind <> 'payment_confirmation' and "sentAt" >= ${since})::int as "emailsSent",
+        (select count(*) from ${s}."EmailLog" where error is not null and "sentAt" >= ${since})::int as "emailsFailed",
+        (select count(*) from ${s}."EmailUnsubscribe" where "unsubscribedAt" >= ${since})::int as unsubscribes`,
+    )
+    try {
+        return await prisma.$queryRawUnsafe<EmailKpiRow[]>(parts.join(' union all '))
+    } catch (e) {
+        console.error('[stats] cifrele e-mailurilor lipsesc:', e instanceof Error ? e.message : e)
+        return null
+    }
+}
+
+export type EmailKindStats = { kind: string; sent: number; sent7: number; sent30: number; failed: number; failed30: number; lastAt: Date | null }
+
+/** Pentru sectiunea „E-mailuri” din /admin. null cand tabelele lipsesc. */
+export async function getEmailAdminStats() {
+    const s = `"${schemaDb()}"`
+    const d7 = PERIODS.d7
+    const d30 = PERIODS.d30
+    try {
+        const [kinds, unsub, optOut, failures, settings] = await Promise.all([
+            prisma.$queryRawUnsafe<EmailKindStats[]>(`
+          select kind,
+            (count(*) filter (where error is null))::int as sent,
+            (count(*) filter (where error is null and "sentAt" >= ${d7}))::int as sent7,
+            (count(*) filter (where error is null and "sentAt" >= ${d30}))::int as sent30,
+            (count(*) filter (where error is not null))::int as failed,
+            (count(*) filter (where error is not null and "sentAt" >= ${d30}))::int as failed30,
+            max("sentAt") as "lastAt"
+          from ${s}."EmailLog" group by kind`),
+            prisma.$queryRawUnsafe<{ total: number; d7: number; d30: number }[]>(`
+          select count(*)::int as total,
+            (count(*) filter (where "unsubscribedAt" >= ${d7}))::int as d7,
+            (count(*) filter (where "unsubscribedAt" >= ${d30}))::int as d30
+          from ${s}."EmailUnsubscribe"`),
+            prisma.user.count({ where: { marketingOptOut: true } }),
+            prisma.emailLog.findMany({
+                where: { error: { not: null } },
+                orderBy: { sentAt: 'desc' },
+                take: 20,
+                select: { id: true, email: true, kind: true, sentAt: true, error: true },
+            }),
+            prisma.emailSettings.findUnique({ where: { id: 1 } }),
+        ])
+        return {
+            launchedAt: settings?.lifecycleLaunchedAt ?? null,
+            kinds,
+            unsubscribes: unsub[0] ?? { total: 0, d7: 0, d30: 0 },
+            optedOut: optOut,
+            failures,
+        }
+    } catch (e) {
+        console.error('[stats] e-mailuri:', e instanceof Error ? e.message : e)
+        return null
+    }
 }
 
 export async function statsMydashboard() {

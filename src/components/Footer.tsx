@@ -83,6 +83,9 @@ export default function Footer() {
                     Sediu: {COMPANY_ADDRESS_LINE} · <a href={`mailto:${COMPANY.email}`} className="hover-text-white">{COMPANY.email}</a>
                 </p>
                 <p>&copy; {new Date().getFullYear()} InvitOnline. Toate drepturile rezervate.</p>
+                <p style={{ marginTop: '6px' }}>
+                    Realizat de <a href="https://e-web.ro" target="_blank" rel="noopener" className="hover-text-white">e-web.ro</a>
+                </p>
             </div>
         </footer>
     )

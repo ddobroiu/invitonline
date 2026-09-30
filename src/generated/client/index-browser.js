@@ -139,7 +139,9 @@ exports.Prisma.UserScalarFieldEnum = {
   bank: 'bank',
   iban: 'iban',
   termsAcceptedAt: 'termsAcceptedAt',
-  termsVersion: 'termsVersion'
+  termsVersion: 'termsVersion',
+  marketingOptOut: 'marketingOptOut',
+  marketingChoiceAt: 'marketingChoiceAt'
 };
 
 exports.Prisma.AuthTokenScalarFieldEnum = {
@@ -209,6 +211,29 @@ exports.Prisma.GuestScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.EmailSettingsScalarFieldEnum = {
+  id: 'id',
+  lifecycleLaunchedAt: 'lifecycleLaunchedAt'
+};
+
+exports.Prisma.EmailLogScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  userId: 'userId',
+  eventId: 'eventId',
+  kind: 'kind',
+  dedupeKey: 'dedupeKey',
+  sentAt: 'sentAt',
+  resendId: 'resendId',
+  error: 'error'
+};
+
+exports.Prisma.EmailUnsubscribeScalarFieldEnum = {
+  email: 'email',
+  unsubscribedAt: 'unsubscribedAt',
+  emailLogId: 'emailLogId'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -241,7 +266,10 @@ exports.Prisma.ModelName = {
   StripeEvent: 'StripeEvent',
   Event: 'Event',
   Order: 'Order',
-  Guest: 'Guest'
+  Guest: 'Guest',
+  EmailSettings: 'EmailSettings',
+  EmailLog: 'EmailLog',
+  EmailUnsubscribe: 'EmailUnsubscribe'
 };
 
 /**

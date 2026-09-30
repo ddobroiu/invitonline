@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
-import { escapeHtml, getSiteUrl } from '@/lib/utils'
 import { LEGAL_VERSION } from '@/config/legal'
 
 export async function POST(req: Request) {
@@ -10,6 +9,7 @@ export async function POST(req: Request) {
         const email = String(body.email || '').trim().toLowerCase()
         const password = String(body.password || '')
         const name = String(body.name || '').trim().slice(0, 120) || null
+        const marketingOptOut = body.marketingOptOut === true
 
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             return NextResponse.json({ message: 'Adresa de email nu este validă.' }, { status: 400 })
@@ -35,25 +35,16 @@ export async function POST(req: Request) {
                 name,
                 termsAcceptedAt: new Date(),
                 termsVersion: LEGAL_VERSION,
+                // bifa „Nu vreau emailuri cu sfaturi și noutăți” (Legea 506/2004 art. 12 alin. 2)
+                marketingOptOut,
+                marketingChoiceAt: new Date(),
             }
         })
 
+        // Bun venit, jurnalizat in EmailLog (lib/lifecycle); nu blocheaza crearea contului
         try {
-            const { sendEmail } = await import('@/lib/resend')
-            await sendEmail({
-                to: email,
-                subject: 'Bun venit la InvitOnline! 💌',
-                html: `
-                    <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
-                        <h1 style="color: #d4af37;">Bună, ${escapeHtml(name || 'și bine ai venit')}!</h1>
-                        <p>Contul tău a fost creat cu succes. Acum poți crea invitații digitale premium pentru evenimentele tale speciale.</p>
-                        <div style="margin: 30px 0;">
-                            <a href="${getSiteUrl(req)}/create" style="background: #000; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Creează prima invitație</a>
-                        </div>
-                        <p>O zi minunată,<br/>Echipa InvitOnline</p>
-                    </div>
-                `
-            })
+            const { sendWelcomeNow } = await import('@/lib/lifecycle/run')
+            await sendWelcomeNow({ id: user.id, email: user.email, name: user.name, marketingOptOut })
         } catch (emailErr) {
             console.error('Welcome email failed:', emailErr)
         }

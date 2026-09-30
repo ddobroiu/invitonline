@@ -10,6 +10,7 @@ import MediaUploader from '@/components/MediaUploader'
 import ImageUploader from '@/components/ImageUploader'
 import CheckoutConsent, { CHECKOUT_CONSENT_REQUIRED } from '@/components/legal/CheckoutConsent'
 import RegisterTermsConsent from '@/components/legal/RegisterTermsConsent'
+import RegisterMarketingChoice from '@/components/legal/RegisterMarketingChoice'
 import { PRICE_NOTE } from '@/config/legal'
 import { TIKTOK_CURRENCY, trackTikTok } from '@/lib/tiktok'
 import {
@@ -148,6 +149,7 @@ function CreateEventContent() {
     const [authError, setAuthError] = useState('')
     const [isAuthLoading, setIsAuthLoading] = useState(false)
     const [acceptTerms, setAcceptTerms] = useState(false)
+    const [marketingOptOut, setMarketingOptOut] = useState(false)
     const [checkoutConsent, setCheckoutConsent] = useState(false)
 
     // Load the event being edited, or restore an unsaved draft
@@ -413,7 +415,7 @@ function CreateEventContent() {
                 const res = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ...authData, acceptTerms })
+                    body: JSON.stringify({ ...authData, acceptTerms, marketingOptOut })
                 })
                 if (!res.ok) {
                     const data = await res.json().catch(() => ({}))
@@ -759,6 +761,7 @@ function CreateEventContent() {
                                     <input className={styles.input} type="email" required aria-label="Email" placeholder="Email" autoComplete="email" value={authData.email} onChange={e => setAuthData({ ...authData, email: e.target.value })} />
                                     <input className={styles.input} type="password" required aria-label="Parolă" minLength={authMode === 'register' ? 6 : undefined} placeholder={authMode === 'register' ? 'Parolă (minim 6 caractere)' : 'Parolă'} autoComplete={authMode === 'register' ? 'new-password' : 'current-password'} value={authData.password} onChange={e => setAuthData({ ...authData, password: e.target.value })} />
                                     {authMode === 'register' && <RegisterTermsConsent checked={acceptTerms} onChange={setAcceptTerms} />}
+                                    {authMode === 'register' && <RegisterMarketingChoice optOut={marketingOptOut} onChange={setMarketingOptOut} />}
                                     {authError && <p className={styles.errorText}>{authError}</p>}
                                     <button type="submit" className={styles.btnGenerate} disabled={isAuthLoading}>
                                         {isAuthLoading ? 'Se procesează...' : authMode === 'register' ? 'Creează cont și continuă' : 'Intră în cont'}

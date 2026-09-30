@@ -26,6 +26,17 @@
     padding: 0 1rem 0.75rem;
 }
 
+.card h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 1rem 1rem 0.5rem;
+}
+
+.cardNote {
+    padding: 0 1rem 0.75rem;
+    line-height: 1.5;
+}
+
 .scroll {
     overflow-x: auto;
 }

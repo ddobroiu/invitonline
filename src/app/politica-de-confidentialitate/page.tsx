@@ -75,6 +75,11 @@ export default function PrivacyPage() {
                             <td>Art. 6 alin. (1) lit. b) – contract / demersuri precontractuale; lit. f) – interes legitim</td>
                         </tr>
                         <tr>
+                            <td>Emailuri cu sfaturi despre contul și invitațiile tale (titularii de cont): emailul, numele, data creării contului, starea invitațiilor (ciornă / activată, tipul, titlul, data, locația), data plății, numărul de răspunsuri RSVP (doar cifre), jurnalul emailurilor trimise și al dezabonărilor</td>
+                            <td>Pași de început, amintirea unei ciorne neactivate, sfaturi după activare, rezumatul confirmărilor înainte de eveniment, un singur email de revenire după o perioadă lungă de inactivitate; cel mult unul la 48 de ore. Invitații care răspund la o invitație nu primesc astfel de emailuri</td>
+                            <td>Art. 6 alin. (1) lit. f) – interes legitim, cu art. 12 alin. (2) din Legea nr. 506/2004 (servicii similare, pentru clienții care și-au făcut cont): poți refuza gratuit la crearea contului (bifa „Nu vreau emailuri cu sfaturi și noutăți”) și oricând, cu un click, din linkul de dezabonare din fiecare email</td>
+                        </tr>
+                        <tr>
                             <td>Date tehnice: adresă IP, tip de browser, jurnale de server, cookies strict necesare de sesiune și securitate</td>
                             <td>Funcționarea și securitatea Platformei, prevenirea fraudelor și abuzurilor, diagnosticarea erorilor</td>
                             <td>Art. 6 alin. (1) lit. f) – interes legitim (securitate); art. 4 alin. (5^1) din Legea nr. 506/2004 pentru cookies strict necesare</td>
@@ -148,7 +153,7 @@ export default function PrivacyPage() {
                         </tr>
                         <tr>
                             <td>Resend (Plus Five Five, Inc.)</td>
-                            <td>Trimiterea emailurilor tranzacționale (bun venit, confirmare plată și factură, notificări RSVP către organizator, confirmare către invitat)</td>
+                            <td>Trimiterea emailurilor tranzacționale (bun venit, confirmare plată și factură, notificări RSVP către organizator, confirmare către invitat) și a emailurilor cu sfaturi către titularii de cont</td>
                             <td>SUA – EU-US Data Privacy Framework și/sau clauze contractuale standard</td>
                         </tr>
                         <tr>
@@ -204,6 +209,7 @@ export default function PrivacyPage() {
                 <li><strong>Fișierele media</strong>: până la ștergerea invitației sau a contului; copiile din infrastructura furnizorilor se elimină conform ciclurilor lor tehnice.</li>
                 <li><strong>Facturi și documente financiar-contabile</strong> (inclusiv evidența comenzilor): 10 ani de la încheierea exercițiului financiar, conform Legii nr. 82/1991.</li>
                 <li><strong>Dovada consimțământului la plată</strong>: împreună cu comanda, pe durata termenului de prescripție și a păstrării documentelor contabile.</li>
+                <li><strong>Jurnalul emailurilor automate</strong>: cât timp contul este activ. <strong>Lista adreselor dezabonate</strong>: cât timp e nevoie ca să-ți respectăm alegerea (ca să nu primești din nou emailuri dacă îți refaci contul).</li>
                 <li><strong>Emailurile de suport</strong>: până la 3 ani de la ultima corespondență, cu excepția celor necesare pentru apărarea unui drept.</li>
                 <li><strong>Jurnale tehnice (loguri)</strong>: de regulă până la 90 de zile, dacă nu sunt necesare pentru investigarea unui incident.</li>
                 <li><strong>Statistici de trafic</strong>: identificatorul de vizitator expiră după 12 luni; datele statistice pot fi păstrate agregat.</li>
@@ -217,7 +223,7 @@ export default function PrivacyPage() {
                 <li>dreptul la <strong>ștergere</strong> („dreptul de a fi uitat”), cu excepția datelor pe care legea ne obligă să le păstrăm;</li>
                 <li>dreptul la <strong>restricționarea</strong> prelucrării;</li>
                 <li>dreptul la <strong>portabilitatea</strong> datelor furnizate de tine, într-un format structurat;</li>
-                <li>dreptul de <strong>opoziție</strong> față de prelucrările bazate pe interesul legitim;</li>
+                <li>dreptul de <strong>opoziție</strong> față de prelucrările bazate pe interesul legitim și, oricând și fără justificare, față de emailurile cu sfaturi și noutăți (linkul de dezabonare din fiecare email);</li>
                 <li>dreptul de a-ți <strong>retrage consimțământul</strong> oricând (ex. din „Setări cookies”), fără a afecta legalitatea prelucrării anterioare;</li>
                 <li>dreptul de a nu face obiectul unei decizii bazate <strong>exclusiv pe prelucrare automată</strong>.</li>
             </ul>
