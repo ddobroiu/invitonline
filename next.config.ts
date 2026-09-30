@@ -8,6 +8,7 @@ const NOINDEX_PATHS = [
   "/dashboard",
   "/admin",
   "/login",
+  "/resetare-parola",
   "/checkout/:path*",
   "/templates/:path*",
   "/api/:path*",

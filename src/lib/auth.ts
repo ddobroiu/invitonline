@@ -64,16 +64,29 @@ export const authOptions: AuthOptions = {
             if (account?.provider !== 'google') return true
             return resolveGoogleSignIn(profile, account.providerAccountId)
         },
-        async jwt({ token, account }) {
-            // La intrarea cu Google, token.sub ar fi id-ul Google: il inlocuim cu id-ul contului nostru
-            // si punem adresa din cont (rutele cauta dupa session.user.email exact).
-            if (account?.provider === 'google') {
-                const user = await findGoogleUser(account.providerAccountId)
-                if (!user) throw new Error('Google account not linked')
-                token.sub = user.id
-                token.email = user.email
-                token.name = user.name ?? token.name
+        async jwt({ token, account, user }) {
+            if (user) {
+                // Intrarea in cont (credentials sau Google): momentul ei, comparat mai jos cu passwordChangedAt
+                token.authAt = Date.now()
+                // La intrarea cu Google, token.sub ar fi id-ul Google: il inlocuim cu id-ul contului nostru
+                // si punem adresa din cont (rutele cauta dupa session.user.email exact).
+                if (account?.provider === 'google') {
+                    const linked = await findGoogleUser(account.providerAccountId)
+                    if (!linked) throw new Error('Google account not linked')
+                    token.sub = linked.id
+                    token.email = linked.email
+                    token.name = linked.name ?? token.name
+                }
+                return token
             }
+            // La fiecare citire a sesiunii: dupa o resetare a parolei (sau stergerea ei la legarea cu Google),
+            // sesiunile deschise inainte nu mai sunt primite. Eroarea aici = NextAuth sterge cookie-ul, sesiune nula.
+            if (!token.sub) throw new Error('Session without user')
+            const current = await prisma.user.findUnique({ where: { id: token.sub }, select: { passwordChangedAt: true } })
+            if (!current) throw new Error('Session user no longer exists')
+            // tokenurile vechi n-au authAt: iat (secunde) e momentul emiterii sau al ultimei reinnoiri
+            const authAt = typeof token.authAt === 'number' ? token.authAt : typeof token.iat === 'number' ? token.iat * 1000 : 0
+            if (current.passwordChangedAt && authAt < current.passwordChangedAt.getTime()) throw new Error('Session revoked')
             return token
         },
         async session({ session, token }) {

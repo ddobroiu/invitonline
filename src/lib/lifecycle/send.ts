@@ -24,6 +24,7 @@ export const KIND_LABELS: Record<string, string> = {
     rsvp_summary: 'Rezumat RSVP înainte de eveniment',
     reengage: 'Revenire (o singură dată)',
     payment_confirmation: 'Confirmare plată (tranzacțional)',
+    password_reset: 'Resetare parolă (tranzacțional)',
 }
 
 /** Nu intra in regula „cel mult un e-mail la 48 de ore”. */

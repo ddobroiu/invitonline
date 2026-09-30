@@ -154,7 +154,7 @@ async function getEmailKpiRows(): Promise<EmailKpiRow[] | null> {
     const parts = Object.entries(PERIODS).map(
         ([key, since]) => `
       select '${key}' as period,
-        (select count(*) from ${s}."EmailLog" where error is null and kind <> 'payment_confirmation' and "sentAt" >= ${since})::int as "emailsSent",
+        (select count(*) from ${s}."EmailLog" where error is null and kind not in ('payment_confirmation', 'password_reset') and "sentAt" >= ${since})::int as "emailsSent",
         (select count(*) from ${s}."EmailLog" where error is not null and "sentAt" >= ${since})::int as "emailsFailed",
         (select count(*) from ${s}."EmailUnsubscribe" where "unsubscribedAt" >= ${since})::int as unsubscribes`,
     )

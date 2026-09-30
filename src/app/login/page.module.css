@@ -192,3 +192,15 @@
         font-size: 2rem;
     }
 }
+
+.forgot {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.forgot:hover {
+    text-decoration: underline;
+}

@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { signIn, useSession } from 'next-auth/react'
+import Link from 'next/link'
 import styles from './page.module.css'
 import RegisterTermsConsent from '@/components/legal/RegisterTermsConsent'
 import RegisterMarketingChoice from '@/components/legal/RegisterMarketingChoice'
@@ -75,7 +76,7 @@ function LoginContent() {
             })
 
             if (res?.error) {
-                setError('Email sau parolă incorectă')
+                setError('Email sau parolă incorectă. Dacă ai intrat până acum cu Google sau ai uitat parola, folosește „Ai uitat parola?”.')
                 return
             }
 
@@ -154,6 +155,9 @@ function LoginContent() {
                             required
                         />
                         {!isLogin && <span className={styles.hint}>Minim 6 caractere</span>}
+                        {isLogin && (
+                            <Link href="/resetare-parola" className={styles.forgot}>Ai uitat parola?</Link>
+                        )}
                     </div>
 
                     {!isLogin && <RegisterTermsConsent checked={acceptTerms} onChange={setAcceptTerms} />}

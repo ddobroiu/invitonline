@@ -45,7 +45,7 @@ export default function PrivacyPage() {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Cont: email, parolă (stocată doar criptat/hash), nume (opțional), data acceptării termenilor</td>
+                            <td>Cont: email, parolă (stocată doar criptat/hash), nume (opțional), data acceptării termenilor; la resetarea parolei, linkul trimis pe email (stocat doar hash) și amprenta criptată (hash) a adresei IP de la care s-a cerut, pentru limitarea abuzurilor</td>
                             <td>Crearea și administrarea contului, autentificare, emailuri legate de cont</td>
                             <td>Art. 6 alin. (1) lit. b) – executarea contractului</td>
                         </tr>

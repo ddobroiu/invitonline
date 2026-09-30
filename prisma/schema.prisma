@@ -39,6 +39,9 @@ model User {
   marketingOptOut   Boolean   @default(false)
   marketingChoiceAt DateTime?
 
+  // Ultima schimbare/stergere a parolei: sesiunile emise inainte nu mai sunt primite (lib/auth.ts)
+  passwordChangedAt DateTime?
+
   events        Event[]
   orders        Order[]
   emailLogs     EmailLog[]
@@ -53,11 +56,14 @@ model AuthToken {
   purpose      String    // login | reset
   // terms accepted in the request form (sign-in link that may create the account)
   termsVersion String?
+  // SHA-256 al IP-ului care a cerut linkul (limita de cereri pe IP)
+  ipHash       String?
   expiresAt    DateTime
   usedAt       DateTime?
   createdAt    DateTime  @default(now())
 
   @@index([email])
+  @@index([ipHash])
 }
 
 // Stripe webhook events already handled (idempotency across retries)

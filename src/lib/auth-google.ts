@@ -80,7 +80,8 @@ export async function resolveGoogleSignIn(claims: GoogleClaims | undefined, goog
                 emailVerified: existing.emailVerified ?? now,
                 image: existing.image ?? picture,
                 // adresa nedovedita pana acum: parola (poate a altcuiva) nu mai deschide contul
-                ...(existing.emailVerified ? {} : { password: null }),
+                // si sesiunile deschise inainte cu ea nu mai sunt primite (lib/auth.ts)
+                ...(existing.emailVerified ? {} : { password: null, passwordChangedAt: now }),
             },
         })
         if (res.count === 0) {

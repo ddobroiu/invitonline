@@ -1710,6 +1710,7 @@ export namespace Prisma {
     termsVersion: string | null
     marketingOptOut: boolean | null
     marketingChoiceAt: Date | null
+    passwordChangedAt: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1734,6 +1735,7 @@ export namespace Prisma {
     termsVersion: string | null
     marketingOptOut: boolean | null
     marketingChoiceAt: Date | null
+    passwordChangedAt: Date | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1758,6 +1760,7 @@ export namespace Prisma {
     termsVersion: number
     marketingOptOut: number
     marketingChoiceAt: number
+    passwordChangedAt: number
     _all: number
   }
 
@@ -1784,6 +1787,7 @@ export namespace Prisma {
     termsVersion?: true
     marketingOptOut?: true
     marketingChoiceAt?: true
+    passwordChangedAt?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1808,6 +1812,7 @@ export namespace Prisma {
     termsVersion?: true
     marketingOptOut?: true
     marketingChoiceAt?: true
+    passwordChangedAt?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1832,6 +1837,7 @@ export namespace Prisma {
     termsVersion?: true
     marketingOptOut?: true
     marketingChoiceAt?: true
+    passwordChangedAt?: true
     _all?: true
   }
 
@@ -1929,6 +1935,7 @@ export namespace Prisma {
     termsVersion: string | null
     marketingOptOut: boolean
     marketingChoiceAt: Date | null
+    passwordChangedAt: Date | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1970,6 +1977,7 @@ export namespace Prisma {
     termsVersion?: boolean
     marketingOptOut?: boolean
     marketingChoiceAt?: boolean
+    passwordChangedAt?: boolean
     events?: boolean | User$eventsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
     emailLogs?: boolean | User$emailLogsArgs<ExtArgs>
@@ -1998,6 +2006,7 @@ export namespace Prisma {
     termsVersion?: boolean
     marketingOptOut?: boolean
     marketingChoiceAt?: boolean
+    passwordChangedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2022,6 +2031,7 @@ export namespace Prisma {
     termsVersion?: boolean
     marketingOptOut?: boolean
     marketingChoiceAt?: boolean
+    passwordChangedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -2046,9 +2056,10 @@ export namespace Prisma {
     termsVersion?: boolean
     marketingOptOut?: boolean
     marketingChoiceAt?: boolean
+    passwordChangedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "emailVerified" | "googleId" | "image" | "createdAt" | "updatedAt" | "companyName" | "cui" | "regCom" | "address" | "city" | "county" | "bank" | "iban" | "termsAcceptedAt" | "termsVersion" | "marketingOptOut" | "marketingChoiceAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "emailVerified" | "googleId" | "image" | "createdAt" | "updatedAt" | "companyName" | "cui" | "regCom" | "address" | "city" | "county" | "bank" | "iban" | "termsAcceptedAt" | "termsVersion" | "marketingOptOut" | "marketingChoiceAt" | "passwordChangedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     events?: boolean | User$eventsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -2087,6 +2098,7 @@ export namespace Prisma {
       termsVersion: string | null
       marketingOptOut: boolean
       marketingChoiceAt: Date | null
+      passwordChangedAt: Date | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2534,6 +2546,7 @@ export namespace Prisma {
     readonly termsVersion: FieldRef<"User", 'String'>
     readonly marketingOptOut: FieldRef<"User", 'Boolean'>
     readonly marketingChoiceAt: FieldRef<"User", 'DateTime'>
+    readonly passwordChangedAt: FieldRef<"User", 'DateTime'>
   }
     
 
@@ -3028,6 +3041,7 @@ export namespace Prisma {
     tokenHash: string | null
     purpose: string | null
     termsVersion: string | null
+    ipHash: string | null
     expiresAt: Date | null
     usedAt: Date | null
     createdAt: Date | null
@@ -3039,6 +3053,7 @@ export namespace Prisma {
     tokenHash: string | null
     purpose: string | null
     termsVersion: string | null
+    ipHash: string | null
     expiresAt: Date | null
     usedAt: Date | null
     createdAt: Date | null
@@ -3050,6 +3065,7 @@ export namespace Prisma {
     tokenHash: number
     purpose: number
     termsVersion: number
+    ipHash: number
     expiresAt: number
     usedAt: number
     createdAt: number
@@ -3063,6 +3079,7 @@ export namespace Prisma {
     tokenHash?: true
     purpose?: true
     termsVersion?: true
+    ipHash?: true
     expiresAt?: true
     usedAt?: true
     createdAt?: true
@@ -3074,6 +3091,7 @@ export namespace Prisma {
     tokenHash?: true
     purpose?: true
     termsVersion?: true
+    ipHash?: true
     expiresAt?: true
     usedAt?: true
     createdAt?: true
@@ -3085,6 +3103,7 @@ export namespace Prisma {
     tokenHash?: true
     purpose?: true
     termsVersion?: true
+    ipHash?: true
     expiresAt?: true
     usedAt?: true
     createdAt?: true
@@ -3169,6 +3188,7 @@ export namespace Prisma {
     tokenHash: string
     purpose: string
     termsVersion: string | null
+    ipHash: string | null
     expiresAt: Date
     usedAt: Date | null
     createdAt: Date
@@ -3197,6 +3217,7 @@ export namespace Prisma {
     tokenHash?: boolean
     purpose?: boolean
     termsVersion?: boolean
+    ipHash?: boolean
     expiresAt?: boolean
     usedAt?: boolean
     createdAt?: boolean
@@ -3208,6 +3229,7 @@ export namespace Prisma {
     tokenHash?: boolean
     purpose?: boolean
     termsVersion?: boolean
+    ipHash?: boolean
     expiresAt?: boolean
     usedAt?: boolean
     createdAt?: boolean
@@ -3219,6 +3241,7 @@ export namespace Prisma {
     tokenHash?: boolean
     purpose?: boolean
     termsVersion?: boolean
+    ipHash?: boolean
     expiresAt?: boolean
     usedAt?: boolean
     createdAt?: boolean
@@ -3230,12 +3253,13 @@ export namespace Prisma {
     tokenHash?: boolean
     purpose?: boolean
     termsVersion?: boolean
+    ipHash?: boolean
     expiresAt?: boolean
     usedAt?: boolean
     createdAt?: boolean
   }
 
-  export type AuthTokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "tokenHash" | "purpose" | "termsVersion" | "expiresAt" | "usedAt" | "createdAt", ExtArgs["result"]["authToken"]>
+  export type AuthTokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "tokenHash" | "purpose" | "termsVersion" | "ipHash" | "expiresAt" | "usedAt" | "createdAt", ExtArgs["result"]["authToken"]>
 
   export type $AuthTokenPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "AuthToken"
@@ -3246,6 +3270,7 @@ export namespace Prisma {
       tokenHash: string
       purpose: string
       termsVersion: string | null
+      ipHash: string | null
       expiresAt: Date
       usedAt: Date | null
       createdAt: Date
@@ -3677,6 +3702,7 @@ export namespace Prisma {
     readonly tokenHash: FieldRef<"AuthToken", 'String'>
     readonly purpose: FieldRef<"AuthToken", 'String'>
     readonly termsVersion: FieldRef<"AuthToken", 'String'>
+    readonly ipHash: FieldRef<"AuthToken", 'String'>
     readonly expiresAt: FieldRef<"AuthToken", 'DateTime'>
     readonly usedAt: FieldRef<"AuthToken", 'DateTime'>
     readonly createdAt: FieldRef<"AuthToken", 'DateTime'>
@@ -11799,7 +11825,8 @@ export namespace Prisma {
     termsAcceptedAt: 'termsAcceptedAt',
     termsVersion: 'termsVersion',
     marketingOptOut: 'marketingOptOut',
-    marketingChoiceAt: 'marketingChoiceAt'
+    marketingChoiceAt: 'marketingChoiceAt',
+    passwordChangedAt: 'passwordChangedAt'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -11811,6 +11838,7 @@ export namespace Prisma {
     tokenHash: 'tokenHash',
     purpose: 'purpose',
     termsVersion: 'termsVersion',
+    ipHash: 'ipHash',
     expiresAt: 'expiresAt',
     usedAt: 'usedAt',
     createdAt: 'createdAt'
@@ -12069,6 +12097,7 @@ export namespace Prisma {
     termsVersion?: StringNullableFilter<"User"> | string | null
     marketingOptOut?: BoolFilter<"User"> | boolean
     marketingChoiceAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    passwordChangedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     events?: EventListRelationFilter
     orders?: OrderListRelationFilter
     emailLogs?: EmailLogListRelationFilter
@@ -12096,6 +12125,7 @@ export namespace Prisma {
     termsVersion?: SortOrderInput | SortOrder
     marketingOptOut?: SortOrder
     marketingChoiceAt?: SortOrderInput | SortOrder
+    passwordChangedAt?: SortOrderInput | SortOrder
     events?: EventOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
     emailLogs?: EmailLogOrderByRelationAggregateInput
@@ -12126,6 +12156,7 @@ export namespace Prisma {
     termsVersion?: StringNullableFilter<"User"> | string | null
     marketingOptOut?: BoolFilter<"User"> | boolean
     marketingChoiceAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    passwordChangedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     events?: EventListRelationFilter
     orders?: OrderListRelationFilter
     emailLogs?: EmailLogListRelationFilter
@@ -12153,6 +12184,7 @@ export namespace Prisma {
     termsVersion?: SortOrderInput | SortOrder
     marketingOptOut?: SortOrder
     marketingChoiceAt?: SortOrderInput | SortOrder
+    passwordChangedAt?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -12183,6 +12215,7 @@ export namespace Prisma {
     termsVersion?: StringNullableWithAggregatesFilter<"User"> | string | null
     marketingOptOut?: BoolWithAggregatesFilter<"User"> | boolean
     marketingChoiceAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    passwordChangedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   }
 
   export type AuthTokenWhereInput = {
@@ -12194,6 +12227,7 @@ export namespace Prisma {
     tokenHash?: StringFilter<"AuthToken"> | string
     purpose?: StringFilter<"AuthToken"> | string
     termsVersion?: StringNullableFilter<"AuthToken"> | string | null
+    ipHash?: StringNullableFilter<"AuthToken"> | string | null
     expiresAt?: DateTimeFilter<"AuthToken"> | Date | string
     usedAt?: DateTimeNullableFilter<"AuthToken"> | Date | string | null
     createdAt?: DateTimeFilter<"AuthToken"> | Date | string
@@ -12205,6 +12239,7 @@ export namespace Prisma {
     tokenHash?: SortOrder
     purpose?: SortOrder
     termsVersion?: SortOrderInput | SortOrder
+    ipHash?: SortOrderInput | SortOrder
     expiresAt?: SortOrder
     usedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -12219,6 +12254,7 @@ export namespace Prisma {
     email?: StringFilter<"AuthToken"> | string
     purpose?: StringFilter<"AuthToken"> | string
     termsVersion?: StringNullableFilter<"AuthToken"> | string | null
+    ipHash?: StringNullableFilter<"AuthToken"> | string | null
     expiresAt?: DateTimeFilter<"AuthToken"> | Date | string
     usedAt?: DateTimeNullableFilter<"AuthToken"> | Date | string | null
     createdAt?: DateTimeFilter<"AuthToken"> | Date | string
@@ -12230,6 +12266,7 @@ export namespace Prisma {
     tokenHash?: SortOrder
     purpose?: SortOrder
     termsVersion?: SortOrderInput | SortOrder
+    ipHash?: SortOrderInput | SortOrder
     expiresAt?: SortOrder
     usedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -12247,6 +12284,7 @@ export namespace Prisma {
     tokenHash?: StringWithAggregatesFilter<"AuthToken"> | string
     purpose?: StringWithAggregatesFilter<"AuthToken"> | string
     termsVersion?: StringNullableWithAggregatesFilter<"AuthToken"> | string | null
+    ipHash?: StringNullableWithAggregatesFilter<"AuthToken"> | string | null
     expiresAt?: DateTimeWithAggregatesFilter<"AuthToken"> | Date | string
     usedAt?: DateTimeNullableWithAggregatesFilter<"AuthToken"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"AuthToken"> | Date | string
@@ -12780,6 +12818,7 @@ export namespace Prisma {
     termsVersion?: string | null
     marketingOptOut?: boolean
     marketingChoiceAt?: Date | string | null
+    passwordChangedAt?: Date | string | null
     events?: EventCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
     emailLogs?: EmailLogCreateNestedManyWithoutUserInput
@@ -12807,6 +12846,7 @@ export namespace Prisma {
     termsVersion?: string | null
     marketingOptOut?: boolean
     marketingChoiceAt?: Date | string | null
+    passwordChangedAt?: Date | string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     emailLogs?: EmailLogUncheckedCreateNestedManyWithoutUserInput
@@ -12834,6 +12874,7 @@ export namespace Prisma {
     termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     marketingOptOut?: BoolFieldUpdateOperationsInput | boolean
     marketingChoiceAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     events?: EventUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
     emailLogs?: EmailLogUpdateManyWithoutUserNestedInput
@@ -12861,6 +12902,7 @@ export namespace Prisma {
     termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     marketingOptOut?: BoolFieldUpdateOperationsInput | boolean
     marketingChoiceAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     emailLogs?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
@@ -12888,6 +12930,7 @@ export namespace Prisma {
     termsVersion?: string | null
     marketingOptOut?: boolean
     marketingChoiceAt?: Date | string | null
+    passwordChangedAt?: Date | string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -12912,6 +12955,7 @@ export namespace Prisma {
     termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     marketingOptOut?: BoolFieldUpdateOperationsInput | boolean
     marketingChoiceAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -12936,6 +12980,7 @@ export namespace Prisma {
     termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     marketingOptOut?: BoolFieldUpdateOperationsInput | boolean
     marketingChoiceAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AuthTokenCreateInput = {
@@ -12944,6 +12989,7 @@ export namespace Prisma {
     tokenHash: string
     purpose: string
     termsVersion?: string | null
+    ipHash?: string | null
     expiresAt: Date | string
     usedAt?: Date | string | null
     createdAt?: Date | string
@@ -12955,6 +13001,7 @@ export namespace Prisma {
     tokenHash: string
     purpose: string
     termsVersion?: string | null
+    ipHash?: string | null
     expiresAt: Date | string
     usedAt?: Date | string | null
     createdAt?: Date | string
@@ -12966,6 +13013,7 @@ export namespace Prisma {
     tokenHash?: StringFieldUpdateOperationsInput | string
     purpose?: StringFieldUpdateOperationsInput | string
     termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipHash?: NullableStringFieldUpdateOperationsInput | string | null
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12977,6 +13025,7 @@ export namespace Prisma {
     tokenHash?: StringFieldUpdateOperationsInput | string
     purpose?: StringFieldUpdateOperationsInput | string
     termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipHash?: NullableStringFieldUpdateOperationsInput | string | null
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12988,6 +13037,7 @@ export namespace Prisma {
     tokenHash: string
     purpose: string
     termsVersion?: string | null
+    ipHash?: string | null
     expiresAt: Date | string
     usedAt?: Date | string | null
     createdAt?: Date | string
@@ -12999,6 +13049,7 @@ export namespace Prisma {
     tokenHash?: StringFieldUpdateOperationsInput | string
     purpose?: StringFieldUpdateOperationsInput | string
     termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipHash?: NullableStringFieldUpdateOperationsInput | string | null
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13010,6 +13061,7 @@ export namespace Prisma {
     tokenHash?: StringFieldUpdateOperationsInput | string
     purpose?: StringFieldUpdateOperationsInput | string
     termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipHash?: NullableStringFieldUpdateOperationsInput | string | null
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13685,6 +13737,7 @@ export namespace Prisma {
     termsVersion?: SortOrder
     marketingOptOut?: SortOrder
     marketingChoiceAt?: SortOrder
+    passwordChangedAt?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -13709,6 +13762,7 @@ export namespace Prisma {
     termsVersion?: SortOrder
     marketingOptOut?: SortOrder
     marketingChoiceAt?: SortOrder
+    passwordChangedAt?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -13733,6 +13787,7 @@ export namespace Prisma {
     termsVersion?: SortOrder
     marketingOptOut?: SortOrder
     marketingChoiceAt?: SortOrder
+    passwordChangedAt?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -13813,6 +13868,7 @@ export namespace Prisma {
     tokenHash?: SortOrder
     purpose?: SortOrder
     termsVersion?: SortOrder
+    ipHash?: SortOrder
     expiresAt?: SortOrder
     usedAt?: SortOrder
     createdAt?: SortOrder
@@ -13824,6 +13880,7 @@ export namespace Prisma {
     tokenHash?: SortOrder
     purpose?: SortOrder
     termsVersion?: SortOrder
+    ipHash?: SortOrder
     expiresAt?: SortOrder
     usedAt?: SortOrder
     createdAt?: SortOrder
@@ -13835,6 +13892,7 @@ export namespace Prisma {
     tokenHash?: SortOrder
     purpose?: SortOrder
     termsVersion?: SortOrder
+    ipHash?: SortOrder
     expiresAt?: SortOrder
     usedAt?: SortOrder
     createdAt?: SortOrder
@@ -15013,6 +15071,7 @@ export namespace Prisma {
     termsVersion?: string | null
     marketingOptOut?: boolean
     marketingChoiceAt?: Date | string | null
+    passwordChangedAt?: Date | string | null
     orders?: OrderCreateNestedManyWithoutUserInput
     emailLogs?: EmailLogCreateNestedManyWithoutUserInput
   }
@@ -15039,6 +15098,7 @@ export namespace Prisma {
     termsVersion?: string | null
     marketingOptOut?: boolean
     marketingChoiceAt?: Date | string | null
+    passwordChangedAt?: Date | string | null
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     emailLogs?: EmailLogUncheckedCreateNestedManyWithoutUserInput
   }
@@ -15159,6 +15219,7 @@ export namespace Prisma {
     termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     marketingOptOut?: BoolFieldUpdateOperationsInput | boolean
     marketingChoiceAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUpdateManyWithoutUserNestedInput
     emailLogs?: EmailLogUpdateManyWithoutUserNestedInput
   }
@@ -15185,6 +15246,7 @@ export namespace Prisma {
     termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     marketingOptOut?: BoolFieldUpdateOperationsInput | boolean
     marketingChoiceAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     emailLogs?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -15261,6 +15323,7 @@ export namespace Prisma {
     termsVersion?: string | null
     marketingOptOut?: boolean
     marketingChoiceAt?: Date | string | null
+    passwordChangedAt?: Date | string | null
     events?: EventCreateNestedManyWithoutUserInput
     emailLogs?: EmailLogCreateNestedManyWithoutUserInput
   }
@@ -15287,6 +15350,7 @@ export namespace Prisma {
     termsVersion?: string | null
     marketingOptOut?: boolean
     marketingChoiceAt?: Date | string | null
+    passwordChangedAt?: Date | string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     emailLogs?: EmailLogUncheckedCreateNestedManyWithoutUserInput
   }
@@ -15374,6 +15438,7 @@ export namespace Prisma {
     termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     marketingOptOut?: BoolFieldUpdateOperationsInput | boolean
     marketingChoiceAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     events?: EventUpdateManyWithoutUserNestedInput
     emailLogs?: EmailLogUpdateManyWithoutUserNestedInput
   }
@@ -15400,6 +15465,7 @@ export namespace Prisma {
     termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     marketingOptOut?: BoolFieldUpdateOperationsInput | boolean
     marketingChoiceAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     emailLogs?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -15573,6 +15639,7 @@ export namespace Prisma {
     termsVersion?: string | null
     marketingOptOut?: boolean
     marketingChoiceAt?: Date | string | null
+    passwordChangedAt?: Date | string | null
     events?: EventCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
   }
@@ -15599,6 +15666,7 @@ export namespace Prisma {
     termsVersion?: string | null
     marketingOptOut?: boolean
     marketingChoiceAt?: Date | string | null
+    passwordChangedAt?: Date | string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
   }
@@ -15641,6 +15709,7 @@ export namespace Prisma {
     termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     marketingOptOut?: BoolFieldUpdateOperationsInput | boolean
     marketingChoiceAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     events?: EventUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
   }
@@ -15667,6 +15736,7 @@ export namespace Prisma {
     termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
     marketingOptOut?: BoolFieldUpdateOperationsInput | boolean
     marketingChoiceAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
   }

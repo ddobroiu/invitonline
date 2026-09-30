@@ -141,7 +141,8 @@ exports.Prisma.UserScalarFieldEnum = {
   termsAcceptedAt: 'termsAcceptedAt',
   termsVersion: 'termsVersion',
   marketingOptOut: 'marketingOptOut',
-  marketingChoiceAt: 'marketingChoiceAt'
+  marketingChoiceAt: 'marketingChoiceAt',
+  passwordChangedAt: 'passwordChangedAt'
 };
 
 exports.Prisma.AuthTokenScalarFieldEnum = {
@@ -150,6 +151,7 @@ exports.Prisma.AuthTokenScalarFieldEnum = {
   tokenHash: 'tokenHash',
   purpose: 'purpose',
   termsVersion: 'termsVersion',
+  ipHash: 'ipHash',
   expiresAt: 'expiresAt',
   usedAt: 'usedAt',
   createdAt: 'createdAt'

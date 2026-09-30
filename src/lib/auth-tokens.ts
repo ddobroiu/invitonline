@@ -29,8 +29,28 @@ export async function canSendToken(email: string, purpose: TokenPurpose): Promis
     return recent < RATE_LIMIT
 }
 
+// Password reset requests: at most 3 per address and 10 per IP address in an hour
+const RESET_LIMIT_PER_EMAIL = 3
+const RESET_LIMIT_PER_IP = 10
+const RESET_WINDOW_MIN = 60
+
+/** SHA-256 of the client IP (the IP itself is not stored). */
+export function hashIp(ip: string | null | undefined): string | null {
+    return ip ? createHash('sha256').update(`ip:${ip}`).digest('hex') : null
+}
+
+/** True when another reset request may be handled now (per address and per IP, last hour). */
+export async function canRequestReset(email: string, ipHash: string | null): Promise<boolean> {
+    const since = new Date(Date.now() - RESET_WINDOW_MIN * 60_000)
+    const [byEmail, byIp] = await Promise.all([
+        prisma.authToken.count({ where: { email, purpose: 'reset', createdAt: { gte: since } } }),
+        ipHash ? prisma.authToken.count({ where: { ipHash, purpose: 'reset', createdAt: { gte: since } } }) : 0,
+    ])
+    return byEmail < RESET_LIMIT_PER_EMAIL && byIp < RESET_LIMIT_PER_IP
+}
+
 /** Creates a token and returns the raw value to put in the link. */
-export async function createAuthToken(email: string, purpose: TokenPurpose, termsVersion?: string | null): Promise<string> {
+export async function createAuthToken(email: string, purpose: TokenPurpose, termsVersion?: string | null, ipHash?: string | null): Promise<string> {
     const raw = randomBytes(32).toString('base64url')
     await prisma.authToken.create({
         data: {
@@ -38,6 +58,7 @@ export async function createAuthToken(email: string, purpose: TokenPurpose, term
             purpose,
             tokenHash: hashToken(raw),
             termsVersion: termsVersion || null,
+            ipHash: ipHash || null,
             expiresAt: new Date(Date.now() + TTL_MINUTES[purpose] * 60_000),
         },
     })
