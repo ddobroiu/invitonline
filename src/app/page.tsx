@@ -105,7 +105,7 @@ const faqs = [
   },
   {
     q: 'Cum văd cine a confirmat?',
-    a: 'În panoul tău de control vezi în timp real cine a confirmat, câte persoane vin și eventualele mesaje sau preferințe de meniu.',
+    a: 'În panoul tău de control vezi în timp real cine a confirmat, câte persoane vin și eventualele mesaje.',
   },
   {
     q: 'Pot folosi invitațiile și pentru botez sau aniversare?',

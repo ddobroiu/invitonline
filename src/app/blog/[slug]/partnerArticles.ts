@@ -355,7 +355,7 @@ export const partnerArticles: Record<string, ArticleData> = {
             '- Activități: pictură pe față, baloane modelate, jocuri',
             '- Un spațiu liniștit pentru cei mici care obosesc',
             '## Comunică din invitație',
-            'Menționează clar în invitația InvitOnline dacă sunt invitați și copiii, iar în formularul RSVP invitații pot specifica numărul de copii. Astfel știi exact pentru câți micuți să pregătești activități și meniuri.',
+            'Menționează clar în invitația InvitOnline dacă sunt invitați și copiii, iar în formularul RSVP invitații confirmă numărul de persoane și pot scrie într-un mesaj câți copii vin. Astfel știi exact pentru câți micuți să pregătești activități și meniuri.',
             '## Concluzie',
             'O nuntă prietenoasă cu copiii necesită organizare, dar creează o atmosferă caldă, de familie. KidMy.ro și InvitOnline te ajută să ai totul sub control.',
         ],
