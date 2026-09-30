@@ -10,6 +10,8 @@ import { GOOGLE_TERMS_COOKIE } from '@/lib/google-auth-shared'
  *   1. dupa googleId (contul Google legat deja) — merge si daca adresa Gmail s-a schimbat intre timp;
  *   2. dupa adresa de e-mail (fara diferente de litere mari/mici) — contul existent se leaga de Google,
  *      DOAR daca Google spune ca adresa e verificata (altfel oricine ar putea intra in contul altcuiva);
+ *      daca adresa contului nu fusese dovedita niciodata (emailVerified NULL), parola lui se sterge: altfel
+ *      cine a creat contul cu adresa altcuiva (inregistrarea nu verifica adresa) ar pastra accesul cu parola;
  *   3. cont nou — doar daca utilizatorul a bifat acordul cu Termenii (cookie-ul pus de buton); fara parola,
  *      alegerea pentru e-mailurile cu sfaturi ramane necunoscuta (marketingChoiceAt NULL), deci cronul
  *      nu-i trimite nimic din ciclul de viata; primeste o singura data e-mailul de bun venit.
@@ -73,7 +75,13 @@ export async function resolveGoogleSignIn(claims: GoogleClaims | undefined, goog
         if (existing.googleId && existing.googleId !== googleId) return loginError('GoogleOtherAccount')
         const res = await prisma.user.updateMany({
             where: { id: existing.id, googleId: null },
-            data: { googleId, emailVerified: existing.emailVerified ?? now, image: existing.image ?? picture },
+            data: {
+                googleId,
+                emailVerified: existing.emailVerified ?? now,
+                image: existing.image ?? picture,
+                // adresa nedovedita pana acum: parola (poate a altcuiva) nu mai deschide contul
+                ...(existing.emailVerified ? {} : { password: null }),
+            },
         })
         if (res.count === 0) {
             // legat intre timp (alt tab): e bine doar daca e acelasi cont Google
