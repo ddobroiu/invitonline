@@ -10,9 +10,19 @@ export function faraCredite(err: any): boolean {
     return status === 402 || CREDIT_RE.test(text)
 }
 
+// Cel mult o alerta la 10 minute pe cheie (in proces); revenirea (resolved) trece mereu
+const THROTTLE_MS = 10 * 60_000
+const lastSent = new Map<string, number>()
+
 export async function alerta(kind: 'credits' | 'error', key: string, message: unknown, resolved = false): Promise<void> {
     const token = process.env.MYDASHBOARD_ALERT_TOKEN
     if (!token) return
+    if (!resolved) {
+        const now = Date.now()
+        if (now - (lastSent.get(key) ?? 0) < THROTTLE_MS) return
+        lastSent.set(key, now)
+        if (lastSent.size > 200) for (const [k, t] of lastSent) if (now - t >= THROTTLE_MS) lastSent.delete(k)
+    }
     try {
         await fetch('https://mydashboard.ro/api/alert', {
             method: 'POST',

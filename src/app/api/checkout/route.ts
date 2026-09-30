@@ -8,6 +8,7 @@ import { getSiteUrl } from '@/lib/utils'
 import { LEGAL_VERSION } from '@/config/legal'
 import { getCookieValue, hasAnalyticsConsent, hasMarketingConsent } from '@/lib/consent'
 import { clientIp, tiktokCheckoutMetadata } from '@/lib/tiktok-events'
+import { alerta } from '@/lib/alerts'
 
 export async function POST(req: Request) {
     try {
@@ -85,6 +86,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ url: checkoutSession.url })
     } catch (error: any) {
         console.error('Stripe Checkout Error:', error)
+        void alerta('error', 'checkout', `InvitOnline: plata nu a putut fi initiata (checkout 500): ${error instanceof Error ? error.message : String(error)}`)
         return NextResponse.json({ message: 'Nu am putut iniția plata. Încearcă din nou.' }, { status: 500 })
     }
 }
@@ -136,6 +138,7 @@ export async function GET(req: Request) {
         })
     } catch (error) {
         console.error('Checkout verify error:', error)
+        void alerta('error', 'checkout-verify', `InvitOnline: verificarea platii dupa checkout a esuat (500): ${error instanceof Error ? error.message : String(error)}`)
         return NextResponse.json({ message: 'Eroare la verificarea plății' }, { status: 500 })
     }
 }

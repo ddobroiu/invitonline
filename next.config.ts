@@ -6,6 +6,7 @@ const NOINDEX_PATHS = [
   "/invitatie/:path*",
   "/create",
   "/dashboard",
+  "/admin",
   "/login",
   "/checkout/:path*",
   "/templates/:path*",
