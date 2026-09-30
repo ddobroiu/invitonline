@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "db:local": "node scripts/local-db.mjs",
+    "db:local:migrate": "node --env-file=.env.local node_modules/prisma/build/index.js migrate deploy",
+    "test:unit": "tsx --test tests/unit/*.test.ts",
+    "test:e2e": "node scripts/e2e.mjs"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",
@@ -20,20 +25,26 @@
     "next-auth": "^4.24.13",
     "next-cloudinary": "^6.17.5",
     "pg": "^8.17.2",
+    "qrcode": "^1.5.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "resend": "^6.8.0",
     "stripe": "^20.2.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "@electric-sql/pglite-socket": "^0.2.11",
+    "@playwright/test": "^1.63.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/pg": "^8.16.0",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.4",
     "prisma": "^7.3.0",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }

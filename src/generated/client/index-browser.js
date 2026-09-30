@@ -125,6 +125,9 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   password: 'password',
   name: 'name',
+  emailVerified: 'emailVerified',
+  googleId: 'googleId',
+  image: 'image',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   companyName: 'companyName',
@@ -137,6 +140,23 @@ exports.Prisma.UserScalarFieldEnum = {
   iban: 'iban',
   termsAcceptedAt: 'termsAcceptedAt',
   termsVersion: 'termsVersion'
+};
+
+exports.Prisma.AuthTokenScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  tokenHash: 'tokenHash',
+  purpose: 'purpose',
+  termsVersion: 'termsVersion',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.StripeEventScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.EventScalarFieldEnum = {
@@ -152,6 +172,7 @@ exports.Prisma.EventScalarFieldEnum = {
   message: 'message',
   data: 'data',
   isPaid: 'isPaid',
+  publishedAt: 'publishedAt',
   stripeSessionId: 'stripeSessionId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -181,6 +202,9 @@ exports.Prisma.GuestScalarFieldEnum = {
   persons: 'persons',
   status: 'status',
   message: 'message',
+  menu: 'menu',
+  token: 'token',
+  respondedAt: 'respondedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -213,6 +237,8 @@ exports.Prisma.JsonNullValueFilter = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  AuthToken: 'AuthToken',
+  StripeEvent: 'StripeEvent',
   Event: 'Event',
   Order: 'Order',
   Guest: 'Guest'

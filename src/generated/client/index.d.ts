@@ -19,6 +19,16 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model AuthToken
+ * 
+ */
+export type AuthToken = $Result.DefaultSelection<Prisma.$AuthTokenPayload>
+/**
+ * Model StripeEvent
+ * 
+ */
+export type StripeEvent = $Result.DefaultSelection<Prisma.$StripeEventPayload>
+/**
  * Model Event
  * 
  */
@@ -160,6 +170,26 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.authToken`: Exposes CRUD operations for the **AuthToken** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AuthTokens
+    * const authTokens = await prisma.authToken.findMany()
+    * ```
+    */
+  get authToken(): Prisma.AuthTokenDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.stripeEvent`: Exposes CRUD operations for the **StripeEvent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StripeEvents
+    * const stripeEvents = await prisma.stripeEvent.findMany()
+    * ```
+    */
+  get stripeEvent(): Prisma.StripeEventDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.event`: Exposes CRUD operations for the **Event** model.
@@ -625,6 +655,8 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
+    AuthToken: 'AuthToken',
+    StripeEvent: 'StripeEvent',
     Event: 'Event',
     Order: 'Order',
     Guest: 'Guest'
@@ -643,7 +675,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "event" | "order" | "guest"
+      modelProps: "user" | "authToken" | "stripeEvent" | "event" | "order" | "guest"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -718,6 +750,154 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      AuthToken: {
+        payload: Prisma.$AuthTokenPayload<ExtArgs>
+        fields: Prisma.AuthTokenFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AuthTokenFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthTokenPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AuthTokenFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthTokenPayload>
+          }
+          findFirst: {
+            args: Prisma.AuthTokenFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthTokenPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AuthTokenFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthTokenPayload>
+          }
+          findMany: {
+            args: Prisma.AuthTokenFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthTokenPayload>[]
+          }
+          create: {
+            args: Prisma.AuthTokenCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthTokenPayload>
+          }
+          createMany: {
+            args: Prisma.AuthTokenCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AuthTokenCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthTokenPayload>[]
+          }
+          delete: {
+            args: Prisma.AuthTokenDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthTokenPayload>
+          }
+          update: {
+            args: Prisma.AuthTokenUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthTokenPayload>
+          }
+          deleteMany: {
+            args: Prisma.AuthTokenDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AuthTokenUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AuthTokenUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthTokenPayload>[]
+          }
+          upsert: {
+            args: Prisma.AuthTokenUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthTokenPayload>
+          }
+          aggregate: {
+            args: Prisma.AuthTokenAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAuthToken>
+          }
+          groupBy: {
+            args: Prisma.AuthTokenGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AuthTokenGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AuthTokenCountArgs<ExtArgs>
+            result: $Utils.Optional<AuthTokenCountAggregateOutputType> | number
+          }
+        }
+      }
+      StripeEvent: {
+        payload: Prisma.$StripeEventPayload<ExtArgs>
+        fields: Prisma.StripeEventFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StripeEventFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StripeEventPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StripeEventFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StripeEventPayload>
+          }
+          findFirst: {
+            args: Prisma.StripeEventFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StripeEventPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StripeEventFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StripeEventPayload>
+          }
+          findMany: {
+            args: Prisma.StripeEventFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StripeEventPayload>[]
+          }
+          create: {
+            args: Prisma.StripeEventCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StripeEventPayload>
+          }
+          createMany: {
+            args: Prisma.StripeEventCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StripeEventCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StripeEventPayload>[]
+          }
+          delete: {
+            args: Prisma.StripeEventDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StripeEventPayload>
+          }
+          update: {
+            args: Prisma.StripeEventUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StripeEventPayload>
+          }
+          deleteMany: {
+            args: Prisma.StripeEventDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StripeEventUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StripeEventUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StripeEventPayload>[]
+          }
+          upsert: {
+            args: Prisma.StripeEventUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StripeEventPayload>
+          }
+          aggregate: {
+            args: Prisma.StripeEventAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStripeEvent>
+          }
+          groupBy: {
+            args: Prisma.StripeEventGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StripeEventGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StripeEventCountArgs<ExtArgs>
+            result: $Utils.Optional<StripeEventCountAggregateOutputType> | number
           }
         }
       }
@@ -1052,6 +1232,8 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     user?: UserOmit
+    authToken?: AuthTokenOmit
+    stripeEvent?: StripeEventOmit
     event?: EventOmit
     order?: OrderOmit
     guest?: GuestOmit
@@ -1229,6 +1411,9 @@ export namespace Prisma {
     email: string | null
     password: string | null
     name: string | null
+    emailVerified: Date | null
+    googleId: string | null
+    image: string | null
     createdAt: Date | null
     updatedAt: Date | null
     companyName: string | null
@@ -1248,6 +1433,9 @@ export namespace Prisma {
     email: string | null
     password: string | null
     name: string | null
+    emailVerified: Date | null
+    googleId: string | null
+    image: string | null
     createdAt: Date | null
     updatedAt: Date | null
     companyName: string | null
@@ -1267,6 +1455,9 @@ export namespace Prisma {
     email: number
     password: number
     name: number
+    emailVerified: number
+    googleId: number
+    image: number
     createdAt: number
     updatedAt: number
     companyName: number
@@ -1288,6 +1479,9 @@ export namespace Prisma {
     email?: true
     password?: true
     name?: true
+    emailVerified?: true
+    googleId?: true
+    image?: true
     createdAt?: true
     updatedAt?: true
     companyName?: true
@@ -1307,6 +1501,9 @@ export namespace Prisma {
     email?: true
     password?: true
     name?: true
+    emailVerified?: true
+    googleId?: true
+    image?: true
     createdAt?: true
     updatedAt?: true
     companyName?: true
@@ -1326,6 +1523,9 @@ export namespace Prisma {
     email?: true
     password?: true
     name?: true
+    emailVerified?: true
+    googleId?: true
+    image?: true
     createdAt?: true
     updatedAt?: true
     companyName?: true
@@ -1416,8 +1616,11 @@ export namespace Prisma {
   export type UserGroupByOutputType = {
     id: string
     email: string
-    password: string
+    password: string | null
     name: string | null
+    emailVerified: Date | null
+    googleId: string | null
+    image: string | null
     createdAt: Date
     updatedAt: Date
     companyName: string | null
@@ -1454,6 +1657,9 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     name?: boolean
+    emailVerified?: boolean
+    googleId?: boolean
+    image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     companyName?: boolean
@@ -1476,6 +1682,9 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     name?: boolean
+    emailVerified?: boolean
+    googleId?: boolean
+    image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     companyName?: boolean
@@ -1495,6 +1704,9 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     name?: boolean
+    emailVerified?: boolean
+    googleId?: boolean
+    image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     companyName?: boolean
@@ -1514,6 +1726,9 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     name?: boolean
+    emailVerified?: boolean
+    googleId?: boolean
+    image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     companyName?: boolean
@@ -1528,7 +1743,7 @@ export namespace Prisma {
     termsVersion?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "createdAt" | "updatedAt" | "companyName" | "cui" | "regCom" | "address" | "city" | "county" | "bank" | "iban" | "termsAcceptedAt" | "termsVersion", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "emailVerified" | "googleId" | "image" | "createdAt" | "updatedAt" | "companyName" | "cui" | "regCom" | "address" | "city" | "county" | "bank" | "iban" | "termsAcceptedAt" | "termsVersion", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     events?: boolean | User$eventsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -1546,8 +1761,11 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       email: string
-      password: string
+      password: string | null
       name: string | null
+      emailVerified: Date | null
+      googleId: string | null
+      image: string | null
       createdAt: Date
       updatedAt: Date
       companyName: string | null
@@ -1989,6 +2207,9 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
     readonly name: FieldRef<"User", 'String'>
+    readonly emailVerified: FieldRef<"User", 'DateTime'>
+    readonly googleId: FieldRef<"User", 'String'>
+    readonly image: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
     readonly companyName: FieldRef<"User", 'String'>
@@ -2456,6 +2677,2009 @@ export namespace Prisma {
 
 
   /**
+   * Model AuthToken
+   */
+
+  export type AggregateAuthToken = {
+    _count: AuthTokenCountAggregateOutputType | null
+    _min: AuthTokenMinAggregateOutputType | null
+    _max: AuthTokenMaxAggregateOutputType | null
+  }
+
+  export type AuthTokenMinAggregateOutputType = {
+    id: string | null
+    email: string | null
+    tokenHash: string | null
+    purpose: string | null
+    termsVersion: string | null
+    expiresAt: Date | null
+    usedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type AuthTokenMaxAggregateOutputType = {
+    id: string | null
+    email: string | null
+    tokenHash: string | null
+    purpose: string | null
+    termsVersion: string | null
+    expiresAt: Date | null
+    usedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type AuthTokenCountAggregateOutputType = {
+    id: number
+    email: number
+    tokenHash: number
+    purpose: number
+    termsVersion: number
+    expiresAt: number
+    usedAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type AuthTokenMinAggregateInputType = {
+    id?: true
+    email?: true
+    tokenHash?: true
+    purpose?: true
+    termsVersion?: true
+    expiresAt?: true
+    usedAt?: true
+    createdAt?: true
+  }
+
+  export type AuthTokenMaxAggregateInputType = {
+    id?: true
+    email?: true
+    tokenHash?: true
+    purpose?: true
+    termsVersion?: true
+    expiresAt?: true
+    usedAt?: true
+    createdAt?: true
+  }
+
+  export type AuthTokenCountAggregateInputType = {
+    id?: true
+    email?: true
+    tokenHash?: true
+    purpose?: true
+    termsVersion?: true
+    expiresAt?: true
+    usedAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type AuthTokenAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AuthToken to aggregate.
+     */
+    where?: AuthTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuthTokens to fetch.
+     */
+    orderBy?: AuthTokenOrderByWithRelationInput | AuthTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AuthTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuthTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuthTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AuthTokens
+    **/
+    _count?: true | AuthTokenCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AuthTokenMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AuthTokenMaxAggregateInputType
+  }
+
+  export type GetAuthTokenAggregateType<T extends AuthTokenAggregateArgs> = {
+        [P in keyof T & keyof AggregateAuthToken]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAuthToken[P]>
+      : GetScalarType<T[P], AggregateAuthToken[P]>
+  }
+
+
+
+
+  export type AuthTokenGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AuthTokenWhereInput
+    orderBy?: AuthTokenOrderByWithAggregationInput | AuthTokenOrderByWithAggregationInput[]
+    by: AuthTokenScalarFieldEnum[] | AuthTokenScalarFieldEnum
+    having?: AuthTokenScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AuthTokenCountAggregateInputType | true
+    _min?: AuthTokenMinAggregateInputType
+    _max?: AuthTokenMaxAggregateInputType
+  }
+
+  export type AuthTokenGroupByOutputType = {
+    id: string
+    email: string
+    tokenHash: string
+    purpose: string
+    termsVersion: string | null
+    expiresAt: Date
+    usedAt: Date | null
+    createdAt: Date
+    _count: AuthTokenCountAggregateOutputType | null
+    _min: AuthTokenMinAggregateOutputType | null
+    _max: AuthTokenMaxAggregateOutputType | null
+  }
+
+  type GetAuthTokenGroupByPayload<T extends AuthTokenGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AuthTokenGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AuthTokenGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AuthTokenGroupByOutputType[P]>
+            : GetScalarType<T[P], AuthTokenGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AuthTokenSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    tokenHash?: boolean
+    purpose?: boolean
+    termsVersion?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["authToken"]>
+
+  export type AuthTokenSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    tokenHash?: boolean
+    purpose?: boolean
+    termsVersion?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["authToken"]>
+
+  export type AuthTokenSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    tokenHash?: boolean
+    purpose?: boolean
+    termsVersion?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["authToken"]>
+
+  export type AuthTokenSelectScalar = {
+    id?: boolean
+    email?: boolean
+    tokenHash?: boolean
+    purpose?: boolean
+    termsVersion?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type AuthTokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "tokenHash" | "purpose" | "termsVersion" | "expiresAt" | "usedAt" | "createdAt", ExtArgs["result"]["authToken"]>
+
+  export type $AuthTokenPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AuthToken"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      email: string
+      tokenHash: string
+      purpose: string
+      termsVersion: string | null
+      expiresAt: Date
+      usedAt: Date | null
+      createdAt: Date
+    }, ExtArgs["result"]["authToken"]>
+    composites: {}
+  }
+
+  type AuthTokenGetPayload<S extends boolean | null | undefined | AuthTokenDefaultArgs> = $Result.GetResult<Prisma.$AuthTokenPayload, S>
+
+  type AuthTokenCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AuthTokenFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AuthTokenCountAggregateInputType | true
+    }
+
+  export interface AuthTokenDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AuthToken'], meta: { name: 'AuthToken' } }
+    /**
+     * Find zero or one AuthToken that matches the filter.
+     * @param {AuthTokenFindUniqueArgs} args - Arguments to find a AuthToken
+     * @example
+     * // Get one AuthToken
+     * const authToken = await prisma.authToken.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AuthTokenFindUniqueArgs>(args: SelectSubset<T, AuthTokenFindUniqueArgs<ExtArgs>>): Prisma__AuthTokenClient<$Result.GetResult<Prisma.$AuthTokenPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AuthToken that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AuthTokenFindUniqueOrThrowArgs} args - Arguments to find a AuthToken
+     * @example
+     * // Get one AuthToken
+     * const authToken = await prisma.authToken.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AuthTokenFindUniqueOrThrowArgs>(args: SelectSubset<T, AuthTokenFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AuthTokenClient<$Result.GetResult<Prisma.$AuthTokenPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AuthToken that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthTokenFindFirstArgs} args - Arguments to find a AuthToken
+     * @example
+     * // Get one AuthToken
+     * const authToken = await prisma.authToken.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AuthTokenFindFirstArgs>(args?: SelectSubset<T, AuthTokenFindFirstArgs<ExtArgs>>): Prisma__AuthTokenClient<$Result.GetResult<Prisma.$AuthTokenPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AuthToken that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthTokenFindFirstOrThrowArgs} args - Arguments to find a AuthToken
+     * @example
+     * // Get one AuthToken
+     * const authToken = await prisma.authToken.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AuthTokenFindFirstOrThrowArgs>(args?: SelectSubset<T, AuthTokenFindFirstOrThrowArgs<ExtArgs>>): Prisma__AuthTokenClient<$Result.GetResult<Prisma.$AuthTokenPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AuthTokens that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthTokenFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AuthTokens
+     * const authTokens = await prisma.authToken.findMany()
+     * 
+     * // Get first 10 AuthTokens
+     * const authTokens = await prisma.authToken.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const authTokenWithIdOnly = await prisma.authToken.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AuthTokenFindManyArgs>(args?: SelectSubset<T, AuthTokenFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuthTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AuthToken.
+     * @param {AuthTokenCreateArgs} args - Arguments to create a AuthToken.
+     * @example
+     * // Create one AuthToken
+     * const AuthToken = await prisma.authToken.create({
+     *   data: {
+     *     // ... data to create a AuthToken
+     *   }
+     * })
+     * 
+     */
+    create<T extends AuthTokenCreateArgs>(args: SelectSubset<T, AuthTokenCreateArgs<ExtArgs>>): Prisma__AuthTokenClient<$Result.GetResult<Prisma.$AuthTokenPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AuthTokens.
+     * @param {AuthTokenCreateManyArgs} args - Arguments to create many AuthTokens.
+     * @example
+     * // Create many AuthTokens
+     * const authToken = await prisma.authToken.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AuthTokenCreateManyArgs>(args?: SelectSubset<T, AuthTokenCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AuthTokens and returns the data saved in the database.
+     * @param {AuthTokenCreateManyAndReturnArgs} args - Arguments to create many AuthTokens.
+     * @example
+     * // Create many AuthTokens
+     * const authToken = await prisma.authToken.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AuthTokens and only return the `id`
+     * const authTokenWithIdOnly = await prisma.authToken.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AuthTokenCreateManyAndReturnArgs>(args?: SelectSubset<T, AuthTokenCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuthTokenPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AuthToken.
+     * @param {AuthTokenDeleteArgs} args - Arguments to delete one AuthToken.
+     * @example
+     * // Delete one AuthToken
+     * const AuthToken = await prisma.authToken.delete({
+     *   where: {
+     *     // ... filter to delete one AuthToken
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AuthTokenDeleteArgs>(args: SelectSubset<T, AuthTokenDeleteArgs<ExtArgs>>): Prisma__AuthTokenClient<$Result.GetResult<Prisma.$AuthTokenPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AuthToken.
+     * @param {AuthTokenUpdateArgs} args - Arguments to update one AuthToken.
+     * @example
+     * // Update one AuthToken
+     * const authToken = await prisma.authToken.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AuthTokenUpdateArgs>(args: SelectSubset<T, AuthTokenUpdateArgs<ExtArgs>>): Prisma__AuthTokenClient<$Result.GetResult<Prisma.$AuthTokenPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AuthTokens.
+     * @param {AuthTokenDeleteManyArgs} args - Arguments to filter AuthTokens to delete.
+     * @example
+     * // Delete a few AuthTokens
+     * const { count } = await prisma.authToken.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AuthTokenDeleteManyArgs>(args?: SelectSubset<T, AuthTokenDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AuthTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthTokenUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AuthTokens
+     * const authToken = await prisma.authToken.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AuthTokenUpdateManyArgs>(args: SelectSubset<T, AuthTokenUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AuthTokens and returns the data updated in the database.
+     * @param {AuthTokenUpdateManyAndReturnArgs} args - Arguments to update many AuthTokens.
+     * @example
+     * // Update many AuthTokens
+     * const authToken = await prisma.authToken.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AuthTokens and only return the `id`
+     * const authTokenWithIdOnly = await prisma.authToken.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AuthTokenUpdateManyAndReturnArgs>(args: SelectSubset<T, AuthTokenUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuthTokenPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AuthToken.
+     * @param {AuthTokenUpsertArgs} args - Arguments to update or create a AuthToken.
+     * @example
+     * // Update or create a AuthToken
+     * const authToken = await prisma.authToken.upsert({
+     *   create: {
+     *     // ... data to create a AuthToken
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AuthToken we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AuthTokenUpsertArgs>(args: SelectSubset<T, AuthTokenUpsertArgs<ExtArgs>>): Prisma__AuthTokenClient<$Result.GetResult<Prisma.$AuthTokenPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AuthTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthTokenCountArgs} args - Arguments to filter AuthTokens to count.
+     * @example
+     * // Count the number of AuthTokens
+     * const count = await prisma.authToken.count({
+     *   where: {
+     *     // ... the filter for the AuthTokens we want to count
+     *   }
+     * })
+    **/
+    count<T extends AuthTokenCountArgs>(
+      args?: Subset<T, AuthTokenCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AuthTokenCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AuthToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthTokenAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AuthTokenAggregateArgs>(args: Subset<T, AuthTokenAggregateArgs>): Prisma.PrismaPromise<GetAuthTokenAggregateType<T>>
+
+    /**
+     * Group by AuthToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthTokenGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AuthTokenGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AuthTokenGroupByArgs['orderBy'] }
+        : { orderBy?: AuthTokenGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AuthTokenGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAuthTokenGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AuthToken model
+   */
+  readonly fields: AuthTokenFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AuthToken.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AuthTokenClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AuthToken model
+   */
+  interface AuthTokenFieldRefs {
+    readonly id: FieldRef<"AuthToken", 'String'>
+    readonly email: FieldRef<"AuthToken", 'String'>
+    readonly tokenHash: FieldRef<"AuthToken", 'String'>
+    readonly purpose: FieldRef<"AuthToken", 'String'>
+    readonly termsVersion: FieldRef<"AuthToken", 'String'>
+    readonly expiresAt: FieldRef<"AuthToken", 'DateTime'>
+    readonly usedAt: FieldRef<"AuthToken", 'DateTime'>
+    readonly createdAt: FieldRef<"AuthToken", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AuthToken findUnique
+   */
+  export type AuthTokenFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthToken
+     */
+    select?: AuthTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthToken
+     */
+    omit?: AuthTokenOmit<ExtArgs> | null
+    /**
+     * Filter, which AuthToken to fetch.
+     */
+    where: AuthTokenWhereUniqueInput
+  }
+
+  /**
+   * AuthToken findUniqueOrThrow
+   */
+  export type AuthTokenFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthToken
+     */
+    select?: AuthTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthToken
+     */
+    omit?: AuthTokenOmit<ExtArgs> | null
+    /**
+     * Filter, which AuthToken to fetch.
+     */
+    where: AuthTokenWhereUniqueInput
+  }
+
+  /**
+   * AuthToken findFirst
+   */
+  export type AuthTokenFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthToken
+     */
+    select?: AuthTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthToken
+     */
+    omit?: AuthTokenOmit<ExtArgs> | null
+    /**
+     * Filter, which AuthToken to fetch.
+     */
+    where?: AuthTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuthTokens to fetch.
+     */
+    orderBy?: AuthTokenOrderByWithRelationInput | AuthTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AuthTokens.
+     */
+    cursor?: AuthTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuthTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuthTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AuthTokens.
+     */
+    distinct?: AuthTokenScalarFieldEnum | AuthTokenScalarFieldEnum[]
+  }
+
+  /**
+   * AuthToken findFirstOrThrow
+   */
+  export type AuthTokenFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthToken
+     */
+    select?: AuthTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthToken
+     */
+    omit?: AuthTokenOmit<ExtArgs> | null
+    /**
+     * Filter, which AuthToken to fetch.
+     */
+    where?: AuthTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuthTokens to fetch.
+     */
+    orderBy?: AuthTokenOrderByWithRelationInput | AuthTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AuthTokens.
+     */
+    cursor?: AuthTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuthTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuthTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AuthTokens.
+     */
+    distinct?: AuthTokenScalarFieldEnum | AuthTokenScalarFieldEnum[]
+  }
+
+  /**
+   * AuthToken findMany
+   */
+  export type AuthTokenFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthToken
+     */
+    select?: AuthTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthToken
+     */
+    omit?: AuthTokenOmit<ExtArgs> | null
+    /**
+     * Filter, which AuthTokens to fetch.
+     */
+    where?: AuthTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuthTokens to fetch.
+     */
+    orderBy?: AuthTokenOrderByWithRelationInput | AuthTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AuthTokens.
+     */
+    cursor?: AuthTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuthTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuthTokens.
+     */
+    skip?: number
+    distinct?: AuthTokenScalarFieldEnum | AuthTokenScalarFieldEnum[]
+  }
+
+  /**
+   * AuthToken create
+   */
+  export type AuthTokenCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthToken
+     */
+    select?: AuthTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthToken
+     */
+    omit?: AuthTokenOmit<ExtArgs> | null
+    /**
+     * The data needed to create a AuthToken.
+     */
+    data: XOR<AuthTokenCreateInput, AuthTokenUncheckedCreateInput>
+  }
+
+  /**
+   * AuthToken createMany
+   */
+  export type AuthTokenCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AuthTokens.
+     */
+    data: AuthTokenCreateManyInput | AuthTokenCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AuthToken createManyAndReturn
+   */
+  export type AuthTokenCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthToken
+     */
+    select?: AuthTokenSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthToken
+     */
+    omit?: AuthTokenOmit<ExtArgs> | null
+    /**
+     * The data used to create many AuthTokens.
+     */
+    data: AuthTokenCreateManyInput | AuthTokenCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AuthToken update
+   */
+  export type AuthTokenUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthToken
+     */
+    select?: AuthTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthToken
+     */
+    omit?: AuthTokenOmit<ExtArgs> | null
+    /**
+     * The data needed to update a AuthToken.
+     */
+    data: XOR<AuthTokenUpdateInput, AuthTokenUncheckedUpdateInput>
+    /**
+     * Choose, which AuthToken to update.
+     */
+    where: AuthTokenWhereUniqueInput
+  }
+
+  /**
+   * AuthToken updateMany
+   */
+  export type AuthTokenUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AuthTokens.
+     */
+    data: XOR<AuthTokenUpdateManyMutationInput, AuthTokenUncheckedUpdateManyInput>
+    /**
+     * Filter which AuthTokens to update
+     */
+    where?: AuthTokenWhereInput
+    /**
+     * Limit how many AuthTokens to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AuthToken updateManyAndReturn
+   */
+  export type AuthTokenUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthToken
+     */
+    select?: AuthTokenSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthToken
+     */
+    omit?: AuthTokenOmit<ExtArgs> | null
+    /**
+     * The data used to update AuthTokens.
+     */
+    data: XOR<AuthTokenUpdateManyMutationInput, AuthTokenUncheckedUpdateManyInput>
+    /**
+     * Filter which AuthTokens to update
+     */
+    where?: AuthTokenWhereInput
+    /**
+     * Limit how many AuthTokens to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AuthToken upsert
+   */
+  export type AuthTokenUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthToken
+     */
+    select?: AuthTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthToken
+     */
+    omit?: AuthTokenOmit<ExtArgs> | null
+    /**
+     * The filter to search for the AuthToken to update in case it exists.
+     */
+    where: AuthTokenWhereUniqueInput
+    /**
+     * In case the AuthToken found by the `where` argument doesn't exist, create a new AuthToken with this data.
+     */
+    create: XOR<AuthTokenCreateInput, AuthTokenUncheckedCreateInput>
+    /**
+     * In case the AuthToken was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AuthTokenUpdateInput, AuthTokenUncheckedUpdateInput>
+  }
+
+  /**
+   * AuthToken delete
+   */
+  export type AuthTokenDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthToken
+     */
+    select?: AuthTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthToken
+     */
+    omit?: AuthTokenOmit<ExtArgs> | null
+    /**
+     * Filter which AuthToken to delete.
+     */
+    where: AuthTokenWhereUniqueInput
+  }
+
+  /**
+   * AuthToken deleteMany
+   */
+  export type AuthTokenDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AuthTokens to delete
+     */
+    where?: AuthTokenWhereInput
+    /**
+     * Limit how many AuthTokens to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AuthToken without action
+   */
+  export type AuthTokenDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthToken
+     */
+    select?: AuthTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthToken
+     */
+    omit?: AuthTokenOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model StripeEvent
+   */
+
+  export type AggregateStripeEvent = {
+    _count: StripeEventCountAggregateOutputType | null
+    _min: StripeEventMinAggregateOutputType | null
+    _max: StripeEventMaxAggregateOutputType | null
+  }
+
+  export type StripeEventMinAggregateOutputType = {
+    id: string | null
+    type: string | null
+    createdAt: Date | null
+  }
+
+  export type StripeEventMaxAggregateOutputType = {
+    id: string | null
+    type: string | null
+    createdAt: Date | null
+  }
+
+  export type StripeEventCountAggregateOutputType = {
+    id: number
+    type: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type StripeEventMinAggregateInputType = {
+    id?: true
+    type?: true
+    createdAt?: true
+  }
+
+  export type StripeEventMaxAggregateInputType = {
+    id?: true
+    type?: true
+    createdAt?: true
+  }
+
+  export type StripeEventCountAggregateInputType = {
+    id?: true
+    type?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type StripeEventAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StripeEvent to aggregate.
+     */
+    where?: StripeEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StripeEvents to fetch.
+     */
+    orderBy?: StripeEventOrderByWithRelationInput | StripeEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StripeEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StripeEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StripeEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StripeEvents
+    **/
+    _count?: true | StripeEventCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StripeEventMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StripeEventMaxAggregateInputType
+  }
+
+  export type GetStripeEventAggregateType<T extends StripeEventAggregateArgs> = {
+        [P in keyof T & keyof AggregateStripeEvent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStripeEvent[P]>
+      : GetScalarType<T[P], AggregateStripeEvent[P]>
+  }
+
+
+
+
+  export type StripeEventGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StripeEventWhereInput
+    orderBy?: StripeEventOrderByWithAggregationInput | StripeEventOrderByWithAggregationInput[]
+    by: StripeEventScalarFieldEnum[] | StripeEventScalarFieldEnum
+    having?: StripeEventScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StripeEventCountAggregateInputType | true
+    _min?: StripeEventMinAggregateInputType
+    _max?: StripeEventMaxAggregateInputType
+  }
+
+  export type StripeEventGroupByOutputType = {
+    id: string
+    type: string
+    createdAt: Date
+    _count: StripeEventCountAggregateOutputType | null
+    _min: StripeEventMinAggregateOutputType | null
+    _max: StripeEventMaxAggregateOutputType | null
+  }
+
+  type GetStripeEventGroupByPayload<T extends StripeEventGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StripeEventGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StripeEventGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StripeEventGroupByOutputType[P]>
+            : GetScalarType<T[P], StripeEventGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StripeEventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["stripeEvent"]>
+
+  export type StripeEventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["stripeEvent"]>
+
+  export type StripeEventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["stripeEvent"]>
+
+  export type StripeEventSelectScalar = {
+    id?: boolean
+    type?: boolean
+    createdAt?: boolean
+  }
+
+  export type StripeEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "createdAt", ExtArgs["result"]["stripeEvent"]>
+
+  export type $StripeEventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StripeEvent"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      type: string
+      createdAt: Date
+    }, ExtArgs["result"]["stripeEvent"]>
+    composites: {}
+  }
+
+  type StripeEventGetPayload<S extends boolean | null | undefined | StripeEventDefaultArgs> = $Result.GetResult<Prisma.$StripeEventPayload, S>
+
+  type StripeEventCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StripeEventFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StripeEventCountAggregateInputType | true
+    }
+
+  export interface StripeEventDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StripeEvent'], meta: { name: 'StripeEvent' } }
+    /**
+     * Find zero or one StripeEvent that matches the filter.
+     * @param {StripeEventFindUniqueArgs} args - Arguments to find a StripeEvent
+     * @example
+     * // Get one StripeEvent
+     * const stripeEvent = await prisma.stripeEvent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StripeEventFindUniqueArgs>(args: SelectSubset<T, StripeEventFindUniqueArgs<ExtArgs>>): Prisma__StripeEventClient<$Result.GetResult<Prisma.$StripeEventPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StripeEvent that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StripeEventFindUniqueOrThrowArgs} args - Arguments to find a StripeEvent
+     * @example
+     * // Get one StripeEvent
+     * const stripeEvent = await prisma.stripeEvent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StripeEventFindUniqueOrThrowArgs>(args: SelectSubset<T, StripeEventFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StripeEventClient<$Result.GetResult<Prisma.$StripeEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StripeEvent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StripeEventFindFirstArgs} args - Arguments to find a StripeEvent
+     * @example
+     * // Get one StripeEvent
+     * const stripeEvent = await prisma.stripeEvent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StripeEventFindFirstArgs>(args?: SelectSubset<T, StripeEventFindFirstArgs<ExtArgs>>): Prisma__StripeEventClient<$Result.GetResult<Prisma.$StripeEventPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StripeEvent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StripeEventFindFirstOrThrowArgs} args - Arguments to find a StripeEvent
+     * @example
+     * // Get one StripeEvent
+     * const stripeEvent = await prisma.stripeEvent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StripeEventFindFirstOrThrowArgs>(args?: SelectSubset<T, StripeEventFindFirstOrThrowArgs<ExtArgs>>): Prisma__StripeEventClient<$Result.GetResult<Prisma.$StripeEventPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StripeEvents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StripeEventFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StripeEvents
+     * const stripeEvents = await prisma.stripeEvent.findMany()
+     * 
+     * // Get first 10 StripeEvents
+     * const stripeEvents = await prisma.stripeEvent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const stripeEventWithIdOnly = await prisma.stripeEvent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StripeEventFindManyArgs>(args?: SelectSubset<T, StripeEventFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StripeEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StripeEvent.
+     * @param {StripeEventCreateArgs} args - Arguments to create a StripeEvent.
+     * @example
+     * // Create one StripeEvent
+     * const StripeEvent = await prisma.stripeEvent.create({
+     *   data: {
+     *     // ... data to create a StripeEvent
+     *   }
+     * })
+     * 
+     */
+    create<T extends StripeEventCreateArgs>(args: SelectSubset<T, StripeEventCreateArgs<ExtArgs>>): Prisma__StripeEventClient<$Result.GetResult<Prisma.$StripeEventPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StripeEvents.
+     * @param {StripeEventCreateManyArgs} args - Arguments to create many StripeEvents.
+     * @example
+     * // Create many StripeEvents
+     * const stripeEvent = await prisma.stripeEvent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StripeEventCreateManyArgs>(args?: SelectSubset<T, StripeEventCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many StripeEvents and returns the data saved in the database.
+     * @param {StripeEventCreateManyAndReturnArgs} args - Arguments to create many StripeEvents.
+     * @example
+     * // Create many StripeEvents
+     * const stripeEvent = await prisma.stripeEvent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many StripeEvents and only return the `id`
+     * const stripeEventWithIdOnly = await prisma.stripeEvent.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StripeEventCreateManyAndReturnArgs>(args?: SelectSubset<T, StripeEventCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StripeEventPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a StripeEvent.
+     * @param {StripeEventDeleteArgs} args - Arguments to delete one StripeEvent.
+     * @example
+     * // Delete one StripeEvent
+     * const StripeEvent = await prisma.stripeEvent.delete({
+     *   where: {
+     *     // ... filter to delete one StripeEvent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StripeEventDeleteArgs>(args: SelectSubset<T, StripeEventDeleteArgs<ExtArgs>>): Prisma__StripeEventClient<$Result.GetResult<Prisma.$StripeEventPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StripeEvent.
+     * @param {StripeEventUpdateArgs} args - Arguments to update one StripeEvent.
+     * @example
+     * // Update one StripeEvent
+     * const stripeEvent = await prisma.stripeEvent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StripeEventUpdateArgs>(args: SelectSubset<T, StripeEventUpdateArgs<ExtArgs>>): Prisma__StripeEventClient<$Result.GetResult<Prisma.$StripeEventPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StripeEvents.
+     * @param {StripeEventDeleteManyArgs} args - Arguments to filter StripeEvents to delete.
+     * @example
+     * // Delete a few StripeEvents
+     * const { count } = await prisma.stripeEvent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StripeEventDeleteManyArgs>(args?: SelectSubset<T, StripeEventDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StripeEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StripeEventUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StripeEvents
+     * const stripeEvent = await prisma.stripeEvent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StripeEventUpdateManyArgs>(args: SelectSubset<T, StripeEventUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StripeEvents and returns the data updated in the database.
+     * @param {StripeEventUpdateManyAndReturnArgs} args - Arguments to update many StripeEvents.
+     * @example
+     * // Update many StripeEvents
+     * const stripeEvent = await prisma.stripeEvent.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more StripeEvents and only return the `id`
+     * const stripeEventWithIdOnly = await prisma.stripeEvent.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StripeEventUpdateManyAndReturnArgs>(args: SelectSubset<T, StripeEventUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StripeEventPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one StripeEvent.
+     * @param {StripeEventUpsertArgs} args - Arguments to update or create a StripeEvent.
+     * @example
+     * // Update or create a StripeEvent
+     * const stripeEvent = await prisma.stripeEvent.upsert({
+     *   create: {
+     *     // ... data to create a StripeEvent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StripeEvent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StripeEventUpsertArgs>(args: SelectSubset<T, StripeEventUpsertArgs<ExtArgs>>): Prisma__StripeEventClient<$Result.GetResult<Prisma.$StripeEventPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StripeEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StripeEventCountArgs} args - Arguments to filter StripeEvents to count.
+     * @example
+     * // Count the number of StripeEvents
+     * const count = await prisma.stripeEvent.count({
+     *   where: {
+     *     // ... the filter for the StripeEvents we want to count
+     *   }
+     * })
+    **/
+    count<T extends StripeEventCountArgs>(
+      args?: Subset<T, StripeEventCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StripeEventCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StripeEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StripeEventAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StripeEventAggregateArgs>(args: Subset<T, StripeEventAggregateArgs>): Prisma.PrismaPromise<GetStripeEventAggregateType<T>>
+
+    /**
+     * Group by StripeEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StripeEventGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StripeEventGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StripeEventGroupByArgs['orderBy'] }
+        : { orderBy?: StripeEventGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StripeEventGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStripeEventGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StripeEvent model
+   */
+  readonly fields: StripeEventFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StripeEvent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StripeEventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StripeEvent model
+   */
+  interface StripeEventFieldRefs {
+    readonly id: FieldRef<"StripeEvent", 'String'>
+    readonly type: FieldRef<"StripeEvent", 'String'>
+    readonly createdAt: FieldRef<"StripeEvent", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StripeEvent findUnique
+   */
+  export type StripeEventFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StripeEvent
+     */
+    select?: StripeEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StripeEvent
+     */
+    omit?: StripeEventOmit<ExtArgs> | null
+    /**
+     * Filter, which StripeEvent to fetch.
+     */
+    where: StripeEventWhereUniqueInput
+  }
+
+  /**
+   * StripeEvent findUniqueOrThrow
+   */
+  export type StripeEventFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StripeEvent
+     */
+    select?: StripeEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StripeEvent
+     */
+    omit?: StripeEventOmit<ExtArgs> | null
+    /**
+     * Filter, which StripeEvent to fetch.
+     */
+    where: StripeEventWhereUniqueInput
+  }
+
+  /**
+   * StripeEvent findFirst
+   */
+  export type StripeEventFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StripeEvent
+     */
+    select?: StripeEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StripeEvent
+     */
+    omit?: StripeEventOmit<ExtArgs> | null
+    /**
+     * Filter, which StripeEvent to fetch.
+     */
+    where?: StripeEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StripeEvents to fetch.
+     */
+    orderBy?: StripeEventOrderByWithRelationInput | StripeEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StripeEvents.
+     */
+    cursor?: StripeEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StripeEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StripeEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StripeEvents.
+     */
+    distinct?: StripeEventScalarFieldEnum | StripeEventScalarFieldEnum[]
+  }
+
+  /**
+   * StripeEvent findFirstOrThrow
+   */
+  export type StripeEventFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StripeEvent
+     */
+    select?: StripeEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StripeEvent
+     */
+    omit?: StripeEventOmit<ExtArgs> | null
+    /**
+     * Filter, which StripeEvent to fetch.
+     */
+    where?: StripeEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StripeEvents to fetch.
+     */
+    orderBy?: StripeEventOrderByWithRelationInput | StripeEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StripeEvents.
+     */
+    cursor?: StripeEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StripeEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StripeEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StripeEvents.
+     */
+    distinct?: StripeEventScalarFieldEnum | StripeEventScalarFieldEnum[]
+  }
+
+  /**
+   * StripeEvent findMany
+   */
+  export type StripeEventFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StripeEvent
+     */
+    select?: StripeEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StripeEvent
+     */
+    omit?: StripeEventOmit<ExtArgs> | null
+    /**
+     * Filter, which StripeEvents to fetch.
+     */
+    where?: StripeEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StripeEvents to fetch.
+     */
+    orderBy?: StripeEventOrderByWithRelationInput | StripeEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StripeEvents.
+     */
+    cursor?: StripeEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StripeEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StripeEvents.
+     */
+    skip?: number
+    distinct?: StripeEventScalarFieldEnum | StripeEventScalarFieldEnum[]
+  }
+
+  /**
+   * StripeEvent create
+   */
+  export type StripeEventCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StripeEvent
+     */
+    select?: StripeEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StripeEvent
+     */
+    omit?: StripeEventOmit<ExtArgs> | null
+    /**
+     * The data needed to create a StripeEvent.
+     */
+    data: XOR<StripeEventCreateInput, StripeEventUncheckedCreateInput>
+  }
+
+  /**
+   * StripeEvent createMany
+   */
+  export type StripeEventCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StripeEvents.
+     */
+    data: StripeEventCreateManyInput | StripeEventCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StripeEvent createManyAndReturn
+   */
+  export type StripeEventCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StripeEvent
+     */
+    select?: StripeEventSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StripeEvent
+     */
+    omit?: StripeEventOmit<ExtArgs> | null
+    /**
+     * The data used to create many StripeEvents.
+     */
+    data: StripeEventCreateManyInput | StripeEventCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StripeEvent update
+   */
+  export type StripeEventUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StripeEvent
+     */
+    select?: StripeEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StripeEvent
+     */
+    omit?: StripeEventOmit<ExtArgs> | null
+    /**
+     * The data needed to update a StripeEvent.
+     */
+    data: XOR<StripeEventUpdateInput, StripeEventUncheckedUpdateInput>
+    /**
+     * Choose, which StripeEvent to update.
+     */
+    where: StripeEventWhereUniqueInput
+  }
+
+  /**
+   * StripeEvent updateMany
+   */
+  export type StripeEventUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StripeEvents.
+     */
+    data: XOR<StripeEventUpdateManyMutationInput, StripeEventUncheckedUpdateManyInput>
+    /**
+     * Filter which StripeEvents to update
+     */
+    where?: StripeEventWhereInput
+    /**
+     * Limit how many StripeEvents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StripeEvent updateManyAndReturn
+   */
+  export type StripeEventUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StripeEvent
+     */
+    select?: StripeEventSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StripeEvent
+     */
+    omit?: StripeEventOmit<ExtArgs> | null
+    /**
+     * The data used to update StripeEvents.
+     */
+    data: XOR<StripeEventUpdateManyMutationInput, StripeEventUncheckedUpdateManyInput>
+    /**
+     * Filter which StripeEvents to update
+     */
+    where?: StripeEventWhereInput
+    /**
+     * Limit how many StripeEvents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StripeEvent upsert
+   */
+  export type StripeEventUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StripeEvent
+     */
+    select?: StripeEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StripeEvent
+     */
+    omit?: StripeEventOmit<ExtArgs> | null
+    /**
+     * The filter to search for the StripeEvent to update in case it exists.
+     */
+    where: StripeEventWhereUniqueInput
+    /**
+     * In case the StripeEvent found by the `where` argument doesn't exist, create a new StripeEvent with this data.
+     */
+    create: XOR<StripeEventCreateInput, StripeEventUncheckedCreateInput>
+    /**
+     * In case the StripeEvent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StripeEventUpdateInput, StripeEventUncheckedUpdateInput>
+  }
+
+  /**
+   * StripeEvent delete
+   */
+  export type StripeEventDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StripeEvent
+     */
+    select?: StripeEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StripeEvent
+     */
+    omit?: StripeEventOmit<ExtArgs> | null
+    /**
+     * Filter which StripeEvent to delete.
+     */
+    where: StripeEventWhereUniqueInput
+  }
+
+  /**
+   * StripeEvent deleteMany
+   */
+  export type StripeEventDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StripeEvents to delete
+     */
+    where?: StripeEventWhereInput
+    /**
+     * Limit how many StripeEvents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StripeEvent without action
+   */
+  export type StripeEventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StripeEvent
+     */
+    select?: StripeEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StripeEvent
+     */
+    omit?: StripeEventOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model Event
    */
 
@@ -2477,6 +4701,7 @@ export namespace Prisma {
     invitationLink: string | null
     message: string | null
     isPaid: boolean | null
+    publishedAt: Date | null
     stripeSessionId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2494,6 +4719,7 @@ export namespace Prisma {
     invitationLink: string | null
     message: string | null
     isPaid: boolean | null
+    publishedAt: Date | null
     stripeSessionId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2512,6 +4738,7 @@ export namespace Prisma {
     message: number
     data: number
     isPaid: number
+    publishedAt: number
     stripeSessionId: number
     createdAt: number
     updatedAt: number
@@ -2531,6 +4758,7 @@ export namespace Prisma {
     invitationLink?: true
     message?: true
     isPaid?: true
+    publishedAt?: true
     stripeSessionId?: true
     createdAt?: true
     updatedAt?: true
@@ -2548,6 +4776,7 @@ export namespace Prisma {
     invitationLink?: true
     message?: true
     isPaid?: true
+    publishedAt?: true
     stripeSessionId?: true
     createdAt?: true
     updatedAt?: true
@@ -2566,6 +4795,7 @@ export namespace Prisma {
     message?: true
     data?: true
     isPaid?: true
+    publishedAt?: true
     stripeSessionId?: true
     createdAt?: true
     updatedAt?: true
@@ -2657,6 +4887,7 @@ export namespace Prisma {
     message: string | null
     data: JsonValue
     isPaid: boolean
+    publishedAt: Date | null
     stripeSessionId: string | null
     createdAt: Date
     updatedAt: Date
@@ -2692,6 +4923,7 @@ export namespace Prisma {
     message?: boolean
     data?: boolean
     isPaid?: boolean
+    publishedAt?: boolean
     stripeSessionId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2714,6 +4946,7 @@ export namespace Prisma {
     message?: boolean
     data?: boolean
     isPaid?: boolean
+    publishedAt?: boolean
     stripeSessionId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2733,6 +4966,7 @@ export namespace Prisma {
     message?: boolean
     data?: boolean
     isPaid?: boolean
+    publishedAt?: boolean
     stripeSessionId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2752,12 +4986,13 @@ export namespace Prisma {
     message?: boolean
     data?: boolean
     isPaid?: boolean
+    publishedAt?: boolean
     stripeSessionId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "type" | "template" | "title" | "date" | "location" | "locationUrl" | "invitationLink" | "message" | "data" | "isPaid" | "stripeSessionId" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
+  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "type" | "template" | "title" | "date" | "location" | "locationUrl" | "invitationLink" | "message" | "data" | "isPaid" | "publishedAt" | "stripeSessionId" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
   export type EventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     guests?: boolean | Event$guestsArgs<ExtArgs>
@@ -2791,6 +5026,7 @@ export namespace Prisma {
       message: string | null
       data: Prisma.JsonValue
       isPaid: boolean
+      publishedAt: Date | null
       stripeSessionId: string | null
       createdAt: Date
       updatedAt: Date
@@ -3232,6 +5468,7 @@ export namespace Prisma {
     readonly message: FieldRef<"Event", 'String'>
     readonly data: FieldRef<"Event", 'Json'>
     readonly isPaid: FieldRef<"Event", 'Boolean'>
+    readonly publishedAt: FieldRef<"Event", 'DateTime'>
     readonly stripeSessionId: FieldRef<"Event", 'String'>
     readonly createdAt: FieldRef<"Event", 'DateTime'>
     readonly updatedAt: FieldRef<"Event", 'DateTime'>
@@ -4948,6 +7185,9 @@ export namespace Prisma {
     persons: number | null
     status: string | null
     message: string | null
+    menu: string | null
+    token: string | null
+    respondedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4960,6 +7200,9 @@ export namespace Prisma {
     persons: number | null
     status: string | null
     message: string | null
+    menu: string | null
+    token: string | null
+    respondedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4972,6 +7215,9 @@ export namespace Prisma {
     persons: number
     status: number
     message: number
+    menu: number
+    token: number
+    respondedAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -4994,6 +7240,9 @@ export namespace Prisma {
     persons?: true
     status?: true
     message?: true
+    menu?: true
+    token?: true
+    respondedAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5006,6 +7255,9 @@ export namespace Prisma {
     persons?: true
     status?: true
     message?: true
+    menu?: true
+    token?: true
+    respondedAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5018,6 +7270,9 @@ export namespace Prisma {
     persons?: true
     status?: true
     message?: true
+    menu?: true
+    token?: true
+    respondedAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5117,6 +7372,9 @@ export namespace Prisma {
     persons: number
     status: string
     message: string | null
+    menu: string | null
+    token: string | null
+    respondedAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: GuestCountAggregateOutputType | null
@@ -5148,6 +7406,9 @@ export namespace Prisma {
     persons?: boolean
     status?: boolean
     message?: boolean
+    menu?: boolean
+    token?: boolean
+    respondedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     event?: boolean | EventDefaultArgs<ExtArgs>
@@ -5161,6 +7422,9 @@ export namespace Prisma {
     persons?: boolean
     status?: boolean
     message?: boolean
+    menu?: boolean
+    token?: boolean
+    respondedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     event?: boolean | EventDefaultArgs<ExtArgs>
@@ -5174,6 +7438,9 @@ export namespace Prisma {
     persons?: boolean
     status?: boolean
     message?: boolean
+    menu?: boolean
+    token?: boolean
+    respondedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     event?: boolean | EventDefaultArgs<ExtArgs>
@@ -5187,11 +7454,14 @@ export namespace Prisma {
     persons?: boolean
     status?: boolean
     message?: boolean
+    menu?: boolean
+    token?: boolean
+    respondedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type GuestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventId" | "name" | "contact" | "persons" | "status" | "message" | "createdAt" | "updatedAt", ExtArgs["result"]["guest"]>
+  export type GuestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventId" | "name" | "contact" | "persons" | "status" | "message" | "menu" | "token" | "respondedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["guest"]>
   export type GuestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     event?: boolean | EventDefaultArgs<ExtArgs>
   }
@@ -5215,6 +7485,9 @@ export namespace Prisma {
       persons: number
       status: string
       message: string | null
+      menu: string | null
+      token: string | null
+      respondedAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["guest"]>
@@ -5648,6 +7921,9 @@ export namespace Prisma {
     readonly persons: FieldRef<"Guest", 'Int'>
     readonly status: FieldRef<"Guest", 'String'>
     readonly message: FieldRef<"Guest", 'String'>
+    readonly menu: FieldRef<"Guest", 'String'>
+    readonly token: FieldRef<"Guest", 'String'>
+    readonly respondedAt: FieldRef<"Guest", 'DateTime'>
     readonly createdAt: FieldRef<"Guest", 'DateTime'>
     readonly updatedAt: FieldRef<"Guest", 'DateTime'>
   }
@@ -6083,6 +8359,9 @@ export namespace Prisma {
     email: 'email',
     password: 'password',
     name: 'name',
+    emailVerified: 'emailVerified',
+    googleId: 'googleId',
+    image: 'image',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     companyName: 'companyName',
@@ -6100,6 +8379,29 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const AuthTokenScalarFieldEnum: {
+    id: 'id',
+    email: 'email',
+    tokenHash: 'tokenHash',
+    purpose: 'purpose',
+    termsVersion: 'termsVersion',
+    expiresAt: 'expiresAt',
+    usedAt: 'usedAt',
+    createdAt: 'createdAt'
+  };
+
+  export type AuthTokenScalarFieldEnum = (typeof AuthTokenScalarFieldEnum)[keyof typeof AuthTokenScalarFieldEnum]
+
+
+  export const StripeEventScalarFieldEnum: {
+    id: 'id',
+    type: 'type',
+    createdAt: 'createdAt'
+  };
+
+  export type StripeEventScalarFieldEnum = (typeof StripeEventScalarFieldEnum)[keyof typeof StripeEventScalarFieldEnum]
+
+
   export const EventScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -6113,6 +8415,7 @@ export namespace Prisma {
     message: 'message',
     data: 'data',
     isPaid: 'isPaid',
+    publishedAt: 'publishedAt',
     stripeSessionId: 'stripeSessionId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -6148,6 +8451,9 @@ export namespace Prisma {
     persons: 'persons',
     status: 'status',
     message: 'message',
+    menu: 'menu',
+    token: 'token',
+    respondedAt: 'respondedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -6286,8 +8592,11 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     id?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
-    password?: StringFilter<"User"> | string
+    password?: StringNullableFilter<"User"> | string | null
     name?: StringNullableFilter<"User"> | string | null
+    emailVerified?: DateTimeNullableFilter<"User"> | Date | string | null
+    googleId?: StringNullableFilter<"User"> | string | null
+    image?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     companyName?: StringNullableFilter<"User"> | string | null
@@ -6307,8 +8616,11 @@ export namespace Prisma {
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
     email?: SortOrder
-    password?: SortOrder
+    password?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
+    emailVerified?: SortOrderInput | SortOrder
+    googleId?: SortOrderInput | SortOrder
+    image?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     companyName?: SortOrderInput | SortOrder
@@ -6328,11 +8640,14 @@ export namespace Prisma {
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     email?: string
+    googleId?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    password?: StringFilter<"User"> | string
+    password?: StringNullableFilter<"User"> | string | null
     name?: StringNullableFilter<"User"> | string | null
+    emailVerified?: DateTimeNullableFilter<"User"> | Date | string | null
+    image?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     companyName?: StringNullableFilter<"User"> | string | null
@@ -6347,13 +8662,16 @@ export namespace Prisma {
     termsVersion?: StringNullableFilter<"User"> | string | null
     events?: EventListRelationFilter
     orders?: OrderListRelationFilter
-  }, "id" | "email">
+  }, "id" | "email" | "googleId">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     email?: SortOrder
-    password?: SortOrder
+    password?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
+    emailVerified?: SortOrderInput | SortOrder
+    googleId?: SortOrderInput | SortOrder
+    image?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     companyName?: SortOrderInput | SortOrder
@@ -6377,8 +8695,11 @@ export namespace Prisma {
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
-    password?: StringWithAggregatesFilter<"User"> | string
+    password?: StringNullableWithAggregatesFilter<"User"> | string | null
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
+    emailVerified?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    googleId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    image?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     companyName?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -6391,6 +8712,115 @@ export namespace Prisma {
     iban?: StringNullableWithAggregatesFilter<"User"> | string | null
     termsAcceptedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     termsVersion?: StringNullableWithAggregatesFilter<"User"> | string | null
+  }
+
+  export type AuthTokenWhereInput = {
+    AND?: AuthTokenWhereInput | AuthTokenWhereInput[]
+    OR?: AuthTokenWhereInput[]
+    NOT?: AuthTokenWhereInput | AuthTokenWhereInput[]
+    id?: StringFilter<"AuthToken"> | string
+    email?: StringFilter<"AuthToken"> | string
+    tokenHash?: StringFilter<"AuthToken"> | string
+    purpose?: StringFilter<"AuthToken"> | string
+    termsVersion?: StringNullableFilter<"AuthToken"> | string | null
+    expiresAt?: DateTimeFilter<"AuthToken"> | Date | string
+    usedAt?: DateTimeNullableFilter<"AuthToken"> | Date | string | null
+    createdAt?: DateTimeFilter<"AuthToken"> | Date | string
+  }
+
+  export type AuthTokenOrderByWithRelationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    tokenHash?: SortOrder
+    purpose?: SortOrder
+    termsVersion?: SortOrderInput | SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AuthTokenWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    tokenHash?: string
+    AND?: AuthTokenWhereInput | AuthTokenWhereInput[]
+    OR?: AuthTokenWhereInput[]
+    NOT?: AuthTokenWhereInput | AuthTokenWhereInput[]
+    email?: StringFilter<"AuthToken"> | string
+    purpose?: StringFilter<"AuthToken"> | string
+    termsVersion?: StringNullableFilter<"AuthToken"> | string | null
+    expiresAt?: DateTimeFilter<"AuthToken"> | Date | string
+    usedAt?: DateTimeNullableFilter<"AuthToken"> | Date | string | null
+    createdAt?: DateTimeFilter<"AuthToken"> | Date | string
+  }, "id" | "tokenHash">
+
+  export type AuthTokenOrderByWithAggregationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    tokenHash?: SortOrder
+    purpose?: SortOrder
+    termsVersion?: SortOrderInput | SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: AuthTokenCountOrderByAggregateInput
+    _max?: AuthTokenMaxOrderByAggregateInput
+    _min?: AuthTokenMinOrderByAggregateInput
+  }
+
+  export type AuthTokenScalarWhereWithAggregatesInput = {
+    AND?: AuthTokenScalarWhereWithAggregatesInput | AuthTokenScalarWhereWithAggregatesInput[]
+    OR?: AuthTokenScalarWhereWithAggregatesInput[]
+    NOT?: AuthTokenScalarWhereWithAggregatesInput | AuthTokenScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AuthToken"> | string
+    email?: StringWithAggregatesFilter<"AuthToken"> | string
+    tokenHash?: StringWithAggregatesFilter<"AuthToken"> | string
+    purpose?: StringWithAggregatesFilter<"AuthToken"> | string
+    termsVersion?: StringNullableWithAggregatesFilter<"AuthToken"> | string | null
+    expiresAt?: DateTimeWithAggregatesFilter<"AuthToken"> | Date | string
+    usedAt?: DateTimeNullableWithAggregatesFilter<"AuthToken"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"AuthToken"> | Date | string
+  }
+
+  export type StripeEventWhereInput = {
+    AND?: StripeEventWhereInput | StripeEventWhereInput[]
+    OR?: StripeEventWhereInput[]
+    NOT?: StripeEventWhereInput | StripeEventWhereInput[]
+    id?: StringFilter<"StripeEvent"> | string
+    type?: StringFilter<"StripeEvent"> | string
+    createdAt?: DateTimeFilter<"StripeEvent"> | Date | string
+  }
+
+  export type StripeEventOrderByWithRelationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StripeEventWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: StripeEventWhereInput | StripeEventWhereInput[]
+    OR?: StripeEventWhereInput[]
+    NOT?: StripeEventWhereInput | StripeEventWhereInput[]
+    type?: StringFilter<"StripeEvent"> | string
+    createdAt?: DateTimeFilter<"StripeEvent"> | Date | string
+  }, "id">
+
+  export type StripeEventOrderByWithAggregationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    _count?: StripeEventCountOrderByAggregateInput
+    _max?: StripeEventMaxOrderByAggregateInput
+    _min?: StripeEventMinOrderByAggregateInput
+  }
+
+  export type StripeEventScalarWhereWithAggregatesInput = {
+    AND?: StripeEventScalarWhereWithAggregatesInput | StripeEventScalarWhereWithAggregatesInput[]
+    OR?: StripeEventScalarWhereWithAggregatesInput[]
+    NOT?: StripeEventScalarWhereWithAggregatesInput | StripeEventScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"StripeEvent"> | string
+    type?: StringWithAggregatesFilter<"StripeEvent"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"StripeEvent"> | Date | string
   }
 
   export type EventWhereInput = {
@@ -6409,6 +8839,7 @@ export namespace Prisma {
     message?: StringNullableFilter<"Event"> | string | null
     data?: JsonFilter<"Event">
     isPaid?: BoolFilter<"Event"> | boolean
+    publishedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     stripeSessionId?: StringNullableFilter<"Event"> | string | null
     createdAt?: DateTimeFilter<"Event"> | Date | string
     updatedAt?: DateTimeFilter<"Event"> | Date | string
@@ -6430,6 +8861,7 @@ export namespace Prisma {
     message?: SortOrderInput | SortOrder
     data?: SortOrder
     isPaid?: SortOrder
+    publishedAt?: SortOrderInput | SortOrder
     stripeSessionId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -6455,6 +8887,7 @@ export namespace Prisma {
     message?: StringNullableFilter<"Event"> | string | null
     data?: JsonFilter<"Event">
     isPaid?: BoolFilter<"Event"> | boolean
+    publishedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     createdAt?: DateTimeFilter<"Event"> | Date | string
     updatedAt?: DateTimeFilter<"Event"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -6475,6 +8908,7 @@ export namespace Prisma {
     message?: SortOrderInput | SortOrder
     data?: SortOrder
     isPaid?: SortOrder
+    publishedAt?: SortOrderInput | SortOrder
     stripeSessionId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -6499,6 +8933,7 @@ export namespace Prisma {
     message?: StringNullableWithAggregatesFilter<"Event"> | string | null
     data?: JsonWithAggregatesFilter<"Event">
     isPaid?: BoolWithAggregatesFilter<"Event"> | boolean
+    publishedAt?: DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
     stripeSessionId?: StringNullableWithAggregatesFilter<"Event"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Event"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Event"> | Date | string
@@ -6615,6 +9050,9 @@ export namespace Prisma {
     persons?: IntFilter<"Guest"> | number
     status?: StringFilter<"Guest"> | string
     message?: StringNullableFilter<"Guest"> | string | null
+    menu?: StringNullableFilter<"Guest"> | string | null
+    token?: StringNullableFilter<"Guest"> | string | null
+    respondedAt?: DateTimeNullableFilter<"Guest"> | Date | string | null
     createdAt?: DateTimeFilter<"Guest"> | Date | string
     updatedAt?: DateTimeFilter<"Guest"> | Date | string
     event?: XOR<EventScalarRelationFilter, EventWhereInput>
@@ -6628,6 +9066,9 @@ export namespace Prisma {
     persons?: SortOrder
     status?: SortOrder
     message?: SortOrderInput | SortOrder
+    menu?: SortOrderInput | SortOrder
+    token?: SortOrderInput | SortOrder
+    respondedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     event?: EventOrderByWithRelationInput
@@ -6635,6 +9076,7 @@ export namespace Prisma {
 
   export type GuestWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    token?: string
     AND?: GuestWhereInput | GuestWhereInput[]
     OR?: GuestWhereInput[]
     NOT?: GuestWhereInput | GuestWhereInput[]
@@ -6644,10 +9086,12 @@ export namespace Prisma {
     persons?: IntFilter<"Guest"> | number
     status?: StringFilter<"Guest"> | string
     message?: StringNullableFilter<"Guest"> | string | null
+    menu?: StringNullableFilter<"Guest"> | string | null
+    respondedAt?: DateTimeNullableFilter<"Guest"> | Date | string | null
     createdAt?: DateTimeFilter<"Guest"> | Date | string
     updatedAt?: DateTimeFilter<"Guest"> | Date | string
     event?: XOR<EventScalarRelationFilter, EventWhereInput>
-  }, "id">
+  }, "id" | "token">
 
   export type GuestOrderByWithAggregationInput = {
     id?: SortOrder
@@ -6657,6 +9101,9 @@ export namespace Prisma {
     persons?: SortOrder
     status?: SortOrder
     message?: SortOrderInput | SortOrder
+    menu?: SortOrderInput | SortOrder
+    token?: SortOrderInput | SortOrder
+    respondedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: GuestCountOrderByAggregateInput
@@ -6677,6 +9124,9 @@ export namespace Prisma {
     persons?: IntWithAggregatesFilter<"Guest"> | number
     status?: StringWithAggregatesFilter<"Guest"> | string
     message?: StringNullableWithAggregatesFilter<"Guest"> | string | null
+    menu?: StringNullableWithAggregatesFilter<"Guest"> | string | null
+    token?: StringNullableWithAggregatesFilter<"Guest"> | string | null
+    respondedAt?: DateTimeNullableWithAggregatesFilter<"Guest"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Guest"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Guest"> | Date | string
   }
@@ -6684,8 +9134,11 @@ export namespace Prisma {
   export type UserCreateInput = {
     id?: string
     email: string
-    password: string
+    password?: string | null
     name?: string | null
+    emailVerified?: Date | string | null
+    googleId?: string | null
+    image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     companyName?: string | null
@@ -6705,8 +9158,11 @@ export namespace Prisma {
   export type UserUncheckedCreateInput = {
     id?: string
     email: string
-    password: string
+    password?: string | null
     name?: string | null
+    emailVerified?: Date | string | null
+    googleId?: string | null
+    image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     companyName?: string | null
@@ -6726,8 +9182,11 @@ export namespace Prisma {
   export type UserUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -6747,8 +9206,11 @@ export namespace Prisma {
   export type UserUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -6768,8 +9230,11 @@ export namespace Prisma {
   export type UserCreateManyInput = {
     id?: string
     email: string
-    password: string
+    password?: string | null
     name?: string | null
+    emailVerified?: Date | string | null
+    googleId?: string | null
+    image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     companyName?: string | null
@@ -6787,8 +9252,11 @@ export namespace Prisma {
   export type UserUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -6806,8 +9274,11 @@ export namespace Prisma {
   export type UserUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -6822,6 +9293,125 @@ export namespace Prisma {
     termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type AuthTokenCreateInput = {
+    id?: string
+    email: string
+    tokenHash: string
+    purpose: string
+    termsVersion?: string | null
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type AuthTokenUncheckedCreateInput = {
+    id?: string
+    email: string
+    tokenHash: string
+    purpose: string
+    termsVersion?: string | null
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type AuthTokenUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    purpose?: StringFieldUpdateOperationsInput | string
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuthTokenUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    purpose?: StringFieldUpdateOperationsInput | string
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuthTokenCreateManyInput = {
+    id?: string
+    email: string
+    tokenHash: string
+    purpose: string
+    termsVersion?: string | null
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type AuthTokenUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    purpose?: StringFieldUpdateOperationsInput | string
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuthTokenUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    purpose?: StringFieldUpdateOperationsInput | string
+    termsVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StripeEventCreateInput = {
+    id: string
+    type: string
+    createdAt?: Date | string
+  }
+
+  export type StripeEventUncheckedCreateInput = {
+    id: string
+    type: string
+    createdAt?: Date | string
+  }
+
+  export type StripeEventUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StripeEventUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StripeEventCreateManyInput = {
+    id: string
+    type: string
+    createdAt?: Date | string
+  }
+
+  export type StripeEventUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StripeEventUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type EventCreateInput = {
     id?: string
     type: string
@@ -6834,6 +9424,7 @@ export namespace Prisma {
     message?: string | null
     data: JsonNullValueInput | InputJsonValue
     isPaid?: boolean
+    publishedAt?: Date | string | null
     stripeSessionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6855,6 +9446,7 @@ export namespace Prisma {
     message?: string | null
     data: JsonNullValueInput | InputJsonValue
     isPaid?: boolean
+    publishedAt?: Date | string | null
     stripeSessionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6874,6 +9466,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
     isPaid?: BoolFieldUpdateOperationsInput | boolean
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stripeSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6895,6 +9488,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
     isPaid?: BoolFieldUpdateOperationsInput | boolean
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stripeSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6915,6 +9509,7 @@ export namespace Prisma {
     message?: string | null
     data: JsonNullValueInput | InputJsonValue
     isPaid?: boolean
+    publishedAt?: Date | string | null
     stripeSessionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6932,6 +9527,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
     isPaid?: BoolFieldUpdateOperationsInput | boolean
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stripeSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6950,6 +9546,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
     isPaid?: BoolFieldUpdateOperationsInput | boolean
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stripeSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7072,6 +9669,9 @@ export namespace Prisma {
     persons?: number
     status?: string
     message?: string | null
+    menu?: string | null
+    token?: string | null
+    respondedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     event: EventCreateNestedOneWithoutGuestsInput
@@ -7085,6 +9685,9 @@ export namespace Prisma {
     persons?: number
     status?: string
     message?: string | null
+    menu?: string | null
+    token?: string | null
+    respondedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7096,6 +9699,9 @@ export namespace Prisma {
     persons?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
+    menu?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     event?: EventUpdateOneRequiredWithoutGuestsNestedInput
@@ -7109,6 +9715,9 @@ export namespace Prisma {
     persons?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
+    menu?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7121,6 +9730,9 @@ export namespace Prisma {
     persons?: number
     status?: string
     message?: string | null
+    menu?: string | null
+    token?: string | null
+    respondedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7132,6 +9744,9 @@ export namespace Prisma {
     persons?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
+    menu?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7144,6 +9759,9 @@ export namespace Prisma {
     persons?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
+    menu?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7178,17 +9796,6 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -7198,6 +9805,17 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type EventListRelationFilter = {
@@ -7230,6 +9848,9 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     name?: SortOrder
+    emailVerified?: SortOrder
+    googleId?: SortOrder
+    image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     companyName?: SortOrder
@@ -7249,6 +9870,9 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     name?: SortOrder
+    emailVerified?: SortOrder
+    googleId?: SortOrder
+    image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     companyName?: SortOrder
@@ -7268,6 +9892,9 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     name?: SortOrder
+    emailVerified?: SortOrder
+    googleId?: SortOrder
+    image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     companyName?: SortOrder
@@ -7318,6 +9945,20 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -7332,18 +9973,55 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  export type AuthTokenCountOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    tokenHash?: SortOrder
+    purpose?: SortOrder
+    termsVersion?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AuthTokenMaxOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    tokenHash?: SortOrder
+    purpose?: SortOrder
+    termsVersion?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AuthTokenMinOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    tokenHash?: SortOrder
+    purpose?: SortOrder
+    termsVersion?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StripeEventCountOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StripeEventMaxOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StripeEventMinOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
   }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -7402,6 +10080,7 @@ export namespace Prisma {
     message?: SortOrder
     data?: SortOrder
     isPaid?: SortOrder
+    publishedAt?: SortOrder
     stripeSessionId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -7419,6 +10098,7 @@ export namespace Prisma {
     invitationLink?: SortOrder
     message?: SortOrder
     isPaid?: SortOrder
+    publishedAt?: SortOrder
     stripeSessionId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -7436,6 +10116,7 @@ export namespace Prisma {
     invitationLink?: SortOrder
     message?: SortOrder
     isPaid?: SortOrder
+    publishedAt?: SortOrder
     stripeSessionId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -7587,6 +10268,9 @@ export namespace Prisma {
     persons?: SortOrder
     status?: SortOrder
     message?: SortOrder
+    menu?: SortOrder
+    token?: SortOrder
+    respondedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -7603,6 +10287,9 @@ export namespace Prisma {
     persons?: SortOrder
     status?: SortOrder
     message?: SortOrder
+    menu?: SortOrder
+    token?: SortOrder
+    respondedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -7615,6 +10302,9 @@ export namespace Prisma {
     persons?: SortOrder
     status?: SortOrder
     message?: SortOrder
+    menu?: SortOrder
+    token?: SortOrder
+    respondedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -7675,12 +10365,12 @@ export namespace Prisma {
     set?: string | null
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
-  }
-
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
   export type EventUpdateManyWithoutUserNestedInput = {
@@ -7929,17 +10619,6 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -7949,6 +10628,17 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -8007,20 +10697,6 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -8033,6 +10709,20 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type NestedBoolFilter<$PrismaModel = never> = {
@@ -8126,6 +10816,7 @@ export namespace Prisma {
     message?: string | null
     data: JsonNullValueInput | InputJsonValue
     isPaid?: boolean
+    publishedAt?: Date | string | null
     stripeSessionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8145,6 +10836,7 @@ export namespace Prisma {
     message?: string | null
     data: JsonNullValueInput | InputJsonValue
     isPaid?: boolean
+    publishedAt?: Date | string | null
     stripeSessionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8234,6 +10926,7 @@ export namespace Prisma {
     message?: StringNullableFilter<"Event"> | string | null
     data?: JsonFilter<"Event">
     isPaid?: BoolFilter<"Event"> | boolean
+    publishedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     stripeSessionId?: StringNullableFilter<"Event"> | string | null
     createdAt?: DateTimeFilter<"Event"> | Date | string
     updatedAt?: DateTimeFilter<"Event"> | Date | string
@@ -8277,8 +10970,11 @@ export namespace Prisma {
   export type UserCreateWithoutEventsInput = {
     id?: string
     email: string
-    password: string
+    password?: string | null
     name?: string | null
+    emailVerified?: Date | string | null
+    googleId?: string | null
+    image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     companyName?: string | null
@@ -8297,8 +10993,11 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutEventsInput = {
     id?: string
     email: string
-    password: string
+    password?: string | null
     name?: string | null
+    emailVerified?: Date | string | null
+    googleId?: string | null
+    image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     companyName?: string | null
@@ -8326,6 +11025,9 @@ export namespace Prisma {
     persons?: number
     status?: string
     message?: string | null
+    menu?: string | null
+    token?: string | null
+    respondedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -8337,6 +11039,9 @@ export namespace Prisma {
     persons?: number
     status?: string
     message?: string | null
+    menu?: string | null
+    token?: string | null
+    respondedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -8405,8 +11110,11 @@ export namespace Prisma {
   export type UserUpdateWithoutEventsInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8425,8 +11133,11 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutEventsInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8469,6 +11180,9 @@ export namespace Prisma {
     persons?: IntFilter<"Guest"> | number
     status?: StringFilter<"Guest"> | string
     message?: StringNullableFilter<"Guest"> | string | null
+    menu?: StringNullableFilter<"Guest"> | string | null
+    token?: StringNullableFilter<"Guest"> | string | null
+    respondedAt?: DateTimeNullableFilter<"Guest"> | Date | string | null
     createdAt?: DateTimeFilter<"Guest"> | Date | string
     updatedAt?: DateTimeFilter<"Guest"> | Date | string
   }
@@ -8492,8 +11206,11 @@ export namespace Prisma {
   export type UserCreateWithoutOrdersInput = {
     id?: string
     email: string
-    password: string
+    password?: string | null
     name?: string | null
+    emailVerified?: Date | string | null
+    googleId?: string | null
+    image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     companyName?: string | null
@@ -8512,8 +11229,11 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutOrdersInput = {
     id?: string
     email: string
-    password: string
+    password?: string | null
     name?: string | null
+    emailVerified?: Date | string | null
+    googleId?: string | null
+    image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     companyName?: string | null
@@ -8546,6 +11266,7 @@ export namespace Prisma {
     message?: string | null
     data: JsonNullValueInput | InputJsonValue
     isPaid?: boolean
+    publishedAt?: Date | string | null
     stripeSessionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8566,6 +11287,7 @@ export namespace Prisma {
     message?: string | null
     data: JsonNullValueInput | InputJsonValue
     isPaid?: boolean
+    publishedAt?: Date | string | null
     stripeSessionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8591,8 +11313,11 @@ export namespace Prisma {
   export type UserUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8611,8 +11336,11 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8651,6 +11379,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
     isPaid?: BoolFieldUpdateOperationsInput | boolean
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stripeSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8671,6 +11400,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
     isPaid?: BoolFieldUpdateOperationsInput | boolean
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stripeSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8689,6 +11419,7 @@ export namespace Prisma {
     message?: string | null
     data: JsonNullValueInput | InputJsonValue
     isPaid?: boolean
+    publishedAt?: Date | string | null
     stripeSessionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8709,6 +11440,7 @@ export namespace Prisma {
     message?: string | null
     data: JsonNullValueInput | InputJsonValue
     isPaid?: boolean
+    publishedAt?: Date | string | null
     stripeSessionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8743,6 +11475,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
     isPaid?: BoolFieldUpdateOperationsInput | boolean
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stripeSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8763,6 +11496,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
     isPaid?: BoolFieldUpdateOperationsInput | boolean
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stripeSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8781,6 +11515,7 @@ export namespace Prisma {
     message?: string | null
     data: JsonNullValueInput | InputJsonValue
     isPaid?: boolean
+    publishedAt?: Date | string | null
     stripeSessionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8813,6 +11548,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
     isPaid?: BoolFieldUpdateOperationsInput | boolean
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stripeSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8832,6 +11568,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
     isPaid?: BoolFieldUpdateOperationsInput | boolean
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stripeSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8851,6 +11588,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
     isPaid?: BoolFieldUpdateOperationsInput | boolean
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stripeSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8908,6 +11646,9 @@ export namespace Prisma {
     persons?: number
     status?: string
     message?: string | null
+    menu?: string | null
+    token?: string | null
+    respondedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -8934,6 +11675,9 @@ export namespace Prisma {
     persons?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
+    menu?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8945,6 +11689,9 @@ export namespace Prisma {
     persons?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
+    menu?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8956,6 +11703,9 @@ export namespace Prisma {
     persons?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
+    menu?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

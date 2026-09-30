@@ -11,8 +11,12 @@ datasource db {
 model User {
   id            String   @id @default(uuid())
   email         String   @unique
-  password      String
+  // null for accounts created with Google or an e-mail link (no password yet)
+  password      String?
   name          String?
+  emailVerified DateTime?
+  googleId      String?  @unique
+  image         String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   
@@ -34,6 +38,29 @@ model User {
   orders        Order[]
 }
 
+// One-time e-mail links: sign-in without password ("login") and password reset ("reset").
+// Only the SHA-256 of the token is stored; the link carries the token itself.
+model AuthToken {
+  id           String    @id @default(uuid())
+  email        String
+  tokenHash    String    @unique
+  purpose      String    // login | reset
+  // terms accepted in the request form (sign-in link that may create the account)
+  termsVersion String?
+  expiresAt    DateTime
+  usedAt       DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@index([email])
+}
+
+// Stripe webhook events already handled (idempotency across retries)
+model StripeEvent {
+  id        String   @id
+  type      String
+  createdAt DateTime @default(now())
+}
+
 model Event {
   id              String   @id @default(uuid())
   userId          String
@@ -48,6 +75,8 @@ model Event {
   message         String?
   data            Json     // Store full flexible JSON data for template specific fields
   isPaid          Boolean  @default(false)
+  // first activation (payment confirmed)
+  publishedAt     DateTime?
   stripeSessionId String?  @unique
   guests          Guest[]
   orders          Order[]
@@ -88,6 +117,11 @@ model Guest {
   persons   Int      @default(1)
   status    String   @default("pending") // pending, confirmed, declined
   message   String?
+  // menu preference chosen in the RSVP form (options come from Event.data.menuOptions)
+  menu      String?
+  // personal invitation link (/invitatie/<event>?g=<token>) for guests added by the organizer
+  token     String?  @unique
+  respondedAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
