@@ -82,7 +82,7 @@ export default function PrivacyPage() {
                         <tr>
                             <td>Emailuri cu sfaturi despre contul și invitațiile tale (titularii de cont): emailul, numele, data creării contului, starea invitațiilor (ciornă / activată, tipul, titlul, data, locația), data plății, numărul de răspunsuri RSVP (doar cifre), jurnalul emailurilor trimise și al dezabonărilor</td>
                             <td>Pași de început, amintirea unei ciorne neactivate, sfaturi după activare, rezumatul confirmărilor înainte de eveniment, un singur email de revenire după o perioadă lungă de inactivitate; cel mult unul la 48 de ore. Invitații care răspund la o invitație nu primesc astfel de emailuri</td>
-                            <td>Art. 6 alin. (1) lit. f) – interes legitim, cu art. 12 alin. (2) din Legea nr. 506/2004 (servicii similare, pentru clienții care și-au făcut cont): poți refuza gratuit la crearea contului (bifa „Nu vreau emailuri cu sfaturi și noutăți”) și oricând, cu un click, din linkul de dezabonare din fiecare email. Conturilor create cu Google, unde această alegere nu s-a putut face, nu le trimitem astfel de emailuri (doar emailul de bun venit)</td>
+                            <td>Art. 6 alin. (1) lit. f) – interes legitim, cu art. 12 alin. (2) din Legea nr. 506/2004 (servicii similare, pentru clienții care și-au făcut cont): ești informat la crearea contului (și cu Google) și poți refuza gratuit oricând, cu un click, din linkul de dezabonare din fiecare email</td>
                         </tr>
                         <tr>
                             <td>Date tehnice: adresă IP, tip de browser, jurnale de server, cookies strict necesare de sesiune și securitate</td>

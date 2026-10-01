@@ -6,7 +6,7 @@ import { signIn, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import styles from './page.module.css'
 import RegisterTermsConsent from '@/components/legal/RegisterTermsConsent'
-import RegisterMarketingChoice from '@/components/legal/RegisterMarketingChoice'
+import RegisterMarketingNotice from '@/components/legal/RegisterMarketingNotice'
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton'
 import { googleErrorMessage } from '@/lib/google-auth-shared'
 
@@ -26,7 +26,6 @@ function LoginContent() {
     const [error, setError] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [acceptTerms, setAcceptTerms] = useState(false)
-    const [marketingOptOut, setMarketingOptOut] = useState(false)
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -60,7 +59,7 @@ function LoginContent() {
                 const res = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ...formData, acceptTerms, marketingOptOut })
+                    body: JSON.stringify({ ...formData, acceptTerms })
                 })
                 if (!res.ok) {
                     const data = await res.json().catch(() => ({}))
@@ -161,7 +160,7 @@ function LoginContent() {
                     </div>
 
                     {!isLogin && <RegisterTermsConsent checked={acceptTerms} onChange={setAcceptTerms} />}
-                    {!isLogin && <RegisterMarketingChoice optOut={marketingOptOut} onChange={setMarketingOptOut} />}
+                    {!isLogin && <RegisterMarketingNotice />}
 
                     <button type="submit" className={styles.submitBtn} disabled={isLoading}>
                         {isLoading ? 'Se procesează...' : (isLogin ? 'Autentificare' : 'Creează contul')}

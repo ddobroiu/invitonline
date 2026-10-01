@@ -13,8 +13,9 @@ import { daysUntil, eventInfo, hourRo, rsvpCounts, type EventInfo, type RsvpCoun
 /**
  * Cronul e-mailurilor: cine ce primeste acum. Reguli, verificate la fiecare rulare:
  *   - doar conturile create dupa lansare (EmailSettings, pus de migrare); conturile vechi nu primesc nimic;
- *   - niciodata cui a bifat „Nu vreau…” la inregistrare, s-a dezabonat sau e in EmailUnsubscribe;
- *   - niciodata conturilor fara alegere la inregistrare (marketingChoiceAt NULL: create cu Google, fara bifa);
+ *   - niciodata cui s-a dezabonat, e in EmailUnsubscribe sau a bifat „Nu vreau…” la inregistrare (bifa a existat
+ *     pana la 01.10.2026; conturile noi, cu parola sau cu Google, au marketingOptOut false si marketingChoiceAt);
+ *   - niciodata conturilor fara alegere (marketingChoiceAt NULL: conturile Google create inainte de 01.10.2026);
  *   - doar titularii de cont: invitatii care raspund la o invitatie (Guest) nu primesc niciodata marketing;
  *   - fiecare fel o singura data pe adresa (EmailLog.dedupeKey); rezumatul RSVP o data pe invitatie platita;
  *   - cel mult un e-mail la 48 de ore pe adresa, in afara de bun venit;
@@ -305,12 +306,12 @@ export async function runLifecycle({ dry, limit, now = Date.now() }: { dry: bool
 }
 
 /**
- * La inregistrare: bun venit imediat, jurnalizat, fara sa astepte cronul. Pleaca si celor care au bifat
- * „Nu vreau…” (e mesajul despre contul creat, fara reclama), dar fara link de dezabonare la ei.
+ * La inregistrare (cu parola sau cu Google): bun venit imediat, jurnalizat, fara sa astepte cronul,
+ * cu link de dezabonare (contul nou are acordul pentru e-mailurile cu sfaturi).
  */
-export function sendWelcomeNow(user: { id: string; email: string; name: string | null; marketingOptOut: boolean }) {
+export function sendWelcomeNow(user: { id: string; email: string; name: string | null }) {
     return sendLogged(
-        { email: user.email, kind: 'welcome', userId: user.id, withUnsubscribe: !user.marketingOptOut },
+        { email: user.email, kind: 'welcome', userId: user.id, withUnsubscribe: true },
         () => welcomeMessage(user.name),
     )
 }

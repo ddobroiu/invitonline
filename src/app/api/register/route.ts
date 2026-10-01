@@ -9,7 +9,6 @@ export async function POST(req: Request) {
         const email = String(body.email || '').trim().toLowerCase()
         const password = String(body.password || '')
         const name = String(body.name || '').trim().slice(0, 120) || null
-        const marketingOptOut = body.marketingOptOut === true
 
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             return NextResponse.json({ message: 'Adresa de email nu este validă.' }, { status: 400 })
@@ -35,8 +34,9 @@ export async function POST(req: Request) {
                 name,
                 termsAcceptedAt: new Date(),
                 termsVersion: LEGAL_VERSION,
-                // bifa „Nu vreau emailuri cu sfaturi și noutăți” (Legea 506/2004 art. 12 alin. 2)
-                marketingOptOut,
+                // e-mailurile cu sfaturi: fara bifa de refuz, doar informarea sub formular (lib/lifecycle/consent.ts);
+                // refuzul e linkul de dezabonare din fiecare e-mail (Legea 506/2004 art. 12 alin. 2)
+                marketingOptOut: false,
                 marketingChoiceAt: new Date(),
             }
         })
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
         // Bun venit, jurnalizat in EmailLog (lib/lifecycle); nu blocheaza crearea contului
         try {
             const { sendWelcomeNow } = await import('@/lib/lifecycle/run')
-            await sendWelcomeNow({ id: user.id, email: user.email, name: user.name, marketingOptOut })
+            await sendWelcomeNow({ id: user.id, email: user.email, name: user.name })
         } catch (emailErr) {
             console.error('Welcome email failed:', emailErr)
         }

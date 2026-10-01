@@ -34,8 +34,8 @@ model User {
   termsAcceptedAt DateTime?
   termsVersion    String?
 
-  // Bifa „Nu vreau emailuri cu sfaturi și noutăți” de la înregistrare sau dezabonarea din e-mail
-  // (Legea 506/2004 art. 12 alin. 2), cu momentul alegerii
+  // Refuzul e-mailurilor cu sfaturi și noutăți: dezabonarea din e-mail (sau bifa de la înregistrare, până la
+  // 01.10.2026); conturile noi au false + momentul creării (Legea 506/2004 art. 12 alin. 2)
   marketingOptOut   Boolean   @default(false)
   marketingChoiceAt DateTime?
 

@@ -121,7 +121,7 @@ export default async function AdminPage() {
                                 : 'Nelansate (lipsește rândul din EmailSettings).'}{' '}
                             Cel mult unul la 48 de ore pe adresă (în afară de bun venit), între {SEND_HOURS.from}:00 și {SEND_HOURS.to}:00, ora României.
                             Dezabonări: {emails.unsubscribes.total} (7 zile: {emails.unsubscribes.d7}, 30 de zile: {emails.unsubscribes.d30}).
-                            Conturi fără e-mailuri cu sfaturi (bifă la înregistrare sau dezabonare): {emails.optedOut}.
+                            Conturi fără e-mailuri cu sfaturi (dezabonare sau vechea bifă de la înregistrare): {emails.optedOut}.
                         </p>
                         <div className={styles.scroll}>
                             <table className={styles.table}>

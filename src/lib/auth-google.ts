@@ -13,8 +13,8 @@ import { GOOGLE_TERMS_COOKIE } from '@/lib/google-auth-shared'
  *      daca adresa contului nu fusese dovedita niciodata (emailVerified NULL), parola lui se sterge: altfel
  *      cine a creat contul cu adresa altcuiva (inregistrarea nu verifica adresa) ar pastra accesul cu parola;
  *   3. cont nou — doar daca utilizatorul a bifat acordul cu Termenii (cookie-ul pus de buton); fara parola,
- *      alegerea pentru e-mailurile cu sfaturi ramane necunoscuta (marketingChoiceAt NULL), deci cronul
- *      nu-i trimite nimic din ciclul de viata; primeste o singura data e-mailul de bun venit.
+ *      cu acordul pentru e-mailurile cu sfaturi ca la inregistrarea cu parola (informarea e sub formular,
+ *      refuzul e linkul de dezabonare din fiecare e-mail), deci intra in ciclul de viata (lib/lifecycle/run.ts).
  */
 
 export const googleEnabled = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET)
@@ -109,10 +109,9 @@ export async function resolveGoogleSignIn(claims: GoogleClaims | undefined, goog
                 image: picture,
                 termsAcceptedAt: now,
                 termsVersion: LEGAL_VERSION,
-                // Alegerea pentru e-mailurile cu sfaturi nu s-a facut: marketingChoiceAt ramane NULL,
-                // iar lib/lifecycle/run.ts nu trimite nimic acestor conturi (in afara de bun venit).
+                // e-mailurile cu sfaturi: ca la inregistrarea cu parola (api/register), alegerea e facuta acum
                 marketingOptOut: false,
-                marketingChoiceAt: null,
+                marketingChoiceAt: now,
             },
             select: { id: true, email: true, name: true },
         })
@@ -125,11 +124,10 @@ export async function resolveGoogleSignIn(claims: GoogleClaims | undefined, goog
         throw err
     }
 
-    // Bun venit, o singura data (EmailLog, cheia adresa:welcome); fara link de dezabonare, fiindca
-    // acestor conturi nu le trimitem e-mailuri cu sfaturi. Nu blocheaza intrarea in cont.
+    // Bun venit, o singura data (EmailLog, cheia adresa:welcome), cu link de dezabonare. Nu blocheaza intrarea in cont.
     try {
         const { sendWelcomeNow } = await import('@/lib/lifecycle/run')
-        await sendWelcomeNow({ id: user.id, email: user.email, name: user.name, marketingOptOut: true })
+        await sendWelcomeNow({ id: user.id, email: user.email, name: user.name })
     } catch (emailErr) {
         console.error('Welcome email (Google) failed:', emailErr)
     }
