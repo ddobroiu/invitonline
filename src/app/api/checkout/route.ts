@@ -73,7 +73,9 @@ export async function POST(req: Request) {
             success_url: `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${siteUrl}/dashboard?canceled=true`,
             metadata: { ...tag, ...consentMeta, eventId: event.id, userId, ...tiktok },
-            payment_intent_data: { metadata: { ...tag, eventId: event.id, userId } },
+            payment_intent_data: { metadata: { ...tag, eventId: event.id, userId }, statement_descriptor_suffix: 'INVITONLIN' },
+            // Contul Stripe e comun cu alte site-uri: numele site-ului pe pagina de plata
+            branding_settings: { display_name: 'InvitOnline' },
             // Numele, adresa si (pentru firme) CUI-ul pentru factura Oblio, cerute de Stripe la plata
             billing_address_collection: 'required',
             tax_id_collection: { enabled: true },
