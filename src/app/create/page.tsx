@@ -5,6 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useSession, signIn } from 'next-auth/react'
 import styles from './page.module.css'
 import TemplateRenderer, { CENTERED_TEMPLATES } from '@/components/TemplateRenderer'
+import PreviewViewport from '@/components/PreviewViewport'
+import { TEMPLATES as CATALOGUE, DEFAULT_TEMPLATE, EVENT_TYPES, isEventType, TEMPLATE_THEMES, getTemplateTheme, type TemplateTheme } from '@/config/templates'
 import LocationPicker from '@/components/LocationPicker'
 import MediaUploader from '@/components/MediaUploader'
 import ImageUploader from '@/components/ImageUploader'
@@ -14,15 +16,16 @@ import RegisterMarketingNotice from '@/components/legal/RegisterMarketingNotice'
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton'
 import { PRICE_NOTE } from '@/config/legal'
 import { TIKTOK_CURRENCY, trackTikTok } from '@/lib/tiktok'
+import { validateEvent, validateRegistration } from '@/lib/validation'
 import {
     Zap, Palette, Info, Trash2, Plus, Music, Video, Image as ImageIcon, Monitor, Smartphone, Lock, CreditCard,
     MailOpen, Clapperboard, Plane, Disc, Ticket, Globe, Newspaper, Film, Tent, Crown, MessageCircle, Flower2, Gem,
-    Minus, Sparkles, Eye, X, Loader2, Check, ChevronLeft, ChevronRight
+    Minus, LayoutTemplate, SlidersHorizontal, Eye, X, Loader2, Check, ChevronLeft, ChevronRight
 } from 'lucide-react'
 
-type TemplateId = 'classic' | 'classic-gold' | 'classic-minimal' | 'envelope' | 'netflix' | 'boarding' | 'vinyl' | 'scratch' | 'passport' | 'news' | 'cinema' | 'festival' | 'vip' | 'story' | 'chat'
+type TemplateId = string
 
-const TEMPLATES: { id: TemplateId, name: string, icon: React.ReactNode, features: ('photo' | 'video' | 'audio')[] }[] = [
+const LEGACY_TEMPLATES: { id: TemplateId, name: string, icon: React.ReactNode, features: ('photo' | 'video' | 'audio')[] }[] = [
     { id: 'classic', name: 'Classic Floral', icon: <Flower2 size={28} strokeWidth={1.5} />, features: ['photo'] },
     { id: 'classic-gold', name: 'Classic Gold', icon: <Gem size={28} strokeWidth={1.5} />, features: ['photo'] },
     { id: 'classic-minimal', name: 'Minimalist', icon: <Minus size={28} strokeWidth={1.5} />, features: ['photo'] },
@@ -39,12 +42,14 @@ const TEMPLATES: { id: TemplateId, name: string, icon: React.ReactNode, features
     { id: 'story', name: 'Story', icon: <Smartphone size={28} strokeWidth={1.5} />, features: ['video', 'photo'] },
     { id: 'chat', name: 'Chat', icon: <MessageCircle size={28} strokeWidth={1.5} />, features: ['audio', 'photo'] },
 ]
+const TEMPLATES = CATALOGUE.map(t => ({ ...t, icon: LEGACY_TEMPLATES.find(old => old.id === t.id)?.icon || <LayoutTemplate size={28} strokeWidth={1.5} /> }))
 const TEMPLATE_IDS = TEMPLATES.map(t => t.id) as string[]
 
 const DEFAULTS_BY_TYPE: Record<string, { title: string, message: string }> = {
     nunta: { title: 'Ana & Andrei', message: 'Te invităm să sărbătorești alături de noi începutul poveștii noastre.' },
     botez: { title: 'David', message: 'Vă invităm cu drag la botezul micuțului nostru.' },
     aniversare: { title: 'Alex - 30 de ani', message: 'Te invit să sărbătorim împreună o nouă aniversare!' },
+    corporate: { title: 'Gala de excelență', message: 'Vă invităm la o seară dedicată ideilor și oamenilor care ne inspiră.' },
     petrecere: { title: 'Summer Party', message: 'Hai la o petrecere de neuitat!' },
 }
 
@@ -59,8 +64,8 @@ function formatDate(iso: string) {
 const initialFormData = {
     eventType: 'nunta',
     title: 'Ana & Andrei',
-    date: '25 August 2026',
-    eventDateISO: '2026-08-25',
+    date: '',
+    eventDateISO: '',
     location: 'Palatul Știrbei, Buftea',
     locationUrl: '',
     message: DEFAULTS_BY_TYPE.nunta.message,
@@ -106,7 +111,7 @@ const DRAFT_KEY = 'eventDraft'
 const steps = [
     { name: 'Design', icon: <Palette size={16} /> },
     { name: 'Detalii', icon: <Info size={16} /> },
-    { name: 'Extra', icon: <Sparkles size={16} /> },
+    { name: 'Extra', icon: <SlidersHorizontal size={16} /> },
     { name: 'Finalizare', icon: <CreditCard size={16} /> },
 ]
 
@@ -128,12 +133,17 @@ function CreateEventContent() {
     const editId = searchParams.get('id')
     const [eventId, setEventId] = useState<string | null>(editId)
     const [isPaid, setIsPaid] = useState(false)
-    const [formData, setFormData] = useState<FormData>(initialFormData)
+    const [formData, setFormData] = useState<FormData>(() => {
+        const type = searchParams.get('tip')
+        if (!isEventType(type)) return initialFormData
+        return { ...initialFormData, eventType: type, ...(DEFAULTS_BY_TYPE[type] || {}), ...(type !== 'nunta' ? { brideName: '', groomName: '' } : {}) }
+    })
     const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>(() => {
         const t = searchParams.get('template') || ''
-        return (TEMPLATE_IDS.includes(t) ? t : 'classic') as TemplateId
+        return (TEMPLATE_IDS.includes(t) ? t : DEFAULT_TEMPLATE) as TemplateId
     })
     const [titleTouched, setTitleTouched] = useState(false)
+    const [templateTheme, setTemplateTheme] = useState<TemplateTheme | 'all'>('all')
     const [currentStep, setCurrentStep] = useState(0)
     const [previewMode, setPreviewMode] = useState<'pc' | 'mobile'>('mobile')
     const [showMobilePreview, setShowMobilePreview] = useState(false)
@@ -274,8 +284,7 @@ function CreateEventContent() {
         })
     }
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value } = e.target
+    const changeField = (name: string, value: string) => {
         if (name === 'title') {
             setTitleTouched(true)
             setFormData(prev => ({ ...prev, title: value }))
@@ -295,6 +304,7 @@ function CreateEventContent() {
         }
         update({ [name]: value } as Partial<FormData>)
     }
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => changeField(e.target.name, e.target.value)
 
     const input = (name: keyof FormData, placeholder = '', type = 'text') => (
         <input
@@ -318,10 +328,7 @@ function CreateEventContent() {
     }
 
     const validate = () => {
-        const errs: Record<string, string> = {}
-        if (!formData.title.trim()) errs.title = 'Adaugă un titlu'
-        if (!formData.date.trim()) errs.date = 'Alege data evenimentului'
-        if (!formData.location.trim()) errs.location = 'Adaugă locația'
+        const errs = validateEvent({ ...formData, template: selectedTemplate })
         setErrors(errs)
         const ok = Object.keys(errs).length === 0
         if (!ok) {
@@ -345,6 +352,7 @@ function CreateEventContent() {
     }
 
     const handleSave = async (shouldPay: boolean) => {
+        if (isSaving) return
         if (!validate()) {
             setCurrentStep(1)
             return
@@ -371,6 +379,7 @@ function CreateEventContent() {
 
             const data = await res.json().catch(() => ({}))
             if (!res.ok) {
+                if (data.errors) { setErrors(data.errors); setCurrentStep(1) }
                 setSaveError(data.message || 'Eroare la salvarea invitației.')
                 return
             }
@@ -410,6 +419,11 @@ function CreateEventContent() {
 
     const handleAuthSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        if (isAuthLoading) return
+        if (authMode === 'register') {
+            const message = validateRegistration({ ...authData, acceptTerms })
+            if (message) { setAuthError(message); return }
+        }
         setAuthError('')
         setIsAuthLoading(true)
         try {
@@ -455,7 +469,7 @@ function CreateEventContent() {
             </div>
             <div className={styles.homeBar}></div>
             <div className={`${styles.phoneInner} ${isCentered ? styles.centeredScaler : ''}`}>
-                <div className={styles.scalerContent}>{preview}</div>
+                <PreviewViewport title="Invitația ta pe telefon">{preview}</PreviewViewport>
             </div>
         </div>
     )
@@ -499,8 +513,12 @@ function CreateEventContent() {
                     <div className={styles.editorCard}>
                         <h2 className={styles.cardTitle}>Alege designul preferat</h2>
                         <p className={styles.cardText}>Poți schimba modelul oricând — datele tale rămân.</p>
+                        <div className={styles.themeFilters} role="group" aria-label="Tematica invitației">
+                            <button type="button" aria-pressed={templateTheme === 'all'} onClick={() => setTemplateTheme('all')}>Toate tematicile</button>
+                            {TEMPLATE_THEMES.map(theme => <button type="button" key={theme.id} aria-pressed={templateTheme === theme.id} onClick={() => setTemplateTheme(theme.id)}>{theme.label}</button>)}
+                        </div>
                         <div className={styles.templateGrid}>
-                            {TEMPLATES.map(tpl => (
+                            {TEMPLATES.filter(tpl => templateTheme === 'all' || getTemplateTheme(tpl.id) === templateTheme).map(tpl => (
                                 <button
                                     type="button"
                                     key={tpl.id}
@@ -524,19 +542,21 @@ function CreateEventContent() {
                 {/* STEP 1: DETAILS */}
                 {currentStep === 1 && (
                     <div className={styles.editorCard}>
+                        {Object.keys(errors).length > 0 && <div className={styles.errorBox} role="alert"><strong>Verifică detaliile invitației:</strong><ul>{Object.entries(errors).map(([key, message]) => <li key={key}>{message}</li>)}</ul></div>}
                         <h2 className={styles.cardTitle}>Detaliile evenimentului</h2>
                         <div className={styles.inputGrid}>
                             <Field label="Tip eveniment" full>
-                                <div className={styles.typeSwitch}>
-                                    {[['nunta', '💍 Nuntă'], ['botez', '👶 Botez'], ['aniversare', '🎂 Aniversare'], ['petrecere', '🎉 Petrecere']].map(([value, label]) => (
+                                <div className={styles.typeSwitch} role="group" aria-label="Tip eveniment">
+                                    {EVENT_TYPES.map(({ id: value, label }) => (
                                         <button
                                             type="button"
                                             key={value}
                                             className={`${styles.typeBtn} ${formData.eventType === value ? styles.typeBtnActive : ''}`}
                                             aria-pressed={formData.eventType === value}
-                                            onClick={() => handleChange({ target: { name: 'eventType', value } } as any)}
+                                            onClick={() => changeField('eventType', value)}
                                         >
-                                            {label}
+                                            {formData.eventType === value && <Check className={styles.typeSelectedMark} size={12} strokeWidth={2} aria-hidden="true" />}
+                                            <span>{label}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -847,9 +867,7 @@ function CreateEventContent() {
                                 <div className={styles.urlBar}>invitonline.ro/invitatie/…</div>
                             </div>
                             <div className={`${styles.pcContent} ${isCentered ? styles.centeredScaler : ''}`}>
-                                <div className={styles.pcInner}>
-                                    <div className={styles.scalerContent}>{preview}</div>
-                                </div>
+                                <PreviewViewport title="Invitația ta pe ecran mare">{preview}</PreviewViewport>
                             </div>
                         </div>
                     )}

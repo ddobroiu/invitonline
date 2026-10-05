@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import styles from './NewspaperTemplate.module.css'
 import RSVPModal from '@/components/RSVPModal'
-import { Heart, Baby, PartyPopper, Cake } from 'lucide-react'
+import { Heart, Baby, PartyPopper, Cake, Scissors } from 'lucide-react'
 import {
     str, shortLocation, getMapUrl, getWazeUrl, getMainNames, getSchedule, getParents, getGodparents,
     parseDate, validCustomFields, CustomField,
@@ -257,7 +257,7 @@ export default function NewspaperTemplate(props: NewspaperTemplateProps) {
 
                 <div className={styles.rsvpWrapper}>
                     <div className={styles.cutLine}>
-                        <span>✂</span>
+                        <span aria-hidden="true"><Scissors size={20} strokeWidth={1.5} /></span>
                     </div>
                     <div className={styles.rsvpCoupon}>
                         <div className={styles.rsvpHeader}>TALON DE CONFIRMARE</div>

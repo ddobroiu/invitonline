@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma'
 import { escapeHtml, getSiteUrl } from '@/lib/utils'
 import { alerta } from '@/lib/alerts'
 import { sendTikTokPurchase } from '@/lib/tiktok-events'
+import { Prisma } from '@/generated/client'
 
 /**
  * Marks the event as paid, creates the order (with invoice when billing data exists)
@@ -15,40 +16,37 @@ export async function fulfillCheckout(session: Stripe.Checkout.Session) {
     const eventId = session.metadata?.eventId
     if (!eventId || session.payment_status !== 'paid') return { fulfilled: false }
 
-    const existingOrder = await prisma.order.findUnique({ where: { stripeSessionId: session.id } })
-    if (existingOrder) {
-        await prisma.event.update({ where: { id: eventId }, data: { isPaid: true } })
-        return { fulfilled: true, alreadyProcessed: true }
-    }
-
-    const updatedEvent = await prisma.event.update({
-        where: { id: eventId },
-        data: { isPaid: true },
-        include: { user: true }
-    })
-
-    const user = updatedEvent.user
     const amount = (session.amount_total || 0) / 100
     const currency = session.currency?.toUpperCase() || 'RON'
+    const event = await prisma.event.findUnique({ where: { id: eventId }, include: { user: true } })
+    if (!event || (session.metadata?.userId && session.metadata.userId !== event.userId)) return { fulfilled: false }
+    const acceptedAt = session.metadata?.terms_accepted_at ? new Date(session.metadata.terms_accepted_at) : null
+    if (acceptedAt && Number.isNaN(acceptedAt.getTime())) throw new Error('Invalid payment consent timestamp')
 
-    // Create the order first so a concurrent call hits the unique constraint instead of duplicating
-    let order
+    // Publication and payment history must commit together.
+    let result
     try {
-        order = await prisma.order.create({
-            data: {
-                userId: user.id,
-                eventId,
-                amount,
-                currency,
-                stripeSessionId: session.id,
-                status: 'completed',
-                termsAcceptedAt: session.metadata?.terms_accepted_at ? new Date(session.metadata.terms_accepted_at) : null,
-                termsVersion: session.metadata?.terms_version || null,
-            }
+        result = await prisma.$transaction(async tx => {
+            const existing = await tx.order.findUnique({ where: { stripeSessionId: session.id } })
+            if (existing && (existing.eventId !== eventId || existing.userId !== event.userId || existing.status !== 'completed')) throw new Error('Payment order does not match invitation')
+            const order = existing ?? await tx.order.create({ data: {
+                userId: event.userId, eventId, amount, currency, stripeSessionId: session.id,
+                status: 'completed', termsAcceptedAt: acceptedAt, termsVersion: session.metadata?.terms_version || null,
+            } })
+            const current = await tx.event.findUniqueOrThrow({ where: { id: eventId }, select: { publishedAt: true } })
+            const updatedEvent = await tx.event.update({ where: { id: eventId }, data: { isPaid: true, publishedAt: current.publishedAt ?? new Date() }, include: { user: true } })
+            return { order, updatedEvent, alreadyProcessed: Boolean(existing) }
         })
-    } catch {
-        return { fulfilled: true, alreadyProcessed: true }
+    } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+            const existing = await prisma.order.findUnique({ where: { stripeSessionId: session.id } })
+            if (existing?.eventId === eventId && existing.userId === event.userId && existing.status === 'completed') return { fulfilled: true, alreadyProcessed: true }
+        }
+        throw error
     }
+    if (result.alreadyProcessed) return { fulfilled: true, alreadyProcessed: true }
+    const { order, updatedEvent } = result
+    const user = updatedEvent.user
 
     // TikTok CompletePayment (server), o singura data: doar apelul care a creat comanda ajunge aici.
     // Doar cu acordul pentru marketing salvat pe sesiune; event_id = id-ul sesiunii Stripe, ca pixelul din /checkout/success.
@@ -85,9 +83,10 @@ export async function fulfillCheckout(session: Stripe.Checkout.Session) {
                 where: { id: order.id },
                 data: { invoiceLink: invLink, invoiceSeries: invSeries, invoiceNumber: invNumber },
             })
-        } catch (err: any) {
-            console.error('Oblio Generation Failed:', err?.message)
-            void alerta('error', 'oblio', `InvitOnline: factura Oblio nu s-a emis (sesiune ${session.id}): ${err?.message ?? err}`)
+        } catch (err) {
+            const message = err instanceof Error ? err.message : String(err)
+            console.error('Oblio Generation Failed:', message)
+            void alerta('error', 'oblio', `InvitOnline: factura Oblio nu s-a emis (sesiune ${session.id}): ${message}`)
         }
     }
 
@@ -99,7 +98,7 @@ export async function fulfillCheckout(session: Stripe.Checkout.Session) {
 
         await sendEmail({
             to: user.email,
-            subject: 'Plata reușită! Invitația ta este acum activă 🎉',
+            subject: 'Plata reușită! Invitația ta este acum activă',
             html: `
                 <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
                     <h1 style="color: #2e7d32;">Plată confirmată!</h1>
@@ -120,7 +119,7 @@ export async function fulfillCheckout(session: Stripe.Checkout.Session) {
 
         await sendEmail({
             to: process.env.ADMIN_EMAIL || 'contact@invitonline.ro',
-            subject: `💸 Vânzare nouă: ${user.email}`,
+            subject: `Vânzare nouă: ${user.email}`,
             html: `
                 <div style="font-family: sans-serif;">
                     <h2>Vânzare nouă!</h2>

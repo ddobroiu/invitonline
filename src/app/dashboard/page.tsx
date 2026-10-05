@@ -4,26 +4,23 @@ import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'rea
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import styles from './page.module.css'
-import TemplateRenderer, { CENTERED_TEMPLATES, eventToTemplateProps } from '@/components/TemplateRenderer'
+import TemplateRenderer, { CENTERED_TEMPLATES, eventToTemplateProps, type InvitationRecord } from '@/components/TemplateRenderer'
+import { validateGuest } from '@/lib/validation'
 import BillingPanel from '@/components/dashboard/BillingPanel'
+import TypeIcon from '@/components/EventTypeIcon'
 import CheckoutConsent from '@/components/legal/CheckoutConsent'
 import { PRICE_NOTE } from '@/config/legal'
 import {
-    Search, Plus, Trash2, Heart, Baby, PartyPopper, Cake, Calendar, MapPin, Eye, Users, Lock, Link as LinkIcon,
+    Search, Plus, Trash2, Mail, Calendar, MapPin, Eye, Users, Lock, Link as LinkIcon,
     Pencil, Download, ExternalLink, Loader2, CheckCircle2, XCircle, Clock, LayoutGrid, Receipt, MessageCircle
 } from 'lucide-react'
 
 type Tab = 'overview' | 'guests' | 'preview' | 'billing'
+interface Guest { id: string; eventId: string; name: string; contact: string; persons: number; status: string; message: string | null; createdAt: string }
+interface EventSummary extends InvitationRecord { isPaid: boolean; guests: Pick<Guest, 'status' | 'persons'>[]; _count: { guests: number } }
 
-const TYPE_LABELS: Record<string, string> = { nunta: 'Nuntă', botez: 'Botez', aniversare: 'Aniversare', petrecere: 'Petrecere' }
+const TYPE_LABELS: Record<string, string> = { nunta: 'Nuntă', botez: 'Botez', aniversare: 'Aniversare', petrecere: 'Petrecere', corporate: 'Corporate' }
 const STATUS_LABELS: Record<string, string> = { confirmed: 'Confirmat', declined: 'Refuzat', pending: 'În așteptare' }
-
-function TypeIcon({ type }: { type: string }) {
-    if (type === 'botez') return <Baby size={22} />
-    if (type === 'aniversare') return <Cake size={22} />
-    if (type === 'petrecere') return <PartyPopper size={22} />
-    return <Heart size={22} />
-}
 
 function guestStats(guests: { status: string, persons: number }[]) {
     const confirmed = guests.filter(g => g.status === 'confirmed')
@@ -41,10 +38,12 @@ function DashboardContent() {
     const searchParams = useSearchParams()
     const { data: session, status } = useSession()
 
-    const [events, setEvents] = useState<any[]>([])
+    const [events, setEvents] = useState<EventSummary[]>([])
     const [selectedId, setSelectedId] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(true)
-    const [guests, setGuests] = useState<any[]>([])
+    const [guests, setGuests] = useState<Guest[]>([])
+    const [loadError, setLoadError] = useState('')
+    const [addingGuest, setAddingGuest] = useState(false)
     const [guestsLoading, setGuestsLoading] = useState(false)
     const [newGuest, setNewGuest] = useState({ name: '', contact: '', persons: 1 })
     const [searchQuery, setSearchQuery] = useState('')
@@ -70,12 +69,14 @@ function DashboardContent() {
             const res = await fetch('/api/events')
             if (res.ok) {
                 const data = await res.json()
-                const list = data.events || []
+                const list: EventSummary[] = data.events || []
+                setLoadError('')
                 setEvents(list)
-                setSelectedId(prev => (prev && list.some((e: any) => e.id === prev)) ? prev : list[0]?.id ?? null)
-            }
+                setSelectedId(prev => (prev && list.some(e => e.id === prev)) ? prev : list[0]?.id ?? null)
+            } else setLoadError('Nu am putut încărca invitațiile. Încearcă din nou.')
         } catch (error) {
             console.error('Fetch error:', error)
+            setLoadError('Nu am putut încărca invitațiile. Verifică conexiunea.')
         } finally {
             setIsLoading(false)
         }
@@ -90,25 +91,36 @@ function DashboardContent() {
         if (searchParams.get('canceled')) showToast('Plata a fost anulată. Invitația a rămas salvată ca draft.')
     }, [searchParams, showToast])
 
-    const fetchGuests = useCallback(async (eventId: string) => {
-        setGuestsLoading(true)
+    const fetchGuests = useCallback(async (eventId: string, quiet = false, signal?: AbortSignal) => {
+        if (!quiet) setGuestsLoading(true)
         try {
-            const res = await fetch(`/api/guests?eventId=${eventId}`)
+            const res = await fetch(`/api/guests?eventId=${encodeURIComponent(eventId)}`, { signal })
             if (res.ok) {
                 const data = await res.json()
-                setGuests(data.guests || [])
-            }
+                if (!signal?.aborted) setGuests(data.guests || [])
+            } else showToast('Nu am putut încărca lista de invitați.')
         } catch (error) {
-            console.error('Fetch guests error:', error)
+            if (!signal?.aborted) { console.error('Fetch guests error:', error); showToast('Nu am putut încărca lista de invitați. Verifică conexiunea.') }
         } finally {
-            setGuestsLoading(false)
+            if (!signal?.aborted) setGuestsLoading(false)
         }
-    }, [])
+    }, [showToast])
 
     useEffect(() => {
-        if (selectedId) fetchGuests(selectedId)
-        else setGuests([])
+        const controller = new AbortController()
+        setGuests([])
+        if (selectedId) fetchGuests(selectedId, false, controller.signal)
+        return () => controller.abort()
     }, [selectedId, fetchGuests])
+
+    useEffect(() => {
+        if (status !== 'authenticated') return
+        const controller = new AbortController()
+        const refresh = () => { if (!document.hidden) { void fetchEvents(); if (selectedId) void fetchGuests(selectedId, true, controller.signal) } }
+        const timer = setInterval(refresh, 15000)
+        document.addEventListener('visibilitychange', refresh)
+        return () => { clearInterval(timer); document.removeEventListener('visibilitychange', refresh); controller.abort() }
+    }, [status, selectedId, fetchEvents, fetchGuests])
 
     const inviteUrl = (id: string) => `${typeof window !== 'undefined' ? window.location.origin : ''}/invitatie/${id}`
 
@@ -121,7 +133,7 @@ function DashboardContent() {
         }
     }
 
-    const shareWhatsApp = (ev: any) => {
+    const shareWhatsApp = (ev: EventSummary) => {
         const text = `Ești invitat: ${ev.title}! Deschide invitația și confirmă prezența aici: ${inviteUrl(ev.id)}`
         window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank', 'noopener')
     }
@@ -170,7 +182,10 @@ function DashboardContent() {
 
     const handleAddGuest = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (!newGuest.name.trim() || !selectedId) return
+        if (addingGuest || !selectedId) return
+        const errors = validateGuest(newGuest, false)
+        if (Object.keys(errors).length) { showToast(Object.values(errors)[0]); return }
+        setAddingGuest(true)
         try {
             const res = await fetch('/api/guests', {
                 method: 'POST',
@@ -187,18 +202,19 @@ function DashboardContent() {
             }
         } catch {
             showToast('Eroare de rețea.')
-        }
+        } finally { setAddingGuest(false) }
     }
 
     const handleGuestStatus = async (id: string, newStatus: string) => {
-        setGuests(prev => prev.map(g => g.id === id ? { ...g, status: newStatus } : g))
         const res = await fetch('/api/guests', {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id, status: newStatus })
         }).catch(() => null)
-        if (!res?.ok && selectedId) fetchGuests(selectedId)
-        else fetchEvents()
+        if (!res?.ok) { showToast('Nu am putut actualiza răspunsul invitatului.'); return }
+        const data = await res.json()
+        setGuests(prev => prev.map(guest => guest.id === id ? data.guest : guest))
+        fetchEvents()
     }
 
     const handleDeleteGuest = async (id: string) => {
@@ -236,12 +252,13 @@ function DashboardContent() {
         return <div className={styles.centerScreen}><Loader2 className="animate-spin" size={32} color="var(--accent)" /></div>
     }
     if (status === 'unauthenticated') return null
+    if (loadError && events.length === 0) return <div className={styles.centerScreen}><div className={styles.emptyState}><h1>Nu am putut încărca invitațiile</h1><p role="alert">{loadError}</p><button className={styles.primaryBtn} onClick={() => { setIsLoading(true); void fetchEvents() }}>Încearcă din nou</button></div></div>
 
     if (events.length === 0) {
         return (
             <div className={styles.centerScreen}>
                 <div className={styles.emptyState}>
-                    <div className={styles.emptyIcon}>💌</div>
+                    <div className={styles.emptyIcon}><Mail size={48} strokeWidth={1.5} aria-hidden="true" /></div>
                     <h1>Bun venit{session?.user?.name ? `, ${session.user.name}` : ''}!</h1>
                     <p>Încă nu ai creat nicio invitație. Alege un model și personalizează-l în câteva minute.</p>
                     <button className={styles.primaryBtn} onClick={() => router.push('/create')}>
@@ -325,7 +342,7 @@ function DashboardContent() {
                     <select className={styles.input} value={newGuest.persons} onChange={e => setNewGuest({ ...newGuest, persons: Number(e.target.value) })} aria-label="Număr persoane">
                         {[1, 2, 3, 4, 5, 6, 7, 8].map(n => <option key={n} value={n}>{n} pers.</option>)}
                     </select>
-                    <button type="submit" className={styles.primaryBtn}><Plus size={16} /> Adaugă</button>
+                    <button type="submit" className={styles.primaryBtn} disabled={addingGuest}><Plus size={16} /> {addingGuest ? 'Se adaugă…' : 'Adaugă'}</button>
                 </form>
 
                 <div className={styles.toolbar}>

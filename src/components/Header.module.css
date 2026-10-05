@@ -1,0 +1,20 @@
+.header { position: fixed; inset: 0 0 auto; z-index: 1000; background: #f8f7f3f2; backdrop-filter: blur(18px); border-bottom: 1px solid #dfe4d8; color: #243c33; }
+.inner { max-width: 1380px; height: 80px; padding: 0 32px; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-heading), Georgia, serif; font-size: 27px; line-height: 1.1; font-weight: 600; letter-spacing: -1px; }
+.logoLight { font-weight: 400; color: #7a8d72; }
+.logo small { display: block; font: 7px/1.8 var(--font-body), sans-serif; letter-spacing: 1.6px; color: #839079; margin-top: 5px; }
+.mark { width: 38px; height: 42px; border: 1px solid #c5d1bc; border-radius: 18px 18px 4px 4px; display: grid; place-items: center; }
+.navigation, .actions { display: flex; align-items: center; gap: 26px; font-size: 12px; }
+.navigation a { padding: 13px 0; color: #73806a; }
+.navigation a[aria-current], .navigation a:hover { color: #243c33; }
+.navigation a[aria-current] { box-shadow: 0 1px #7b9070; }
+.actions { gap: 22px; }
+.cta { display: inline-flex; align-items: center; justify-content: center; gap: 12px; color: #fff; background: #243c33; border-radius: 28px; padding: 13px 20px; font-size: 12px; }
+.toggle { display: none; border: 1px solid #d8dfd1; background: transparent; color: #243c33; border-radius: 50%; width: 44px; height: 44px; place-items: center; cursor: pointer; }
+.mobile { background: #f8f7f3; display: flex; flex-direction: column; gap: 16px; padding: 25px; max-height: calc(100dvh - 80px); overflow-y: auto; border-top: 1px solid #dfe4d8; }
+.mobile a { padding: 12px; }
+.mobile button { border: 0; background: transparent; color: #6d7865; padding: 12px; cursor: pointer; }
+@media(min-width: 961px) { .mobile { display: none; } }
+@media(max-width: 960px) { .navigation, .actions { display: none; } .toggle { display: grid; } .inner { padding-inline: 20px; } }
+
+.signOut { display: grid; place-items: center; border: 1px solid #d8dfd1; background: transparent; color: #243c33; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; }

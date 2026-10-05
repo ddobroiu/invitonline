@@ -25,21 +25,21 @@ export default async function OpengraphImage() {
                     flexDirection: 'column',
                     justifyContent: 'center',
                     padding: '80px',
-                    background: 'radial-gradient(circle at 80% 20%, #3a2f12 0%, #0a0a0a 55%)',
-                    color: '#fff',
+                    background: '#f8f7f3',
+                    color: '#243c33',
                     fontFamily: 'Inter',
                 }}
             >
-                <div style={{ display: 'flex', fontFamily: 'Playfair', fontSize: 44, letterSpacing: 4, color: '#d4af37' }}>
+                <div style={{ display: 'flex', fontFamily: 'Playfair', fontSize: 44, letterSpacing: 4, color: '#48644f' }}>
                     INVITONLINE
                 </div>
                 <div style={{ display: 'flex', fontFamily: 'Playfair', fontSize: 76, lineHeight: 1.1, marginTop: 28, maxWidth: 980 }}>
                     Invitații digitale pentru nuntă și botez
                 </div>
-                <div style={{ display: 'flex', fontSize: 32, color: 'rgba(255,255,255,0.75)', marginTop: 32 }}>
+                <div style={{ display: 'flex', fontSize: 32, color: '#637364', marginTop: 32 }}>
                     Modele interactive · Confirmări RSVP online · Hărți integrate
                 </div>
-                <div style={{ display: 'flex', fontSize: 28, color: '#d4af37', marginTop: 48 }}>invitonline.ro</div>
+                <div style={{ display: 'flex', fontSize: 28, color: '#48644f', marginTop: 48 }}>invitonline.ro</div>
             </div>
         ),
         {

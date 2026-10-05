@@ -15,6 +15,7 @@ const NOINDEX_PATHS = [
 ];
 
 const nextConfig: NextConfig = {
+  distDir: process.env.INVITONLINE_E2E === '1' ? '.next-e2e' : '.next',
   // serverul autonom pentru imaginea Docker (vezi Dockerfile)
   output: "standalone",
   async redirects() {

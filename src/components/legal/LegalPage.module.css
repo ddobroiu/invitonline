@@ -8,19 +8,19 @@
 .title {
     font-family: var(--font-heading);
     font-size: clamp(1.9rem, 5vw, 2.8rem);
-    color: #fff;
+    color: var(--site-ink);
     margin-bottom: 0.5rem;
     line-height: 1.2;
 }
 
 .meta {
-    color: #888;
+    color: var(--site-muted);
     font-size: 0.9rem;
     margin-bottom: 2rem;
 }
 
 .content {
-    color: #ccc;
+    color: var(--site-ink);
     font-size: 1rem;
     line-height: 1.75;
     overflow-wrap: anywhere;
@@ -28,13 +28,13 @@
 
 .content h2 {
     font-family: var(--font-heading);
-    color: #fff;
+    color: var(--site-ink);
     font-size: 1.4rem;
     margin: 2.2rem 0 0.8rem;
 }
 
 .content h3 {
-    color: #eee;
+    color: var(--site-ink);
     font-size: 1.1rem;
     margin: 1.4rem 0 0.5rem;
 }
@@ -58,7 +58,7 @@
 }
 
 .content strong {
-    color: #eee;
+    color: var(--site-ink);
 }
 
 .tableWrap {
@@ -74,21 +74,25 @@
 
 .content th,
 .content td {
-    border: 1px solid #2a2a2a;
+    border: 1px solid var(--site-border);
     padding: 8px 10px;
     text-align: left;
     vertical-align: top;
 }
 
 .content th {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.04);
+    color: var(--site-ink);
+    background: rgba(36, 60, 51, 0.04);
 }
 
 .box {
-    border: 1px solid rgba(212, 175, 55, 0.35);
-    background: rgba(212, 175, 55, 0.06);
+    border: 1px solid rgba(72, 100, 79, 0.35);
+    background: rgba(72, 100, 79, 0.06);
     border-radius: 12px;
     padding: 1rem 1.2rem;
     margin: 0 0 1.5rem;
 }
+
+.container { padding-top: 56px; }
+.content th { background: var(--site-soft); }
+.content th, .content td { border-color: var(--site-border); }

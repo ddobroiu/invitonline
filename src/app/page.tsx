@@ -1,20 +1,20 @@
 import Link from 'next/link'
+import Image from 'next/image'
+import InvitationDiscover from '@/components/InvitationDiscover'
+import InvitationFlowDemo from '@/components/InvitationFlowDemo'
 import {
   Crown,
   CheckCircle,
   MapPin,
-  Palette,
   Link2,
-  Send,
   Check,
   ArrowRight,
   Music,
   Users,
   Infinity as InfinityIcon,
-  Sparkles,
 } from 'lucide-react'
 import styles from './page.module.css'
-import ProcessAnimation from '@/components/home/ProcessAnimation'
+import { TEMPLATES, TEMPLATE_THEMES, getTemplateTheme, getModelPreviewSrc } from '@/config/templates'
 import type { Metadata } from 'next'
 import { SITE_URL } from '@/config/legal'
 import { INVITATION_PRICE } from '@/lib/stripe'
@@ -25,7 +25,7 @@ const PRICE_RON = INVITATION_PRICE / 100
 
 export const metadata: Metadata = {
   title: { absolute: 'Invitații digitale pentru nuntă și botez | InvitOnline' },
-  description: 'Creează invitații digitale interactive pentru nuntă, botez sau aniversare: 15 modele animate, confirmări RSVP online, hărți Google Maps și Waze. 99 lei per invitație.',
+  description: 'Creează invitații digitale interactive pentru nuntă, botez sau aniversare: 23 modele animate, confirmări RSVP online, hărți Google Maps și Waze. 99 lei per invitație.',
   alternates: { canonical: '/' },
   openGraph: {
     ...OG_BASE,
@@ -54,32 +54,7 @@ const features = [
   },
 ]
 
-const steps = [
-  {
-    icon: Palette,
-    title: 'Alegi modelul',
-    text: 'Selectezi unul dintre cele 15 template-uri și completezi detaliile evenimentului: nume, dată, locație, program.',
-  },
-  {
-    icon: Link2,
-    title: 'Primești link-ul',
-    text: 'După finalizare, invitația ta primește un link unic, gata de trimis, care arată perfect pe orice telefon.',
-  },
-  {
-    icon: Send,
-    title: 'Trimiți și urmărești',
-    text: 'O distribui pe WhatsApp, Facebook sau e-mail și urmărești confirmările în timp real din contul tău.',
-  },
-]
-
-const showcase = [
-  { id: 'classic-gold', name: 'Classic Gold', tag: 'Elegant', variant: 'tplGold' },
-  { id: 'envelope', name: 'Plic 3D de Lux', tag: 'Interactiv', variant: 'tplEnvelope' },
-  { id: 'netflix', name: 'Cinematic Netflix', tag: 'Video', variant: 'tplNetflix' },
-  { id: 'boarding', name: 'Boarding Pass', tag: 'Călătorie', variant: 'tplBoarding' },
-  { id: 'vinyl', name: 'Vinyl Record', tag: 'Muzică', variant: 'tplVinyl' },
-  { id: 'scratch', name: 'Loz Norocos', tag: 'Surpriză', variant: 'tplScratch' },
-] as const
+const showcase = TEMPLATES.slice(0, 6)
 
 const included = [
   { icon: Link2, text: 'Link unic pentru invitația ta' },
@@ -154,29 +129,70 @@ export default function Home() {
         <div className={styles.orb2}></div>
       </div>
 
-      {/* HERO */}
       <section className={styles.hero}>
-        <div className={`${styles.eyebrow} animate-fade-in`}>
-          <Sparkles size={14} /> Invitații digitale premium
+        <div className={styles.heroCopy}>
+          <div className={styles.eyebrow}>Pentru momentele care contează</div>
+          <h1 className={styles.heroTitle}>Povești frumoase.<br /> <em>Invitații pe măsură.</em></h1>
+          <p className={styles.description}>Bilet de avion, pașaport, vinil sau o surpriză de răzuit. Alegi modelul, trimiți linkul, iar invitații confirmă direct. Tu vezi cine vine, în contul tău.</p>
+          <div className={styles.buttonGroup}>
+            <Link href="#modele" className={styles.primaryButton}>Descoperă colecția <ArrowRight size={18} /></Link>
+            <Link href="/create" className={styles.secondaryBtn}>Creează invitația ta</Link>
+          </div>
+          <div className={styles.heroNote}><Check size={15} /> Fără limită de invitați <span>·</span> {PRICE_RON} lei / eveniment</div>
+          <Link href="#cum-functioneaza" className={styles.flowJump}>Vezi cum funcționează, în 3 pași <ArrowRight size={14} /></Link>
         </div>
-        <h1 className={`hero-title ${styles.heroTitle} animate-fade-in`}>Viitorul Evenimentelor Tale</h1>
-        <p className={`${styles.description} animate-fade-in delay-1`}>
-          Lasă hârtia în urmă. Trimite invitații digitale interactive, elegante și memorabile
-          pentru nunți, botezuri și momente unice.
-        </p>
-        <div className={`${styles.buttonGroup} animate-fade-in delay-2`}>
-          <Link href="/create" className={`btn-primary ${styles.btnLink}`}>
-            Începe Acum
-          </Link>
-          <Link href="/demo" className={styles.secondaryBtn}>
-            Vezi Demo
-          </Link>
-        </div>
+        <Link href="/templates/boarding" className={styles.heroArt} aria-label="Descoperă invitația Bilet de avion">
+          <div className={styles.artCaption}>O invitație cu propria ei tematică</div>
+          <div className={styles.heroModelBack} aria-hidden="true"><Image src={getModelPreviewSrc('passport')} alt="" width={390} height={650} sizes="240px" /></div>
+          <div className={styles.heroModelCard}>
+            <Image src={getModelPreviewSrc('boarding')} alt="Invitație în formă de bilet de avion, cu numele mirilor și programul zilei" width={390} height={650} sizes="(max-width: 760px) 260px, 285px" priority />
+          </div>
+          <div className={styles.artBadge}><CheckCircle size={19} /><span>Bilet către povestea voastră<small>Apasă și explorează invitația</small></span><ArrowRight size={17} /></div>
+        </Link>
+      </section>
 
-        <div className={`${styles.processWrap} animate-fade-in delay-3`}>
-          <ProcessAnimation />
+      {/* TEMPLATE SHOWCASE */}
+      <section className={styles.section} id="modele">
+        <div className={styles.sectionHeader}>
+          <span className={styles.kicker}>Începem cu cele mai surprinzătoare</span>
+          <h2 className={styles.sectionTitle}>Modele care impresionează</h2>
+          <p className={styles.sectionSubtitle}>
+            Deschide un bilet de avion, răzuiește un loz sau pornește un vinil. Apasă pe un model și încearcă-l.
+          </p>
+        </div>
+        <div className={styles.templateGrid}>
+          {showcase.map((tpl) => (
+            <Link
+              key={tpl.id}
+              href={`/templates/${tpl.id}`}
+              className={styles.templateTile}
+            >
+              <div className={styles.showcasePreview}>
+                <Image src={getModelPreviewSrc(tpl.id)} alt={`Previzualizare model ${tpl.name}`} width={390} height={650} sizes="(max-width: 760px) 45vw, (max-width: 1000px) 45vw, 380px" />
+                <span className={styles.previewHint}>Deschide modelul <ArrowRight size={14} /></span>
+              </div>
+              <div className={styles.tplInfo}>
+                <div>
+                  <span className={styles.tplTag}>{TEMPLATE_THEMES.find(theme => theme.id === getTemplateTheme(tpl.id))?.label}</span>
+                  <h3 className={styles.tplName}>{tpl.name}</h3>
+                  <p className={styles.showcaseDescription}>{tpl.desc}</p>
+                </div>
+                <span className={styles.tplArrow}>
+                  <ArrowRight size={18} />
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+        <div className={styles.centerRow}>
+          <Link href="/demo" className={styles.secondaryBtn}>
+            Vezi toate cele {TEMPLATES.length} modele <ArrowRight size={18} />
+          </Link>
         </div>
       </section>
+
+      {/* HOW IT WORKS */}
+      <InvitationFlowDemo />
 
       {/* FEATURES */}
       <section className={styles.section}>
@@ -190,65 +206,6 @@ export default function Home() {
               <p className={styles.featureText}>{text}</p>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* HOW IT WORKS */}
-      <section className={styles.section} id="cum-functioneaza">
-        <div className={styles.sectionHeader}>
-          <span className={styles.kicker}>Simplu și rapid</span>
-          <h2 className={styles.sectionTitle}>Cum funcționează</h2>
-          <p className={styles.sectionSubtitle}>De la idee la invitația trimisă în mai puțin de 10 minute.</p>
-        </div>
-        <ol className={styles.steps}>
-          {steps.map(({ icon: Icon, title, text }, idx) => (
-            <li key={title} className={styles.step}>
-              <div className={styles.stepNumber}>{idx + 1}</div>
-              <div className={styles.stepIcon}>
-                <Icon size={22} />
-              </div>
-              <h3 className={styles.stepTitle}>{title}</h3>
-              <p className={styles.stepText}>{text}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      {/* TEMPLATE SHOWCASE */}
-      <section className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <span className={styles.kicker}>Colecția 2026</span>
-          <h2 className={styles.sectionTitle}>Modele care impresionează</h2>
-          <p className={styles.sectionSubtitle}>
-            15 template-uri interactive, de la clasic și elegant până la cinematic și jucăuș.
-          </p>
-        </div>
-        <div className={styles.templateGrid}>
-          {showcase.map((tpl) => (
-            <Link
-              key={tpl.id}
-              href={`/create?template=${tpl.id}`}
-              className={styles.templateTile}
-            >
-              <div className={`${styles.tplPreview} ${styles[tpl.variant]}`}>
-                <span className={styles.tplMonogram}>M &amp; T</span>
-              </div>
-              <div className={styles.tplInfo}>
-                <div>
-                  <span className={styles.tplTag}>{tpl.tag}</span>
-                  <h3 className={styles.tplName}>{tpl.name}</h3>
-                </div>
-                <span className={styles.tplArrow}>
-                  <ArrowRight size={18} />
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-        <div className={styles.centerRow}>
-          <Link href="/demo" className={styles.secondaryBtn}>
-            Vezi toate cele 15 modele <ArrowRight size={18} />
-          </Link>
         </div>
       </section>
 
@@ -301,6 +258,7 @@ export default function Home() {
       </section>
 
       {/* FINAL CTA */}
+      <InvitationDiscover />
       <section className={styles.section}>
         <div className={styles.finalCta}>
           <h2 className={styles.finalTitle}>Gata să-ți impresionezi invitații?</h2>

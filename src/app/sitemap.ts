@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { LEGAL_LINKS, LEGAL_VERSION, SITE_URL } from '@/config/legal'
 import { articleDateISO, articlesContent } from './blog/[slug]/articles'
+import { INVITATION_LANDINGS } from '@/config/invitation-landings'
 
 // Only public, indexable pages. Excluded on purpose: /create (editor), /login, /dashboard,
 // /checkout/*, /api/*, /templates/* (standalone demos) and every /invitatie/* guest invitation.
@@ -25,6 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     return [
         { url: SITE_URL, changeFrequency: 'weekly', priority: 1 },
         { url: `${SITE_URL}/demo`, changeFrequency: 'monthly', priority: 0.9 },
+        ...INVITATION_LANDINGS.map(page => ({ url: `${SITE_URL}/${page.slug}`, changeFrequency: 'monthly' as const, priority: page.slug === 'invitatii-online' ? 0.9 : 0.8 })),
         {
             url: `${SITE_URL}/blog`,
             ...(latestArticle ? { lastModified: latestArticle } : {}),

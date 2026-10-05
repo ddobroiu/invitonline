@@ -3,40 +3,37 @@
 import type { ComponentType } from 'react'
 import dynamic from 'next/dynamic'
 import { TEMPLATES } from '@/config/templates'
+import { isRecord } from '@/lib/validation'
 
-// One chunk per template: an invitation page downloads only the template it uses (still server-rendered)
+// Shared design systems load only when a design from that collection is requested.
+const CollectionTemplate = dynamic(() => import('@/components/templates/CollectionTemplate'))
+const ConceptTemplate = dynamic(() => import('@/components/templates/ConceptTemplate'))
 const EnvelopeTemplate = dynamic(() => import('@/components/templates/EnvelopeTemplate'))
-const NetflixTemplate = dynamic(() => import('@/components/templates/NetflixTemplate'))
 const BoardingPassTemplate = dynamic(() => import('@/components/templates/BoardingPassTemplate'))
-const VinylTemplate = dynamic(() => import('@/components/templates/VinylTemplate'))
-const ScratchTemplate = dynamic(() => import('@/components/templates/ScratchTemplate'))
 const PassportTemplate = dynamic(() => import('@/components/templates/PassportTemplate'))
 const NewspaperTemplate = dynamic(() => import('@/components/templates/NewspaperTemplate'))
-const CinemaTemplate = dynamic(() => import('@/components/templates/CinemaTemplate'))
-const FestivalTemplate = dynamic(() => import('@/components/templates/FestivalTemplate'))
+const VinylTemplate = dynamic(() => import('@/components/templates/VinylTemplate'))
+const ScratchTemplate = dynamic(() => import('@/components/templates/ScratchTemplate'))
 const ChatTemplate = dynamic(() => import('@/components/templates/ChatTemplate'))
-const StoryTemplate = dynamic(() => import('@/components/templates/StoryTemplate'))
-const VipCardTemplate = dynamic(() => import('@/components/templates/VipCardTemplate'))
-const ClassicTemplate = dynamic(() => import('@/components/templates/ClassicTemplate'))
-const ClassicGoldTemplate = dynamic(() => import('@/components/templates/ClassicGoldTemplate'))
-const ClassicMinimalTemplate = dynamic(() => import('@/components/templates/ClassicMinimalTemplate'))
+import type { CollectionTheme } from '@/components/templates/CollectionTemplate'
+import type { Concept } from '@/components/templates/ConceptTemplate'
 
-export const TEMPLATE_COMPONENTS: Record<string, ComponentType<any>> = {
-    'classic': ClassicTemplate,
-    'classic-gold': ClassicGoldTemplate,
-    'classic-minimal': ClassicMinimalTemplate,
-    'envelope': EnvelopeTemplate,
-    'netflix': NetflixTemplate,
-    'boarding': BoardingPassTemplate,
-    'vinyl': VinylTemplate,
-    'scratch': ScratchTemplate,
-    'passport': PassportTemplate,
-    'news': NewspaperTemplate,
-    'cinema': CinemaTemplate,
-    'festival': FestivalTemplate,
-    'vip': VipCardTemplate,
-    'story': StoryTemplate,
-    'chat': ChatTemplate,
+const collection = (theme: CollectionTheme): ComponentType<Record<string, unknown>> => {
+    function Design(props: Record<string, unknown>) { return <CollectionTemplate {...props} designTheme={theme} /> }
+    return Design
+}
+const concept = (design: Concept): ComponentType<Record<string, unknown>> => {
+    function Design(props: Record<string, unknown>) { return <ConceptTemplate {...props} concept={design} /> }
+    return Design
+}
+export const TEMPLATE_COMPONENTS: Record<string, ComponentType<Record<string, unknown>>> = {
+    modern: collection('modern'), boho: collection('boho'), 'botez-delicat': collection('botez-delicat'),
+    kids: collection('kids'), gala: collection('gala'), corporate: collection('corporate'),
+    riviera: collection('riviera'), nocturne: collection('nocturne'), envelope: EnvelopeTemplate,
+    classic: concept('classic'), 'classic-gold': concept('classic-gold'), 'classic-minimal': concept('classic-minimal'),
+    netflix: concept('netflix'), boarding: BoardingPassTemplate, vinyl: VinylTemplate, scratch: ScratchTemplate,
+    passport: PassportTemplate, news: NewspaperTemplate, cinema: concept('cinema'), festival: concept('festival'),
+    vip: concept('vip'), story: concept('story'), chat: ChatTemplate,
 }
 
 // Templates that are a card centered on the page (vs. full-height scrolling layouts)
@@ -45,8 +42,19 @@ export const CENTERED_TEMPLATES = TEMPLATES.filter((t) => t.centered).map((t) =>
 /**
  * Converts an Event row from the API into the flat props the templates expect.
  */
-export function eventToTemplateProps(event: any) {
-    const data = (event?.data && typeof event.data === 'object') ? event.data : {}
+export interface InvitationRecord {
+    id: string
+    template: string
+    title: string
+    date: string
+    location: string
+    locationUrl?: string | null
+    message?: string | null
+    type: string
+    data?: unknown
+}
+export function eventToTemplateProps(event: InvitationRecord) {
+    const data = isRecord(event.data) ? event.data : {}
     return {
         ...data,
         id: event.id,
@@ -61,7 +69,7 @@ export function eventToTemplateProps(event: any) {
     }
 }
 
-export default function TemplateRenderer({ template, ...props }: { template: string } & Record<string, any>) {
-    const Component = TEMPLATE_COMPONENTS[template] || ClassicTemplate
+export default function TemplateRenderer({ template, ...props }: { template: string } & Record<string, unknown>) {
+    const Component = TEMPLATE_COMPONENTS[template] || TEMPLATE_COMPONENTS.modern
     return <Component {...props} />
 }

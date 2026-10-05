@@ -1,6 +1,6 @@
 'use client'
 
-// Botez Delicat — pastel sky, soft clouds, moon and stars (own SVG). Quicksand + Dancing Script (latin-ext).
+// Botez Delicat — pastel sky, soft clouds and moon (own SVG). Quicksand + Dancing Script (latin-ext).
 import { useId, useState } from 'react'
 import { Dancing_Script, Quicksand } from 'next/font/google'
 import RSVPModal from '@/components/RSVPModal'
@@ -16,14 +16,6 @@ function Cloud({ className }: { className?: string }) {
     return (
         <svg className={className} viewBox="0 0 200 80" aria-hidden="true" focusable="false">
             <path d="M30 70 C 8 70, 6 44, 28 42 C 26 22, 56 14, 68 30 C 78 8, 118 8, 124 34 C 140 22, 168 30, 164 50 C 188 50, 192 70, 170 70 Z" fill="#ffffff" opacity="0.92" />
-        </svg>
-    )
-}
-
-function Star({ x, y, r, d }: { x: string; y: string; r: number; d: number }) {
-    return (
-        <svg className={styles.star} style={{ left: x, top: y, width: r * 2, height: r * 2, animationDelay: `${d}s` }} viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-            <path d="M10 0 L12.4 7.6 L20 10 L12.4 12.4 L10 20 L7.6 12.4 L0 10 L7.6 7.6 Z" fill="#f6d77e" />
         </svg>
     )
 }
@@ -58,10 +50,6 @@ export default function BotezDelicatTemplate(props: TemplateProps) {
                 <Cloud className={`${styles.cloud} ${styles.cloud1}`} />
                 <Cloud className={`${styles.cloud} ${styles.cloud2}`} />
                 <Cloud className={`${styles.cloud} ${styles.cloud3}`} />
-                <Star x="12%" y="7%" r={7} d={0} />
-                <Star x="84%" y="12%" r={9} d={1.2} />
-                <Star x="72%" y="4%" r={5} d={0.6} />
-                <Star x="22%" y="22%" r={5} d={1.8} />
             </div>
             <div className={styles.page}>
                 <header className={styles.hero}>

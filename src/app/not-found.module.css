@@ -1,4 +1,7 @@
 .wrap {
+    --accent: var(--site-accent);
+    background: var(--site-bg);
+    color: var(--site-ink);
     position: relative;
     min-height: calc(100vh - 80px);
     display: flex;
@@ -26,7 +29,7 @@
     font-size: clamp(5rem, 20vw, 9rem);
     line-height: 1;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--accent), #f6e27a);
+    background: linear-gradient(135deg, var(--accent), #809173);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -35,12 +38,12 @@
 .title {
     font-family: var(--font-heading);
     font-size: clamp(1.6rem, 5vw, 2.4rem);
-    color: #fff;
+    color: var(--site-ink);
     margin: 0.75rem 0 0.75rem;
 }
 
 .text {
-    color: #999;
+    color: var(--site-muted);
     max-width: 460px;
     margin-bottom: 2rem;
 }
@@ -62,12 +65,12 @@
 
 .primary {
     background: var(--accent);
-    color: #000;
+    color: #fff;
 }
 
 .secondary {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
+    border: 1px solid var(--site-border);
+    color: var(--site-ink);
 }
 
 .primary:hover,

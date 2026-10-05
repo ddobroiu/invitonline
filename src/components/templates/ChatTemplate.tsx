@@ -65,7 +65,7 @@ export default function ChatTemplate(props: ChatTemplateProps) {
         age, specialInstructions, dressCode, audioUrl, photoUrl, customFields,
     } = props
 
-    const [shown, setShown] = useState(0)
+    const [shown, setShown] = useState(1)
     const [isTyping, setIsTyping] = useState(false)
     const [showRSVP, setShowRSVP] = useState(false)
     const { isPlaying, toggle: handleAudioPlay } = useAudioPlayer(audioUrl, false)
@@ -84,10 +84,10 @@ export default function ChatTemplate(props: ChatTemplateProps) {
     const announce = (() => {
         const when = dateText ? ` pe ${dateText}` : ''
         switch (eventType) {
-            case 'botez': return `Îl/o creștinăm pe ${str(props.childName) || names || 'micuțul nostru'}${when}! 👶✨`
-            case 'aniversare': return `Sărbătorim ${str(age) ? `${str(age)} ani` : 'o aniversare'}${when}! 🎂🎉`
-            case 'petrecere': return `Facem o petrecere${when}! 🎉🥳`
-            default: return `Ne căsătorim${when}! 💍🎉`
+            case 'botez': return `Îl/o creștinăm pe ${str(props.childName) || names || 'micuțul nostru'}${when}!`
+            case 'aniversare': return `Sărbătorim ${str(age) ? `${str(age)} ani` : 'o aniversare'}${when}!`
+            case 'petrecere': return `Facem o petrecere${when}!`
+            default: return `Ne căsătorim${when}!`
         }
     })()
 
@@ -99,21 +99,21 @@ export default function ChatTemplate(props: ChatTemplateProps) {
 
     // Conversation script — rebuilt on every render, so edits in the editor show up live.
     const script: ScriptMessage[] = ([
-        { key: 'hi', type: 'text', content: 'Salut! 👋', delay: 600 },
+        { key: 'hi', type: 'text', content: 'Salut!', delay: 600 },
         { key: 'msg', type: 'text', content: str(message) || 'Avem o veste mare!', delay: 700 },
         { key: 'announce', type: 'text', content: announce, delay: 1100 },
         photoUrl ? { key: 'photo', type: 'image', content: photoUrl, delay: 1000 } : null,
         str(location) ? { key: 'location', type: 'location', content: str(location), delay: 900 } : null,
         audioUrl ? { key: 'audio', type: 'audio', content: audioUrl, delay: 800 } : null,
-        godparentsText ? { key: 'godparents', type: 'text', content: `✨ Alături de nașii: ${godparentsText}`, delay: 800 } : null,
-        parents.length ? { key: 'parents', type: 'text', content: `👨‍👩‍👧 Alături de părinți: ${parents.join(' și ')}`, delay: 800 } : null,
+        godparentsText ? { key: 'godparents', type: 'text', content: `Alături de nașii: ${godparentsText}`, delay: 800 } : null,
+        parents.length ? { key: 'parents', type: 'text', content: `Alături de părinți: ${parents.join(' și ')}`, delay: 800 } : null,
         schedule.length ? {
             key: 'schedule',
             type: 'text',
-            content: `🕒 Program:\n${schedule.map((s) => `• ${s.label}${s.time ? ` – ${s.time}` : ''}${s.loc ? `, ${s.loc}` : ''}`).join('\n')}`,
+            content: `Program:\n${schedule.map((s) => `• ${s.label}${s.time ? ` – ${s.time}` : ''}${s.loc ? `, ${s.loc}` : ''}`).join('\n')}`,
             delay: 800,
         } : null,
-        extras.length ? { key: 'extras', type: 'text', content: `ℹ️ ${extras.join('\n')}`, delay: 1300 } : null,
+        extras.length ? { key: 'extras', type: 'text', content: extras.join('\n'), delay: 1300 } : null,
         { key: 'bye', type: 'text', content: 'Te așteptăm cu drag! Ce zici, poți ajunge?', delay: 1000 },
     ] as (ScriptMessage | null)[]).filter((m): m is ScriptMessage => m !== null)
 
@@ -182,7 +182,7 @@ export default function ChatTemplate(props: ChatTemplateProps) {
 
                 <div className={styles.messagesList} ref={listRef}>
                     <div className={styles.systemNote}>
-                        🔒 Mesajele sunt criptate integral. Doar invitații noștri le pot citi.
+                        Un mesaj special de la noi, pentru tine.
                     </div>
 
                     {visible.map((msg, i) => (
@@ -245,7 +245,7 @@ export default function ChatTemplate(props: ChatTemplateProps) {
                             className={styles.whatsappBtn}
                             onClick={() => setShowRSVP(true)}
                         >
-                            Da, confirm prezența! 🥂
+                            Da, confirm prezența!
                         </button>
                     </div>
                 )}

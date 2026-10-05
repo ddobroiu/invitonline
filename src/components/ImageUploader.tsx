@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { Upload, X, Loader2, Image as ImageIcon, Check } from 'lucide-react'
+import { MEDIA_TYPES, MEDIA_MAX_SIZE } from '@/config/media'
 
 interface ImageUploaderProps {
     currentUrl?: string
@@ -22,7 +23,7 @@ export default function ImageUploader({ currentUrl, onUploadComplete, onRemove, 
         setError('')
 
         // Validate file type
-        const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
+        const validImageTypes = MEDIA_TYPES.image
 
         if (!validImageTypes.includes(file.type)) {
             setError('Tip de fișier invalid. Te rog încarcă o imagine (JPG, PNG, WebP, GIF).')
@@ -30,7 +31,7 @@ export default function ImageUploader({ currentUrl, onUploadComplete, onRemove, 
         }
 
         // Validate file size (max 10MB)
-        const maxSize = 10 * 1024 * 1024
+        const maxSize = MEDIA_MAX_SIZE.image
         if (file.size > maxSize) {
             setError('Fișierul este prea mare. Mărimea maximă este 10MB.')
             return
@@ -77,7 +78,7 @@ export default function ImageUploader({ currentUrl, onUploadComplete, onRemove, 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <ImageIcon size={18} color="var(--accent)" />
-                    <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#fff' }}>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--site-ink)' }}>
                         Încarcă {label}
                     </span>
                 </div>
@@ -108,7 +109,7 @@ export default function ImageUploader({ currentUrl, onUploadComplete, onRemove, 
                     <input
                         ref={fileInputRef}
                         type="file"
-                        accept="image/*"
+                        accept={MEDIA_TYPES.image.join(',')}
                         onChange={(e) => { handleFileSelect(e); e.target.value = '' }}
                         style={{ display: 'none' }}
                     />
@@ -166,7 +167,7 @@ export default function ImageUploader({ currentUrl, onUploadComplete, onRemove, 
                 }}>
                     <Check size={18} color="#00ff00" />
                     <div style={{ flex: 1 }}>
-                        <p style={{ fontSize: '0.8rem', color: '#00ff00', margin: 0, marginBottom: '8px' }}>
+                        <p style={{ fontSize: '0.8rem', color: '#28603c', margin: 0, marginBottom: '8px' }}>
                             Imagine încărcată cu succes
                         </p>
                         <img

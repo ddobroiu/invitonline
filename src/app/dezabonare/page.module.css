@@ -16,12 +16,12 @@
 .title {
     font-family: var(--font-heading);
     font-size: clamp(1.6rem, 5vw, 2.2rem);
-    color: #fff;
+    color: var(--site-ink);
     margin: 0 0 0.75rem;
 }
 
 .text {
-    color: #999;
+    color: var(--site-muted);
     line-height: 1.6;
     margin: 0 0 1.5rem;
 }
@@ -51,10 +51,10 @@
 .back {
     display: inline-block;
     margin-top: 1.25rem;
-    color: #999;
+    color: var(--site-muted);
     font-size: 0.9rem;
 }
 
 .back:hover {
-    color: #fff;
+    color: var(--site-ink);
 }

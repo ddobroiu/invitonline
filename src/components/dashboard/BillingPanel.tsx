@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Loader2, Receipt, Download, CheckCircle, AlertCircle } from 'lucide-react'
 import styles from '@/app/dashboard/page.module.css'
+import { validateBilling } from '@/lib/validation'
 
 interface BillingInfo {
     billingType: 'individual' | 'company'
@@ -62,7 +63,7 @@ export default function BillingPanel({
             const res = await fetch('/api/user/billing')
             if (res.ok) {
                 const data = await res.json()
-                if (data && (data.companyName || data.cui)) {
+                if (data) {
                     const info: BillingInfo = {
                         billingType: data.cui ? 'company' : 'individual',
                         companyName: data.companyName || '',
@@ -136,6 +137,7 @@ export default function BillingPanel({
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault()
+        if (isSaving) return
         setIsSaving(true)
         setStatus(null)
         const isCompany = billingInfo.billingType === 'company'
@@ -144,20 +146,23 @@ export default function BillingPanel({
             cui: isCompany ? billingInfo.cui.trim() : '',
             regCom: isCompany ? billingInfo.regCom.trim() : '',
         }
+        const validationError = validateBilling(payload)
+        if (validationError) { setStatus({ type: 'error', text: validationError }); setIsSaving(false); return }
         try {
             const res = await fetch('/api/user/billing', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             })
+            const data = await res.json()
             if (res.ok) {
-                const saved = { ...payload }
+                const saved: BillingInfo = { billingType: payload.billingType, companyName: data.companyName || '', cui: data.cui || '', regCom: data.regCom || '', address: data.address || '', city: data.city || '', county: data.county || '' }
                 setBillingInfo(saved)
                 setSavedInfo(saved)
                 setStatus({ type: 'ok', text: 'Datele de facturare au fost salvate.' })
                 onSaveSuccess?.()
             } else {
-                setStatus({ type: 'error', text: 'Nu am putut salva datele. Încearcă din nou.' })
+                setStatus({ type: 'error', text: data.error || 'Nu am putut salva datele. Încearcă din nou.' })
             }
         } catch {
             setStatus({ type: 'error', text: 'Eroare de rețea. Verifică conexiunea și încearcă din nou.' })
@@ -183,7 +188,7 @@ export default function BillingPanel({
         <section className={`${styles.billingSection} ${hideHistory ? styles.billingSingle : ''}`}>
             <form className={styles.billingCard} onSubmit={handleSave}>
                 <h2 className={styles.billingTitle}>Detalii facturare</h2>
-                <p className={styles.billingHint}>Folosim aceste date pentru factura emisă la activarea invitației.</p>
+                <p className={styles.billingHint}>Datele sunt păstrate în cont. Pentru factura activării, confirmă datele cerute de Stripe la plată.</p>
 
                 <div className={styles.segmented} role="group" aria-label="Tip facturare">
                     <button

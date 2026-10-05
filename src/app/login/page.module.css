@@ -6,20 +6,20 @@
     align-items: center;
     position: relative;
     overflow: hidden;
-    background: #000;
+    background: var(--site-soft);
 }
 
 .glassCard {
     width: 100%;
     max-width: 450px;
     padding: 3rem;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(36, 60, 51, 0.03);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(36, 60, 51, 0.1);
     border-radius: 24px;
     z-index: 10;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 20px 50px rgba(36, 60, 51, 0.08);
     animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -28,7 +28,7 @@
     font-size: 2.5rem;
     text-align: center;
     margin-bottom: 0.5rem;
-    background: linear-gradient(to right, #fff, #999);
+    background: linear-gradient(to right, #243c33, #637364);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -36,7 +36,7 @@
 
 .subtitle {
     text-align: center;
-    color: #666;
+    color: var(--site-muted);
     margin-bottom: 2.5rem;
     font-size: 0.95rem;
 }
@@ -48,7 +48,7 @@
 .label {
     display: block;
     font-size: 0.8rem;
-    color: #888;
+    color: var(--site-muted);
     margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -57,10 +57,10 @@
 .input {
     width: 100%;
     padding: 1rem;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(36, 60, 51, 0.08);
+    border: 1px solid rgba(36, 60, 51, 0.1);
     border-radius: 12px;
-    color: #fff;
+    color: var(--site-ink);
     font-size: 1rem;
     transition: all 0.3s ease;
 }
@@ -68,8 +68,8 @@
 .input:focus {
     outline: none;
     border-color: var(--accent);
-    background: rgba(0, 0, 0, 0.5);
-    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+    background: rgba(36, 60, 51, 0.08);
+    box-shadow: 0 0 0 4px rgba(72, 100, 79, 0.1);
 }
 
 .submitBtn {
@@ -94,13 +94,13 @@
 
 .submitBtn:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 0 30px rgba(72, 100, 79, 0.3);
 }
 
 .footer {
     text-align: center;
     margin-top: 2rem;
-    color: #666;
+    color: var(--site-muted);
     font-size: 0.9rem;
 }
 
@@ -166,7 +166,7 @@
     }
 }
 .error {
-    color: #ff6b6b;
+    color: var(--site-danger);
     background: rgba(255, 68, 68, 0.08);
     border: 1px solid rgba(255, 68, 68, 0.25);
     border-radius: 10px;
@@ -179,7 +179,7 @@
 .hint {
     display: block;
     font-size: 0.75rem;
-    color: #666;
+    color: var(--site-muted);
     margin-top: 6px;
 }
 
@@ -204,3 +204,11 @@
 .forgot:hover {
     text-decoration: underline;
 }
+
+.loginContainer { background: var(--site-bg); }
+.glassCard { background: var(--site-surface); border-color: var(--site-border); box-shadow: 0 20px 60px #243c3310; }
+.input, .input:focus { background: #fcfcf8; color: var(--site-ink); border-color: var(--site-border); }
+.submitBtn { background: var(--site-ink); color: white; }
+.orb1, .orb2 { display: none; }
+.error { color: var(--site-danger); }
+.link { min-height: 44px; }

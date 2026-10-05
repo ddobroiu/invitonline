@@ -3,13 +3,13 @@
 import { useEffect, useRef, useState } from 'react'
 import styles from './EnvelopeTemplate.module.css'
 import RSVPModal from '@/components/RSVPModal'
-import { Heart, Calendar, MapPin, Users, Star, Navigation, Mail } from 'lucide-react'
-import { Great_Vibes } from 'next/font/google'
+import { Heart, Calendar, MapPin, Users, Clock, Navigation, Mail } from 'lucide-react'
+import localFont from 'next/font/local'
 import {
     str, getMapUrl, getWazeUrl, getMainNames, getSchedule, splitNames, validCustomFields, CustomField,
 } from './templateUtils'
 
-const script = Great_Vibes({ weight: '400', subsets: ['latin', 'latin-ext'], display: 'swap', variable: '--env-script' })
+const script = localFont({ src: '../../assets/fonts/GreatVibes.ttf', weight: '400', display: 'swap', variable: '--env-script' })
 
 interface Props {
     id?: string
@@ -186,7 +186,7 @@ export default function EnvelopeTemplate(props: Props) {
                             )}
                             {schedule.length > 0 && (
                                 <div className={styles.column}>
-                                    <div className={styles.columnTitle}><Star size={14} aria-hidden="true" /> Program</div>
+                                    <div className={styles.columnTitle}><Clock size={14} aria-hidden="true" /> Program</div>
                                     {schedule.map((s) => (
                                         <div key={s.key}>
                                             <strong>{s.label}{s.time ? ':' : ''}</strong> {s.time}

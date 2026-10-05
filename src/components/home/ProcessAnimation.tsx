@@ -2,7 +2,7 @@
 
 import { useState, useEffect, type CSSProperties } from 'react'
 import styles from './ProcessAnimation.module.css'
-import { Check, Lock, Palette, Info, CreditCard, Send, Crown, Rocket } from 'lucide-react'
+import { Check, Lock, Palette, Info, CreditCard, Send, Crown, Rocket, MousePointerClick } from 'lucide-react'
 
 export default function ProcessAnimation() {
     const [step, setStep] = useState(0)
@@ -138,7 +138,7 @@ export default function ProcessAnimation() {
                         </div>
                         <div className={styles.waChat}>
                             <div className={`${styles.msg} ${styles.sent}`}>
-                                Dragii noștri, vă așteptăm la nuntă! 🤵👰
+                                Dragii noștri, vă așteptăm la nuntă!
                             </div>
                             <div className={`${styles.msg} ${styles.sent}`}>
                                 <b style={{ color: '#0070f3' }}>invitonline.ro/nunta-ta</b>
@@ -169,7 +169,7 @@ export default function ProcessAnimation() {
                                 {/* Hands/Finger Interaction */}
                                 {step === 3 && (
                                     <>
-                                        <div className={styles.fingerTap}>👆</div>
+                                        <div className={styles.fingerTap}><MousePointerClick size={30} strokeWidth={1.5} aria-hidden="true" /></div>
                                         {/* Confetti Particles */}
                                         <div className={styles.confetti} style={{ '--tx': '-50px', '--ty': '-80px' } as CSSProperties}></div>
                                         <div className={styles.confetti} style={{ '--tx': '50px', '--ty': '-90px' } as CSSProperties}></div>

@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { getCurrentUserId } from '@/lib/auth'
 
-const TEMPLATES = ['classic', 'classic-gold', 'classic-minimal', 'envelope', 'netflix', 'boarding', 'vinyl', 'scratch', 'passport', 'news', 'cinema', 'festival', 'vip', 'story', 'chat']
+import { TEMPLATE_IDS as TEMPLATES, DEFAULT_TEMPLATE } from '@/config/templates'
+import { readJsonObject, validateEvent, eventTemplateData, ValidationError } from '@/lib/validation'
 
 export async function POST(req: Request) {
     try {
@@ -11,23 +12,23 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: 'Trebuie să fii autentificat.' }, { status: 401 })
         }
 
-        const body = await req.json()
-        // Columns and server-controlled fields are pulled out; everything else is template data
-        const {
-            id, type, eventType, template, title, date, location, locationUrl, message,
-            isPaid: _isPaid, _count, userId: _userId, guests: _guests, createdAt: _c, updatedAt: _u,
-            ...rest
-        } = body
+        const body = await readJsonObject(req)
+        const errors = validateEvent(body)
+        if (Object.keys(errors).length) return NextResponse.json({ message: Object.values(errors)[0], errors }, { status: 400 })
+        if (body.id !== undefined && (typeof body.id !== 'string' || !body.id)) throw new ValidationError('Identificatorul invitației nu este valid.')
+        const { type, eventType, title, date, location, locationUrl, message } = body
+        const id = typeof body.id === 'string' ? body.id : undefined
+        const template = typeof body.template === 'string' ? body.template : DEFAULT_TEMPLATE
 
         const eventData = {
             type: String(type || eventType || 'nunta'),
-            template: TEMPLATES.includes(template) ? template : 'classic',
+            template: TEMPLATES.includes(template) ? template : DEFAULT_TEMPLATE,
             title: String(title || '').trim().slice(0, 200),
             date: String(date || '').trim().slice(0, 100),
             location: String(location || '').trim().slice(0, 300),
             locationUrl: locationUrl ? String(locationUrl).slice(0, 1000) : null,
             message: message ? String(message).slice(0, 2000) : null,
-            data: { ...rest, eventType: String(type || eventType || 'nunta') },
+            data: eventTemplateData(body),
         }
 
         if (!eventData.title) {
@@ -47,6 +48,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ event }, { status: id ? 200 : 201 })
     } catch (error) {
+        if (error instanceof ValidationError) return NextResponse.json({ message: error.message }, { status: 400 })
         console.error('Save Event Error:', error)
         return NextResponse.json({ message: 'Eroare la salvarea invitației.' }, { status: 500 })
     }

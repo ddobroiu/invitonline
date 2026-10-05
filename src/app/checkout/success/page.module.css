@@ -3,13 +3,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #0a0a0a;
+    background: var(--site-soft);
     padding: 20px;
 }
 
 .card {
-    background: #111;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--site-soft);
+    border: 1px solid rgba(36, 60, 51, 0.1);
     padding: 40px;
     border-radius: 20px;
     text-align: center;
@@ -19,19 +19,25 @@
 }
 
 .icon {
-    font-size: 50px;
-    margin-bottom: 20px;
+    display: grid;
+    place-items: center;
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: var(--site-soft);
+    color: var(--site-accent);
+    margin: 0 auto 20px;
 }
 
 .title {
     font-family: var(--font-heading);
     font-size: 2rem;
-    color: #fff;
+    color: var(--site-ink);
     margin-bottom: 10px;
 }
 
 .text {
-    color: #888;
+    color: var(--site-muted);
     margin-bottom: 30px;
 }
 
@@ -45,20 +51,20 @@
 }
 
 .linkTitle {
-    color: #fff;
+    color: var(--site-ink);
     font-weight: 600;
     margin-bottom: 10px;
 }
 
 .linkBox {
-    background: #000;
+    background: var(--site-soft);
     padding: 15px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 20px;
-    border: 1px solid #333;
+    border: 1px solid var(--site-border);
 }
 
 .linkBox code {
@@ -69,8 +75,11 @@
 }
 
 .copyBtn {
-    background: #222;
-    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--site-soft);
+    color: var(--site-ink);
     border: none;
     padding: 5px 12px;
     border-radius: 5px;
@@ -79,7 +88,7 @@
 }
 
 .copyBtn:hover {
-    background: #333;
+    background: var(--site-soft);
 }
 
 .actions {
@@ -105,7 +114,7 @@
 
 .whatsappBtn {
     background: #25d366;
-    color: #fff;
+    color: var(--site-ink);
 }
 
 @media (max-width: 480px) {
@@ -119,7 +128,7 @@
 }
 
 .backBtn {
-    color: #666;
+    color: var(--site-muted);
     font-size: 0.9rem;
     text-decoration: underline;
 }
@@ -135,3 +144,7 @@
         transform: translateY(0);
     }
 }
+.container { background: var(--site-bg); }
+.card { background: white; border-color: var(--site-border); box-shadow: 0 20px 60px #243c3310; }
+.viewBtn { background: var(--site-ink); color: white; }
+.copyBtn { min-height: 44px; background: var(--site-soft); color: var(--site-ink); }

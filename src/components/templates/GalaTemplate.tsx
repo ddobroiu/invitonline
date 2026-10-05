@@ -1,8 +1,8 @@
 'use client'
 
-// Gala Art Deco — black and champagne, stepped deco frame and sunburst (own SVG).
+// Gala Art Deco — black and champagne, stepped deco frame (own SVG).
 // Marcellus + Poiret One + Jost (next/font, latin-ext).
-import { useId, useState } from 'react'
+import { useState } from 'react'
 import { Jost, Marcellus, Poiret_One } from 'next/font/google'
 import RSVPModal from '@/components/RSVPModal'
 import styles from './GalaTemplate.module.css'
@@ -14,30 +14,6 @@ import { str } from './templateUtils'
 const roman = Marcellus({ subsets: ['latin', 'latin-ext'], weight: '400', display: 'swap', variable: '--gala-roman' })
 const deco = Poiret_One({ subsets: ['latin', 'latin-ext'], weight: '400', display: 'swap', variable: '--gala-deco' })
 const sans = Jost({ subsets: ['latin', 'latin-ext'], weight: ['300', '400', '500'], display: 'swap', variable: '--gala-sans' })
-
-function Sunburst() {
-    // unique per instance: the same template can appear twice on a page (desktop + phone previews)
-    const gid = `gala-gold-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`
-    return (
-        <svg className={styles.sunburst} viewBox="0 0 240 120" aria-hidden="true" focusable="false">
-            <defs>
-                <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#f3e2b3" />
-                    <stop offset="50%" stopColor="#c9a45c" />
-                    <stop offset="100%" stopColor="#8f6f33" />
-                </linearGradient>
-            </defs>
-            {Array.from({ length: 13 }, (_, i) => {
-                const a = Math.PI - (i * Math.PI) / 12
-                const x = 120 + Math.cos(a) * 110
-                const y = 118 - Math.sin(a) * 110
-                return <line key={i} x1="120" y1="118" x2={x} y2={y} stroke={`url(#${gid})`} strokeWidth={i % 2 ? 0.8 : 1.6} />
-            })}
-            <path d="M60 118 A 60 60 0 0 1 180 118" stroke={`url(#${gid})`} strokeWidth="1.6" fill="#0c0c0e" />
-            <path d="M80 118 A 40 40 0 0 1 160 118" stroke={`url(#${gid})`} strokeWidth="1" fill="none" />
-        </svg>
-    )
-}
 
 function Divider() {
     return (
@@ -68,7 +44,6 @@ export default function GalaTemplate(props: TemplateProps) {
                     <span className={`${styles.corner} ${styles.br}`} aria-hidden="true" />
 
                     <header className={styles.hero}>
-                        <Sunburst />
                         <p className={styles.kicker}>{heroKicker(props)}</p>
                         {photo && (
                             <div className={styles.photoFrame}>

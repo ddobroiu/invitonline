@@ -226,8 +226,8 @@ const boxStyle: React.CSSProperties = {
     maxWidth: '720px',
     maxHeight: '85vh',
     overflowY: 'auto',
-    background: '#111',
-    color: '#ddd',
+    background: '#fffdf9',
+    color: '#243c33',
     border: '1px solid rgba(212, 175, 55, 0.35)',
     borderRadius: '16px',
     padding: '18px 18px 14px',
@@ -240,13 +240,13 @@ const boxStyle: React.CSSProperties = {
 const titleStyle: React.CSSProperties = {
     fontFamily: 'var(--font-heading), Georgia, serif',
     fontSize: '1.15rem',
-    color: '#fff',
+    color: '#243c33',
     marginBottom: '6px',
 }
 
-const textStyle: React.CSSProperties = { color: '#bbb' }
+const textStyle: React.CSSProperties = { color: '#637364' }
 
-const linkStyle: React.CSSProperties = { color: 'var(--accent)', textDecoration: 'underline' }
+const linkStyle: React.CSSProperties = { color: '#48644f', textDecoration: 'underline' }
 
 const rowStyle: React.CSSProperties = { display: 'flex', gap: '10px', alignItems: 'flex-start', cursor: 'pointer' }
 
@@ -271,13 +271,13 @@ const btnBase: React.CSSProperties = {
 const btnSecondary: React.CSSProperties = {
     ...btnBase,
     background: 'transparent',
-    color: '#eee',
+    color: '#243c33',
     border: '1px solid #444',
 }
 
 const btnPrimary: React.CSSProperties = {
     ...btnBase,
-    background: 'var(--accent)',
-    color: '#111',
+    background: '#243c33',
+    color: '#fff',
     border: '1px solid var(--accent)',
 }

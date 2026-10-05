@@ -14,7 +14,7 @@
 .title {
     font-family: var(--font-heading);
     font-size: clamp(2.2rem, 6vw, 3.5rem);
-    background: linear-gradient(to right, #fff, #999);
+    background: linear-gradient(to right, #243c33, #637364);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -23,7 +23,7 @@
 
 .subtitle {
     font-size: 1.3rem;
-    color: #888;
+    color: var(--site-muted);
     max-width: 600px;
     margin: 0 auto;
 }
@@ -36,8 +36,8 @@
 }
 
 .articleCard {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(145deg, rgba(36, 60, 51, 0.05) 0%, rgba(36, 60, 51, 0.02) 100%);
+    border: 1px solid rgba(36, 60, 51, 0.1);
     border-radius: 20px;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -51,7 +51,7 @@
 .articleCard:hover {
     transform: translateY(-10px);
     border-color: var(--accent);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 20px 40px rgba(36, 60, 51, 0.08);
 }
 
 .articleImage {
@@ -87,14 +87,14 @@
 .articleTitle {
     font-family: var(--font-heading);
     font-size: 1.4rem;
-    color: #fff;
+    color: var(--site-ink);
     margin-bottom: 1rem;
     line-height: 1.3;
     overflow-wrap: break-word;
 }
 
 .articleExcerpt {
-    color: #aaa;
+    color: var(--site-muted);
     font-size: 0.95rem;
     line-height: 1.6;
     margin-bottom: 1.5rem;
@@ -107,7 +107,7 @@
     gap: 0.5rem 1.5rem;
     margin-bottom: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(36, 60, 51, 0.05);
 }
 
 .metaItem {
@@ -115,7 +115,7 @@
     align-items: center;
     gap: 6px;
     font-size: 0.8rem;
-    color: #666;
+    color: var(--site-muted);
 }
 
 .readMore {
@@ -155,3 +155,5 @@
         height: 190px;
     }
 }
+.articleCard { background: white; border-color: var(--site-border); }
+.category { background: var(--site-ink); color: white; }

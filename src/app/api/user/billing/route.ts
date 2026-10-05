@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { readJsonObject, validateBilling, ValidationError, BILLING_LIMITS } from '@/lib/validation';
 
 const BILLING_FIELDS = {
     companyName: true,
@@ -21,27 +22,21 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const body = await request.json();
-        const clean = (v: unknown, max = 200) => (typeof v === 'string' ? v.trim().slice(0, max) : '') || null;
+        const body = await readJsonObject(request);
+        const error = validateBilling(body);
+        if (error) throw new ValidationError(error);
+        const data = Object.fromEntries(Object.keys(BILLING_LIMITS).map(key => [key, typeof body[key] === 'string' ? body[key].trim() || null : null]));
 
         // Only billing fields are returned (never the password hash)
         const billing = await prisma.user.update({
             where: { email: session.user.email },
-            data: {
-                companyName: clean(body.companyName),
-                cui: clean(body.cui, 20),
-                regCom: clean(body.regCom, 40),
-                address: clean(body.address, 300),
-                city: clean(body.city, 100),
-                county: clean(body.county, 100),
-                bank: clean(body.bank, 100),
-                iban: clean(body.iban, 40),
-            },
+            data,
             select: BILLING_FIELDS,
         });
 
         return NextResponse.json(billing);
     } catch (error) {
+        if (error instanceof ValidationError) return NextResponse.json({ error: error.message }, { status: 400 });
         console.error('Save billing error:', error);
         return NextResponse.json({ error: 'Nu am putut salva datele de facturare.' }, { status: 500 });
     }

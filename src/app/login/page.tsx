@@ -9,6 +9,7 @@ import RegisterTermsConsent from '@/components/legal/RegisterTermsConsent'
 import RegisterMarketingNotice from '@/components/legal/RegisterMarketingNotice'
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton'
 import { googleErrorMessage } from '@/lib/google-auth-shared'
+import { validateRegistration } from '@/lib/validation'
 
 // Only allow redirects inside the site
 function safeCallback(url: string | null) {
@@ -51,7 +52,12 @@ function LoginContent() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        if (isLoading) return
         setError('')
+        if (!isLogin) {
+            const message = validateRegistration({ ...formData, acceptTerms })
+            if (message) { setError(message); return }
+        }
         setIsLoading(true)
 
         try {
@@ -74,8 +80,10 @@ function LoginContent() {
                 redirect: false
             })
 
-            if (res?.error) {
-                setError('Email sau parolă incorectă. Dacă ai intrat până acum cu Google sau ai uitat parola, folosește „Ai uitat parola?”.')
+            if (!res?.ok) {
+                setError(res?.error === 'CredentialsSignin'
+                    ? 'Email sau parolă incorectă. Dacă ai intrat până acum cu Google sau ai uitat parola, folosește „Ai uitat parola?”.'
+                    : 'Autentificarea este temporar indisponibilă. Încearcă din nou.')
                 return
             }
 

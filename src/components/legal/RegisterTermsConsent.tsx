@@ -9,7 +9,7 @@ export default function RegisterTermsConsent({ checked, onChange }: { checked: b
     const id = useId()
     const link: React.CSSProperties = { color: 'var(--accent)', textDecoration: 'underline' }
     return (
-        <label htmlFor={id} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', textAlign: 'left', fontSize: '0.85rem', lineHeight: 1.5, color: '#bbb', cursor: 'pointer', margin: '4px 0 12px' }}>
+        <label htmlFor={id} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', textAlign: 'left', fontSize: '0.85rem', lineHeight: 1.5, color: 'var(--site-muted)', cursor: 'pointer', margin: '4px 0 12px' }}>
             <input
                 id={id}
                 type="checkbox"

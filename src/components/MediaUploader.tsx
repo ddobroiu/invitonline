@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { Upload, X, Loader2, Music, Film, Check } from 'lucide-react'
+import { MEDIA_TYPES, MEDIA_MAX_SIZE } from '@/config/media'
 
 interface MediaUploaderProps {
     type: 'audio' | 'video'
@@ -22,9 +23,7 @@ export default function MediaUploader({ type, currentUrl, onUploadComplete, onRe
         setError('')
 
         // Validate file type
-        const validAudioTypes = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg']
-        const validVideoTypes = ['video/mp4', 'video/webm', 'video/quicktime', 'video/x-msvideo']
-        const validTypes = type === 'audio' ? validAudioTypes : validVideoTypes
+        const validTypes = MEDIA_TYPES[type]
 
         if (!validTypes.includes(file.type)) {
             setError(`Tip de fișier invalid. Te rog încarcă un fișier ${type === 'audio' ? 'audio (MP3, WAV)' : 'video (MP4, WebM)'}.`)
@@ -32,7 +31,7 @@ export default function MediaUploader({ type, currentUrl, onUploadComplete, onRe
         }
 
         // Validate file size (max 50MB for audio, 100MB for video)
-        const maxSize = type === 'audio' ? 50 * 1024 * 1024 : 100 * 1024 * 1024
+        const maxSize = MEDIA_MAX_SIZE[type]
         if (file.size > maxSize) {
             setError(`Fișierul este prea mare. Mărimea maximă este ${type === 'audio' ? '50MB' : '100MB'}.`)
             return
@@ -82,7 +81,7 @@ export default function MediaUploader({ type, currentUrl, onUploadComplete, onRe
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Icon size={18} color="var(--accent)" />
-                    <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#fff' }}>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--site-ink)' }}>
                         Încarcă {label}
                     </span>
                 </div>
@@ -113,7 +112,7 @@ export default function MediaUploader({ type, currentUrl, onUploadComplete, onRe
                     <input
                         ref={fileInputRef}
                         type="file"
-                        accept={type === 'audio' ? 'audio/*' : 'video/*'}
+                        accept={MEDIA_TYPES[type].join(',')}
                         onChange={(e) => { handleFileSelect(e); e.target.value = '' }}
                         style={{ display: 'none' }}
                     />
@@ -151,7 +150,7 @@ export default function MediaUploader({ type, currentUrl, onUploadComplete, onRe
                         )}
                     </button>
                     <p style={{ fontSize: '0.7rem', color: '#666', marginTop: '8px', textAlign: 'center' }}>
-                        {type === 'audio' ? 'MP3, WAV (max 50MB)' : 'MP4, WebM (max 100MB)'}
+                        {type === 'audio' ? 'MP3, WAV, OGG (max 50MB)' : 'MP4, WebM (max 100MB)'}
                     </p>
                     {error && (
                         <p role="alert" style={{ fontSize: '0.8rem', color: '#fca5a5', background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.25)', borderRadius: '8px', padding: '8px 12px', marginTop: '10px', textAlign: 'center' }}>
@@ -169,9 +168,9 @@ export default function MediaUploader({ type, currentUrl, onUploadComplete, onRe
                     alignItems: 'center',
                     gap: '10px'
                 }}>
-                    <Check size={18} color="#00ff00" />
+                    <Check size={18} color="var(--accent)" />
                     <div style={{ flex: 1 }}>
-                        <p style={{ fontSize: '0.8rem', color: '#00ff00', margin: 0 }}>
+                        <p style={{ fontSize: '0.8rem', color: 'var(--accent)', margin: 0 }}>
                             Fișier încărcat cu succes
                         </p>
                         {type === 'audio' ? (

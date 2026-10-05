@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react'
 import styles from './ScratchTemplate.module.css'
 import RSVPModal from '@/components/RSVPModal'
-import { Trophy, Calendar, MapPin, Users, Info, Gift, Navigation, Sparkles } from 'lucide-react'
+import { Trophy, Calendar, MapPin, Users, Info, Gift, Navigation, Check } from 'lucide-react'
 import {
     str, getMapUrl, getWazeUrl, getMainNames, getSchedule, validCustomFields, CustomField,
 } from './templateUtils'
@@ -124,10 +124,10 @@ export default function ScratchTemplate(props: Props) {
 
         ctx.globalCompositeOperation = 'source-over'
         const gradient = ctx.createLinearGradient(0, 0, width, height)
-        gradient.addColorStop(0, '#f7d046')
-        gradient.addColorStop(0.35, '#e9a23b')
-        gradient.addColorStop(0.65, '#f1c40f')
-        gradient.addColorStop(1, '#e67e22')
+        gradient.addColorStop(0, '#ede0c5')
+        gradient.addColorStop(0.35, '#bc9d68')
+        gradient.addColorStop(0.65, '#e7d5ae')
+        gradient.addColorStop(1, '#bd9864')
         ctx.fillStyle = gradient
         ctx.fillRect(0, 0, width, height)
 
@@ -152,15 +152,15 @@ export default function ScratchTemplate(props: Props) {
         const big = Math.max(18, Math.min(30, Math.floor(width / 11)))
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
-        ctx.shadowBlur = 12
+        ctx.shadowBlur = 0
         ctx.shadowColor = 'rgba(0,0,0,0.35)'
-        ctx.fillStyle = '#fff'
+        ctx.fillStyle = '#30281d'
         ctx.font = `900 ${big}px Inter, system-ui, sans-serif`
         ctx.fillText('RĂZUIEȘTE AICI', width / 2, cy)
         ctx.font = `800 ${Math.round(big * 0.5)}px Inter, system-ui, sans-serif`
         ctx.fillText('cu degetul sau cu mouse-ul', width / 2, cy + big * 1.1)
         ctx.font = `900 ${Math.round(big * 0.48)}px Inter, system-ui, sans-serif`
-        ctx.fillText('★ JACKPOT GARANTAT ★', width / 2, cy + big * 2.2)
+        ctx.fillText('O SURPRIZĂ DE PĂSTRAT', width / 2, cy + big * 2.2)
         ctx.shadowBlur = 0
 
         // Coin circles as decoration
@@ -390,7 +390,7 @@ export default function ScratchTemplate(props: Props) {
 
                 <div className={styles.helper} aria-live="polite">
                     {isRevealed ? (
-                        <span className={styles.won}><Sparkles size={15} /> Felicitări! Ai câștigat o invitație!</span>
+                        <span className={styles.won}><Check size={15} /> Felicitări! Ai câștigat o invitație!</span>
                     ) : (
                         <button type="button" className={styles.revealBtn} onClick={reveal}>
                             {hasScratched ? 'Arată tot biletul' : 'Nu poți răzui? Arată invitația'}

@@ -1,0 +1,200 @@
+
+.root { --paper:#f5eee3; --ink:#544633; --accent:#948262; --line:#54463329; }
+.hero { min-height:min(790px,100svh); padding:86px 28px 88px; display:flex; flex-direction:column; align-items:center; text-align:center; position:relative; overflow:hidden; isolation:isolate; }
+.edition { position:absolute; top:23px; left:25px; right:25px; display:flex; align-items:center; justify-content:space-between; gap:15px; font:500 9px var(--sans); letter-spacing:.17em; z-index:4; }
+.kicker { font:500 8px/1.6 var(--sans); text-transform:uppercase; letter-spacing:.18em; position:relative; z-index:2; margin:0 0 20px; }
+.names { font:400 clamp(32px,calc(16cqw * var(--name-scale)),86px)/1.02 var(--display); letter-spacing:-.045em; max-width:100%; position:relative; z-index:2; margin:0; text-wrap:balance; }
+.names > span { display:block; }
+.names i { display:block; font-size:.52em; margin:5px 0; color:var(--accent); }
+.date { display:flex; flex-direction:column; align-items:center; gap:7px; margin-top:30px; position:relative; z-index:2; }
+.date span { font:500 8px var(--sans); text-transform:uppercase; letter-spacing:.18em; opacity:.6; }
+.date strong { font:500 12px/1.6 var(--sans); letter-spacing:.13em; }
+.location { font:400 11px/1.7 var(--sans); max-width:260px; margin:15px auto 0; opacity:.65; position:relative; z-index:2; }
+.photo { width:100%; height:100%; background:var(--line); display:grid; place-items:center; overflow:hidden; }
+.photo img { width:100%; height:100%; object-fit:cover; display:block; }
+.photo > span { font:italic 70px var(--display); opacity:.4; }
+.scrollCue { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); display:flex; gap:15px; align-items:center; min-height:44px; width:max-content; max-width:90%; border:0; background:none; color:inherit; cursor:pointer; z-index:4; }
+.scrollCue span { font:500 7px var(--sans); letter-spacing:.18em; }
+.handwritten { font:italic 30px var(--display); margin-bottom:20px; }
+.sound { min-height:44px; display:flex; align-items:center; gap:10px; padding:12px 18px; border:1px solid var(--line); border-radius:30px; background:transparent; color:inherit; font:500 10px var(--sans); margin-top:22px; cursor:pointer; }
+.videoSection { padding:20px 0 35px; text-align:center; }
+.videoSection video { width:100%; max-height:550px; display:block; margin-top:20px; border-radius:12px; background:#111; }
+/* Maison: a modern heirloom with scalloped stationery and small portrait. */
+.classic { --paper:#ede8df; --ink:#6a4b3d; --accent:#9f735e; --line:#6a4b3d28; }
+.classic .hero { padding-top:105px; }
+.maisonFrame { position:absolute; inset:62px 17px 66px; border:1px solid #a98c7261; border-radius:110px 110px 0 0; }
+.botanicalMark { font:400 65px/1 var(--display); color:#9f735e; margin-bottom:20px; }
+.classic .names { font-size:clamp(30px,calc(14cqw * var(--name-scale)),80px); }
+.classic .names i { display:inline; margin-right:10px; }
+.maisonPortrait { width:110px; height:135px; margin-top:25px; }
+.maisonPortrait .photo { border-radius:50%; filter:sepia(.3); }
+/* Champagne: ivory, a sunburst and restrained warm foil. */
+.classic-gold { --paper:#f7f0e3; --ink:#735d3c; --accent:#ab8d57; --line:#735d3c29; }
+.classic-gold .hero { padding-top:110px; }
+.classic-gold .handwritten { font-size:21px; opacity:.65; }
+.classic-gold .names { font-style:italic; }
+.goldRule { width:50px; height:1px; background:#bea66d; margin-top:30px; }
+.classic-gold .date { margin-top:20px; }
+/* Pure: Swiss typography with an oversized date composition. */
+.classic-minimal { --paper:#f6f6f1; --ink:#282923; --accent:#85887b; --line:#2829232b; }
+.classic-minimal .hero { text-align:left; align-items:stretch; padding-top:115px; }
+.classic-minimal .names { font-family:var(--sans); font-weight:500; letter-spacing:-.07em; font-size:clamp(32px,calc(16cqw * var(--name-scale)),100px); }
+.classic-minimal .names i { display:inline-block; font:400 .85em var(--display); margin-right:10px; }
+.pureDate { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:8px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:28px 0; margin-top:55px; text-transform:uppercase; }
+.pureDate span:first-child { font:400 90px/1 var(--display); letter-spacing:-.09em; }
+.pureDate span:last-child { font:400 40px/1 var(--sans); letter-spacing:-.07em; }
+.pureDate i { font:italic 35px var(--display); color:#a5a697; }
+.pureFooter { display:flex; gap:18px; justify-content:space-between; align-items:flex-start; padding-top:22px; }
+.pureFooter > span { font:400 25px/1 var(--display); }
+.pureFooter p { flex:1; max-width:150px; font-size:10px; }
+/* Premiere: a graphic film launch, without a streaming-service imitation. */
+.netflix { --paper:#1a1a1a; --ink:#f2ece0; --accent:#df7456; --line:#f2ece02b; }
+.netflix .hero { text-align:left; align-items:stretch; padding:76px 25px 90px; }
+.premierePhoto { width:100%; height:230px; margin-bottom:24px; }
+.premierePhoto .photo { filter:saturate(.55); }
+.redLine { width:45px; height:4px; background:#dc684d; margin-bottom:20px; }
+.netflix .kicker { font-size:7px; }
+.netflix .names { font-family:var(--sans); font-weight:700; text-transform:uppercase; font-size:clamp(30px,calc(13cqw * var(--name-scale)),85px); line-height:1; letter-spacing:-.07em; }
+.netflix .names i { font-family:var(--display); display:inline-block; margin-right:10px; }
+.premiereLabel { margin-top:18px; font:400 7px var(--sans); letter-spacing:.2em; opacity:.6; }
+.netflix .date { align-items:flex-start; }
+.netflix .location { margin-left:0; text-align:left; }
+/* The Journey: a tactile modern ticket, generous and readable. */
+.boarding { --paper:#e9e0d3; --ink:#9b432d; --accent:#b36549; --line:#9b432d28; }
+.journeyTop { display:flex; align-items:center; justify-content:space-between; gap:20px; width:100%; border-bottom:1px solid var(--line); padding-bottom:20px; margin-bottom:32px; text-align:right; font:500 8px/1.6 var(--sans); letter-spacing:.08em; }
+.boarding .names { font-style:italic; }
+.boarding .names i { display:inline-block; margin-right:10px; }
+.route { width:100%; display:flex; align-items:center; gap:10px; margin:32px 0; font:600 9px var(--sans); letter-spacing:.08em; }
+.route i { flex:1; border-top:1px dashed #b7836e; }
+.ticket { width:100%; background:#f9f2e7; padding:27px 20px; position:relative; border-radius:3px; }
+.ticket::before,.ticket::after { content:''; width:22px; height:22px; background:var(--paper); border-radius:50%; position:absolute; top:calc(50% - 11px); }
+.ticket::before { left:-11px; }.ticket::after { right:-11px; }
+.ticket .date { margin:0; }
+.barcode { display:block; width:150px; height:28px; margin:24px auto 10px; background:repeating-linear-gradient(90deg,#9b432d 0 1px,transparent 1px 3px,#9b432d 3px 5px,transparent 5px 7px,#9b432d 7px 8px,transparent 8px 12px); }
+.ticket small { font:500 7px var(--sans); letter-spacing:.1em; }
+/* On Record: lavender sleeve, oversized vinyl and an intentional music control. */
+.vinyl { --paper:#d7cde7; --ink:#342841; --accent:#766285; --line:#3428412b; }
+.record { width:min(85%,300px); aspect-ratio:1; border-radius:50%; background:repeating-radial-gradient(#29252e 0 2px,#201d24 3px 5px); display:grid; place-items:center; box-shadow:9px 12px 0 #b3a2c4; margin:12px 0 35px; }
+.recordLabel { width:38%; aspect-ratio:1; border-radius:50%; overflow:hidden; background:#ecbfa6; position:relative; display:grid; place-items:center; }
+.recordLabel img { width:100%; height:100%; object-fit:cover; filter:grayscale(.6); }
+.recordLabel > span { font:400 27px var(--display); }
+.recordLabel i { position:absolute; width:12px; height:12px; border-radius:50%; background:#d7cde7; border:3px solid #27212e; }
+.spinning { animation:recordSpin 14s linear infinite; }
+.vinyl .names { font:500 clamp(30px,calc(14cqw * var(--name-scale)),80px)/1.05 var(--sans); letter-spacing:-.06em; }
+.vinyl .names i { display:inline; margin-right:10px; font-family:var(--display); }
+.track { width:100%; display:flex; justify-content:space-between; gap:15px; margin-top:25px; padding-top:14px; border-top:1px solid var(--line); font:500 8px var(--sans); letter-spacing:.1em; }
+/* Lucky Us: foil-inspired surprise, with an accessible reveal. */
+.scratch { --paper:#efceba; --ink:#8d3929; --accent:#ab5d46; --line:#8d392929; }
+.scratch .names { font-style:italic; font-size:clamp(30px,calc(14cqw * var(--name-scale)),82px); }
+.scratch .names i { display:inline; margin-right:8px; }
+.revealCard { width:100%; min-height:230px; border-radius:120px 120px 15px 15px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:35px 20px; margin-top:28px; background:linear-gradient(130deg,#dacdc3,#f8eadd 38%,#bfb9b0 65%,#e5dace); border:1px solid #fff7e699; color:#754333; }
+.foilText { font:500 18px/1.3 var(--sans); letter-spacing:.02em; }
+.foilText i { font:italic 34px var(--display); }
+.revealButton { display:flex; align-items:center; gap:8px; margin-top:22px; padding:12px 19px; min-height:44px; background:#754333; color:#ffead8; border:0; border-radius:30px; cursor:pointer; font:500 10px var(--sans); }
+.revealCard .date { margin:0 0 20px; }
+/* Anywhere Together: embossed book cover and an arrival stamp. */
+.passport { --paper:#e5e7d9; --ink:#465440; --accent:#829270; --line:#4654402b; }
+.passport .hero { background:#465440; color:#eee9d3; margin:18px; border-radius:12px 24px 24px 12px; border-left:8px solid #35422f; box-shadow:inset 5px 0 8px #0002; }
+.passport .names i { color:#bfbd8e; }
+.passport .names { font-size:clamp(30px,calc(14cqw * var(--name-scale)),78px); }
+.passportStamp { display:flex; flex-direction:column; gap:3px; border:1px solid #bec99a88; border-radius:5px; padding:13px 23px; margin-top:30px; transform:rotate(-7deg); color:#ccd3ae; }
+.passportStamp > span,.passportStamp small { font:500 7px var(--sans); letter-spacing:.1em; }
+.passportStamp strong { font:400 23px var(--display); }
+/* The Sunday Edit: a fashion newspaper with clean columns. */
+.news { --paper:#f1eee5; --ink:#3d3e35; --accent:#a15e43; --line:#3d3e352b; }
+.news .hero { padding-top:75px; }
+.masthead { font:400 42px/.95 var(--display); letter-spacing:-.04em; }
+.masthead i { font-size:50px; }
+.newsMeta { display:flex; width:100%; justify-content:space-between; gap:10px; border-block:1px solid var(--line); padding:10px 0; margin:22px 0 28px; font:500 7px var(--sans); letter-spacing:.1em; }
+.news .names { font-size:clamp(30px,calc(13cqw * var(--name-scale)),75px); }
+.news .names i { display:inline; margin-right:8px; }
+.newsPhoto { width:100%; height:235px; margin-top:25px; position:relative; }
+.newsPhoto .photo { filter:grayscale(1); }
+.newsPhoto > span { display:block; text-align:left; margin-top:9px; font:500 6px var(--sans); letter-spacing:.12em; }
+/* The Feature: monochrome film stock and a restrained premiere poster. */
+.cinema { --paper:#e6e3dc; --ink:#2c2a27; --accent:#777066; --line:#2c2a272b; }
+.cinema .hero { padding-inline:37px; }
+.filmPerforations { position:absolute; inset:58px 12px 68px; border-inline:8px dotted #b8b5ac; pointer-events:none; }
+.filmPhoto { width:100%; height:245px; margin-bottom:24px; }
+.filmPhoto .photo { filter:grayscale(1) contrast(1.1); }
+.cinema .names { font:600 clamp(28px,calc(12cqw * var(--name-scale)),75px)/1.05 var(--sans); letter-spacing:-.06em; }
+.cinema .names i { display:inline; margin-right:8px; font-family:var(--display); }
+.credits { display:flex; flex-direction:column; gap:9px; margin-top:25px; }
+.credits span { font:500 7px/1.5 var(--sans); text-transform:uppercase; letter-spacing:.14em; }
+.credits strong { font:400 17px var(--display); }
+/* Daydream: acid colours and a festival poster with real breathing room. */
+.festival { --paper:#dce995; --ink:#4c386d; --accent:#766389; --line:#4c386d30; }
+.festival .hero { padding-top:128px; }
+.festivalSticker { position:absolute; top:53px; right:20px; width:70px; height:70px; border-radius:50%; background:#a994ca; display:grid; align-content:center; font:700 9px/1.15 var(--sans); transform:rotate(15deg); }
+.festival .names { font:800 clamp(32px,calc(18cqw * var(--name-scale)),100px)/.98 var(--sans); letter-spacing:-.075em; }
+.festival .names i { display:inline; font-family:var(--display); margin-right:8px; }
+.festivalPass { display:flex; width:100%; justify-content:space-between; align-items:center; gap:20px; padding:19px 20px; border-top:1px solid #4c386d66; border-bottom:1px solid #4c386d66; }
+.festivalPass .date { margin:0; align-items:flex-start; }
+/* Private Club: a satin membership card with warm metallic detail. */
+.vip { --paper:#20272b; --ink:#e5d8c8; --accent:#b9a287; --line:#e5d8c82b; }
+.memberCard { width:100%; max-width:360px; aspect-ratio:1.55; padding:22px; color:#dfc5a5; background:linear-gradient(120deg,#384047,#252c32 55%,#495056); border:1px solid #7b7a725e; border-radius:15px; display:flex; flex-direction:column; justify-content:space-between; margin:45px 0; transform:rotate(-7deg); box-shadow:0 22px 35px #0003; }
+.memberTop,.memberBottom { display:flex; justify-content:space-between; text-align:left; gap:20px; }
+.memberTop { font:500 10px/1.2 var(--sans); letter-spacing:.2em; }
+.memberInitials { font:italic 52px/1 var(--display); text-align:left; }
+.memberBottom { font:500 6px var(--sans); letter-spacing:.12em; }
+.vip .names { font-size:clamp(31px,calc(14cqw * var(--name-scale)),80px); }
+.vip .names i { display:inline; margin-right:10px; }
+/* In Frame: three intentional chapters, never a copy of social media UI. */
+.story { --paper:#242923; --ink:#f6eedf; --accent:#d7cba5; --line:#f6eedf2b; }
+.story .hero { min-height:100svh; justify-content:flex-end; padding-bottom:95px; }
+.storyBackdrop,.storyShade { position:absolute; inset:0; z-index:-2; }
+.storyBackdrop .photo { background:linear-gradient(130deg,#86917e,#242923); }
+.storyShade { z-index:-1; background:linear-gradient(#17201730,#17201799 50%,#172017ed); }
+.storyProgress { display:flex; gap:7px; position:absolute; top:60px; left:25px; right:25px; z-index:4; }
+.storyProgress button { flex:1; position:relative; height:44px; border:0; background:transparent; cursor:pointer; }
+.storyProgress button::after { content:''; display:block; height:2px; background:#fff4; }
+.storyProgress button[aria-pressed=true]::after { background:#eee1bd; }
+.storyText { width:100%; text-align:left; }
+.storyText .handwritten { display:block; margin:20px 0; }
+.story .names { font-size:clamp(34px,calc(17cqw * var(--name-scale)),98px); }
+.story .names i { display:inline; margin-right:10px; }
+.storyText .date { align-items:flex-start; margin-bottom:25px; }
+.storyText > p { font:400 16px/1.7 var(--display); }
+.chapterTitle { font:italic clamp(40px,19cqw,100px)/1 var(--display); margin:20px 0; }
+.nextChapter,.storyRsvp { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:15px 0; border:0; border-bottom:1px solid #e8d9b566; color:#f6eedf; background:transparent; font:500 10px var(--sans); min-height:44px; cursor:pointer; margin-top:25px; }
+/* Love Notes: paper, tape and a personal reply, rather than a chat clone. */
+.chat { --paper:#efdfda; --ink:#823c44; --accent:#a36c6e; --line:#823c442b; }
+.noteStack { width:100%; position:relative; margin:40px 0 10px; }
+.noteBack { position:absolute; inset:0; background:#c5a39d; transform:rotate(7deg); }
+.notePaper { position:relative; background:#fbf4e9; padding:30px 20px; transform:rotate(-3deg); display:flex; flex-direction:column; align-items:center; box-shadow:0 10px 20px #823c4412; }
+.notePaper .handwritten { font-size:24px; margin:15px 0 22px; }
+.notePaper .names { font:italic 400 clamp(28px,calc(12cqw * var(--name-scale)),68px)/1.05 var(--display); }
+.notePaper .names i { display:inline; margin-right:8px; }
+.notePaper p { font:400 12px/1.8 var(--display); margin-top:24px; }
+.noteTape { position:absolute; top:-15px; left:calc(50% - 38px); height:30px; width:76px; background:#aa977c55; transform:rotate(5deg); z-index:3; }
+.reply { display:flex; align-items:center; gap:17px; padding:13px 22px; border:1px solid #b98b87; background:transparent; color:var(--ink); border-radius:30px; font:500 11px var(--sans); margin-top:24px; cursor:pointer; min-height:44px; }
+@container(min-width:650px) {
+ .hero { padding-inline:70px; min-height:760px; }
+ .edition { left:45px; right:45px; }
+ .classic .hero,.classic-gold .hero { min-height:850px; }
+ .classic .names > span,.classic-gold .names > span { display:inline; }
+ .classic .names i,.classic-gold .names i { display:inline; margin-inline:15px; }
+ .maisonPortrait { width:140px; height:175px; }
+ .classic-minimal .hero { align-items:flex-start; }
+ .classic-minimal .names { max-width:800px; }
+ .pureDate,.pureFooter { width:100%; }
+ .pureDate span:first-child { font-size:160px; }.pureDate span:last-child { font-size:75px; }
+ .premierePhoto { height:330px; }
+ .netflix .hero { padding-inline:65px; }
+ .netflix .names > span { display:inline; }.netflix .names i { margin-inline:15px; }
+ .boarding .hero,.scratch .hero,.passport .hero,.vip .hero,.chat .hero { max-width:650px; margin-inline:auto; }
+ .record { width:320px; }
+ .newsPhoto { width:65%; height:340px; }
+ .news .hero { padding-bottom:100px; }
+ .filmPhoto { width:65%; height:340px; }
+ .cinema .names > span { display:inline; }.cinema .names i { margin-inline:15px; }
+ .festival .hero { text-align:left; align-items:flex-start; padding-top:140px; }
+ .festivalPass { max-width:650px; }
+ .festivalSticker { top:60px; right:70px; width:95px; height:95px; }
+ .memberCard { max-width:430px; }
+ .story .hero { min-height:850px; }.story .names > span { display:inline; }.story .names i { margin-inline:15px; }
+ .noteStack { max-width:400px; }
+}
+@container(max-width:340px) { .hero { padding-inline:20px; }.edition { left:20px; right:20px; font-size:8px; }.memberCard { padding:16px; }.memberInitials { font-size:40px; }.pureDate span:first-child { font-size:74px; }.pureDate span:last-child { font-size:32px; }.passport .hero { margin:10px; }.notePaper { padding-inline:15px; } }
+@keyframes recordSpin { to { transform:rotate(360deg); } }
+@media(prefers-reduced-motion:reduce) { .root * { animation:none!important; transition:none!important; } }

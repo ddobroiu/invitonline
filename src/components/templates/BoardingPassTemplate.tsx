@@ -1,6 +1,8 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import QRCode from 'qrcode'
+import { SITE_URL } from '@/config/legal'
 import styles from './BoardingPassTemplate.module.css'
 import RSVPModal from '@/components/RSVPModal'
 import { Plane, Calendar, MapPin, User, Info, Users, Navigation, Clock, ShieldCheck } from 'lucide-react'
@@ -43,44 +45,6 @@ interface Props {
     customFields?: CustomField[]
 }
 
-const QR_SIZE = 21
-
-/** Decorative, deterministic QR-like pattern (no network request, stable between renders). */
-function buildQrCells(seedText: string): boolean[] {
-    let seed = 2166136261
-    for (let i = 0; i < seedText.length; i++) {
-        seed ^= seedText.charCodeAt(i)
-        seed = Math.imul(seed, 16777619) >>> 0
-    }
-    const rand = () => {
-        seed ^= seed << 13; seed >>>= 0
-        seed ^= seed >>> 17
-        seed ^= seed << 5; seed >>>= 0
-        return seed / 4294967296
-    }
-    const cells: boolean[] = []
-    const inFinder = (x: number, y: number) =>
-        (x < 8 && y < 8) || (x >= QR_SIZE - 8 && y < 8) || (x < 8 && y >= QR_SIZE - 8)
-    for (let y = 0; y < QR_SIZE; y++) {
-        for (let x = 0; x < QR_SIZE; x++) {
-            if (inFinder(x, y)) {
-                // Finder pattern: 7x7 ring + 3x3 center, 1-cell quiet separator.
-                const fx = x >= QR_SIZE - 8 ? x - (QR_SIZE - 7) : x
-                const fy = y >= QR_SIZE - 8 ? y - (QR_SIZE - 7) : y
-                const inside = fx >= 0 && fx < 7 && fy >= 0 && fy < 7
-                const ring = fx === 0 || fx === 6 || fy === 0 || fy === 6
-                const core = fx >= 2 && fx <= 4 && fy >= 2 && fy <= 4
-                cells.push(inside && (ring || core))
-            } else if (y === 6 || x === 6) {
-                cells.push((x + y) % 2 === 0) // timing patterns
-            } else {
-                cells.push(rand() > 0.52)
-            }
-        }
-    }
-    return cells
-}
-
 export default function BoardingPassTemplate(props: Props) {
     const {
         id, date, location, locationUrl, message, eventType = 'nunta',
@@ -120,7 +84,7 @@ export default function BoardingPassTemplate(props: Props) {
     const boardingTime = schedule.find((s) => s.time)?.time || ''
     const flightNo = `${airline.replace(/[^A-Z]/g, '').slice(0, 2)} ${String(id || passenger).split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) % 9000, 7) + 1000}`
 
-    const qrCells = useMemo(() => buildQrCells(`${id || ''}|${passenger}`), [id, passenger])
+    const qr = useMemo(() => QRCode.create(id ? `${SITE_URL}/invitatie/${encodeURIComponent(id)}` : `${SITE_URL}/templates/boarding`, { errorCorrectionLevel: 'M' }).modules, [id])
 
     const crew: { label: string, value: string }[] = []
     if (isWedding) {
@@ -253,11 +217,11 @@ export default function BoardingPassTemplate(props: Props) {
                     <div className={styles.stubSection}>
                         <div className={styles.stubTitle}>BOARDING PASS</div>
 
-                        <div className={styles.qrCode} aria-hidden="true">
-                            <svg viewBox={`-1 -1 ${QR_SIZE + 2} ${QR_SIZE + 2}`} shapeRendering="crispEdges">
-                                <rect x={-1} y={-1} width={QR_SIZE + 2} height={QR_SIZE + 2} fill="#fff" />
-                                {qrCells.map((on, i) => on && (
-                                    <rect key={i} x={i % QR_SIZE} y={Math.floor(i / QR_SIZE)} width={1} height={1} fill="#0f172a" />
+                        <div className={styles.qrCode} role="img" aria-label="Cod QR pentru linkul invitației">
+                            <svg viewBox={`-4 -4 ${qr.size + 8} ${qr.size + 8}`} shapeRendering="crispEdges">
+                                <rect x={-4} y={-4} width={qr.size + 8} height={qr.size + 8} fill="#fff" />
+                                {Array.from(qr.data).map((on, i) => on && (
+                                    <rect key={i} x={i % qr.size} y={Math.floor(i / qr.size)} width={1} height={1} fill="#0f172a" />
                                 ))}
                             </svg>
                         </div>

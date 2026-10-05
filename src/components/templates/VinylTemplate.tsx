@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import styles from './VinylTemplate.module.css'
 import RSVPModal from '@/components/RSVPModal'
-import { Play, Pause, Music, Disc, Calendar, MapPin, Users, Star, Navigation } from 'lucide-react'
+import { Play, Pause, Music, Disc, Calendar, MapPin, Users, Info, Navigation } from 'lucide-react'
 import { useAudioPlayer } from './useAudioPlayer'
 import {
     str, getMapUrl, getWazeUrl, getMainNames, getSchedule, parseDate, validCustomFields, CustomField,
@@ -159,7 +159,7 @@ export default function VinylTemplate(props: Props) {
                         <div className={styles.details}>
                             {hasInfo && (
                                 <section className={styles.section}>
-                                    <div className={styles.detailsTitle}><Star size={12} /> Detalii</div>
+                                    <div className={styles.detailsTitle}><Info size={12} /> Detalii</div>
                                     {str(date) && <p className={styles.infoRow}><Calendar size={16} className={styles.rowIcon} /> <span>{str(date)}</span></p>}
                                     {str(location) && <p className={styles.infoRow}><MapPin size={16} className={styles.rowIcon} /> <span>{str(location)}</span></p>}
                                     {str(message) && <p className={styles.message}>„{str(message)}”</p>}

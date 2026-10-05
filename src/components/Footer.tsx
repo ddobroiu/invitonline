@@ -5,12 +5,17 @@ import { ANPC_SAL_URL, ANPC_URL, COMPANY, COMPANY_ADDRESS_LINE, LEGAL_LINKS } fr
 import { openCookieSettings } from '@/lib/consent'
 
 export default function Footer() {
+    const socialLinks = [
+        { label: 'Instagram', url: process.env.NEXT_PUBLIC_INSTAGRAM_URL },
+        { label: 'Facebook', url: process.env.NEXT_PUBLIC_FACEBOOK_URL },
+        { label: 'TikTok', url: process.env.NEXT_PUBLIC_TIKTOK_URL },
+    ].filter(link => link.url?.startsWith('https://'))
     return (
         <footer style={{
-            background: '#050505',
-            borderTop: '1px solid #222',
+            background: '#243c33',
+            borderTop: '1px solid #3f5548',
             padding: '60px clamp(16px, 4vw, 40px) 20px',
-            color: '#888',
+            color: '#b6c1ae',
             marginTop: 'auto'
         }}>
             <div style={{
@@ -35,8 +40,16 @@ export default function Footer() {
                         <li style={{ marginBottom: '10px' }}><Link href="/" className="hover-text-white">Acasă</Link></li>
                         <li style={{ marginBottom: '10px' }}><Link href="/create" className="hover-text-white">Creează Invitație</Link></li>
                         <li style={{ marginBottom: '10px' }}><Link href="/demo" className="hover-text-white">Modele Demo</Link></li>
+                        <li style={{ marginBottom: '10px' }}><Link href="/invitatii-online" className="hover-text-white">Invitații online</Link></li>
                         <li style={{ marginBottom: '10px' }}><Link href="/blog" className="hover-text-white">Blog & Articole</Link></li>
                         <li style={{ marginBottom: '10px' }}><Link href="/dashboard" className="hover-text-white">Contul Meu</Link></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 style={{ color: 'white', marginBottom: '15px', fontSize: '1rem' }}>Pentru evenimentul tău</h4>
+                    <ul style={{ listStyle: 'none', padding: 0 }}>
+                        {[['/invitatii-nunta', 'Invitații de nuntă'], ['/invitatii-botez', 'Invitații de botez'], ['/invitatii-aniversare', 'Invitații de aniversare'], ['/invitatii-petrecere', 'Invitații de petrecere'], ['/invitatii-corporate', 'Invitații corporate']].map(([href, label]) => <li key={href} style={{ marginBottom: '10px' }}><Link href={href} className="hover-text-white">{label}</Link></li>)}
                     </ul>
                 </div>
 
@@ -62,14 +75,12 @@ export default function Footer() {
                     </ul>
                 </div>
 
-                <div>
+                {socialLinks.length > 0 && <div>
                     <h4 style={{ color: 'white', marginBottom: '15px', fontSize: '1rem' }}>Urmărește-ne</h4>
                     <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-                        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" className="hover-text-white">Instagram</a>
-                        <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" className="hover-text-white">Facebook</a>
-                        <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" className="hover-text-white">TikTok</a>
+                        {socialLinks.map(link => <a key={link.label} href={link.url} target="_blank" rel="noopener noreferrer" className="hover-text-white">{link.label}</a>)}
                     </div>
-                </div>
+                </div>}
             </div>
 
             <div style={{

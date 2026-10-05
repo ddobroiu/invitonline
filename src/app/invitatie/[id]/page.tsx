@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { cache } from 'react'
 import Link from 'next/link'
+import { Mail } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import prisma from '@/lib/prisma'
 import { getCurrentUserId } from '@/lib/auth'
@@ -48,7 +49,7 @@ export default async function PublicInvitation({ params }: { params: Promise<{ i
         return (
             <div className={styles.error}>
                 <div className={styles.errorCard}>
-                    <div className={styles.errorIcon}>✉️</div>
+                    <div className={styles.errorIcon}><Mail size={48} strokeWidth={1.5} aria-hidden="true" /></div>
                     <h1>Invitația nu este disponibilă</h1>
                     <p>Link-ul nu există sau invitația nu a fost încă activată de organizator.</p>
                     <Link href="/" className={styles.homeLink}>Mergi la InvitOnline</Link>

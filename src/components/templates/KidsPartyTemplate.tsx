@@ -3,7 +3,7 @@
 // Petrecere Copii — balloons, confetti and bright colors (own SVG). Fredoka + Nunito (latin-ext).
 import { useState } from 'react'
 import { Fredoka, Nunito } from 'next/font/google'
-import { CalendarDays, Clock, MapPin } from 'lucide-react'
+import { CalendarDays, Clock, MapPin, PartyPopper } from 'lucide-react'
 import RSVPModal from '@/components/RSVPModal'
 import styles from './KidsPartyTemplate.module.css'
 import { InvitationDetails, type TemplateProps } from './InvitationParts'
@@ -51,7 +51,7 @@ export default function KidsPartyTemplate(props: TemplateProps) {
                         {photo ? (
                             <img className={styles.photo} src={photo} alt={celebrant || 'Fotografie'} />
                         ) : (
-                            <span className={styles.age} aria-label={age ? `${age} ani` : undefined}>{age || '🎉'}</span>
+                            <span className={styles.age} aria-label={age ? `${age} ani` : undefined}>{age || <PartyPopper size={48} strokeWidth={1.5} aria-hidden="true" />}</span>
                         )}
                         {photo && age && <span className={styles.ageSticker}>{age}</span>}
                     </div>
@@ -95,7 +95,7 @@ export default function KidsPartyTemplate(props: TemplateProps) {
                     <InvitationDetails s={styles} props={props} skip={getSchedule(props).length <= 1 ? ['program'] : []} titles={{ location: 'Cum ajungi' }} countdownLabel="Mai sunt doar" />
                     <div className={styles.rsvpWrap}>
                         <button type="button" className={styles.rsvpButton} onClick={() => setShowRSVP(true)}>
-                            Confirmă prezența 🎈
+                            Confirmă prezența
                         </button>
                     </div>
                 </main>

@@ -1,9 +1,9 @@
 'use client'
 
-import TemplateRenderer, { eventToTemplateProps } from '@/components/TemplateRenderer'
+import TemplateRenderer, { eventToTemplateProps, type InvitationRecord } from '@/components/TemplateRenderer'
 import styles from './page.module.css'
 
-export default function InvitationView({ event }: { event: any }) {
+export default function InvitationView({ event }: { event: InvitationRecord }) {
     const props = eventToTemplateProps(event)
     return (
         <div className={styles.publicContainer}>

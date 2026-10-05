@@ -1,12 +1,14 @@
 'use client'
 
-import { useEffect, useId, useState } from 'react'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { validateGuest } from '@/lib/validation'
+import { Check, CircleCheck, Mail, X } from 'lucide-react'
 
 interface RSVPModalProps {
     isOpen: boolean
     onClose: () => void
-    onSubmit?: (data: any) => void
+    onSubmit?: (data: typeof initialData) => void
     eventId?: string
 }
 
@@ -19,32 +21,47 @@ export default function RSVPModal({ isOpen, onClose, onSubmit, eventId }: RSVPMo
     const [error, setError] = useState('')
     const [mounted, setMounted] = useState(false)
     const uid = useId()
+    const dialogRef = useRef<HTMLDivElement>(null)
     const fid = (name: string) => `${uid}-${name}`
 
     useEffect(() => setMounted(true), [])
 
-    // Close on Escape
+    const handleClose = useCallback(() => {
+        if (isSending) return
+        setGuestData(initialData)
+        setIsSubmitted(false)
+        setError('')
+        onClose()
+    }, [isSending, onClose])
+
+    // Keep keyboard focus inside the dialog and restore it to the triggering button.
     useEffect(() => {
-        if (!isOpen) return
-        const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
-        window.addEventListener('keydown', onKey)
-        return () => window.removeEventListener('keydown', onKey)
-    }, [isOpen, onClose])
+        if (!isOpen || !mounted) return
+        const previous = document.activeElement as HTMLElement | null
+        const overflow = document.body.style.overflow
+        document.body.style.overflow = 'hidden'
+        dialogRef.current?.focus()
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') { e.preventDefault(); handleClose() }
+            if (e.key !== 'Tab') return
+            const elements = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), select, textarea, a[href]') || []).filter(el => el.getClientRects().length > 0)
+            const first = elements[0], last = elements[elements.length - 1]
+            if (!first) { e.preventDefault(); return }
+            if (e.shiftKey && (document.activeElement === first || document.activeElement === dialogRef.current)) { e.preventDefault(); last.focus() }
+            else if (!e.shiftKey && (document.activeElement === last || document.activeElement === dialogRef.current)) { e.preventDefault(); first.focus() }
+        }
+        document.addEventListener('keydown', onKey)
+        return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = overflow; previous?.focus() }
+    }, [isOpen, mounted, handleClose])
 
     if (!isOpen || !mounted) return null
 
-    const handleClose = () => {
-        if (isSubmitted) {
-            setGuestData(initialData)
-            setIsSubmitted(false)
-        }
-        setError('')
-        onClose()
-    }
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        if (isSending) return
         setError('')
+        const errors = validateGuest({ ...guestData, status: guestData.attending ? 'confirmed' : 'declined' })
+        if (Object.keys(errors).length) { setError(Object.values(errors)[0]); return }
 
         // Without an event id we're in a preview/demo: simulate success
         if (eventId) {
@@ -55,8 +72,8 @@ export default function RSVPModal({ isOpen, onClose, onSubmit, eventId }: RSVPMo
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         eventId,
-                        name: guestData.name,
-                        contact: guestData.contact,
+                        name: guestData.name.trim(),
+                        contact: guestData.contact.trim(),
                         persons: guestData.attending ? guestData.persons : 0,
                         message: guestData.message,
                         status: guestData.attending ? 'confirmed' : 'declined',
@@ -81,12 +98,12 @@ export default function RSVPModal({ isOpen, onClose, onSubmit, eventId }: RSVPMo
 
     const modal = (
         <div style={overlayStyle} onClick={handleClose}>
-            <div style={modalStyle} onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby={fid('title')}>
-                <button type="button" onClick={handleClose} style={closeBtnStyle} aria-label="Închide">&times;</button>
+            <div ref={dialogRef} tabIndex={-1} style={modalStyle} onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby={fid('title')}>
+                <button type="button" onClick={handleClose} style={closeBtnStyle} aria-label="Închide"><X size={22} aria-hidden="true" /></button>
 
                 {isSubmitted ? (
                     <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-                        <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>{guestData.attending ? '🎉' : '💌'}</div>
+                        <div style={{ display: 'flex', justifyContent: 'center', color: '#48644f', marginBottom: '1rem' }}>{guestData.attending ? <CircleCheck size={48} strokeWidth={1.5} aria-hidden="true" /> : <Mail size={48} strokeWidth={1.5} aria-hidden="true" />}</div>
                         <h2 id={fid('title')} style={titleStyle}>Mulțumim, {guestData.name}!</h2>
                         <p style={{ color: '#555', marginTop: '0.5rem' }}>
                             {guestData.attending
@@ -120,7 +137,8 @@ export default function RSVPModal({ isOpen, onClose, onSubmit, eventId }: RSVPMo
                                             color: guestData.attending === val ? '#7a5f12' : '#666',
                                         }}
                                     >
-                                        {val ? '✓ Particip' : '✕ Nu pot ajunge'}
+                                        {val ? <Check size={17} aria-hidden="true" /> : <X size={17} aria-hidden="true" />}
+                                        {val ? 'Particip' : 'Nu pot ajunge'}
                                     </button>
                                 ))}
                             </div>
@@ -130,6 +148,8 @@ export default function RSVPModal({ isOpen, onClose, onSubmit, eventId }: RSVPMo
                                 <input
                                     id={fid('name')}
                                     required
+                                    minLength={2}
+                                    maxLength={120}
                                     autoComplete="name"
                                     style={inputStyle}
                                     type="text"
@@ -144,6 +164,7 @@ export default function RSVPModal({ isOpen, onClose, onSubmit, eventId }: RSVPMo
                                 <input
                                     id={fid('contact')}
                                     required
+                                    maxLength={120}
                                     style={inputStyle}
                                     type="text"
                                     placeholder="07xx xxx xxx / email@exemplu.ro"
@@ -161,7 +182,7 @@ export default function RSVPModal({ isOpen, onClose, onSubmit, eventId }: RSVPMo
                                         value={guestData.persons}
                                         onChange={(e) => setGuestData({ ...guestData, persons: Number(e.target.value) })}
                                     >
-                                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
+                                        {Array.from({ length: 20 }, (_, i) => i + 1).map(n => (
                                             <option key={n} value={n}>{n} {n === 1 ? 'persoană' : 'persoane'}</option>
                                         ))}
                                     </select>
@@ -172,6 +193,7 @@ export default function RSVPModal({ isOpen, onClose, onSubmit, eventId }: RSVPMo
                                 <label style={labelStyle} htmlFor={fid('message')}>Mesaj pentru gazde (opțional)</label>
                                 <textarea
                                     id={fid('message')}
+                                    maxLength={1000}
                                     style={{ ...inputStyle, minHeight: '70px', resize: 'vertical' }}
                                     placeholder="Ex: venim cu un copil, sosim mai târziu..."
                                     value={guestData.message}
@@ -215,13 +237,13 @@ const overlayStyle: React.CSSProperties = {
 }
 
 const modalStyle: React.CSSProperties = {
-    backgroundColor: '#fff',
+    backgroundColor: '#fffdf9',
     padding: '2rem 1.5rem 1.5rem',
     borderRadius: '20px',
     maxWidth: '420px',
     width: '100%',
     position: 'relative',
-    color: '#333',
+    color: '#243c33',
     boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
     fontFamily: 'var(--font-body), system-ui, sans-serif',
     margin: 'auto',
@@ -255,6 +277,10 @@ const inputStyle: React.CSSProperties = {
 }
 
 const choiceStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '6px',
     padding: '12px 8px',
     borderRadius: '12px',
     border: '2px solid #ddd',
@@ -266,7 +292,7 @@ const choiceStyle: React.CSSProperties = {
 
 const submitBtnStyle: React.CSSProperties = {
     width: '100%',
-    backgroundColor: '#b8962e',
+    backgroundColor: '#243c33',
     color: '#fff',
     border: 'none',
     padding: '14px',
@@ -279,6 +305,10 @@ const submitBtnStyle: React.CSSProperties = {
 }
 
 const closeBtnStyle: React.CSSProperties = {
+    display: 'grid',
+    placeItems: 'center',
+    minHeight: '44px',
+    minWidth: '44px',
     position: 'absolute',
     top: '10px',
     right: '14px',

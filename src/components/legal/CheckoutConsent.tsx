@@ -5,7 +5,7 @@ import { useId } from 'react'
 import { LEGAL_LINKS } from '@/config/legal'
 
 // Acordul obligatoriu inainte de plata (OUG 34/2014, art. 16 lit. a si m). Nebifat implicit.
-export default function CheckoutConsent({ checked, onChange, dark = true }: { checked: boolean, onChange: (v: boolean) => void, dark?: boolean }) {
+export default function CheckoutConsent({ checked, onChange, dark = false }: { checked: boolean, onChange: (v: boolean) => void, dark?: boolean }) {
     const id = useId()
     return (
         <label htmlFor={id} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', textAlign: 'left', fontSize: '0.85rem', lineHeight: 1.5, color: dark ? '#bbb' : '#444', cursor: 'pointer', margin: '12px 0' }}>

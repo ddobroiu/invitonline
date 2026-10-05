@@ -80,13 +80,6 @@
     text-align: center;
 }
 
-.sunburst {
-    width: min(70%, 260px);
-    height: auto;
-    margin-bottom: 12px;
-    animation: glow 1.4s ease both;
-}
-
 .kicker {
     font-family: var(--deco);
     font-size: 1rem;
@@ -447,10 +440,4 @@
 @keyframes glow {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .sunburst {
-        animation: none;
-    }
 }

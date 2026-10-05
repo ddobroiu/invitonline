@@ -2,12 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary'
 import { getCurrentUserId } from '@/lib/auth'
 import { alerta, faraCredite } from '@/lib/alerts'
-
-const MAX_SIZE: Record<string, number> = {
-    image: 10 * 1024 * 1024,
-    audio: 50 * 1024 * 1024,
-    video: 100 * 1024 * 1024,
-}
+import { MEDIA_TYPES, MEDIA_MAX_SIZE } from '@/config/media'
 
 export async function POST(request: NextRequest) {
     try {
@@ -15,31 +10,26 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Autentifică-te pentru a încărca fișiere.' }, { status: 401 })
         }
 
-        const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env
-        if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
-            return NextResponse.json({ error: 'Încărcarea fișierelor nu este configurată (Cloudinary).' }, { status: 503 })
-        }
-        cloudinary.config({
-            cloud_name: CLOUDINARY_CLOUD_NAME,
-            api_key: CLOUDINARY_API_KEY,
-            api_secret: CLOUDINARY_API_SECRET,
-        })
-
         const formData = await request.formData()
         const file = formData.get('file')
         const typeParam = String(formData.get('type') || 'image')
-        const type = ['image', 'audio', 'video'].includes(typeParam) ? typeParam : 'image'
+        const type = typeParam
+        if (!Object.hasOwn(MEDIA_TYPES, type)) return NextResponse.json({ error: 'Tip de fișier invalid.' }, { status: 400 })
 
         if (!(file instanceof File)) {
             return NextResponse.json({ error: 'Niciun fișier trimis.' }, { status: 400 })
         }
-        if (file.size > MAX_SIZE[type]) {
+        if (!file.size) return NextResponse.json({ error: 'Fișierul este gol.' }, { status: 400 })
+        if (file.size > MEDIA_MAX_SIZE[type]) {
             return NextResponse.json({ error: 'Fișierul este prea mare.' }, { status: 413 })
         }
-        const expectedPrefix = type === 'image' ? 'image/' : type === 'audio' ? 'audio/' : 'video/'
-        if (!file.type.startsWith(expectedPrefix)) {
+        if (!MEDIA_TYPES[type].includes(file.type)) {
             return NextResponse.json({ error: 'Tip de fișier invalid.' }, { status: 400 })
         }
+
+        const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env
+        if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) return NextResponse.json({ error: 'Încărcarea fișierelor este momentan indisponibilă. Poți păstra invitația și reveni mai târziu.' }, { status: 503 })
+        cloudinary.config({ cloud_name: CLOUDINARY_CLOUD_NAME, api_key: CLOUDINARY_API_KEY, api_secret: CLOUDINARY_API_SECRET })
 
         const buffer = Buffer.from(await file.arrayBuffer())
 

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { getCurrentUserId } from '@/lib/auth'
 import { escapeHtml, getSiteUrl } from '@/lib/utils'
+import { readJsonObject, validateGuest, ValidationError } from '@/lib/validation'
 
 const STATUSES = ['pending', 'confirmed', 'declined']
 
@@ -16,12 +17,15 @@ async function getOwnedEvent(eventId: string) {
 // Public RSVP from an invitation, or a guest added manually by the organizer
 export async function POST(req: Request) {
     try {
-        const body = await req.json()
+        const body = await readJsonObject(req)
+        const inputErrors = validateGuest(body, false)
+        if (typeof body.eventId !== 'string' || !body.eventId.trim()) inputErrors.eventId = 'Invitația nu este validă.'
+        if (Object.keys(inputErrors).length) return NextResponse.json({ message: Object.values(inputErrors)[0], errors: inputErrors }, { status: 400 })
         const eventId = String(body.eventId || '')
         const name = String(body.name || '').trim().slice(0, 120)
         const contact = String(body.contact || '').trim().slice(0, 120)
         const message = body.message ? String(body.message).trim().slice(0, 1000) : null
-        const requestedStatus = STATUSES.includes(body.status) ? body.status : 'confirmed'
+        const requestedStatus = typeof body.status === 'string' && STATUSES.includes(body.status) ? body.status : 'confirmed'
         const persons = requestedStatus === 'declined' ? 0 : Math.min(Math.max(Number(body.persons) || 1, 1), 20)
 
         if (!eventId || !name) {
@@ -37,9 +41,9 @@ export async function POST(req: Request) {
         if (!isOwner && !event.isPaid) {
             return NextResponse.json({ message: 'Invitația nu este activată.' }, { status: 403 })
         }
-        if (!isOwner && !contact) {
-            return NextResponse.json({ message: 'Te rugăm să completezi emailul sau telefonul.' }, { status: 400 })
-        }
+        const errors = validateGuest(body, !isOwner)
+        if (!isOwner && requestedStatus === 'pending') errors.status = 'Alege dacă participi sau nu poți ajunge.'
+        if (Object.keys(errors).length) return NextResponse.json({ message: Object.values(errors)[0], errors }, { status: 400 })
 
         const guest = await prisma.guest.create({
             data: {
@@ -50,6 +54,7 @@ export async function POST(req: Request) {
                 message,
                 // Guests added by the organizer wait for an answer; RSVPs carry their answer
                 status: isOwner && !body.status ? 'pending' : requestedStatus,
+                respondedAt: isOwner && !body.status ? null : new Date(),
             }
         })
 
@@ -60,7 +65,7 @@ export async function POST(req: Request) {
 
                 await sendEmail({
                     to: event.user.email,
-                    subject: `📩 Răspuns nou: ${name} — ${event.title}`,
+                    subject: `Răspuns nou: ${name} — ${event.title}`,
                     html: `
                         <div style="font-family: sans-serif; color: #333;">
                             <h2>Răspuns nou primit!</h2>
@@ -94,6 +99,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ guest }, { status: 201 })
     } catch (error) {
+        if (error instanceof ValidationError) return NextResponse.json({ message: error.message }, { status: 400 })
         console.error('Create Guest Error:', error)
         return NextResponse.json({ message: 'Eroare de server. Încearcă din nou.' }, { status: 500 })
     }
@@ -124,8 +130,8 @@ export async function GET(req: Request) {
 // Organizer changes a guest's status
 export async function PATCH(req: Request) {
     try {
-        const { id, status } = await req.json()
-        if (!id || !STATUSES.includes(status)) {
+        const { id, status } = await readJsonObject(req)
+        if (typeof id !== 'string' || !id || typeof status !== 'string' || !STATUSES.includes(status)) {
             return NextResponse.json({ message: 'Date invalide' }, { status: 400 })
         }
 
@@ -134,9 +140,10 @@ export async function PATCH(req: Request) {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
         }
 
-        const updated = await prisma.guest.update({ where: { id }, data: { status } })
+        const updated = await prisma.guest.update({ where: { id }, data: { status, persons: status === 'declined' ? 0 : Math.max(guest.persons, 1), respondedAt: status === 'pending' ? null : new Date() } })
         return NextResponse.json({ guest: updated })
     } catch (error) {
+        if (error instanceof ValidationError) return NextResponse.json({ message: error.message }, { status: 400 })
         console.error('Update Guest Error:', error)
         return NextResponse.json({ message: 'Internal server error' }, { status: 500 })
     }

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import localFont from 'next/font/local'
 import './globals.css'
 import Providers from '@/components/Providers'
 import SiteShell from '@/components/SiteShell'
@@ -7,8 +7,8 @@ import CookieConsent from '@/components/CookieConsent'
 import TikTokPixel from '@/components/TikTokPixel'
 import { BRAND, COMPANY, SITE_URL } from '@/config/legal'
 
-const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-body' })
-const playfair = Playfair_Display({ subsets: ['latin', 'latin-ext'], variable: '--font-heading' })
+const inter = localFont({ src: '../assets/fonts/Inter.ttf', weight: '100 900', display: 'swap', variable: '--font-body' })
+const playfair = localFont({ src: '../assets/fonts/PlayfairDisplay.ttf', weight: '400 900', display: 'swap', variable: '--font-heading' })
 
 export const metadata: Metadata = {
   // Canonical host is fixed (apex, https) so canonicals/OG never follow a www or localhost env value
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#0a0a0a',
+  themeColor: '#f8f7f3',
 }
 
 const organizationJsonLd = {

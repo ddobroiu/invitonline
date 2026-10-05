@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react'
 import styles from './NetflixTemplate.module.css'
 import RSVPModal from '@/components/RSVPModal'
-import { Play, Info, CheckCircle, Plus, Users, Calendar, MapPin, Navigation, Church, PartyPopper } from 'lucide-react'
+import { Play, Info, CheckCircle, Plus, Users, Calendar, MapPin, Navigation, Church, PartyPopper, Clapperboard } from 'lucide-react'
 import {
     str, getMapUrl, getWazeUrl, getMainNames, splitNames, getSchedule, parseDate, validCustomFields, eventLabel, CustomField,
 } from './templateUtils'
@@ -183,7 +183,7 @@ export default function NetflixTemplate(props: Props) {
 
             {videoUrl && (
                 <section className={`${styles.episodes} ${styles.videoSection}`}>
-                    <h2 className={styles.sectionTitle}>🎬 Trailer oficial</h2>
+                    <h2 className={styles.sectionTitle}><Clapperboard size={22} strokeWidth={1.6} aria-hidden="true" /> Trailer oficial</h2>
                     <div className={styles.videoFrame}>
                         <video
                             key={videoUrl}

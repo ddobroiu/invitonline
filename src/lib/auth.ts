@@ -91,7 +91,7 @@ export const authOptions: AuthOptions = {
         },
         async session({ session, token }) {
             if (session.user) {
-                (session.user as any).id = token.sub
+                session.user.id = token.sub
             }
             return session
         }
@@ -101,5 +101,5 @@ export const authOptions: AuthOptions = {
 // Id of the logged-in user, or null
 export async function getCurrentUserId(): Promise<string | null> {
     const session = await getServerSession(authOptions)
-    return (session?.user as any)?.id ?? null
+    return session?.user?.id ?? null
 }

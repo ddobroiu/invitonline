@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import styles from './StoryTemplate.module.css'
 import RSVPModal from '@/components/RSVPModal'
+import EventTypeIcon from '@/components/EventTypeIcon'
 import { MapPin, Calendar, Clock, Volume2, VolumeX, ChevronRight, Navigation, RotateCcw } from 'lucide-react'
 import {
     str, getMapUrl, getWazeUrl, getMainNames, splitNames, getSchedule, getGodparents, getParents,
@@ -124,8 +125,6 @@ export default function StoryTemplate(props: Props) {
         onPointerCancel: () => setIsPaused(false),
     }
 
-    const emoji = eventType === 'botez' ? '👶' : eventType === 'aniversare' ? '🎂' : eventType === 'petrecere' ? '🎉' : '💍'
-
     const renderContent = () => {
         switch (currentSlide) {
             case 0:
@@ -142,7 +141,7 @@ export default function StoryTemplate(props: Props) {
                             ) : (names || 'Invitație')}
                         </h1>
                         {str(date) && <h2 className={styles.subtitle}>{str(date)}</h2>}
-                        <div className={styles.emoji}>{emoji}</div>
+                        <div className={styles.eventSymbol}><EventTypeIcon type={eventType} size={44} /></div>
                         <div className={styles.tapHint}>Atinge ecranul pentru a continua <ChevronRight size={14} /></div>
                     </div>
                 )

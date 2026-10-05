@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { CircleCheck, Clock3, Search, TriangleAlert, LockKeyhole, Check, type LucideIcon } from 'lucide-react'
 import styles from './page.module.css'
 import { CONSENT_CHANGE_EVENT, hasAnalyticsConsent } from '@/lib/consent'
 import { trackTikTok } from '@/lib/tiktok'
@@ -55,29 +56,29 @@ const MAX_ATTEMPTS = 10
 
 type State = 'loading' | 'done' | 'pending' | 'missing' | 'invalid' | 'unavailable' | 'auth'
 
-const MESSAGES: Record<Exclude<State, 'loading' | 'done'>, { icon: string, title: string, text: string }> = {
+const MESSAGES: Record<Exclude<State, 'loading' | 'done'>, { icon: LucideIcon, title: string, text: string }> = {
     pending: {
-        icon: '⏳',
+        icon: Clock3,
         title: 'Verificăm plata',
         text: 'Nu am putut confirma încă plata. Dacă ai fost debitat, invitația se va activa automat în câteva minute — o găsești în contul tău.',
     },
     missing: {
-        icon: '🔎',
+        icon: Search,
         title: 'Nicio plată de verificat',
         text: 'Pagina aceasta se deschide automat după o plată. Poți activa o invitație din contul tău.',
     },
     invalid: {
-        icon: '⚠️',
+        icon: TriangleAlert,
         title: 'Sesiune de plată invalidă',
         text: 'Nu am găsit această plată. Verifică statusul invitației în contul tău sau încearcă din nou activarea.',
     },
     unavailable: {
-        icon: '⚠️',
+        icon: TriangleAlert,
         title: 'Plățile nu sunt disponibile',
         text: 'Momentan nu putem verifica plățile. Invitația rămâne salvată în contul tău — încearcă din nou mai târziu.',
     },
     auth: {
-        icon: '🔒',
+        icon: LockKeyhole,
         title: 'Autentifică-te',
         text: 'Intră în contul cu care ai făcut plata ca să vezi invitația activată.',
     },
@@ -143,13 +144,14 @@ function SuccessContent() {
     }
 
     const info = state === 'loading' || state === 'done' ? null : MESSAGES[state]
+    const StatusIcon = info?.icon || (state === 'loading' ? Clock3 : CircleCheck)
 
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`Ești invitat! Deschide invitația aici: ${invitationUrl}`)}`
 
     return (
         <div className={styles.container}>
             <div className={styles.card}>
-                <div className={styles.icon}>{info ? info.icon : state === 'loading' ? '⏳' : '✅'}</div>
+                <div className={styles.icon}><StatusIcon size={40} strokeWidth={1.5} aria-hidden="true" /></div>
                 <h1 className={styles.title}>{info ? info.title : state === 'loading' ? 'Verificăm plata' : 'Plată reușită!'}</h1>
 
                 {state === 'loading' && (
@@ -168,7 +170,7 @@ function SuccessContent() {
                             <div className={styles.linkBox}>
                                 <code>{invitationUrl}</code>
                                 <button onClick={copy} className={styles.copyBtn}>
-                                    {copied ? 'Copiat ✓' : 'Copiază'}
+                                    {copied && <Check size={15} aria-hidden="true" />} {copied ? 'Copiat' : 'Copiază'}
                                 </button>
                             </div>
                             <div className={styles.actions}>

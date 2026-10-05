@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import styles from './SiteShell.module.css'
 
 // Public invitations (and the template previews that imitate them) are shown full screen, without the site header/footer
 export default function SiteShell({ children }: { children: React.ReactNode }) {
@@ -11,16 +12,16 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
     const hideFooter = isInvitation || pathname === '/create' || pathname === '/dashboard'
 
     if (isInvitation) {
-        return <main style={{ flex: 1 }}>{children}</main>
+        return <main className={styles.invitation}>{children}</main>
     }
 
     return (
-        <>
+        <div className={styles.shell}>
             <Header />
-            <main style={{ flex: 1, paddingTop: '80px' }}>
+            <main className={styles.content}>
                 {children}
             </main>
             {!hideFooter && <Footer />}
-        </>
+        </div>
     )
 }

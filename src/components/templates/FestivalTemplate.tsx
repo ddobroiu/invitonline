@@ -102,7 +102,7 @@ export default function FestivalTemplate(props: FestivalTemplateProps) {
                                 </div>
                             )}
 
-                            <div className={styles.lineupTitle}>★ LINE-UP ★</div>
+                            <div className={styles.lineupTitle}>LINE-UP</div>
 
                             <div className={styles.performerGrid}>
                                 <div className={styles.mainPerformer}>

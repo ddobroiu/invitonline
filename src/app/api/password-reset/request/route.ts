@@ -5,6 +5,7 @@ import { resetPasswordEmail } from '@/lib/emails'
 import { sendEmail } from '@/lib/resend'
 import { clientIp } from '@/lib/tiktok-events'
 import { getSiteUrl } from '@/lib/utils'
+import { readJsonObject, ValidationError } from '@/lib/validation'
 
 // Acelasi raspuns daca adresa are cont sau nu (nu dezvaluim cine are cont), si la depasirea limitei.
 const SAME_ANSWER = {
@@ -13,7 +14,8 @@ const SAME_ANSWER = {
 
 export async function POST(req: Request) {
     try {
-        const body = await req.json().catch(() => ({}))
+        const body = await readJsonObject(req)
+        if (typeof body.email !== 'string') throw new ValidationError('Adresa de email nu este validă.')
         const email = normalizeEmail(body.email)
         if (!isValidEmail(email)) {
             return NextResponse.json({ message: 'Adresa de email nu este validă.' }, { status: 400 })
@@ -44,6 +46,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json(SAME_ANSWER)
     } catch (error) {
+        if (error instanceof ValidationError) return NextResponse.json({ message: error.message }, { status: 400 })
         console.error('Password reset request error:', error)
         return NextResponse.json({ message: 'Eroare de server. Încearcă din nou.' }, { status: 500 })
     }

@@ -614,3 +614,16 @@
         scrollbar-width: thin;
     }
 }
+
+/* Love Letter: tactile sage stationery, with the original accessible opening interaction. */
+.container { --gold:#a58b62; --gold-deep:#687659; --navy:#87967b; --navy-light:#aab79d; color:#3d4d35; background:#eeeee3; padding:48px 24px; min-height:100svh; }
+.scene { max-width:510px; gap:35px; }
+.envelope { border-radius:3px; box-shadow:0 25px 45px #3d4d3526,0 3px 7px #3d4d3510; }
+.interior { background-image:radial-gradient(circle,#ffffff25 1px,transparent 1px); }
+.peek { border-color:#c9cebc; background:#fffdf3; box-shadow:none; }
+.peekNames { color:#58694d; }
+.seal { color:#6c5531; background:radial-gradient(circle at 35% 30%,#dfcaa2,#c4ab7d 65%,#a68b5d); box-shadow:0 0 0 2px #b5a073,inset 0 0 0 4px #efdfc044,0 4px 8px #3d4d3525; font-weight:400; }
+.hint { color:#58694d; border-color:#bbc6ad; font-size:12px; letter-spacing:.07em; padding:13px 23px; animation:none; }
+.hint:hover { background:#dde5d3; }
+.letter { background:#fffdf5; border:1px solid #d3dac5; box-shadow:0 20px 60px #3d4d3515; border-radius:3px; }
+@media(prefers-reduced-motion:reduce) { .container *, .container *::before, .container *::after { animation:none!important; transition:none!important; } }

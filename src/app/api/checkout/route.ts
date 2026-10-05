@@ -9,21 +9,18 @@ import { LEGAL_VERSION } from '@/config/legal'
 import { getCookieValue, hasAnalyticsConsent, hasMarketingConsent } from '@/lib/consent'
 import { clientIp, tiktokCheckoutMetadata } from '@/lib/tiktok-events'
 import { alerta } from '@/lib/alerts'
+import { readJsonObject, validateEvent, ValidationError, isRecord } from '@/lib/validation'
 
 export async function POST(req: Request) {
     try {
         const session = await getServerSession(authOptions)
-        const userId = (session?.user as any)?.id
+        const userId = session?.user?.id
         if (!userId) {
             return NextResponse.json({ message: 'Trebuie să fii autentificat.' }, { status: 401 })
         }
 
-        const stripe = getStripe()
-        if (!stripe) {
-            return NextResponse.json({ message: 'Plățile nu sunt configurate încă (STRIPE_SECRET_KEY lipsește).' }, { status: 503 })
-        }
-
-        const { eventId, consent } = await req.json()
+        const { eventId, consent } = await readJsonObject(req)
+        if (typeof eventId !== 'string' || !eventId) throw new ValidationError('Alege invitația pe care vrei să o activezi.')
         // Acordul pentru furnizarea imediata si pierderea dreptului de retragere (OUG 34/2014, art. 16 lit. a si m)
         if (consent !== true) {
             return NextResponse.json({ message: 'Trebuie să accepți Termenii și condițiile și furnizarea imediată a serviciului digital.' }, { status: 400 })
@@ -37,6 +34,10 @@ export async function POST(req: Request) {
         if (event.isPaid) {
             return NextResponse.json({ message: 'Invitația este deja activată.' }, { status: 400 })
         }
+        const errors = validateEvent({ ...(isRecord(event.data) ? event.data : {}), ...event })
+        if (Object.keys(errors).length) return NextResponse.json({ message: 'Completează detaliile invitației înainte de activare.', errors }, { status: 400 })
+        const stripe = getStripe()
+        if (!stripe) return NextResponse.json({ message: 'Plățile sunt momentan indisponibile. Invitația rămâne salvată în contul tău.' }, { status: 503 })
 
         const siteUrl = getSiteUrl(req)
         // Contul Stripe „Applications” e comun aplicatiilor: eticheta de proiect separa platile in mydashboard
@@ -84,7 +85,8 @@ export async function POST(req: Request) {
         })
 
         return NextResponse.json({ url: checkoutSession.url })
-    } catch (error: any) {
+    } catch (error) {
+        if (error instanceof ValidationError) return NextResponse.json({ message: error.message }, { status: 400 })
         console.error('Stripe Checkout Error:', error)
         void alerta('error', 'checkout', `InvitOnline: plata nu a putut fi initiata (checkout 500): ${error instanceof Error ? error.message : String(error)}`)
         return NextResponse.json({ message: 'Nu am putut iniția plata. Încearcă din nou.' }, { status: 500 })
@@ -96,7 +98,7 @@ export async function POST(req: Request) {
 export async function GET(req: Request) {
     try {
         const session = await getServerSession(authOptions)
-        const userId = (session?.user as any)?.id
+        const userId = session?.user?.id
         if (!userId) {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
         }
@@ -126,7 +128,8 @@ export async function GET(req: Request) {
         }
 
         if (checkoutSession.payment_status === 'paid') {
-            await fulfillCheckout(checkoutSession)
+            const result = await fulfillCheckout(checkoutSession)
+            if (!result.fulfilled) return NextResponse.json({ message: 'Sesiune de plată invalidă.' }, { status: 403 })
         }
 
         return NextResponse.json({

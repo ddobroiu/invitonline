@@ -18,7 +18,7 @@ export async function GET() {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
-        const orders = await (prisma as any).order.findMany({
+        const orders = await prisma.order.findMany({
             where: { userId: user.id },
             include: {
                 event: {
@@ -34,7 +34,8 @@ export async function GET() {
 
         return NextResponse.json({ transactions: orders });
 
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    } catch (error) {
+        console.error('Load orders error:', error);
+        return NextResponse.json({ error: 'Nu am putut încărca istoricul plăților. Încearcă din nou.' }, { status: 500 });
     }
 }

@@ -1,39 +1,33 @@
-# Spectra Events 🎭
+# InvitOnline
 
-O platformă inovatoare pentru invitații digitale premium, create pentru nunți, botezuri și aniversări exclusiviste.
+Invitații digitale pentru nunți, botezuri, aniversări, petreceri și evenimente corporate. Colecția cuprinde 23 de modele, grupate pe tematici: călătorii, muzică, cinema, hârtie, interactive și elegante.
 
-## ✨ Funcționalități Principale
+Editorul oferă previzualizare pe telefon și desktop, salvează invitațiile în PostgreSQL și permite modificarea lor după activare. Invitațiile active au link public, RSVP, hărți Google Maps/Waze, listă de invitați și export CSV. Fotografiile, muzica și videoclipurile sunt disponibile în modelele care le acceptă.
 
-*   **Creator Interactiv**: Editor vizual în timp real pentru personalizarea invitațiilor.
-*   **Modele "Smechere"**:
-    *   ✉️ **Plic 3D**: Animație realistică de deschidere.
-    *   🎬 **Netflix Style**: "Serialul" poveștii voastre de dragoste.
-    *   ✈️ **Boarding Pass**: Bilet de avion cu QR Code dinamic.
-    *   🎵 **Vinyl Retro**: Player muzical animat.
-    *   🎫 **Loz (Scratch Card)**: Răzuiește ecranul pentru a vedea surpriza.
-*   **Cont Utilizator**: Dashboard pentru gestionarea evenimentelor și a listei de invitați.
-*   **Design Premium**: Glassmorphism, Dark Mode, animații fluide.
+## Pornire locală
 
-## 🚀 Cum să rulezi proiectul
+1. Instalează dependențele cu `npm install`.
+2. Copiază `.env.example` în `.env.local` și configurează baza de date, secretul de autentificare și adresele site-ului.
+3. Rulează `npm run dev` și deschide http://localhost:3000. Dacă folosești baza inclusă pe `127.0.0.1:54329`, comanda o pornește automat și aplică migrările înainte să pornească site-ul. Datele existente se păstrează în `.local-db`.
+4. Pentru alt port, rulează `npm run dev -- --port 3015`. Adresa locală de autentificare se aliniază automat cu portul ales. Baza inclusă pornită de această comandă se închide odată cu site-ul; o bază deja pornită separat rămâne deschisă.
 
-1.  Instalează dependențele:
-    ```bash
-    npm install
-    ```
+Stripe activează invitațiile după plata confirmată. Cloudinary gestionează fișierele, Resend trimite emailurile, iar Oblio emite facturile din datele colectate la plata Stripe. Google OAuth este opțional. Configurările sunt descrise în `.env.example`; fără configurarea unui serviciu, aplicația afișează un mesaj de indisponibilitate.
 
-2.  Pornește serverul de dezvoltare:
-    ```bash
-    npm run dev
-    ```
+## Verificări
 
-3.  Accesează aplicația la [http://localhost:3000](http://localhost:3000).
+- `npm run typecheck` — verificarea tipurilor.
+- `npm run lint -- --quiet` — erori ESLint.
+- `npm run test:unit` — reguli pentru formulare și API.
+- `npm run test:e2e` — cont, editor, acces, activare, RSVP, CSV și pagini responsive. Folosește baze de date temporare, cu serviciile externe dezactivate. Porturi implicite: 3016, 54330 și 54331.
+- `node scripts/check-thematic.mjs http://localhost:3000` — verificarea modelelor și a interacțiunilor în browser.
+- `node scripts/check-seo.mjs http://localhost:3000` — pagini SEO, canonical, sitemap, date structurate, imagini sociale și aspect responsive.
+- `node --env-file=.env.local --import tsx scripts/audit-auth.ts` — verifică accesul la baza de date, coloanele și migrările lipsă, fără a afișa datele conturilor.
+- `node --env-file=.env.local scripts/check-login.mjs http://localhost:3015` — verifică autentificarea pe baza locală inclusă cu un cont temporar, eliminat la final. Nu trimite emailuri.
+- `node --env-file=.env.local --import tsx scripts/audit-payments.ts` — audit Stripe și probe webhook fără tranzacții: încasări activate, endpoint și semnături, sesiuni recente. Nu afișează chei sau date de clienți. Pe Node 24/Windows, folosește `node --use-system-ca` dacă mediul cere certificatele sistemului.
+- `npm run build` — build de producție; `npm start` îl servește local.
 
-## 🛠 Tehnologii Folosite
+Testele locale nu confirmă plățile, emailurile, încărcările sau facturile reale. Aceste integrări trebuie verificate în mediul configurat înainte de publicare.
 
-*   **Next.js 14**: Framework React pentru performanță maximă.
-*   **CSS Modules**: Stilizare modulară și curată.
-*   **Canvas API**: Pentru efectul de scratch card.
-*   **Local Storage**: Pentru persistența datelor (MVP).
+Aplicația folosește Next.js 16, React 19, TypeScript, Prisma/PostgreSQL și CSS Modules. Fonturile sunt livrate local, cu licențele în `src/assets/fonts`.
 
----
-*Creat cu ❤️ de Antigravity pentru un eveniment de neuitat.*
+Paginile publice pentru evenimente și tematici sunt definite în `src/config/invitation-landings.ts`. Sunt generate static, au conținut distinct, linkuri către modele și ghiduri, canonical propriu, BreadcrumbList/Service și imagini pentru distribuire. Sitemap-ul se actualizează din aceeași listă. Previzualizările modelelor se pot reface cu `node scripts/capture-models.mjs http://localhost:3000`.

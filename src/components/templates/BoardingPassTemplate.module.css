@@ -1,6 +1,6 @@
 .container {
     --notch: 13px;
-    --blue: #2563eb;
+    --blue: #b55236;
     --ink: #0f172a;
     --muted: #64748b;
     flex: 1 0 auto;
@@ -10,8 +10,8 @@
     width: 100%;
     min-height: 100%;
     background:
-        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(96, 165, 250, 0.22), transparent 70%),
-        radial-gradient(circle at center, #2c3e50, #05080d);
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(181, 82, 54, 0.12), transparent 70%),
+        linear-gradient(145deg, #e8dfd1, #f7f3eb);
     padding: 24px 14px;
     overflow-x: hidden;
     container-type: inline-size;
@@ -24,7 +24,7 @@
     display: flex;
     justify-content: center;
     /* drop-shadow follows the notched outline (box-shadow would be a plain rectangle) */
-    filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.55));
+    filter: drop-shadow(0 30px 40px rgba(53, 43, 31, 0.18));
 }
 
 @keyframes flightIn {
@@ -50,7 +50,7 @@
 }
 
 .mainSection {
-    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    background: linear-gradient(180deg, #fffdf8 0%, #f8f4eb 100%);
     border-radius: 16px 16px 0 0;
     padding: 22px 20px 22px;
     position: relative;
@@ -563,3 +563,14 @@
         margin-bottom: auto;
     }
 }
+
+/* Airline stationery: printed ink, warm paper and a quiet entrance. */
+.mainSection::before { animation: none; opacity: 0; }
+.airline { letter-spacing: .12em; }
+.code { font-family: var(--font-heading), Georgia, serif; }
+.ticketWrapper { animation-duration: .65s; }
+.stubSection { background: #efe8da; border-top-color: #cbbda8; }
+.passengerCell { background: #efe9dd; }
+.pathLine { border-top-color: #cfae93; }
+.cityName, .detailLabel { color: #716757; }
+.wazeBtn { background: #233c35; color: #fff; }

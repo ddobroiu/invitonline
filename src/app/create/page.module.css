@@ -269,22 +269,30 @@ textarea.input {
 
 .typeSwitch {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
 }
 
 .typeBtn {
-    padding: 10px 4px;
-    border-radius: 12px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    padding: 14px 4px;
+    border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     background: rgba(255, 255, 255, 0.03);
     color: #aaa;
-    font-weight: 700;
-    font-size: 0.85rem;
+    font-weight: 600;
+    font-size: 0.8rem;
     cursor: pointer;
     font-family: inherit;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
+
+.typeSelectedMark { position: absolute; top: 5px; right: 5px; }
+.typeBtn:focus-visible { outline: 2px solid var(--site-accent); outline-offset: 3px; }
 
 .typeBtn:hover {
     color: #fff;
@@ -358,6 +366,12 @@ textarea.input {
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
 }
+
+.typeBtn svg { flex-shrink: 0; }
+
+.themeFilters { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0; }
+.themeFilters button { min-height: 44px; padding: 8px 12px; border: 1px solid #dce2d7; border-radius: 24px; color: #52624b; background: #f8f9f5; cursor: pointer; font-size: 12px; }
+.themeFilters button[aria-pressed="true"] { background: #243c33; color: white; border-color: #243c33; }
 
 .templateBtn {
     padding: 14px 6px;
@@ -980,6 +994,8 @@ textarea.input {
         grid-template-columns: repeat(2, 1fr);
     }
 
+    .typeBtn:last-child { grid-column: 1 / -1; }
+
     .customFieldRow {
         grid-template-columns: 1fr auto;
     }
@@ -993,3 +1009,49 @@ textarea.input {
         letter-spacing: 0.5px;
     }
 }
+
+/* Reserve the phone chrome outside the actual invitation viewport. */
+.phoneInner { height: calc(100% - 44px); margin-top: 44px; border-radius: 0 0 38px 38px; overflow: hidden; }
+.pcContent { overflow: hidden; min-height: 0; }
+.phoneFrame { background: #243c33; border-color: #243c33; }
+
+/* Match the invitation studio to the public collection. */
+.container { --accent: #365744; background: #f8f7f3; color: #243c33; }
+.title { background: none; color: #243c33; font-weight: 400; }
+.subtitle, .cardText, .hint, .secureNote { color: #73816c; }
+.stepCounter, .stepNav { background: #edf0e7; border-color: #dce3d4; }
+.stepTab { color: #78866f; }
+.activeTab, .stepTab:hover { background: #fff; color: #365744; }
+.editorCard { background: #fff; border-color: #e0e6d9; }
+.cardTitle, .label { color: #3b5132; }
+.cardFooter, .sectionDivider { border-color: #e0e6d9; }
+.input, .input option { background: #fafbf7; color: #243c33; border-color: #dce3d4; color-scheme: light; }
+.input:focus { background: #fff; box-shadow: 0 0 0 3px #36574415; }
+.input::placeholder { color: #8d9886; }
+.templateBtn { background: #fafbf7; color: #76866b; border-color: #e0e6d9; }
+.templateBtn:hover { background: #edf2e6; border-color: #b9c8ac; }
+.activeTemplate, .activeTemplate:hover { background: #edf2e6; color: #365744; border-color: #789769; box-shadow: none; }
+.typeBtn { background: #fff; color: var(--site-muted); border-color: var(--site-border); }
+.typeBtn:hover { background: var(--site-soft); border-color: #a6b3a0; color: var(--site-ink); }
+.typeBtnActive, .typeBtnActive:hover { background: var(--site-ink); color: #fff; border-color: var(--site-ink); box-shadow: none; }
+.templateName { color: inherit; }
+.badgePhoto { color: #42645e; background: #e2eeeb; }
+.badgeAudio { color: #476336; background: #e8f0df; }
+.badgeVideo { color: #8b4c51; background: #f4e6e7; }
+.previewSection { background: #e9ede3; border-color: #dce3d4; border-radius: 24px; }
+.previewSwitcher { background: #dce4d3; border: 0; }
+.switchBtn { color: #6b7c60; }
+.activeSwitch { color: #243c33; background: #fff; }
+.pcMockup { box-shadow: 0 20px 50px #243c3318; border-color: #d0d9c7; }
+.pcBrowserHeader { background: #e0e6d8; border-color: #d0d9c7; }
+.urlBar { background: #f8faf5; color: #7b8b70; }
+.phoneFrame { box-shadow: 0 20px 50px #243c3325; }
+.btnGenerate { background: #243c33; color: #fff; box-shadow: none; }
+.btnSecondary, .addFieldBtn { background: #eff3e9; border-color: #d5dfcb; color: #47643a; }
+.priceCard { background: #eef3e7; border-color: #d5dfcb; }
+.price, .priceCard ul, .priceCard li, .price span { color: #365744; }
+.infoBox { background: #eef3e7; border-color: #d5dfcb; color: #6b7c60; }
+.authTabs { background: #eef3e7; }
+.authTabs button { color: #718166; }
+.authTabs .authTabActive { color: #365744; background: #fff; }
+@media(prefers-reduced-motion: reduce) { .editorCard { animation: none; } }

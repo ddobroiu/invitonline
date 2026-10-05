@@ -3,6 +3,28 @@
 
 export type EventTypeId = 'nunta' | 'botez' | 'aniversare' | 'petrecere' | 'corporate'
 export type TemplateFeature = 'photo' | 'video' | 'audio'
+export type TemplateTheme = 'travel' | 'music' | 'cinema' | 'paper' | 'playful' | 'elegant'
+
+export const TEMPLATE_THEMES: { id: TemplateTheme; label: string }[] = [
+    { id: 'travel', label: 'Călătorie' },
+    { id: 'music', label: 'Muzică & festival' },
+    { id: 'cinema', label: 'Film & poveste' },
+    { id: 'paper', label: 'Scrisori & ziar' },
+    { id: 'playful', label: 'Joacă & surprize' },
+    { id: 'elegant', label: 'Elegant & clasic' },
+]
+
+const THEMATIC_TEMPLATES: Record<string, TemplateTheme> = {
+    boarding: 'travel', passport: 'travel', riviera: 'travel',
+    vinyl: 'music', festival: 'music',
+    netflix: 'cinema', cinema: 'cinema', story: 'cinema', nocturne: 'cinema',
+    envelope: 'paper', news: 'paper', chat: 'paper',
+    scratch: 'playful', kids: 'playful', 'botez-delicat': 'playful',
+}
+
+export function getTemplateTheme(id: string): TemplateTheme {
+    return THEMATIC_TEMPLATES[id] || 'elegant'
+}
 
 export interface TemplateInfo {
     id: string
@@ -18,42 +40,54 @@ export interface TemplateInfo {
     isNew?: boolean
 }
 
-export const EVENT_TYPES: { id: EventTypeId; label: string; emoji: string }[] = [
-    { id: 'nunta', label: 'Nuntă', emoji: '💍' },
-    { id: 'botez', label: 'Botez', emoji: '👶' },
-    { id: 'aniversare', label: 'Aniversare', emoji: '🎂' },
-    { id: 'petrecere', label: 'Petrecere', emoji: '🎉' },
-    { id: 'corporate', label: 'Corporate', emoji: '🏢' },
+export const EVENT_TYPES: { id: EventTypeId; label: string }[] = [
+    { id: 'nunta', label: 'Nuntă' },
+    { id: 'botez', label: 'Botez' },
+    { id: 'aniversare', label: 'Aniversare' },
+    { id: 'petrecere', label: 'Petrecere' },
+    { id: 'corporate', label: 'Corporate' },
 ]
 
-export const TEMPLATES: TemplateInfo[] = [
-    // New collection first: they are the most refined designs
-    { id: 'modern', name: 'Modern Minimal', desc: 'Tipografie editorială, mult spațiu alb, linii fine.', suits: ['nunta', 'aniversare', 'corporate'], features: ['photo'], centered: false, isNew: true },
-    { id: 'boho', name: 'Boho Floral', desc: 'Tonuri de teracotă și salvie, flori și pampas desenate.', suits: ['nunta', 'botez'], features: ['photo'], centered: false, isNew: true },
-    { id: 'botez-delicat', name: 'Botez Delicat', desc: 'Pastel, nori și steluțe, pentru primul eveniment al celui mic.', suits: ['botez'], features: ['photo'], centered: false, isNew: true },
-    { id: 'kids', name: 'Petrecere Copii', desc: 'Baloane, confetti și culori vesele pentru aniversări de copii.', suits: ['aniversare', 'petrecere'], features: ['photo'], centered: false, isNew: true },
-    { id: 'gala', name: 'Gala Art Deco', desc: 'Negru și șampanie, ornamente art deco: majorat, gală, aniversare.', suits: ['aniversare', 'petrecere', 'corporate', 'nunta'], features: ['photo'], centered: false, isNew: true },
-    { id: 'corporate', name: 'Corporate', desc: 'Curat și profesionist: agendă, locație, confirmare.', suits: ['corporate', 'petrecere'], features: ['photo'], centered: false, isNew: true },
+export const FEATURED_TEMPLATE_IDS = ['boarding', 'passport', 'scratch', 'vinyl', 'envelope', 'netflix'] as const
 
-    { id: 'classic', name: 'Classic Floral', desc: 'Eleganță atemporală cu motive florale.', suits: ['nunta', 'botez'], features: ['photo'], centered: true },
-    { id: 'classic-gold', name: 'Classic Gold', desc: 'Lux regal cu detalii aurii.', suits: ['nunta', 'aniversare'], features: ['photo'], centered: true },
-    { id: 'classic-minimal', name: 'Minimalist', desc: 'Modern, curat, alb-negru.', suits: ['nunta', 'botez', 'aniversare'], features: ['photo'], centered: true },
-    { id: 'envelope', name: 'Plic 3D', desc: 'O deschidere animată, ca o scrisoare adevărată.', suits: ['nunta', 'botez', 'aniversare'], features: ['photo'], centered: true },
-    { id: 'netflix', name: 'Cinematic Netflix', desc: 'Evenimentul vostru ca un serial de succes.', suits: ['nunta', 'aniversare', 'petrecere'], features: ['video', 'photo'], centered: false },
-    { id: 'boarding', name: 'Boarding Pass', desc: 'Invitație tip bilet de avion.', suits: ['nunta', 'petrecere'], features: ['photo'], centered: false },
-    { id: 'vinyl', name: 'Vinyl Record', desc: 'Stil retro, cu muzica voastră (pornește la atingere).', suits: ['nunta', 'aniversare', 'petrecere'], features: ['audio', 'photo'], centered: true },
-    { id: 'scratch', name: 'Loz Norocos', desc: 'Interactiv: invitații răzuiesc ca să afle data.', suits: ['nunta', 'botez', 'aniversare'], features: ['photo'], centered: true },
-    { id: 'passport', name: 'Pașaport', desc: 'Pentru nunți cu temă de călătorie.', suits: ['nunta'], features: ['photo'], centered: true },
-    { id: 'news', name: 'Ziarul Nunții', desc: 'Anunțul ca o știre de primă pagină.', suits: ['nunta', 'aniversare'], features: ['photo'], centered: false },
-    { id: 'cinema', name: 'Film Poster', desc: 'Voi sunteți vedetele filmului.', suits: ['nunta', 'aniversare', 'petrecere'], features: ['photo'], centered: false },
-    { id: 'festival', name: 'Summer Festival', desc: 'Pentru petreceri cu energie de festival.', suits: ['petrecere', 'aniversare'], features: ['audio', 'photo'], centered: false },
-    { id: 'vip', name: 'VIP Card', desc: 'Un card de acces exclusivist.', suits: ['petrecere', 'aniversare', 'corporate'], features: ['photo'], centered: true },
-    { id: 'story', name: 'Insta Story', desc: 'Format vertical, ca un story, cu video.', suits: ['nunta', 'aniversare', 'petrecere'], features: ['video', 'photo'], centered: false },
-    { id: 'chat', name: 'Love Chat', desc: 'Invitația ca o conversație pe telefon.', suits: ['nunta', 'aniversare'], features: ['audio', 'photo'], centered: false },
+const TEMPLATE_COLLECTION: TemplateInfo[] = [
+    { id: 'riviera', name: 'Riviera', desc: 'Cobalt, soare și hârtie crem. O poveste cu aer mediteraneean.', suits: ['nunta', 'aniversare', 'petrecere'], features: ['photo'], centered: false, isNew: true },
+    { id: 'nocturne', name: 'Éternité', desc: 'Fotografie pe tot ecranul, lumină și o compoziție cinematografică.', suits: ['nunta', 'aniversare'], features: ['photo'], centered: false, isNew: true },
+    { id: 'modern', name: 'Vow', desc: 'Editorial asimetric, fotografie în arc și tipografie expresivă.', suits: ['nunta', 'aniversare', 'corporate'], features: ['photo'], centered: false, isNew: true },
+    { id: 'boho', name: 'Botanica', desc: 'Verde măsliniu, ilustrații botanice și un portret organic.', suits: ['nunta', 'botez'], features: ['photo'], centered: false, isNew: true },
+    { id: 'botez-delicat', name: 'Luna', desc: 'O lună sculpturală și tonuri de lavandă pentru o minune mică.', suits: ['botez'], features: ['photo'], centered: false, isNew: true },
+    { id: 'kids', name: 'Confetti Club', desc: 'Un poster de petrecere, cu forme decupate și confetti interactive.', suits: ['aniversare', 'petrecere'], features: ['photo'], centered: false, isNew: true },
+    { id: 'gala', name: 'After Dark', desc: 'Burgund, orbite aurii și o invitație pentru o seară specială.', suits: ['petrecere', 'corporate', 'nunta', 'aniversare'], features: ['photo'], centered: false, isNew: true },
+    { id: 'corporate', name: 'The Gathering', desc: 'Verde profund, accente lime și tipografie de afiș contemporan.', suits: ['corporate', 'petrecere'], features: ['photo'], centered: false, isNew: true },
+
+    { id: 'classic', name: 'Maison', desc: 'O invitație de colecție, cu detalii fine și un portret oval.', suits: ['nunta', 'botez'], features: ['photo'], centered: true },
+    { id: 'classic-gold', name: 'Champagne', desc: 'Fildeș, accente calde și o compoziție tipografică rafinată.', suits: ['nunta', 'aniversare'], features: ['photo'], centered: true },
+    { id: 'classic-minimal', name: 'Pure', desc: 'Alb cald, contrast tipografic și o dată imposibil de trecut cu vederea.', suits: ['nunta', 'botez', 'aniversare'], features: ['photo'], centered: true },
+    { id: 'envelope', name: 'Love Letter', desc: 'Un plic verde salvie care se deschide într-o scrisoare personală.', suits: ['nunta', 'botez', 'aniversare'], features: ['photo'], centered: true },
+    { id: 'netflix', name: 'Premiere', desc: 'Povestea voastră într-un afiș cinematografic original.', suits: ['nunta', 'aniversare', 'petrecere'], features: ['video', 'photo'], centered: false },
+    { id: 'boarding', name: 'Bilet de avion', desc: 'Un boarding pass cu rută, pasageri, poartă de îmbarcare și talon detașabil.', suits: ['nunta', 'petrecere'], features: ['photo'], centered: false },
+    { id: 'vinyl', name: 'Discul nostru', desc: 'Un disc de vinil cu fotografia voastră pe etichetă și muzică la o atingere.', suits: ['nunta', 'aniversare', 'petrecere'], features: ['audio', 'photo'], centered: true },
+    { id: 'scratch', name: 'Lozul norocos', desc: 'Răzuiește suprafața aurie și descoperă invitația ascunsă dedesubt.', suits: ['nunta', 'botez', 'aniversare'], features: ['photo'], centered: true },
+    { id: 'passport', name: 'Pașaport', desc: 'O copertă de pașaport care se deschide spre fotografia și vizele poveștii voastre.', suits: ['nunta'], features: ['photo'], centered: true },
+    { id: 'news', name: 'Ziarul nostru', desc: 'Prima pagină a unui ziar: titluri, fotografie, coloane și știrea cea mare.', suits: ['nunta', 'aniversare'], features: ['photo'], centered: false },
+    { id: 'cinema', name: 'Pelicula noastră', desc: 'Cadre de film, fotografie alb-negru și distribuția unei zile de neuitat.', suits: ['nunta', 'aniversare', 'petrecere'], features: ['photo'], centered: false },
+    { id: 'festival', name: 'Festival Pass', desc: 'Un afiș de festival cu permis de acces, dată și muzica petrecerii.', suits: ['petrecere', 'aniversare'], features: ['audio', 'photo'], centered: false },
+    { id: 'vip', name: 'Card VIP', desc: 'Un card de membru cu inițiale, număr de acces și un loc rezervat pentru tine.', suits: ['petrecere', 'aniversare', 'corporate'], features: ['photo'], centered: true },
+    { id: 'story', name: 'In Frame', desc: 'Trei capitole interactive pentru o singură poveste.', suits: ['nunta', 'aniversare', 'petrecere'], features: ['video', 'photo'], centered: false },
+    { id: 'chat', name: 'Mesaj pentru tine', desc: 'O conversație animată, cu mesaje, fotografii și răspuns direct la invitație.', suits: ['nunta', 'aniversare'], features: ['audio', 'photo'], centered: false },
 ]
 
+const featuredRank = new Map<string, number>(FEATURED_TEMPLATE_IDS.map((id, index) => [id, index]))
+// Keep the most distinctive themes first in the homepage, catalogue and editor.
+export const TEMPLATES: TemplateInfo[] = [...TEMPLATE_COLLECTION].sort((a, b) => (featuredRank.get(a.id) ?? FEATURED_TEMPLATE_IDS.length) - (featuredRank.get(b.id) ?? FEATURED_TEMPLATE_IDS.length))
 export const TEMPLATE_IDS: string[] = TEMPLATES.map((t) => t.id)
 export const DEFAULT_TEMPLATE = 'modern'
+export const MODEL_PREVIEW_VERSION = '2'
+
+// A new URL makes the refreshed previews visible even when older images were cached.
+export function getModelPreviewSrc(id: string): string {
+    return `/images/models/${id}-v${MODEL_PREVIEW_VERSION}.jpg`
+}
 
 export function getTemplate(id: string | null | undefined): TemplateInfo | undefined {
     return TEMPLATES.find((t) => t.id === id)

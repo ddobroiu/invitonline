@@ -58,7 +58,7 @@ export interface OblioProduct {
     vatIncluded?: boolean;
 }
 
-export async function createInvoice(clientData: any, products: OblioProduct[]) {
+export async function createInvoice(clientData: { cif?: string; name: string; rc?: string; address?: string; city?: string; county?: string; email?: string }, products: OblioProduct[]) {
     const token = await getAccessToken();
 
     let issuerCif = OBLIO_CIF_FIRMA || '';

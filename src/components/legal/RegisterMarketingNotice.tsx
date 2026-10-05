@@ -4,7 +4,7 @@ import { SIGNUP_MARKETING_NOTICE } from '@/lib/lifecycle/consent'
 // Refuzul, gratuit si cu un click, e linkul de dezabonare din fiecare e-mail (/dezabonare).
 export default function RegisterMarketingNotice() {
     return (
-        <p style={{ textAlign: 'left', fontSize: '0.8rem', lineHeight: 1.5, color: '#999', margin: '0 0 12px' }}>
+        <p style={{ textAlign: 'left', fontSize: '0.8rem', lineHeight: 1.5, color: 'var(--site-muted)', margin: '0 0 12px' }}>
             {SIGNUP_MARKETING_NOTICE}
         </p>
     )

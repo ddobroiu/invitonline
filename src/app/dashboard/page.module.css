@@ -1,8 +1,8 @@
 .dashboardContainer {
     min-height: calc(100vh - 80px);
     display: flex;
-    background: #050505;
-    color: #fff;
+    background: var(--site-soft);
+    color: var(--site-ink);
     font-family: var(--font-body);
 }
 
@@ -12,7 +12,7 @@
     align-items: center;
     justify-content: center;
     padding: 24px 16px;
-    background: #050505;
+    background: var(--site-soft);
 }
 
 .emptyState {
@@ -32,7 +32,7 @@
 }
 
 .emptyState p {
-    color: #888;
+    color: var(--site-muted);
     margin-bottom: 2rem;
 }
 
@@ -41,8 +41,8 @@
 .sidebar {
     width: 280px;
     flex-shrink: 0;
-    background: rgba(255, 255, 255, 0.02);
-    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(36, 60, 51, 0.02);
+    border-right: 1px solid rgba(36, 60, 51, 0.07);
     padding: 1.75rem 1.25rem;
     display: flex;
     flex-direction: column;
@@ -55,7 +55,7 @@
 
 .sidebarTitle {
     font-size: 0.7rem;
-    color: #666;
+    color: var(--site-muted);
     text-transform: uppercase;
     margin-bottom: 0.75rem;
     letter-spacing: 1.5px;
@@ -72,9 +72,9 @@
     text-align: left;
     padding: 11px 44px 11px 12px;
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    background: rgba(255, 255, 255, 0.02);
-    color: #fff;
+    border: 1px solid rgba(36, 60, 51, 0.05);
+    background: rgba(36, 60, 51, 0.02);
+    color: var(--site-ink);
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: inherit;
@@ -84,12 +84,12 @@
 }
 
 .eventListItem:hover {
-    border-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(36, 60, 51, 0.15);
 }
 
 .eventListItemActive {
     border-color: var(--accent);
-    background: rgba(212, 175, 55, 0.08);
+    background: rgba(72, 100, 79, 0.08);
 }
 
 .eventListTitle {
@@ -106,7 +106,7 @@
 
 .eventListMeta {
     font-size: 0.68rem;
-    color: #666;
+    color: var(--site-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -117,7 +117,7 @@
     top: 50%;
     transform: translateY(-50%);
     background: #262626;
-    color: #999;
+    color: var(--site-muted);
     padding: 2px 7px;
     border-radius: 6px;
     font-size: 0.7rem;
@@ -134,7 +134,7 @@
     width: 100%;
     padding: 10px;
     background: transparent;
-    color: #aaa;
+    color: var(--site-muted);
     border: 1px dashed #444;
     border-radius: 10px;
     cursor: pointer;
@@ -163,7 +163,7 @@
     padding: 0.8rem 1rem;
     border-radius: 12px;
     cursor: pointer;
-    color: #888;
+    color: var(--site-muted);
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
@@ -177,13 +177,13 @@
 }
 
 .navItem:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.04);
+    color: var(--site-ink);
+    background: rgba(36, 60, 51, 0.04);
 }
 
 .activeNav,
 .activeNav:hover {
-    background: rgba(212, 175, 55, 0.1);
+    background: rgba(72, 100, 79, 0.1);
     color: var(--accent);
 }
 
@@ -222,7 +222,7 @@
 }
 
 .eventDate {
-    color: #777;
+    color: var(--site-muted);
     font-size: 0.85rem;
     margin-top: 0.4rem;
     text-transform: uppercase;
@@ -245,7 +245,7 @@
 
 .pillDraft {
     background: #2a2a2a;
-    color: #999;
+    color: var(--site-muted);
 }
 
 .headerActions {
@@ -285,19 +285,19 @@
 }
 
 .secondaryBtn {
-    background: rgba(255, 255, 255, 0.06);
-    color: #ddd;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(36, 60, 51, 0.06);
+    color: var(--site-ink);
+    border: 1px solid rgba(36, 60, 51, 0.12);
 }
 
 .secondaryBtn:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.12);
-    color: #fff;
+    background: rgba(36, 60, 51, 0.12);
+    color: var(--site-ink);
 }
 
 .whatsappBtn {
     background: #25d366;
-    color: #fff;
+    color: var(--site-ink);
 }
 
 .primaryBtn:disabled,
@@ -315,8 +315,8 @@
 }
 
 .invitationCard {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(145deg, rgba(36, 60, 51, 0.05) 0%, rgba(36, 60, 51, 0.015) 100%);
+    border: 1px solid rgba(36, 60, 51, 0.08);
     border-radius: 22px;
     padding: 1.4rem;
     cursor: pointer;
@@ -328,13 +328,13 @@
 
 .eventGrid .invitationCard:hover {
     transform: translateY(-4px);
-    border-color: rgba(212, 175, 55, 0.5);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(72, 100, 79, 0.5);
+    box-shadow: 0 20px 40px rgba(36, 60, 51, 0.08);
 }
 
 .activeCard {
     border-color: var(--accent);
-    background: rgba(212, 175, 55, 0.06);
+    background: rgba(72, 100, 79, 0.06);
 }
 
 .cardHeader {
@@ -347,7 +347,7 @@
 .cardIcon {
     width: 46px;
     height: 46px;
-    background: rgba(212, 175, 55, 0.1);
+    background: rgba(72, 100, 79, 0.1);
     border-radius: 14px;
     display: flex;
     align-items: center;
@@ -368,7 +368,7 @@
 
 .draftBadge {
     background: #2a2a2a;
-    color: #999;
+    color: var(--site-muted);
 }
 
 .cardBody {
@@ -392,7 +392,7 @@
 }
 
 .cardDetails {
-    color: #888;
+    color: var(--site-muted);
     font-size: 0.85rem;
     display: flex;
     flex-direction: column;
@@ -415,7 +415,7 @@
     flex-wrap: wrap;
     margin: 1.1rem 0;
     font-size: 0.8rem;
-    color: #bbb;
+    color: var(--site-muted);
 }
 
 .miniStats span {
@@ -428,7 +428,7 @@
     display: flex;
     gap: 6px;
     padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid rgba(36, 60, 51, 0.06);
     cursor: default;
 }
 
@@ -469,17 +469,17 @@
 }
 
 .actionGhost {
-    background: rgba(255, 255, 255, 0.07);
-    color: #ddd;
+    background: rgba(36, 60, 51, 0.07);
+    color: var(--site-ink);
 }
 
 .actionGhost:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(36, 60, 51, 0.15);
 }
 
 .actionWhatsapp {
     background: #25d366;
-    color: #fff;
+    color: var(--site-ink);
 }
 
 .actionDanger {
@@ -493,10 +493,10 @@
 
 .newCard {
     min-height: 240px;
-    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border: 2px dashed rgba(36, 60, 51, 0.1);
     background: transparent;
     border-radius: 22px;
-    color: #666;
+    color: var(--site-muted);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -524,8 +524,8 @@
 }
 
 .statCard {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: linear-gradient(145deg, rgba(36, 60, 51, 0.05) 0%, rgba(36, 60, 51, 0.02) 100%);
+    border: 1px solid rgba(36, 60, 51, 0.06);
     padding: 1.2rem 1.3rem;
     border-radius: 18px;
     position: relative;
@@ -553,7 +553,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    color: #888;
+    color: var(--site-muted);
     font-size: 0.78rem;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -561,8 +561,8 @@
 }
 
 .panel {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(36, 60, 51, 0.02);
+    border: 1px solid rgba(36, 60, 51, 0.06);
     border-radius: 20px;
     padding: 1.5rem;
 }
@@ -590,16 +590,16 @@
 .searchBox svg {
     position: absolute;
     left: 14px;
-    color: #666;
+    color: var(--site-muted);
 }
 
 .searchBox input {
     width: 100%;
     padding: 11px 12px 11px 40px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    color: #fff;
+    background: rgba(36, 60, 51, 0.04);
+    border: 1px solid rgba(36, 60, 51, 0.09);
+    color: var(--site-ink);
     font-size: 0.9rem;
     font-family: inherit;
 }
@@ -624,23 +624,23 @@
 .guestList th {
     text-align: left;
     padding: 0.8rem;
-    color: #666;
+    color: var(--site-muted);
     font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(36, 60, 51, 0.08);
 }
 
 .guestList td {
     padding: 0.85rem 0.8rem;
-    color: #ccc;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    color: var(--site-ink);
+    border-bottom: 1px solid rgba(36, 60, 51, 0.04);
     font-size: 0.9rem;
     vertical-align: middle;
 }
 
 .guestList tbody tr:hover td {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(36, 60, 51, 0.02);
 }
 
 .guestName {
@@ -679,8 +679,8 @@
 }
 
 .statusSelect option {
-    background: #111;
-    color: #fff;
+    background: var(--site-soft);
+    color: var(--site-ink);
 }
 
 .confirmed {
@@ -732,8 +732,8 @@
     border: 10px solid #1a1a1a;
     border-radius: 44px;
     overflow: hidden;
-    background: #000;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+    background: var(--site-soft);
+    box-shadow: 0 30px 80px rgba(36, 60, 51, 0.08);
 }
 
 .previewScroll {
@@ -762,7 +762,7 @@
 }
 
 .previewActions p {
-    color: #888;
+    color: var(--site-muted);
     margin-bottom: 0.5rem;
 }
 
@@ -788,8 +788,8 @@
 }
 
 .billingCard {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0.015) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(145deg, rgba(36, 60, 51, 0.045) 0%, rgba(36, 60, 51, 0.015) 100%);
+    border: 1px solid rgba(36, 60, 51, 0.08);
     border-radius: 22px;
     padding: 1.75rem;
     min-width: 0;
@@ -798,20 +798,20 @@
 .billingTitle {
     font-family: var(--font-heading);
     font-size: 1.35rem;
-    color: #fff;
+    color: var(--site-ink);
     margin: 0;
 }
 
 .billingHint {
-    color: #888;
+    color: var(--site-muted);
     font-size: 0.88rem;
     margin: 0.35rem 0 1.4rem;
 }
 
 .segmented {
     display: flex;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(36, 60, 51, 0.04);
+    border: 1px solid rgba(36, 60, 51, 0.06);
     border-radius: 12px;
     padding: 4px;
     margin-bottom: 1.4rem;
@@ -823,7 +823,7 @@
     border: none;
     border-radius: 9px;
     background: transparent;
-    color: #aaa;
+    color: var(--site-muted);
     font: inherit;
     font-size: 0.88rem;
     font-weight: 600;
@@ -832,7 +832,7 @@
 }
 
 .segmented button:hover {
-    color: #fff;
+    color: var(--site-ink);
 }
 
 .segmented .segmentActive,
@@ -878,7 +878,7 @@
 }
 
 .fieldHint {
-    color: #777;
+    color: var(--site-muted);
 }
 
 .fieldWarning {
@@ -920,7 +920,7 @@
 .linkBtn {
     background: none;
     border: none;
-    color: #999;
+    color: var(--site-muted);
     font: inherit;
     font-size: 0.88rem;
     cursor: pointer;
@@ -928,7 +928,7 @@
 }
 
 .linkBtn:hover:not(:disabled) {
-    color: #fff;
+    color: var(--site-ink);
 }
 
 .linkBtn:disabled {
@@ -942,11 +942,11 @@
     gap: 10px;
     padding-bottom: 1rem;
     margin-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(36, 60, 51, 0.06);
 }
 
 .billingEmpty {
-    color: #777;
+    color: var(--site-muted);
     text-align: center;
     padding: 2.5rem 1rem;
     font-size: 0.92rem;
@@ -961,17 +961,17 @@
 .invoiceTable th {
     text-align: left;
     padding: 10px;
-    color: #666;
+    color: var(--site-muted);
     font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(36, 60, 51, 0.06);
 }
 
 .invoiceTable td {
     padding: 14px 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    color: #ddd;
+    border-bottom: 1px solid rgba(36, 60, 51, 0.03);
+    color: var(--site-ink);
 }
 
 .invoiceLink {
@@ -984,18 +984,18 @@
 
 .label {
     font-size: 0.8rem;
-    color: #aaa;
+    color: var(--site-muted);
     font-weight: 600;
     margin-bottom: 5px;
     display: block;
 }
 
 .input {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.09);
+    background: rgba(36, 60, 51, 0.04);
+    border: 1px solid rgba(36, 60, 51, 0.09);
     padding: 0.8rem 1rem;
     border-radius: 12px;
-    color: #fff;
+    color: var(--site-ink);
     font-family: var(--font-body);
     font-size: 0.95rem;
     transition: all 0.2s ease;
@@ -1005,13 +1005,13 @@
 }
 
 .input option {
-    background: #111;
+    background: var(--site-soft);
 }
 
 .input:focus {
     border-color: var(--accent);
-    background: rgba(255, 255, 255, 0.06);
-    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.12);
+    background: rgba(36, 60, 51, 0.06);
+    box-shadow: 0 0 0 4px rgba(72, 100, 79, 0.12);
 }
 
 .formGroup {
@@ -1028,13 +1028,13 @@
     left: 50%;
     transform: translateX(-50%);
     background: #1c1c1c;
-    color: #fff;
-    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: var(--site-ink);
+    border: 1px solid rgba(72, 100, 79, 0.4);
     padding: 12px 20px;
     border-radius: 12px;
     font-size: 0.9rem;
     z-index: 3000;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 10px 30px rgba(36, 60, 51, 0.08);
     max-width: calc(100% - 32px);
     animation: toastIn 0.25s ease;
 }
@@ -1077,7 +1077,7 @@
         width: 100%;
         height: auto;
         border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        border-bottom: 1px solid rgba(36, 60, 51, 0.07);
         padding: 1rem 16px;
         gap: 1rem;
     }
@@ -1156,14 +1156,14 @@
     .navItem {
         justify-content: center;
         padding: 0.65rem 0.5rem;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(36, 60, 51, 0.03);
+        border: 1px solid rgba(36, 60, 51, 0.06);
     }
 
     .activeNav,
     .activeNav:hover {
-        background: rgba(212, 175, 55, 0.1);
-        border-color: rgba(212, 175, 55, 0.35);
+        background: rgba(72, 100, 79, 0.1);
+        border-color: rgba(72, 100, 79, 0.35);
     }
 
     .navItem span {
@@ -1184,3 +1184,20 @@
         align-items: stretch;
     }
 }
+
+.dashboardContainer, .centerScreen { background: var(--site-bg); color: var(--site-ink); }
+.sidebar { background: #eef1e9; border-color: var(--site-border); }
+.eventTitle { background: none; color: var(--site-ink); }
+.primaryBtn, .addGuestBtn, .payBtn, .saveBtn, .pillActive, .eventListItemActive .eventListCount { color: white; }
+.eventListCount, .pillDraft, .toast { background: var(--site-soft); color: var(--site-ink); }
+.overviewCard, .billingCard, .statCard { background: white; border-color: var(--site-border); }
+.guestName { color: var(--site-ink) !important; }
+.muted, .messageCell { color: var(--site-muted) !important; }
+.confirmed, .statusOk { color: #28603c; background: #e7f2e9; }
+.pending { color: #805d21; background: #f7efde; }
+.declined, .statusError, .iconDanger { color: var(--site-danger); }
+.input, .statusSelect { color-scheme: light; }
+.billingStatusOk { color: #28603c; }
+.toast { border-color: var(--site-border); }
+.segmented .segmentActive { color: #fff; }
+.fieldWarning { color: #805d21; }

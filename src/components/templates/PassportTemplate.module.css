@@ -13,7 +13,7 @@
     perspective: 1800px;
     background:
         radial-gradient(ellipse at 50% 40%, rgba(212, 175, 55, 0.08) 0%, transparent 55%),
-        radial-gradient(ellipse at center, #22262b 0%, #15171a 60%, #0d0e10 100%);
+        linear-gradient(135deg, #eee7da, #ded4c3);
     overflow-x: hidden;
     overflow-x: clip;
     container-type: inline-size;
@@ -106,7 +106,7 @@
 }
 
 .front {
-    background: #2c3e50;
+    background: #284737;
     background-image: radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.06), transparent 60%);
     border-radius: 12px;
     z-index: 2;
@@ -413,11 +413,10 @@
 }
 
 .hint {
-    color: #d4af37;
+    color: #44533d;
     font-size: 0.8rem;
     text-align: center;
-    opacity: 0.8;
-    animation: hintPulse 2s ease-in-out infinite;
+    opacity: 1;
 }
 
 @keyframes hintPulse {
@@ -446,7 +445,7 @@
     justify-content: center;
     gap: 8px;
     padding: 13px 16px;
-    background: #2c3e50;
+    background: #284737;
     color: #d4af37;
     border: 3px double #d4af37;
     border-radius: 8px;
@@ -473,14 +472,15 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    color: #d4af37;
+    color: #284737;
     font-size: 0.78rem;
     font-weight: bold;
     letter-spacing: 1px;
     text-transform: uppercase;
     text-decoration: none;
     border-bottom: 1px solid rgba(212, 175, 55, 0.5);
-    padding: 4px 0;
+    padding: 10px 4px;
+    min-height: 44px;
 }
 
 /* Large screens: a bigger book so the open spread fills the page nicely */

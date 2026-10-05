@@ -940,7 +940,7 @@
 }
 
 .step3 .rsvpBtn::after {
-    content: "CONFIRMAT ✔";
+    content: "CONFIRMAT";
     position: absolute;
     top: 50%;
     left: 50%;

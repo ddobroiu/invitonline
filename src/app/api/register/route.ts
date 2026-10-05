@@ -2,10 +2,13 @@ import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { LEGAL_VERSION } from '@/config/legal'
+import { readJsonObject, validateRegistration, ValidationError } from '@/lib/validation'
 
 export async function POST(req: Request) {
     try {
-        const body = await req.json()
+        const body = await readJsonObject(req)
+        const validationError = validateRegistration(body)
+        if (validationError) return NextResponse.json({ message: validationError }, { status: 400 })
         const email = String(body.email || '').trim().toLowerCase()
         const password = String(body.password || '')
         const name = String(body.name || '').trim().slice(0, 120) || null
@@ -51,6 +54,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ message: 'User created', userId: user.id }, { status: 201 })
     } catch (error) {
+        if (error instanceof ValidationError) return NextResponse.json({ message: error.message }, { status: 400 })
         console.error('Register error:', error)
         return NextResponse.json({ message: 'Eroare de server. Încearcă din nou.' }, { status: 500 })
     }

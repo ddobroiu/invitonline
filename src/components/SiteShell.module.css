@@ -1,0 +1,16 @@
+.shell {
+    --foreground: var(--site-ink);
+    --background: var(--site-bg);
+    --accent: #48644f;
+    --accent-glow: rgba(72, 100, 79, .16);
+    --glass-bg: #fff;
+    --glass-border: #dfe4da;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 100dvh;
+    background: var(--site-bg);
+    color: var(--site-ink);
+}
+.content { flex: 1; padding-top: 80px; min-width: 0; }
+.invitation { flex: 1; }

@@ -52,7 +52,7 @@
     text-align: left;
     font-weight: 400;
     font-size: 0.75rem;
-    color: rgba(237, 237, 237, 0.6);
+    color: var(--site-muted);
     padding: 0.5rem 1rem;
     border-bottom: 1px solid var(--glass-border);
 }
@@ -85,10 +85,10 @@
 .hint {
     display: block;
     font-size: 0.75rem;
-    color: rgba(237, 237, 237, 0.55);
+    color: var(--site-muted);
 }
 
 .muted {
-    color: rgba(237, 237, 237, 0.6);
+    color: var(--site-muted);
     font-size: 0.875rem;
 }

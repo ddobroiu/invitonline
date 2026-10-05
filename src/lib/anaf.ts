@@ -51,8 +51,8 @@ export async function searchCompanyByCUI(cui: string) {
 
         return null;
 
-    } catch (error: any) {
-        console.error('[ANAF] Error fetching data:', error.message);
+    } catch (error) {
+        console.error('[ANAF] Error fetching data:', error instanceof Error ? error.message : String(error));
         return null;
     }
 }
