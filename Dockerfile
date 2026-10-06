@@ -41,6 +41,8 @@ RUN addgroup -S app && adduser -S app -G app
 COPY --from=build --chown=app:app /app/.next/standalone ./
 COPY --from=build --chown=app:app /app/.next/static ./.next/static
 COPY --from=build --chown=app:app /app/public ./public
+# Fonturile pentru imaginile de previzualizare (opengraph-image le citeste de pe disc)
+COPY --from=build --chown=app:app /app/src/assets/og-fonts ./src/assets/og-fonts
 
 USER app
 EXPOSE 3000
