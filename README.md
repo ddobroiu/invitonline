@@ -31,3 +31,8 @@ Testele locale nu confirmă plățile, emailurile, încărcările sau facturile 
 Aplicația folosește Next.js 16, React 19, TypeScript, Prisma/PostgreSQL și CSS Modules. Fonturile sunt livrate local, cu licențele în `src/assets/fonts`.
 
 Paginile publice pentru evenimente și tematici sunt definite în `src/config/invitation-landings.ts`. Sunt generate static, au conținut distinct, linkuri către modele și ghiduri, canonical propriu, BreadcrumbList/Service și imagini pentru distribuire. Sitemap-ul se actualizează din aceeași listă. Previzualizările modelelor se pot reface cu `node scripts/capture-models.mjs http://localhost:3000`.
+
+## IndexNow (Bing / ChatGPT)
+Cheia IndexNow e constanta `INDEXNOW_KEY` din `scripts/indexnow-submit.mjs` și e servită la `/<cheie>.txt` (fișierul din `public/`).
+`node scripts/indexnow-submit.mjs` doar numără adresele din sitemap; `--days 3` păstrează doar cele schimbate recent (după `lastmod`); `--send` le trimite la api.indexnow.org (loturi de 10.000).
+Rulează `--send` numai după deploy: scriptul verifică întâi că fișierul cheii e live pe site.
