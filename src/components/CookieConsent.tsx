@@ -189,7 +189,7 @@ export default function CookieConsent() {
                         </label>
                         <label style={rowStyle}>
                             <input type="checkbox" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} />
-                            <span><strong>Marketing / reclame</strong> — ne permite să măsurăm eficiența reclamelor (ex. TikTok) și să vă arătăm reclame relevante.</span>
+                            <span><strong>Marketing / reclame</strong> — ne permite să măsurăm eficiența reclamelor (ex. TikTok, Meta) și să vă arătăm reclame relevante.</span>
                         </label>
                     </div>
                 )}

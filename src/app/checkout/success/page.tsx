@@ -7,6 +7,7 @@ import { CircleCheck, Clock3, Search, TriangleAlert, LockKeyhole, Check, type Lu
 import styles from './page.module.css'
 import { CONSENT_CHANGE_EVENT, hasAnalyticsConsent } from '@/lib/consent'
 import { trackTikTok } from '@/lib/tiktok'
+import { trackMeta } from '@/lib/meta'
 
 // GA4 purchase event: only with analytics consent (gtag exists only after the cookie
 // banner loaded GA), once per Stripe session, no personal data
@@ -41,6 +42,31 @@ function trackTikTokPurchase(sessionId: string, value: number, currency: string)
             order_id: sessionId,
             event_id: sessionId,
         }, { event_id: sessionId })
+        if (sent) {
+            try { localStorage.setItem(key, '1') } catch { /* storage blocat */ }
+        }
+        return sent
+    }
+    if (fire()) return () => {}
+    const onChange = () => { if (fire()) window.removeEventListener(CONSENT_CHANGE_EVENT, onChange) }
+    window.addEventListener(CONSENT_CHANGE_EVENT, onChange)
+    return () => window.removeEventListener(CONSENT_CHANGE_EVENT, onChange)
+}
+
+// Meta Purchase: same rules as TikTok (marketing consent, once per Stripe session, no personal data).
+// eventID = Stripe session id, the same id the Conversions API uses (lib/fulfill.ts -> lib/meta-capi.ts).
+function trackMetaPurchase(sessionId: string, value: number, currency: string): () => void {
+    const key = `fb_purchase_${sessionId}`
+    const fire = (): boolean => {
+        try { if (localStorage.getItem(key)) return true } catch { /* storage blocat */ }
+        const sent = trackMeta('Purchase', {
+            value,
+            currency,
+            content_ids: ['invitatie_premium'],
+            contents: [{ id: 'invitatie_premium', quantity: 1 }],
+            content_type: 'product',
+            num_items: 1,
+        }, sessionId)
         if (sent) {
             try { localStorage.setItem(key, '1') } catch { /* storage blocat */ }
         }
@@ -97,6 +123,7 @@ function SuccessContent() {
         let timer: ReturnType<typeof setTimeout>
         let cancelled = false
         let stopTikTok: (() => void) | undefined
+        let stopMeta: (() => void) | undefined
 
         const verifyPayment = async () => {
             attempts++
@@ -113,6 +140,7 @@ function SuccessContent() {
                         if (typeof data.amount === 'number' && data.amount > 0) {
                             trackPurchase(sessionId, data.amount, String(data.currency || 'RON'))
                             stopTikTok = trackTikTokPurchase(sessionId, data.amount, String(data.currency || 'RON'))
+                            stopMeta = trackMetaPurchase(sessionId, data.amount, String(data.currency || 'RON'))
                         }
                         setInvitationUrl(`${window.location.origin}/invitatie/${data.eventId}`)
                         setState('done')
@@ -132,6 +160,7 @@ function SuccessContent() {
             cancelled = true
             clearTimeout(timer)
             stopTikTok?.()
+            stopMeta?.()
         }
     }, [sessionId])
 

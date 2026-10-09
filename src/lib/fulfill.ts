@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma'
 import { escapeHtml, getSiteUrl } from '@/lib/utils'
 import { alerta } from '@/lib/alerts'
 import { sendTikTokPurchase } from '@/lib/tiktok-events'
+import { sendMetaPurchase } from '@/lib/meta-capi'
 import { Prisma } from '@/generated/client'
 
 /**
@@ -55,6 +56,18 @@ export async function fulfillCheckout(session: Stripe.Checkout.Session) {
         value: amount,
         currency: session.currency || 'ron',
         contents: [{ content_id: 'invitatie_premium', content_name: 'Invitație premium', quantity: 1, price: amount }],
+        pageUrl: `${getSiteUrl()}/checkout/success`,
+        email: session.customer_details?.email ?? user.email,
+        phone: session.customer_details?.phone,
+        externalId: user.id,
+        metadata: session.metadata,
+    })
+    // Meta Purchase (Conversions API), tot o singura data si doar cu acordul salvat pe sesiune; event_id = id-ul sesiunii Stripe
+    void sendMetaPurchase({
+        eventId: session.id,
+        value: amount,
+        currency: session.currency || 'ron',
+        contentIds: ['invitatie_premium'],
         pageUrl: `${getSiteUrl()}/checkout/success`,
         email: session.customer_details?.email ?? user.email,
         phone: session.customer_details?.phone,

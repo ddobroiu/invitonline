@@ -5,6 +5,7 @@ import Providers from '@/components/Providers'
 import SiteShell from '@/components/SiteShell'
 import CookieConsent from '@/components/CookieConsent'
 import TikTokPixel from '@/components/TikTokPixel'
+import MetaPixel from '@/components/MetaPixel'
 import { BRAND, COMPANY, SITE_URL } from '@/config/legal'
 
 const inter = localFont({ src: '../assets/fonts/Inter.ttf', weight: '100 900', display: 'swap', variable: '--font-body' })
@@ -87,6 +88,8 @@ export default function RootLayout({
           <CookieConsent />
           {/* TikTok Pixel: doar cu acord pentru cookies de marketing */}
           <TikTokPixel />
+          {/* Meta Pixel: tot doar cu acord pentru cookies de marketing */}
+          <MetaPixel />
         </Providers>
       </body>
     </html>

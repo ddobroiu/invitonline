@@ -16,6 +16,8 @@ import RegisterMarketingNotice from '@/components/legal/RegisterMarketingNotice'
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton'
 import { PRICE_NOTE } from '@/config/legal'
 import { TIKTOK_CURRENCY, trackTikTok } from '@/lib/tiktok'
+import { META_CONTENT_ID, META_CURRENCY, META_INVITATION_VALUE, trackMeta } from '@/lib/meta'
+import { trackGa } from '@/lib/ga'
 import { validateEvent, validateRegistration } from '@/lib/validation'
 import {
     Zap, Palette, Info, Trash2, Plus, Music, Video, Image as ImageIcon, Monitor, Smartphone, Lock, CreditCard,
@@ -394,6 +396,14 @@ function CreateEventContent() {
                     content_type: 'product',
                     contents: [{ content_id: 'invitatie_premium', content_name: 'Invitație premium', quantity: 1 }],
                 })
+                // Meta InitiateCheckout (no-op without marketing consent)
+                trackMeta('InitiateCheckout', {
+                    value: META_INVITATION_VALUE,
+                    currency: META_CURRENCY,
+                    content_ids: [META_CONTENT_ID],
+                    content_type: 'product',
+                    num_items: 1,
+                })
                 const checkoutRes = await fetch('/api/checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -433,11 +443,14 @@ function CreateEventContent() {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ...authData, acceptTerms })
                 })
+                const data = await res.json().catch(() => ({}))
                 if (!res.ok) {
-                    const data = await res.json().catch(() => ({}))
                     setAuthError(data.message || 'Eroare la înregistrare')
                     return
                 }
+                // Cont nou: GA4 sign_up + Meta CompleteRegistration (eventID reg_<userId>, ca la Conversions API)
+                trackGa('sign_up', { method: 'email' })
+                if (typeof data.userId === 'string') trackMeta('CompleteRegistration', { content_name: 'Cont InvitOnline', status: 'email' }, `reg_${data.userId}`)
             }
             const res = await signIn('credentials', { email: authData.email, password: authData.password, redirect: false })
             if (res?.error) setAuthError('Email sau parolă incorectă')

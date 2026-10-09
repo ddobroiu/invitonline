@@ -1,7 +1,9 @@
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import prisma from '@/lib/prisma'
 import { LEGAL_VERSION } from '@/config/legal'
 import { GOOGLE_TERMS_COOKIE } from '@/lib/google-auth-shared'
+import { metaVisitorFromHeaders, sendMetaRegistration } from '@/lib/meta-capi'
+import { getSiteUrl } from '@/lib/utils'
 
 /**
  * „Continuă cu Google” fara adaptorul Prisma (sesiuni JWT, ca la e-mail + parola): contul se gaseste sau
@@ -130,6 +132,12 @@ export async function resolveGoogleSignIn(claims: GoogleClaims | undefined, goog
         await sendWelcomeNow({ id: user.id, email: user.email, name: user.name })
     } catch (emailErr) {
         console.error('Welcome email (Google) failed:', emailErr)
+    }
+    // Meta CompleteRegistration (Conversions API), doar cu acord pentru marketing (cookie_consent din cerere)
+    try {
+        void sendMetaRegistration({ visitor: metaVisitorFromHeaders(await headers()), userId: user.id, email: user.email, method: 'google', pageUrl: `${getSiteUrl()}/login` })
+    } catch (metaErr) {
+        console.error('Meta CompleteRegistration (Google) failed:', metaErr instanceof Error ? metaErr.message : metaErr)
     }
     return true
 }

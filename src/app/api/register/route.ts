@@ -3,6 +3,8 @@ import prisma from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { LEGAL_VERSION } from '@/config/legal'
 import { readJsonObject, validateRegistration, ValidationError } from '@/lib/validation'
+import { metaVisitorFromHeaders, sendMetaRegistration } from '@/lib/meta-capi'
+import { getSiteUrl } from '@/lib/utils'
 
 export async function POST(req: Request) {
     try {
@@ -51,6 +53,15 @@ export async function POST(req: Request) {
         } catch (emailErr) {
             console.error('Welcome email failed:', emailErr)
         }
+
+        // Meta CompleteRegistration (Conversions API), doar cu acord pentru marketing; event_id reg_<userId> ca in browser
+        void sendMetaRegistration({
+            visitor: metaVisitorFromHeaders(req.headers),
+            userId: user.id,
+            email: user.email,
+            method: 'email',
+            pageUrl: `${getSiteUrl(req)}/login`,
+        })
 
         return NextResponse.json({ message: 'User created', userId: user.id }, { status: 201 })
     } catch (error) {

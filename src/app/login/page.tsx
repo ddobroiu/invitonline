@@ -10,6 +10,7 @@ import RegisterMarketingNotice from '@/components/legal/RegisterMarketingNotice'
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton'
 import { googleErrorMessage } from '@/lib/google-auth-shared'
 import { validateRegistration } from '@/lib/validation'
+import { trackGa } from '@/lib/ga'
 
 // Only allow redirects inside the site
 function safeCallback(url: string | null) {
@@ -72,6 +73,9 @@ function LoginContent() {
                     setError(data.message || 'Eroare la înregistrare')
                     return
                 }
+                // GA4 sign_up (doar cu acord analitic). Meta CompleteRegistration pleaca de pe server (api/register):
+                // /login e pagina exclusa pentru pixeli.
+                trackGa('sign_up', { method: 'email' })
             }
 
             const res = await signIn('credentials', {

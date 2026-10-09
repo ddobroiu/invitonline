@@ -8,6 +8,7 @@ import { getSiteUrl } from '@/lib/utils'
 import { LEGAL_VERSION } from '@/config/legal'
 import { getCookieValue, hasAnalyticsConsent, hasMarketingConsent } from '@/lib/consent'
 import { clientIp, tiktokCheckoutMetadata } from '@/lib/tiktok-events'
+import { metaCheckoutMetadata, metaVisitorFromHeaders } from '@/lib/meta-capi'
 import { alerta } from '@/lib/alerts'
 import { readJsonObject, validateEvent, ValidationError, isRecord } from '@/lib/validation'
 
@@ -54,6 +55,9 @@ export async function POST(req: Request) {
             ip: clientIp(req.headers),
             userAgent: req.headers.get('user-agent'),
         })
+        // Meta Conversions API (lib/meta-capi.ts): consimtamant + _fbp/_fbc (IP/UA refolosite din tt_ip/tt_ua)
+        const metaVisitor = metaVisitorFromHeaders(req.headers)
+        const meta = metaCheckoutMetadata(metaVisitor)
         const checkoutSession = await stripe.checkout.sessions.create({
             line_items: [
                 {
@@ -72,7 +76,7 @@ export async function POST(req: Request) {
             customer_email: session?.user?.email || undefined,
             success_url: `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${siteUrl}/dashboard?canceled=true`,
-            metadata: { ...tag, ...consentMeta, eventId: event.id, userId, ...tiktok },
+            metadata: { ...tag, ...consentMeta, eventId: event.id, userId, ...tiktok, ...meta },
             payment_intent_data: { metadata: { ...tag, eventId: event.id, userId }, statement_descriptor_suffix: 'INVITONLIN' },
             // Contul Stripe e comun cu alte site-uri: numele site-ului pe pagina de plata
             branding_settings: { display_name: 'InvitOnline' },

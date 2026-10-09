@@ -95,7 +95,7 @@ export default function PrivacyPage() {
                             <td>Art. 6 alin. (1) lit. a) – consimțământ (cookies analitice), pe care îl poți retrage oricând din „Setări cookies”</td>
                         </tr>
                         <tr>
-                            <td>Date de marketing: identificatori pseudonimi TikTok (cookie-urile _ttp și tt_ttclid), pagini vizitate, evenimente (ex. inițierea plății, plata finalizată – valoare, monedă, identificatorul comenzii), adresă IP și browser; la o plată confirmată, trimise de pe serverul nostru (TikTok Events API), și emailul, telefonul și identificatorul contului, criptate ireversibil (SHA-256)</td>
+                            <td>Date de marketing: identificatori pseudonimi TikTok (cookie-urile _ttp și tt_ttclid), pagini vizitate, evenimente (ex. inițierea plății, plata finalizată – valoare, monedă, identificatorul comenzii), adresă IP și browser; la o plată confirmată, trimise de pe serverul nostru (TikTok Events API), și emailul, telefonul și identificatorul contului, criptate ireversibil (SHA-256); aceleași categorii pentru Meta (cookie-urile _fbp și _fbc, Meta Conversions API), unde se adaugă și crearea contului</td>
                             <td>Măsurarea eficienței reclamelor și afișarea de reclame relevante (retargeting)</td>
                             <td>Art. 6 alin. (1) lit. a) – consimțământ (cookies de marketing), pe care îl poți retrage oricând din „Setări cookies”</td>
                         </tr>
@@ -192,6 +192,11 @@ export default function PrivacyPage() {
                             <td>Irlanda; posibile transferuri în afara UE – clauze contractuale standard</td>
                         </tr>
                         <tr>
+                            <td>Meta Platforms Ireland Limited (Meta Pixel)</td>
+                            <td>Măsurarea eficienței reclamelor Facebook / Instagram și retargeting, inclusiv plățile confirmate și conturile create, trimise de pe serverul nostru (Meta Conversions API), cu emailul, telefonul și identificatorul contului criptate SHA-256 (doar cu consimțământ pentru cookies de marketing)</td>
+                            <td>Irlanda / SUA – EU-US Data Privacy Framework și clauze contractuale standard</td>
+                        </tr>
+                        <tr>
                             <td>Contabil / auditori, avocați, autorități și instanțe</td>
                             <td>Îndeplinirea obligațiilor legale, apărarea drepturilor</td>
                             <td>România</td>
@@ -255,7 +260,7 @@ export default function PrivacyPage() {
 
             <h2>10. Cookies</h2>
             <p>
-                Cookies analitice și de marketing (ex. TikTok Pixel) se folosesc doar cu consimțământul tău, pe care îl poți retrage oricând din „Setări cookies”.
+                Cookies analitice și de marketing (ex. TikTok Pixel, Meta Pixel) se folosesc doar cu consimțământul tău, pe care îl poți retrage oricând din „Setări cookies”.
                 Detalii despre cookies și tehnologiile similare găsești în <Link href={LEGAL_LINKS.cookies}>Politica de cookies</Link>.
             </p>
 
